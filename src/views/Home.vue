@@ -1,18 +1,30 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <div
+      class="jumbotron jumbotron-fluid"
+    >
+      <div class="container text-center">
+        <h1 class="display-4">Wondering where they stand?</h1>
+        <hr />
+        <h3>
+          WhereTheyStand aggregates voting data, financial information,
+          biographical information, and more.
+        </h3>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
 export default {
   name: 'Home',
-  components: {
-    HelloWorld
-  }
+  components: {}
 }
 </script>
+
+<style scoped>
+.jumbotron {
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('https://storage.googleapis.com/wheretheystand-nz/nzpm_app/beehive.jpg');
+  background-size: cover;
+}
+</style>
