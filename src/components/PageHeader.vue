@@ -1,32 +1,23 @@
 <template>
-  <div class="container-fluid hero">
+  <div class="container-fluid hero" :style="{ backgroundImage: gradient }">
   <div class="container">
-    <h1 class="hero">{{ pageTitle }}</h1>
-    <h3 class="hero" v-if="pageSubtitle">{{ pageSubtitle }}</h3>
+    <div v-if="!image">
+      <h1 class="hero">{{ pageTitle }}</h1>
+      <h3 class="hero" v-if="pageSubtitle">{{ pageSubtitle }}</h3>
+    </div>
+    <div v-else>
+      <div class="media">
+        <img class="mr-3" :src="image" :alt="pageTitle">
+        <div class="media-body">
+          <h1 class="hero">{{ pageTitle }}</h1>
+          <h3 class="hero" v-if="pageSubtitle">{{ pageSubtitle }}</h3>
+        </div>
+      </div>
+    </div>
     <nav class="navbar navbar-expand-lg navbar-light sub-nav">
       <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" href="#">All debates</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Topics</a>
-        </li>
-        <li class="nav-item">
-          <form
-                  id="sub-nav-search"
-                  class="form-inline mx-3"
-                  action="/hansard/search/"
-                  method="get"
-          >
-            <input
-                    class="nav-link form-control form-control-sm mr-sm-2"
-                    id="q"
-                    name="q"
-                    type="search"
-                    placeholder="Search speeches"
-                    aria-label="Speeches search"
-            />
-          </form>
+        <li class="nav-item" v-for="(link, index) in pageLinks" :key="index">
+          <router-link class="nav-link" :to="link.to" active-class="active">{{ link.name }}</router-link>
         </li>
       </ul>
     </nav>
@@ -37,16 +28,39 @@
 <script>
 export default {
   name: 'PageHeader',
-  props: [
-    'pageTitle',
-    'pageSubtitle'
-  ]
+  props: {
+    pageTitle: String,
+    pageSubtitle: String,
+    image: String,
+    colour: String,
+    secondaryColour: String,
+    pageLinks: Array
+  },
+  computed: {
+    harmony: function () {
+      var Harmonizer = require('color-harmony').Harmonizer
+      var harmonizer = new Harmonizer()
+
+      if (!this.colour) {
+        return ['#58787f', 'rgb(52, 148, 148)']
+      }
+
+      if (this.secondaryColour) {
+        return [this.colour, this.secondaryColour]
+      }
+
+      return harmonizer.harmonize(this.colour, 'neutral')
+    },
+    gradient: function () {
+      return `linear-gradient(230deg, ${this.harmony[1]} 0%, ${this.harmony[0]} 50%)`
+    }
+  }
 }
 </script>
 
 <style scoped>
 h3 {
-  margin: 40px 0 0;
+  margin: 0px 0px 10px;
 }
 ul {
   list-style-type: none;
@@ -58,5 +72,10 @@ li {
 }
 a {
   color: #42b983;
+}
+img {
+  border-radius: 50%;
+  max-width: 128px;
+  margin-bottom: 10px;
 }
 </style>
