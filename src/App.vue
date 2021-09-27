@@ -55,6 +55,7 @@
     </div>
   </nav>
   <router-view class="content-wrapper" />
+
   <footer class="footer text-light">
     <div class="container">
       <div class="row">
@@ -203,7 +204,7 @@ h6.hero {
 
 div.hero {
   padding: 30px 0px;
-  background-image: var(--wts-gradient);
+  /*background-image: var(--wts-gradient);*/
 }
 
 .display {
@@ -354,25 +355,6 @@ ul.entity-vote-list {
 }
 
 /* Insights */
-.wts-card {
-  margin: 10px 0px;
-  padding: 15px 15px;
-  background-color: var(--wts-card-bg);
-  border-radius: var(--wts-card-border-radius);
-  box-shadow: var(--wts-card-box-shadow);
-}
-
-.wts-card.wts-card-missing {
-  background-color: transparent;
-  border-radius: var(--wts-card-border-radius);
-  border-style: dashed;
-  border-color: var(--wts-secondary);
-  box-shadow: none;
-}
-
-.wts-card a.no-format {
-  padding: 0;
-}
 
 ul.no-format {
   list-style: none;
