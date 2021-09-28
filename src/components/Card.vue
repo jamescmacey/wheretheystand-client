@@ -1,5 +1,5 @@
 <template>
-  <div class="wts-card" :class="{'wts-card-missing': missing}">
+  <div class="wts-card" :class="{'wts-card-missing': missing, 'wts-card-gradient': gradient}">
     <slot></slot>
   </div>
 </template>
@@ -9,6 +9,10 @@ export default {
   name: 'Card',
   props: {
     missing: {
+      type: Boolean,
+      default: false
+    },
+    gradient: {
       type: Boolean,
       default: false
     }
@@ -31,6 +35,13 @@ export default {
   border-style: dashed;
   border-color: var(--wts-secondary);
   box-shadow: none;
+}
+
+.wts-card.wts-card-gradient {
+  border-radius: var(--wts-card-border-radius);
+  background-color: transparent;
+  background-image: linear-gradient(90deg, #ffffff36, #ffffff36), linear-gradient(145deg, rgb(52, 148, 148), rgb(88, 120, 127) 100%);
+  color: white;
 }
 
 .wts-card a.no-format {

@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
 const axios = require('axios').default
+const server = 'http://192.168.1.4:8000'
 
 export default createStore({
   state: {
@@ -7,7 +8,8 @@ export default createStore({
     people: [],
     peopleData: {
       votes: {},
-      bills: {}
+      bills: {},
+      interests: {}
     }
   },
   mutations: {
@@ -19,12 +21,15 @@ export default createStore({
     },
     SET_PERSON_BILLS (state, payload) {
       state.peopleData.bills[payload.identifier] = payload.data
+    },
+    SET_PERSON_INTERESTS (state, payload) {
+      state.peopleData.interests[payload.identifier] = payload.data
     }
   },
   actions: {
     fetchPerson ({ commit, getters }, payload) {
       if (!getters.personByIdentifier(payload.identifier)) {
-        axios.get('http://0.0.0.0:8000/api/people/' + payload.identifier)
+        axios.get(server + '/api/people/' + payload.identifier)
           .then(function (response) {
             commit('ADD_PERSON', response.data)
           })
@@ -35,7 +40,7 @@ export default createStore({
     },
     fetchPersonVotes ({ commit, getters }, payload) {
       if (!getters.personVotesByIdentifier(payload.identifier)) {
-        axios.get('http://0.0.0.0:8000/api/people/' + payload.identifier + '/votes')
+        axios.get(server + '/api/people/' + payload.identifier + '/votes')
           .then(function (response) {
             commit('SET_PERSON_VOTES', { identifier: payload.identifier, data: response.data })
           })
@@ -45,10 +50,21 @@ export default createStore({
       }
     },
     fetchPersonBills ({ commit, getters }, payload) {
-      if (!getters.personVotesByIdentifier(payload.identifier)) {
-        axios.get('http://0.0.0.0:8000/api/people/' + payload.identifier + '/bills')
+      if (!getters.personBillsByIdentifier(payload.identifier)) {
+        axios.get(server + '/api/people/' + payload.identifier + '/bills')
           .then(function (response) {
             commit('SET_PERSON_BILLS', { identifier: payload.identifier, data: response.data })
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      }
+    },
+    fetchPersonInterests ({ commit, getters }, payload) {
+      if (!getters.personInterestsByIdentifier(payload.identifier)) {
+        axios.get(server + '/api/people/' + payload.identifier + '/interests')
+          .then(function (response) {
+            commit('SET_PERSON_INTERESTS', { identifier: payload.identifier, data: response.data })
           })
           .catch(function (error) {
             console.log(error)
@@ -71,6 +87,9 @@ export default createStore({
     },
     personBillsByIdentifier: (state) => (id) => {
       return state.peopleData.bills[id]
+    },
+    personInterestsByIdentifier: (state) => (id) => {
+      return state.peopleData.interests[id]
     }
   }
 })

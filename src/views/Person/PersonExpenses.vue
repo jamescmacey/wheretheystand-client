@@ -21,9 +21,15 @@ export default {
   components: {
     Card
   },
+  created () {
+    this.$store.dispatch('fetchPersonExpenses', { identifier: this.$route.params.id })
+  },
   computed: {
     person () {
       return this.$store.getters.personByIdentifier(this.$route.params.id)
+    },
+    expenses () {
+      return this.$store.getters.personExpensesByIdentifier(this.$route.params.id)
     }
   }
 }
