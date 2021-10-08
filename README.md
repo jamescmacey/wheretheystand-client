@@ -1,4 +1,5 @@
 # wheretheystand-client
+This Vue app is an under-development client for WhereTheyStand ([https://wheretheystand.nz](https://wheretheystand.nz)). This app is intended to fully replace the current front-end user interface for WhereTheyStand at some point in late 2021. It is not currently live.
 
 ## Project setup
 ```
