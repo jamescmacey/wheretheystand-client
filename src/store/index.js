@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 const axios = require('axios').default
-const server = 'http://192.168.1.4:8000'
+const server = 'http://localhost:8000'
 
 export default createStore({
   state: {
@@ -10,11 +10,31 @@ export default createStore({
       votes: {},
       bills: {},
       interests: {}
-    }
+    },
+    bills: [],
+    votes: [],
+    electorates: [],
+    parties: [],
+    parliaments: []
   },
   mutations: {
-    ADD_PERSON (state, person) {
-      state.people.push(person)
+    ADD_PERSON (state, obj) {
+      state.people.push(obj)
+    },
+    ADD_BILL (state, obj) {
+      state.bills.push(obj)
+    },
+    ADD_VOTE (state, obj) {
+      state.votes.push(obj)
+    },
+    ADD_ELECTORATE (state, obj) {
+      state.electorates.push(obj)
+    },
+    ADD_PARTY (state, obj) {
+      state.parties.push(obj)
+    },
+    ADD_PARLIAMENT (state, obj) {
+      state.parliaments.push(obj)
     },
     SET_PERSON_VOTES (state, payload) {
       state.peopleData.votes[payload.identifier] = payload.data
@@ -70,6 +90,17 @@ export default createStore({
             console.log(error)
           })
       }
+    },
+    fetchBill ({ commit, getters }, payload) {
+      if (!getters.billByID(payload.id)) {
+        axios.get(server + '/api/bills/' + payload.id)
+          .then(function (response) {
+            commit('ADD_BILL', response.data)
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      }
     }
   },
   modules: {
@@ -90,6 +121,9 @@ export default createStore({
     },
     personInterestsByIdentifier: (state) => (id) => {
       return state.peopleData.interests[id]
+    },
+    billByID: (state) => (id) => {
+      return state.bills.find(bill => bill.id === id)
     }
   }
 })
