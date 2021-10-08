@@ -14,7 +14,7 @@
         </div>
       </div>
     </div>
-    <nav class="navbar navbar-expand-lg navbar-light sub-nav">
+    <nav v-if="pageLinks.length" class="navbar navbar-expand-lg navbar-light sub-nav">
       <ul class="navbar-nav">
         <li class="nav-item" v-for="(link, index) in pageLinks" :key="index">
           <router-link class="nav-link" :to="link.to" active-class="active">{{ link.name }}</router-link>
@@ -34,7 +34,10 @@ export default {
     image: String,
     colour: String,
     secondaryColour: String,
-    pageLinks: Array
+    pageLinks: {
+      type: Array,
+      default: () => { return [] }
+    }
   },
   computed: {
     harmony: function () {

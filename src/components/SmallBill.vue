@@ -1,9 +1,11 @@
 <template>
-  <Card>
-    <h5>{{ bill.name }}</h5>
-    <p>{{ bill.description }}</p>
-    <span v-if="bill.date_modified" :title="formattedDate" class="text-muted"><font-awesome-icon :icon="['fas', 'history']"></font-awesome-icon> Last activity {{ relativeDate }}</span>
-  </Card>
+  <router-link class="router-link" :to="'/bills/' + bill.id">
+    <Card>
+      <h5>{{ bill.name }}</h5>
+      <p>{{ bill.description }}</p>
+      <span v-if="bill.date_modified" :title="formattedDate" class="text-muted"><font-awesome-icon :icon="['fas', 'history']"></font-awesome-icon> Last activity {{ relativeDate }}</span>
+    </Card>
+  </router-link>
 </template>
 
 <script>
@@ -29,5 +31,8 @@ export default {
 </script>
 
 <style scoped>
-
+.router-link, .router-link:hover {
+  color: black;
+  text-decoration: none;
+}
 </style>
