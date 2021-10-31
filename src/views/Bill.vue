@@ -105,6 +105,7 @@ export default {
         wit: 'This Bill has been withdrawn, which means that it will not be progressing and will not become law.',
         lap: 'This Bill has lapsed. At the end of each Parliamentary term, bills which are still in progress lapse unless they are reinstated in the next term.',
         unx: 'This Bill is classed as \'not current\' on Parliament\'s website, which means it is likely that the Bill was either defeated or withdrawn. Unfortunately, WhereTheyStand has not been able to ascertain this information based on the Bill\'s page on the Parliament website.',
+        div: 'This Bill has been divided into multiple bills.',
         unk: 'WhereTheyStand isn\'t sure what\'s happening with this Bill.'
       }
 

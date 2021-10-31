@@ -9,7 +9,12 @@ export default createStore({
     peopleData: {
       votes: {},
       bills: {},
-      interests: {}
+      interests: {},
+      mpExpenses: {},
+      execExpenses: {},
+      returns: {},
+      votingSimilarity: {},
+      details: {}
     },
     bills: [],
     votes: [],
@@ -44,6 +49,21 @@ export default createStore({
     },
     SET_PERSON_INTERESTS (state, payload) {
       state.peopleData.interests[payload.identifier] = payload.data
+    },
+    SET_PERSON_MP_EXPENSES (state, payload) {
+      state.peopleData.mpExpenses[payload.identifier] = payload.data
+    },
+    SET_PERSON_EXEC_EXPENSES (state, payload) {
+      state.peopleData.execExpenses[payload.identifier] = payload.data
+    },
+    SET_PERSON_RETURNS (state, payload) {
+      state.peopleData.returns[payload.identifier] = payload.data
+    },
+    SET_PERSON_VOTING_SIMILARITY (state, payload) {
+      state.peopleData.votingSimilarity[payload.identifier] = payload.data
+    },
+    SET_PERSON_DETAILS (state, payload) {
+      state.peopleData.details[payload.identifier] = payload.data
     }
   },
   actions: {
@@ -91,6 +111,61 @@ export default createStore({
           })
       }
     },
+    fetchPersonExecExpenses ({ commit, getters }, payload) {
+      if (!getters.personInterestsByIdentifier(payload.identifier)) {
+        axios.get(server + '/api/people/' + payload.identifier + '/exec-expenses')
+          .then(function (response) {
+            commit('SET_PERSON_EXEC_EXPENSES', { identifier: payload.identifier, data: response.data })
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      }
+    },
+    fetchPersonMpExpenses ({ commit, getters }, payload) {
+      if (!getters.personInterestsByIdentifier(payload.identifier)) {
+        axios.get(server + '/api/people/' + payload.identifier + '/mp-expenses')
+          .then(function (response) {
+            commit('SET_PERSON_MP_EXPENSES', { identifier: payload.identifier, data: response.data })
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      }
+    },
+    fetchPersonReturns ({ commit, getters }, payload) {
+      if (!getters.personInterestsByIdentifier(payload.identifier)) {
+        axios.get(server + '/api/people/' + payload.identifier + '/returns')
+          .then(function (response) {
+            commit('SET_PERSON_RETURNS', { identifier: payload.identifier, data: response.data })
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      }
+    },
+    fetchPersonDetails ({ commit, getters }, payload) {
+      if (!getters.personInterestsByIdentifier(payload.identifier)) {
+        axios.get(server + '/api/people/' + payload.identifier + '/details')
+          .then(function (response) {
+            commit('SET_PERSON_DETAILS', { identifier: payload.identifier, data: response.data })
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      }
+    },
+    fetchPersonVotingSimilarity ({ commit, getters }, payload) {
+      if (!getters.personInterestsByIdentifier(payload.identifier)) {
+        axios.get(server + '/api/people/' + payload.identifier + '/voting-similarity')
+          .then(function (response) {
+            commit('SET_PERSON_VOTING_SIMILARITY', { identifier: payload.identifier, data: response.data })
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      }
+    },
     fetchBill ({ commit, getters }, payload) {
       if (!getters.billByID(payload.id)) {
         axios.get(server + '/api/bills/' + payload.id)
@@ -116,11 +191,26 @@ export default createStore({
     personVotesByIdentifier: (state) => (id) => {
       return state.peopleData.votes[id]
     },
+    personDetailsByIdentifier: (state) => (id) => {
+      return state.peopleData.details[id]
+    },
     personBillsByIdentifier: (state) => (id) => {
       return state.peopleData.bills[id]
     },
     personInterestsByIdentifier: (state) => (id) => {
       return state.peopleData.interests[id]
+    },
+    personMpExpensesByIdentifier: (state) => (id) => {
+      return state.peopleData.mpExpenses[id]
+    },
+    personExecExpensesByIdentifier: (state) => (id) => {
+      return state.peopleData.execExpenses[id]
+    },
+    personReturnsByIdentifier: (state) => (id) => {
+      return state.peopleData.returns[id]
+    },
+    personVotingSimilarityByIdentifier: (state) => (id) => {
+      return state.peopleData.votingSimilarity[id]
     },
     billByID: (state) => (id) => {
       return state.bills.find(bill => bill.id === id)
