@@ -1,32 +1,33 @@
 <template>
   <div class="container">
-    <div class="row">
-      <div class="col-12 col-md-6">
-        {{ person.description }}
-      </div>
-      <div class="col-12 col-md-6">
-        <card>
-          <h5>Social media</h5>
-          <ul>Twitter <font-awesome-icon :icon="['fas', 'user-secret']" /></ul>
-        </card>
+    <div class="row mt-3" v-if="details">
+      <div class="col-12 col-md-6" v-if="details.twitter_user">
+        <twitter-user-card :user="details.twitter_user"></twitter-user-card>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Card from '../../components/Card.vue'
+import TwitterUserCard from '../../components/TwitterUserCard.vue'
 export default {
   name: 'PersonDetails',
   components: {
-    Card
+    TwitterUserCard
   },
   data () {
     return {
-      person: {}
     }
   },
+  created () {
+    this.$store.dispatch('fetchPersonDetails', { identifier: this.$route.params.id })
+  },
   mounted () {
+  },
+  computed: {
+    details () {
+      return this.$store.getters.personDetailsByIdentifier(this.$route.params.id)
+    }
   }
 }
 </script>

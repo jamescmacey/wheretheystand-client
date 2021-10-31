@@ -19,13 +19,20 @@
               </DisplayControlButton>
           </div>
         </div>
-        <div class="col-12 col-lg-4">
+        <div v-if="votingSimilarity && votingSimilarity != {}" class="col-12 col-lg-4">
           <h4>Voting similarity</h4>
           <div class="row">
             <div class="col-12">
-              <Card :gradient="true">
+              <voting-similarity-display v-if="votingSimilarity.status == 'complete'" :person="person" :similarityReport="votingSimilarity">
+
+              </voting-similarity-display>
+              <Card :gradient="true" v-else-if="votingSimilarity.status == 'insufficient'">
                 <p><strong>There isn't enough data to show who {{ person.display_name }} votes similarly to.</strong></p>
-                <p>Once {{ person.display_name }} has participated in enough personal votes, you will be able to see a list of MPs who tend to vote the same way.</p>
+                <p>Once {{ person.display_name }} has participated in enough personal votes, you will be able to see a list of MPs who tend to vote the same way. Personal votes don't happen often in New Zealand, so it may be some time.</p>
+              </Card>
+              <Card :gradient="true" v-else>
+                <p><strong>WhereTheyStand hasn't checked who {{ person.display_name }} votes similarly to.</strong></p>
+                <p>Please check back at a later date.</p>
               </Card>
             </div>
           </div>
@@ -59,6 +66,7 @@ import Card from '../../components/Card.vue'
 import SmallBill from '../../components/SmallBill.vue'
 import PersonPersonalVote from '../../components/PersonPersonalVote.vue'
 import DisplayControlButton from '../../components/DisplayControlButton.vue'
+import VotingSimilarityDisplay from '../../components/VotingSimilarityDisplay.vue'
 
 export default {
   name: 'PersonHome',
@@ -66,7 +74,8 @@ export default {
     Card,
     SmallBill,
     PersonPersonalVote,
-    DisplayControlButton
+    DisplayControlButton,
+    VotingSimilarityDisplay
   },
   data () {
     return {
@@ -77,6 +86,7 @@ export default {
   created () {
     this.$store.dispatch('fetchPersonVotes', { identifier: this.$route.params.id })
     this.$store.dispatch('fetchPersonBills', { identifier: this.$route.params.id })
+    this.$store.dispatch('fetchPersonVotingSimilarity', { identifier: this.$route.params.id })
   },
   computed: {
     votes () {
@@ -87,6 +97,9 @@ export default {
     },
     person () {
       return this.$store.getters.personByIdentifier(this.$route.params.id)
+    },
+    votingSimilarity () {
+      return this.$store.getters.personVotingSimilarityByIdentifier(this.$route.params.id)
     },
     votesByBill () {
       var votes = {}
