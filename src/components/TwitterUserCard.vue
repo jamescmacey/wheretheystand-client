@@ -38,6 +38,7 @@
         </div>
       </div>
       <ScatterChart v-if="user.time_series.length" :chartData="chartData" :options="chartOptions"></ScatterChart>
+      <p class="text-muted" v-if="mode === 'number_change'">Since measurements cannot be taken at exactly the same time each day, you may find that daily changes do not show as whole numbers; this is because they are calculated based on the growth over the actual interval between measurements.</p>
     </Card>
 </template>
 
@@ -85,11 +86,85 @@ export default {
         return null
       }
     },
+    dailyNumberChange () {
+      var data = this.displayedDataset.data
+      var newData = []
+      var lastTimestamp = data[0].x
+      var lastValue = data[0].y
+      data.forEach(datum => {
+        /* Only calculate change if the gap between the last data points is more than 12 hours */
+        if ((datum.x - 43200000) > lastTimestamp) {
+          var change = datum.y - lastValue
+          var timeDelta = datum.x - lastTimestamp
+          var dailyChange = 86400000 * change / timeDelta
+
+          newData.push({
+            x: datum.x,
+            y: dailyChange
+          })
+          lastValue = datum.y
+          lastTimestamp = datum.x
+        }
+      })
+
+      var dataset = {
+        label: this.displayedDataset.label + ' - Numeric daily change',
+        borderColor: '#58787f',
+        fill: false,
+        showLine: true,
+        data: newData
+      }
+      return dataset
+    },
+    dailyPercentChange () {
+      var data = this.displayedDataset.data
+      var newData = []
+      var lastTimestamp = data[0].x
+      var lastValue = data[0].y
+      data.forEach(datum => {
+        /* Only calculate change if the gap between the last data points is more than 12 hours */
+        if ((datum.x - 43200000) > lastTimestamp) {
+          var change = datum.y - lastValue
+          var timeDelta = datum.x - lastTimestamp
+          var dailyChange = 86400000 * change / timeDelta
+
+          newData.push({
+            x: datum.x,
+            y: (dailyChange / lastValue) * 100
+          })
+          lastValue = datum.y
+          lastTimestamp = datum.x
+        }
+      })
+
+      var dataset = {
+        label: this.displayedDataset.label + ' - Percentage daily change',
+        borderColor: '#58787f',
+        fill: false,
+        showLine: true,
+        data: newData
+      }
+      return dataset
+    },
     chartData () {
-      return {
-        datasets: [
-          this.displayedDataset
-        ]
+      if (this.mode === 'percent_change') {
+        return {
+          datasets: [
+            this.dailyPercentChange
+          ]
+        }
+      } else if (this.mode === 'number_change') {
+        return {
+          datasets: [
+            this.dailyNumberChange
+          ]
+        }
+      } else {
+        return {
+          datasets: [
+            this.displayedDataset
+          ]
+        }
       }
     },
     chartOptions () {
@@ -105,12 +180,23 @@ export default {
         },
         elements: {
           point: {
-            radius: 0
+            radius: 2
           }
         },
         plugins: {
           tooltip: {
-            enabled: false
+            callbacks: {
+              label: function (context) {
+                var label = ['', '']
+                if (context.parsed.y !== null) {
+                  label[0] = Intl.NumberFormat('en-NZ').format(context.parsed.y)
+                }
+                if (context.parsed.x !== null) {
+                  label[1] = moment(context.parsed.x).format('D.M.YYYY')
+                }
+                return label
+              }
+            }
           },
           legend: {
             display: false
