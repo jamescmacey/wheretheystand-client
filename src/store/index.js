@@ -112,7 +112,7 @@ export default createStore({
       }
     },
     fetchPersonExecExpenses ({ commit, getters }, payload) {
-      if (!getters.personInterestsByIdentifier(payload.identifier)) {
+      if (!getters.personExecExpensesByIdentifier(payload.identifier)) {
         axios.get(server + '/api/people/' + payload.identifier + '/exec-expenses')
           .then(function (response) {
             commit('SET_PERSON_EXEC_EXPENSES', { identifier: payload.identifier, data: response.data })
@@ -123,7 +123,7 @@ export default createStore({
       }
     },
     fetchPersonMpExpenses ({ commit, getters }, payload) {
-      if (!getters.personInterestsByIdentifier(payload.identifier)) {
+      if (!getters.personMpExpensesByIdentifier(payload.identifier)) {
         axios.get(server + '/api/people/' + payload.identifier + '/mp-expenses')
           .then(function (response) {
             commit('SET_PERSON_MP_EXPENSES', { identifier: payload.identifier, data: response.data })
@@ -134,7 +134,7 @@ export default createStore({
       }
     },
     fetchPersonReturns ({ commit, getters }, payload) {
-      if (!getters.personInterestsByIdentifier(payload.identifier)) {
+      if (!getters.personReturnsByIdentifier(payload.identifier)) {
         axios.get(server + '/api/people/' + payload.identifier + '/returns')
           .then(function (response) {
             commit('SET_PERSON_RETURNS', { identifier: payload.identifier, data: response.data })
@@ -145,7 +145,7 @@ export default createStore({
       }
     },
     fetchPersonDetails ({ commit, getters }, payload) {
-      if (!getters.personInterestsByIdentifier(payload.identifier)) {
+      if (!getters.personDetailsByIdentifier(payload.identifier)) {
         axios.get(server + '/api/people/' + payload.identifier + '/details')
           .then(function (response) {
             commit('SET_PERSON_DETAILS', { identifier: payload.identifier, data: response.data })
@@ -156,7 +156,7 @@ export default createStore({
       }
     },
     fetchPersonVotingSimilarity ({ commit, getters }, payload) {
-      if (!getters.personInterestsByIdentifier(payload.identifier)) {
+      if (!getters.personVotingSimilarityByIdentifier(payload.identifier)) {
         axios.get(server + '/api/people/' + payload.identifier + '/voting-similarity')
           .then(function (response) {
             commit('SET_PERSON_VOTING_SIMILARITY', { identifier: payload.identifier, data: response.data })
