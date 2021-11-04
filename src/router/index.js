@@ -57,6 +57,11 @@ const routes = [
     path: '/bills/:id',
     name: 'Bill',
     component: () => import('../views/Bill.vue')
+  },
+  {
+    path: '/electorates/:id',
+    name: 'Electorate',
+    component: () => import('../views/Electorate.vue')
   }
 ]
 

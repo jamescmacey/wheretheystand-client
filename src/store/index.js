@@ -26,14 +26,14 @@ export default createStore({
     ADD_PERSON (state, obj) {
       state.people.push(obj)
     },
+    ADD_ELECTORATE (state, obj) {
+      state.electorates.push(obj)
+    },
     ADD_BILL (state, obj) {
       state.bills.push(obj)
     },
     ADD_VOTE (state, obj) {
       state.votes.push(obj)
-    },
-    ADD_ELECTORATE (state, obj) {
-      state.electorates.push(obj)
     },
     ADD_PARTY (state, obj) {
       state.parties.push(obj)
@@ -67,6 +67,39 @@ export default createStore({
     }
   },
   actions: {
+    fetchElectorate ({ commit, getters }, payload) {
+      if (!getters.electorateByIdentifier(payload.identifier)) {
+        axios.get(server + '/api/electorates/' + payload.identifier)
+          .then(function (response) {
+            commit('ADD_ELECTORATE', response.data)
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      }
+    },
+    fetchParty ({ commit, getters }, payload) {
+      if (!getters.partyByIdentifier(payload.identifier)) {
+        axios.get(server + '/api/parties/' + payload.identifier)
+          .then(function (response) {
+            commit('ADD_PARTY', response.data)
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      }
+    },
+    fetchParliament ({ commit, getters }, payload) {
+      if (!getters.parliamentByIdentifier(payload.identifier)) {
+        axios.get(server + '/api/parliaments/' + payload.identifier)
+          .then(function (response) {
+            commit('ADD_PARLIAMENT', response.data)
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      }
+    },
     fetchPerson ({ commit, getters }, payload) {
       if (!getters.personByIdentifier(payload.identifier)) {
         axios.get(server + '/api/people/' + payload.identifier)
@@ -182,11 +215,28 @@ export default createStore({
   },
   getters: {
     personByIdentifier: (state) => (id) => {
-      console.log(state.people.find(person => person.slug === id))
       if (state.people.find(person => person.slug === id)) {
         return state.people.find(person => person.slug === id)
       }
       return state.people.find(person => person.id === id)
+    },
+    electorateByIdentifier: (state) => (id) => {
+      if (state.electorates.find(electorate => electorate.slug === id)) {
+        return state.electorates.find(electorate => electorate.slug === id)
+      }
+      return state.electorates.find(electorate => electorate.id === id)
+    },
+    parliamentByIdentifier: (state) => (id) => {
+      if (state.parliaments.find(parliament => parliament.slug === id)) {
+        return state.parliaments.find(parliament => parliament.slug === id)
+      }
+      return state.parliaments.find(parliament => parliament.id === id)
+    },
+    partyByIdentifier: (state) => (id) => {
+      if (state.parties.find(party => party.slug === id)) {
+        return state.parties.find(party => party.slug === id)
+      }
+      return state.parties.find(party => party.id === id)
     },
     personVotesByIdentifier: (state) => (id) => {
       return state.peopleData.votes[id]

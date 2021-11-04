@@ -11,9 +11,7 @@
           <h4>Member<span v-if="bill.people_responsible.length > 1">s</span> responsible</h4>
           <div class="row">
             <div class="col-12 col-lg-6" v-for="person in bill.people_responsible" :key="person.id">
-              <Card>
-                {{ person.display_name }}
-              </Card>
+              <person-card :person="person"></person-card>
             </div>
           </div>
         </div>
@@ -79,12 +77,14 @@
 <script>
 import Card from '../components/Card.vue'
 import PageHeader from '../components/PageHeader.vue'
+import PersonCard from '../components/PersonCard.vue'
 
 export default {
   name: 'Bill',
   components: {
     PageHeader,
-    Card
+    Card,
+    PersonCard
   },
   created () {
     this.$store.dispatch('fetchBill', { id: this.$route.params.id })
