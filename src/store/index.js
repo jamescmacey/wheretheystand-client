@@ -16,6 +16,10 @@ export default createStore({
       votingSimilarity: {},
       details: {}
     },
+    electorateData: {
+      histories: {}
+    },
+    groups: [],
     bills: [],
     votes: [],
     electorates: [],
@@ -31,6 +35,12 @@ export default createStore({
     },
     ADD_BILL (state, obj) {
       state.bills.push(obj)
+    },
+    ADD_GROUP (state, obj) {
+      state.groups.push({
+        items: obj.data,
+        groupName: obj.name
+      })
     },
     ADD_VOTE (state, obj) {
       state.votes.push(obj)
@@ -64,6 +74,9 @@ export default createStore({
     },
     SET_PERSON_DETAILS (state, payload) {
       state.peopleData.details[payload.identifier] = payload.data
+    },
+    SET_ELECTORATE_HISTORY (state, payload) {
+      state.electorateData.histories[payload.identifier] = payload.data
     }
   },
   actions: {
@@ -78,11 +91,33 @@ export default createStore({
           })
       }
     },
+    fetchElectorateHistory ({ commit, getters }, payload) {
+      if (!getters.electorateHistoryByIdentifier(payload.identifier)) {
+        axios.get(server + '/api/electorates/' + payload.identifier + '/history')
+          .then(function (response) {
+            commit('SET_ELECTORATE_HISTORY', { identifier: payload.identifier, data: response.data })
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      }
+    },
     fetchParty ({ commit, getters }, payload) {
       if (!getters.partyByIdentifier(payload.identifier)) {
         axios.get(server + '/api/parties/' + payload.identifier)
           .then(function (response) {
             commit('ADD_PARTY', response.data)
+          })
+          .catch(function (error) {
+            console.log(error)
+          })
+      }
+    },
+    fetchPeopleGroup ({ commit, getters }, payload) {
+      if (!getters.groupByName(payload.groupName)) {
+        axios.get(server + '/api/people/')
+          .then(function (response) {
+            commit('ADD_GROUP', { data: response.data, name: payload.groupName })
           })
           .catch(function (error) {
             console.log(error)
@@ -232,6 +267,11 @@ export default createStore({
       }
       return state.parliaments.find(parliament => parliament.id === id)
     },
+    groupByName: (state) => (name) => {
+      if (state.groups.find(group => group.groupName === name)) {
+        return state.groups.find(group => group.groupName === name).items
+      }
+    },
     partyByIdentifier: (state) => (id) => {
       if (state.parties.find(party => party.slug === id)) {
         return state.parties.find(party => party.slug === id)
@@ -261,6 +301,9 @@ export default createStore({
     },
     personVotingSimilarityByIdentifier: (state) => (id) => {
       return state.peopleData.votingSimilarity[id]
+    },
+    electorateHistoryByIdentifier: (state) => (id) => {
+      return state.electorateData.histories[id]
     },
     billByID: (state) => (id) => {
       return state.bills.find(bill => bill.id === id)

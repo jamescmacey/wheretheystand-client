@@ -1,7 +1,7 @@
 <template>
     <span class="inline-entity">
-      <span v-if="entity.colour" class="party-dot" :style="{ backgroundColor: '#' + entity.colour }"></span>
-      {{ entity.name }}
+      <span v-if="entity.colour" class="party-dot" :style="{ backgroundColor: entity.colour }"></span>
+      {{ entity.display_name }}
     </span>
 </template>
 
