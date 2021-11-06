@@ -117,11 +117,10 @@
                 >Twitter</a
               >
             </li>
-            <li>
-              <p>
-                Buy me a hot chocolate - this button temporarily removed.
-              </p>
-            </li>
+            <card :gradient='true'>
+              <h5>Like WhereTheyStand?</h5>
+              <p>You can shout me a hot chocolate (or two).</p>
+            </card>
           </ul>
         </div>
       </div>
@@ -149,6 +148,17 @@
   </footer>
   </div>
 </template>
+
+<script>
+import Card from './components/Card.vue'
+
+export default {
+  name: 'App',
+  components: {
+    Card
+  }
+}
+</script>
 
 <style>
 :root {

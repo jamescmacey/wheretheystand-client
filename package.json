@@ -21,6 +21,7 @@
     "chart.js": "^3.6.0",
     "color-harmony": "^0.3.0",
     "core-js": "^3.6.5",
+    "gridjs-vue": "^5.0.4",
     "moment": "^2.29.1",
     "vue": "^3.0.0",
     "vue-chart-3": "^0.5.11",

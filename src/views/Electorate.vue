@@ -29,13 +29,12 @@
           <div class="col-12">
             <h4>History</h4>
             <Card>
-              <h5>This electorate replaced the {{ electorate.replaced_electorate.name }} electorate on {{ formatDate(electorate.valid_from )}}.</h5>
-              <p>To see the former Members of Parliament</p>
+              <h5>This electorate replaced the <router-link :to="'/electorates/' + electorate.replaced_electorate.slug">{{ electorate.replaced_electorate.name }}</router-link> electorate on {{ formatDate(electorate.valid_from )}}.</h5>
+              <p>See <router-link :to="'/electorates/' + electorate.replaced_electorate.slug">{{ electorate.replaced_electorate.name }}</router-link> for more former MPs.</p>
             </Card>
           </div>
         </div>
       </div>
-      <div id="electorate-map"></div>
     </div>
   </div>
 </template>
@@ -44,7 +43,6 @@
 import Card from '../components/Card.vue'
 import PageHeader from '../components/PageHeader.vue'
 import PersonCard from '../components/PersonCard.vue'
-import mapkit from 'apple-mapkit-js'
 var moment = require('moment')
 
 export default {
@@ -56,10 +54,14 @@ export default {
   },
   created () {
     this.$store.dispatch('fetchElectorate', { identifier: this.$route.params.id })
+    this.$store.dispatch('fetchElectorateHistory', { identifier: this.$route.params.id })
   },
   computed: {
     electorate () {
       return this.$store.getters.electorateByIdentifier(this.$route.params.id)
+    },
+    affiliations () {
+      return this.$store.getters.electorateHistoryByIdentifer(this.$route.params.id)
     }
   },
   methods: {
@@ -70,45 +72,10 @@ export default {
   watch: {
     $route (to, from) {
       this.$store.dispatch('fetchElectorate', { identifier: to.params.id })
+      this.$store.dispatch('fetchElectorateHistory', { identifier: this.$route.params.id })
     }
   },
   mounted () {
-    mapkit.init({
-      authorizationCallback: function (done) {
-        fetch('https://wheretheystand.nz/services/mapkit-jwt/')
-          .then(response => done(response))
-      }
-    })
-
-    var map = new mapkit.Map('electorate-map', {
-      isRotationEnabled: false,
-      isZoomEnabled: true,
-      showsZoomControl: true
-    })
-
-    mapkit.importGeoJSON('https://storage.googleapis.com/wheretheystand-nz/electorates/general-electorates.json', {
-      itemForMultiPolygon: function (collection, geoJSON) {
-        var overlays = collection.getFlattenedItemList()
-        var points = overlays.reduce(function (points, overlay) {
-          return points.concat(overlay.points)
-        }, [])
-        return new mapkit.PolygonOverlay(points)
-      },
-      itemForFeature: function (overlay, geoJSON) {
-        overlay.data = {
-          name: geoJSON.properties.name,
-          link: geoJSON.properties.wts_path
-        }
-        overlay.style = new mapkit.Style({
-          fillOpacity: 0.7,
-          lineWidth: 0.5
-        })
-        return overlay
-      },
-      geoJSONDidComplete: function (overlays) {
-        map.addOverlays(overlays)
-      }
-    })
   }
 }
 </script>
