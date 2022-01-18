@@ -1,5 +1,6 @@
 <template>
   <Card>
+      <router-link class="router-link" :to="'/bills/' + record.bill.id">
       <h5>{{ record.bill.name }}</h5>
       <div class="row">
           <div class="col-4 text-center" v-for="(vote, reading) in record.votes" :key="reading">
@@ -15,6 +16,7 @@
             </div>
           </div>
       </div>
+      </router-link>
   </Card>
 </template>
 
@@ -68,5 +70,10 @@ export default {
 
 .vote-info {
   font-size: 0.8em
+}
+
+.router-link, .router-link:hover {
+  color: black;
+  text-decoration: none;
 }
 </style>

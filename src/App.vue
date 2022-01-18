@@ -33,7 +33,7 @@
         <li class="nav-item">
           <a class="nav-link" href="/docs/about/">About</a>
         </li>
-
+        <!--
         <li class="nav-item">
           <form
             id="site-search-box"
@@ -51,6 +51,7 @@
             />
           </form>
         </li>
+        -->
       </ul>
     </div>
   </nav>
