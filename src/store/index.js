@@ -115,7 +115,11 @@ export default createStore({
     },
     fetchPeopleGroup ({ commit, getters }, payload) {
       if (!getters.groupByName(payload.groupName)) {
-        axios.get(server + '/api/people/')
+        axios.get(server + '/api/people/', {
+          params: {
+            group: payload.groupName
+          }
+        })
           .then(function (response) {
             commit('ADD_GROUP', { data: response.data, name: payload.groupName })
           })

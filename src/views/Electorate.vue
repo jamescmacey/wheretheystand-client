@@ -24,6 +24,62 @@
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="col-12">
+          <h4>Previous MPs</h4>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" v-model="showReasons" id="showReasons">
+            <label class="form-check-label" for="showReasons">
+              Show reasons for commencement and conclusion of terms
+            </label>
+          </div>
+        </div>
+        <div class="col-12">
+          <Card>
+            <div v-for="(affiliation, i) in affiliations" :key="affiliation.id">
+              <router-link class="router-link" :to="'/people/' + affiliation.person.slug">
+                <div v-if="(i == 0) || (affiliations[i].person.id != affiliations[i-1].person.id)">
+                  <div v-if="affiliation.person.image" class="media m-2">
+                    <img v-if="affiliation.person.image" :src="affiliation.person.image" class="mr-3 person-image" :alt="affiliation.person.display_name">
+                    <div class="media-body">
+                        <h6><strong>{{ affiliation.person.display_name }}</strong></h6>
+                        <p class="text-muted person-description"><colour-dot v-if="affiliation.person.colour" :colour="affiliation.person.colour"></colour-dot>Currently: {{ affiliation.person.description }}</p>
+                    </div>
+                  </div>
+                  <div v-else>
+                    <h6><strong>{{ affiliation.person.display_name }}</strong></h6>
+                    <p class="text-muted person-description"><colour-dot v-if="affiliation.person.colour" :colour="affiliation.person.colour"></colour-dot>Currently: {{ affiliation.person.description }}</p>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-1"></div>
+                  <div class="col-11">
+                    <div class="row">
+                      <div class="col-12 col-md-6">
+                        <h6 class="affiliation-date-heading">Started:</h6>
+                        {{ formatDate(affiliation.start_date) }}
+                        <h6 v-if="showReasons && affiliation.start_reason_desc" class="affiliation-date-heading">Reason:</h6>
+                        <span v-if="showReasons && affiliation.start_reason_desc">{{ affiliation.start_reason_desc }}</span>
+                      </div>
+                      <div class="col-12 col-md-6" v-if="affiliation.end_date">
+                        <h6 class="affiliation-date-heading">Ended:</h6>
+                        {{ formatDate(affiliation.end_date) }}
+                        <h6 v-if="showReasons && affiliation.end_reason_desc" class="affiliation-date-heading">Reason:</h6>
+                        <span v-if="showReasons && affiliation.end_reason_desc">{{ affiliation.end_reason_desc }}</span>
+                      </div>
+                    </div>
+                    <hr v-if="(i < (affiliations.length - 1)) && (affiliations[i].person.id == affiliations[i+1].person.id)">
+                  </div>
+                </div>
+
+                <hr v-if="(i < (affiliations.length - 1)) && (affiliations[i].person.id != affiliations[i+1].person.id)">
+              </router-link>
+            </div>
+            <hr>
+            <p class="text-muted">These dates correspond to when an MP was eligible to sit and vote in the House of Representatives, not when they were declared elected. This list only includes MPs with profiles on WhereTheyStand, so it may contain some gaps.</p>
+          </Card>
+        </div>
+      </div>
       <div v-if="electorate.replaced_electorate">
         <div class="row">
           <div class="col-12">
@@ -43,6 +99,7 @@
 import Card from '../components/Card.vue'
 import PageHeader from '../components/PageHeader.vue'
 import PersonCard from '../components/PersonCard.vue'
+import ColourDot from '../components/ColourDot.vue'
 var moment = require('moment')
 
 export default {
@@ -50,7 +107,13 @@ export default {
   components: {
     PageHeader,
     Card,
-    PersonCard
+    PersonCard,
+    ColourDot
+  },
+  data () {
+    return {
+      showReasons: false
+    }
   },
   created () {
     this.$store.dispatch('fetchElectorate', { identifier: this.$route.params.id })
@@ -61,7 +124,7 @@ export default {
       return this.$store.getters.electorateByIdentifier(this.$route.params.id)
     },
     affiliations () {
-      return this.$store.getters.electorateHistoryByIdentifer(this.$route.params.id)
+      return this.$store.getters.electorateHistoryByIdentifier(this.$route.params.id)
     }
   },
   methods: {
@@ -81,5 +144,17 @@ export default {
 </script>
 
 <style scoped>
+.affiliation-date-heading {
+  margin-bottom: 0px
+}
 
+p.person-description {
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+}
+
+.router-link, .router-link:hover {
+  color: black;
+  text-decoration: none;
+}
 </style>

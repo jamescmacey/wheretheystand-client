@@ -3,10 +3,18 @@
     <page-header pageTitle="People" class="mb-3" pageSubtitle="Current and Former Members of Parliament"></page-header>
     <div class="container">
       <div class="row">
+        <select class="form-select col-12 mb-3" aria-label="Filter list of people" v-model="filterName">
+            <option selected value="incumbent">Current MPs</option>
+            <option value="all">All people</option>
+            <option value="former">Former MPs</option>
+          </select>
+      </div>
+      <div class="row">
         <h4 class="col-12">All MPs</h4>
         <div class="col-12">
           <Card>
             <div v-for="(person, i) in people" :key="person.id">
+              <router-link class="router-link" :to="'/people/' + person.slug">
               <div v-if="person.image" class="media m-2">
                 <img v-if="person.image" :src="person.image" class="mr-3 person-image" :alt="person.display_name">
                 <div class="media-body">
@@ -18,6 +26,7 @@
                 <h6><strong>{{ person.display_name }}</strong></h6>
                 <p v-if="person.description" class="text-muted person-description"><colour-dot v-if="person.colour" :colour="person.colour"></colour-dot>{{ person.description }}</p>
               </div>
+              </router-link>
               <hr v-if="i < (people.length - 1)">
             </div>
           </Card>
@@ -32,7 +41,7 @@
         </div>
         <div class="col-12 col-md-4">
           <card>
-            <h5>54%</h5> of MPs are men.
+            <h5>xx%</h5> of MPs are men.
           </card>
         </div>
         <div class="col-12 col-md-4">
@@ -52,16 +61,37 @@ import InlinePersonText from '../components/InlinePersonText.vue'
 export default {
   name: 'People',
   components: { PageHeader, Card, ColourDot, InlinePersonText },
+  data () {
+    return {
+      filterName: 'incumbent'
+    }
+  },
   created () {
-    this.$store.dispatch('fetchPeopleGroup', { groupName: 'allIncumbent' })
+    this.$store.dispatch('fetchPeopleGroup', { groupName: 'allLive' })
   },
   computed: {
+    filter () {
+      switch (this.filterName) {
+        case 'all':
+          return ['current', 'provisional', 'former', 'generic']
+        case 'incumbent':
+          return ['current', 'provisional']
+        case 'former':
+          return ['former']
+        default:
+          return []
+      }
+    },
     people () {
-      return (this.$store.getters.groupByName('allIncumbent') || []).sort((a, b) => {
+      return (this.$store.getters.groupByName('allLive') || []).sort((a, b) => {
         if (a.last_name.toLowerCase() < b.last_name.toLowerCase()) {
           return -1
         }
         return 1
+      }).filter(person => {
+        if (this.filter.indexOf(person.membership_status) >= 0) {
+          return true
+        }
       })
     },
     mostCommonNamed () {
@@ -106,4 +136,8 @@ p.person-description {
   margin-bottom: 0px;
 }
 
+.router-link, .router-link:hover {
+  color: black;
+  text-decoration: none;
+}
 </style>
