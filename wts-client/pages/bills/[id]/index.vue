@@ -25,54 +25,53 @@
       </div>
       <h3>Votes</h3>
       <div class="row">
-          <div class="col-12 col-lg-4">
-              <Card>
-                <h6 class="text-uppercase"><strong>1st reading</strong></h6>
-                <h5 class="text-uppercase"><span class="dot-yes"></span> <strong>Passed</strong></h5>
-                <h6 class="text-muted">19 January 2021</h6>
-                <hr />
-                <div class="row">
-                  <div class="col-3 text-center">
-                    <h3>63</h3>
-                    <h6 class="text-muted text-uppercase"><span class="dot-yes"></span> Ayes</h6>
-                  </div>
-                  <div class="col-3 text-center">
-                    <h3>56</h3>
-                    <h6 class="text-muted text-uppercase"><span class="dot-no"></span> Noes</h6>
-                  </div>
-                  <div class="col-3 text-center">
-                    <h3>0</h3>
-                    <h6 class="text-muted text-uppercase"><span class="dot-abstain"></span> Abst.</h6>
-                  </div>
-                  <div class="col-3 text-center">
-                    <h3>1</h3>
-                    <h6 class="text-muted text-uppercase"><span class="dot-absent"></span> Abs</h6>
-                  </div>
-                </div>
-              </Card>
-          </div>
-          <div class="col-12 col-lg-4">
-            <Card>
-              <h6 class="text-uppercase"><strong>2nd reading</strong></h6>
-              <h5 class="text-uppercase"><span class="dot-yes"></span> <strong>Passed</strong></h5>
-              <h6 class="text-muted">9 March 2021</h6>
-              <hr />
-              <h6 class="text-muted text-center">
-                WhereTheyStand has no totals for this vote. <a href="#">Learn more.</a>
-              </h6>
-            </Card>
+        <div class="col-12 col-lg-4">
+          <NuxtLink class='vote-link' v-if="firstReading" :to="'/votes/' + firstReading.id">
+            <VoteSummary :vote="firstReading"></VoteSummary>
+          </NuxtLink>
+          <VoteSummaryBare v-else-if="bill.dates.first_reading_date" :reading="1" :passed="true" :date="bill.dates.first_reading_date"></VoteSummaryBare>
+          <VoteSummaryBare v-else-if="bill.dates.defeated_date && (bill.defeated_at_reading === 1)" :passed="false" :reading="1" :date="bill.dates.defeated_date"></VoteSummaryBare>
+          <Card v-else-if="!bill.defeated_at_reading || bill.defeated_at_reading >= 1" :missing='true'>
+            <h6 class="text-uppercase text-muted"><strong>1st reading</strong></h6>
+            <h6 class="text-muted">This vote has not yet occurred, or is not yet recorded on WhereTheyStand.</h6>
+          </Card>
         </div>
         <div class="col-12 col-lg-4">
-          <Card :missing='true'>
+          <NuxtLink class='vote-link' v-if="secondReading" :to="'/votes/' + secondReading.id">
+            <VoteSummary :vote="secondReading"></VoteSummary>
+          </NuxtLink>
+          <VoteSummaryBare v-else-if="bill.dates.second_reading_date" :reading="2" :passed="true" :date="bill.dates.second_reading_date"></VoteSummaryBare>
+          <VoteSummaryBare v-else-if="bill.dates.defeated_date && (bill.defeated_at_reading === 2)" :passed="false" :reading="2" :date="bill.dates.defeated_date"></VoteSummaryBare>
+          <Card v-else-if="!bill.defeated_at_reading || bill.defeated_at_reading >= 2" :missing='true'>
+            <h6 class="text-uppercase text-muted"><strong>2nd reading</strong></h6>
+            <h6 class="text-muted">This vote has not yet occurred, or is not yet recorded on WhereTheyStand.</h6>
+          </Card>
+        </div>
+        <div class="col-12 col-lg-4">
+          <NuxtLink class='vote-link' v-if="thirdReading" :to="'/votes/' + thirdReading.id">
+            <VoteSummary :vote="thirdReading"></VoteSummary>
+          </NuxtLink>
+          <VoteSummaryBare v-else-if="bill.dates.third_reading_date" :reading="3" :passed="true" :date="bill.dates.third_reading_date"></VoteSummaryBare>
+          <VoteSummaryBare v-else-if="bill.dates.defeated_date && (bill.defeated_at_reading === 3)" :passed="false" :reading="3" :date="bill.dates.defeated_date"></VoteSummaryBare>
+          <Card v-else-if="!bill.defeated_at_reading || bill.defeated_at_reading >= 3" :missing='true'>
             <h6 class="text-uppercase text-muted"><strong>3rd reading</strong></h6>
             <h6 class="text-muted">This vote has not yet occurred, or is not yet recorded on WhereTheyStand.</h6>
           </Card>
         </div>
       </div>
-      <p class="text-muted">Only reading votes are shown here; these votes determine whether the Bill progresses through Parliament. Other votes, such as votes on whether to amend parts of the Bill, can be seen in Hansard</p>
+      <p class="text-muted">Only reading votes are shown here; these votes determine whether the Bill progresses through
+        Parliament. Other votes, such as votes on whether to amend parts of the Bill, can be seen in Hansard</p>
     </div>
   </div>
 </template>
+
+<style scoped>
+.vote-link, .vote-link:hover {
+  color: black;
+  text-decoration: none;
+}
+
+</style>
 
 <script>
 import { format, parse } from 'date-fns'
@@ -84,19 +83,19 @@ export default {
     const billsStore = useBillsStore()
     return { billsStore }
   },
-  created () {
+  created() {
     this.billsStore.fetch(this.$route.params.id)
   },
   methods: {
-    formatDate (date) {
+    formatDate(date) {
       return format(parse(date, 'yyyy-MM-dd', new Date()), 'd MMMM yyyy')
     }
   },
   computed: {
-    bill () {
+    bill() {
       return this.billsStore.byID(this.$route.params.id)
     },
-    progressExplanation () {
+    progressExplanation() {
       if (!this.bill) {
         return ''
       } else if (this.bill.progress === 'inp') {
@@ -128,11 +127,19 @@ export default {
       }
 
       return EXPLANATIONS[this.bill.progress]
-    }
+    },
+    firstReading() {
+      return this.bill.votes.find(vote => vote.reading === 1)
+    },
+    secondReading() {
+      return this.bill.votes.find(vote => vote.reading === 2)
+    },
+    thirdReading() {
+      return this.bill.votes.find(vote => vote.reading === 3)
+    },
   }
 }
 </script>
 
 <style scoped>
-
 </style>

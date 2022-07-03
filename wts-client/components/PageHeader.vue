@@ -4,6 +4,7 @@
     <div v-if="!image">
       <h1 class="hero">{{ pageTitle }}</h1>
       <h3 class="hero" v-if="pageSubtitle">{{ pageSubtitle }}</h3>
+      <h5 class="hero text-uppercase" v-if="pageDate">{{ formatDate(pageDate) }}</h5>
     </div>
     <div v-else>
       <div class="d-flex align-items-center">
@@ -13,6 +14,7 @@
         <div class="flex-grow-1 ms-3">
           <h1 class="hero">{{ pageTitle }}</h1>
           <h3 class="hero" v-if="pageSubtitle">{{ pageSubtitle }}</h3>
+          <h5 class="hero text-uppercase" v-if="pageDate">{{ formatDate(pageDate) }}</h5>
         </div>
       </div>
     </div>
@@ -29,12 +31,14 @@
 
 <script>
 import { Harmonizer } from 'color-harmony'
+import { format, parse } from 'date-fns'
 
 export default {
   name: 'PageHeader',
   props: {
     pageTitle: String,
     pageSubtitle: String,
+    pageDate: String,
     image: String,
     colour: String,
     secondaryColour: String,
@@ -59,6 +63,11 @@ export default {
     },
     gradient: function () {
       return `linear-gradient(230deg, ${this.harmony[1]} 0%, ${this.harmony[0]} 50%)`
+    },
+  },
+  methods: {
+    formatDate(date) {
+      return format(parse(date, 'yyyy-MM-dd', new Date()), 'd MMMM yyyy')
     }
   }
 }

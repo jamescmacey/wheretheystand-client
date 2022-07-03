@@ -1,1 +1,1 @@
-export const API_BASE = 'https://wheretheystand.nz/api/'
+export const API_BASE = 'https://dev.wheretheystand.nz/api/'
