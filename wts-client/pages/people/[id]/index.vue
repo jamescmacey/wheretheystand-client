@@ -102,7 +102,7 @@ export default {
     votesByBill () {
       var votes = {}
 
-      if (!votes.length) { return [] }
+      if (!this.votes || this.votes.length === 0) { return [] }
 
       this.votes.forEach((vote) => {
         if (!(vote.vote.bill.id in votes)) {
