@@ -7,8 +7,11 @@ export default defineNuxtConfig({
     ],
     plugins: [
         '~/plugins/vue-gtag.client.js',
-        '~/plugins/fontawesome.js'
+        '~/plugins/fontawesome.js',
+        '~/plugins/vue-mapbox.js',
+        '~/plugins/instantsearch.js'
     ],
+    //build: { transpile: ['vue-mapbox-ts'] },
     buildModules: [
         '@pinia/nuxt',
       ],

@@ -24,6 +24,26 @@ export const useGroupsStore = defineStore('groups', {
                     type: 'people'
                 })
             }
+        },
+        async fetchElectorates(id) {
+            if (!this.byName(id, 'electorates')) {
+                const group = await $fetch(API_BASE + 'electorates/', { params: { group: id }})
+                this.items.push({
+                    items: group,
+                    name: id,
+                    type: 'electorates'
+                })
+            }
+        },
+        async fetchParties(id) {
+            if (!this.byName(id, 'parties')) {
+                const group = await $fetch(API_BASE + 'parties/', { params: { group: id }})
+                this.items.push({
+                    items: group,
+                    name: id,
+                    type: 'parties'
+                })
+            }
         }
     }
 })

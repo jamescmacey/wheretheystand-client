@@ -9,7 +9,7 @@ export const useBillsStore = defineStore('bills', {
     },
     getters: {
         byID: (state) => (id) => {
-            return state.items.find(bill => bill.id === id)
+            return state.items.find(bill => bill.id == id)
         }
     },
     actions: {

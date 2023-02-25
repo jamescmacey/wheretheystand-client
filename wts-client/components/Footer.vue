@@ -6,17 +6,19 @@
             <h5>Pages</h5>
             <hr />
             <ul style="list-style: none; padding-left: 0">
-              <li><a class="a-no-format text-light" href="/people">People</a></li>
+              <li><RouterLink class="text-light footer-link" to="/people">People</RouterLink></li>
               <li>
-                <a class="a-no-format text-light" href="/parties">Parties</a>
+                <RouterLink class="text-light footer-link" to="/parties">Parties</RouterLink>
               </li>
               <li>
-                <a class="a-no-format text-light" href="/bills">Bills and Votes</a>
+                <RouterLink class="text-light footer-link" to="/electorates">Electorates</RouterLink>
               </li>
               <li>
-                <a class="a-no-format text-light" href="/electorates">Electorates</a>
+                <RouterLink class="text-light footer-link" to="/bills">Bills</RouterLink>
               </li>
-              <li><a class="a-no-format text-light" href="/data/">Data</a></li>
+              <li>
+                <RouterLink class="text-light footer-link" to="/votes">Votes</RouterLink>
+              </li>
             </ul>
           </div>
           <div class="col-12 col-lg-4">
@@ -24,16 +26,16 @@
             <hr />
             <ul style="list-style: none; padding-left: 0">
               <li>
-                <a class="a-no-format text-light" href="/docs/about">About WhereTheyStand</a>
+                <RouterLink class="text-light footer-link" to="/about">About WhereTheyStand</RouterLink>
               </li>
               <li>
-                <a class="a-no-format text-light" href="/feedback">Submit feedback</a>
+                <RouterLink class="text-light footer-link" to="/feedback">Feedback</RouterLink>
               </li>
               <li>
-                <a class="a-no-format text-light" href="/corrections">Submit corrections</a>
+                <RouterLink class="text-light footer-link" to="/corrections">Corrections</RouterLink>
               </li>
               <li>
-                <a class="a-no-format text-light" href="/docs/copyright">Copyright</a>
+                <RouterLink class="text-light footer-link" to="/terms">Copyright and Privacy</RouterLink>
               </li>
             </ul>
           </div>
@@ -42,7 +44,7 @@
             <hr />
             <ul style="list-style: none; padding-left: 0">
               <li>
-                <a class="a-no-format text-light" href="https://twitter.com/wherestandnz">Twitter</a>
+                <ExternalLinkInline class="text-light footer-link" link="https://twitter.com/wherestandnz">Twitter</ExternalLinkInline>
               </li>
               <Card :gradient='true'>
                 <h5>Like WhereTheyStand?</h5>
@@ -52,16 +54,15 @@
           </div>
         </div>
 
-        <p>
-          <i><a class="a-no-format text-light"
-              href="https://commons.wikimedia.org/wiki/File:Beehive_and_Parliament_House_in_New_Zealand.jpg">Header
-              image by Wikimedia user "Melonblob", used under CC BY-SA
-              4.0. Cropped and resized.</a></i>
-        </p>
+        <small v-if="$route.fullPath.length <= 1">
+          <ExternalLinkInline class="text-light footer-link" link="https://commons.wikimedia.org/wiki/File:Beehive_and_Parliament_House_in_New_Zealand.jpg">
+            Header image by Wikimedia user "Melonblob", used under CC BY-SA 4.0. Cropped and resized.
+          </ExternalLinkInline>
+        </small>
 
         <hr />
         <h4>
-          <a class="a-no-format text-light special-font" href="https://wheretheystand.nz">wheretheystand.nz</a>
+          <a class="footer-link text-light special-font" href="https://wheretheystand.nz">wheretheystand.nz</a>
         </h4>
       </div>
     </footer>
@@ -74,6 +75,14 @@
   padding-bottom: 10px;
   background-color: var(--wts-solid);
   flex-shrink: none;
+}
+
+.footer-link {
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
 }
 </style>
 

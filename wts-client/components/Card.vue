@@ -1,6 +1,11 @@
 <template>
-  <div class="wts-card" :class="{'wts-card-missing': missing, 'wts-card-gradient': gradient}">
-    <slot></slot>
+  <div class="wts-card" :class="{'wts-card-missing': missing, 'wts-card-gradient': gradient, 'wts-card-frosted': frosted}">
+    <div class="padding-div">
+      <slot></slot>
+    </div>
+    <ColourStripe v-if="stripeColour" :colour="stripeColour">
+    
+    </ColourStripe>
   </div>
 </template>
 
@@ -15,7 +20,12 @@ export default {
     gradient: {
       type: Boolean,
       default: false
-    }
+    },
+    frosted: {
+      type: Boolean,
+      default: false
+    },
+    stripeColour: String
   }
 }
 </script>
@@ -23,10 +33,13 @@ export default {
 <style scoped>
 .wts-card {
   margin: 10px 0px;
-  padding: 15px 15px;
   background-color: var(--wts-card-bg);
   border-radius: var(--wts-card-border-radius);
   box-shadow: var(--wts-card-box-shadow);
+}
+
+.padding-div {
+  padding: 15px 15px;
 }
 
 .wts-card.wts-card-missing {
@@ -42,6 +55,12 @@ export default {
   background-color: transparent;
   background-image: linear-gradient(90deg, #ffffff36, #ffffff36), linear-gradient(145deg, rgb(52, 148, 148), rgb(88, 120, 127) 100%);
   color: white;
+}
+
+.wts-card.wts-card-frosted {
+  /*background-color: rgba(171, 171, 171, 0.15);  */
+  background-image: linear-gradient(145deg, rgba(52, 148, 148, 0.35), rgba(88, 120, 127, 0.35) 100%);
+  backdrop-filter: blur(5px);
 }
 
 .wts-card a.no-format {
