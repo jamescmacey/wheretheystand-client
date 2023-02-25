@@ -1,10 +1,18 @@
 <template>
   <div id="electorate-view" v-if="electorate">
-    <PageHeader class="mb-3" :pageTitle="electorate.name" :pageSubtitle="electorate.description"></PageHeader>
-    <div class="container">
+    <PageHeader :pageTitle="electorate.name" :pageSubtitle="electorate.description"></PageHeader>
+    <div class="container-fluid hero pt-0">
+      <mapbox-map v-if="shape && shape['wts-comment'] != 'noshape'"
+        accessToken="pk.eyJ1IjoiamFtZXNjbWFjZXkiLCJhIjoiY2xiN2VhYzVqMGE5YTN2bnhuM3l6d3pxbyJ9.CN_c4Tf7wXMtxyLKWrtvJg"
+        height="500px" mapStyle="mapbox://styles/jamescmacey/clef24lj5000b01mlaqsjy2dl"
+        :customAttribution="['Representation Commission', 'Stats NZ', 'Electoral Commission']" :center="center" :zoom="9"
+        :autoResize="true">
+        <mapbox-geogeometry-polygon v-for="(path, i) in paths" :key="i" :path="path" :opacity="0.2" /></mapbox-map>
+    </div>
+    <div class="mt-3 container">
       <div v-if="(electorate.status === 'current' || electorate.status === 'retiring') && electorate.incumbent">
         <div class="row">
-          <div class="col-12 col-md-4">
+          <div class="col-12 col-xl-4">
             <h4>Incumbent Member of Parliament</h4>
             <PersonCard :person="electorate.incumbent"></PersonCard>
           </div>
@@ -106,12 +114,12 @@
             <h4>History</h4>
             <Card>
               <h5>This electorate replaced the <NuxtLink :to="'/electorates/' + electorate.replaced_electorate.slug">{{
-                  electorate.replaced_electorate.name
+                electorate.replaced_electorate.name
               }}</NuxtLink> electorate on {{ formatDate(electorate.valid_from
-  )
+)
 }}.</h5>
               <p>See <NuxtLink :to="'/electorates/' + electorate.replaced_electorate.slug">{{
-                  electorate.replaced_electorate.name
+                electorate.replaced_electorate.name
               }}</NuxtLink> for more former MPs.</p>
             </Card>
           </div>
@@ -140,6 +148,7 @@ export default {
   created() {
     this.electoratesStore.fetch(this.$route.params.id)
     this.electoratesStore.fetchHistory(this.$route.params.id)
+    this.electoratesStore.fetchShape(this.$route.params.id)
   },
   computed: {
     electorate() {
@@ -147,6 +156,89 @@ export default {
     },
     affiliations() {
       return this.electoratesStore.historyByIdentifier(this.$route.params.id)
+    },
+    shape() {
+      return this.electoratesStore.shapeByIdentifier(this.$route.params.id)
+    },
+    paths() {
+      if (!this.shape || this.shape['wts-comment'] == 'noshape') {
+        return []
+      }
+      var feature = this.shape.features[0]
+      if (feature.geometry.type == 'Polygon') {
+        return this.shape.features[0].geometry.coordinates
+      } else if (feature.geometry.type == 'MultiPolygon') {
+        var paths = []
+        this.shape.features[0].geometry.coordinates.forEach(polygon => {
+          paths.push(polygon[0])
+        })
+        return paths
+      }
+    },
+    limits() {
+      if (!this.shape || this.shape['wts-comment'] == 'noshape') {
+        return undefined
+      }
+      var north = -180
+      var south = 0
+      var east = 0
+      var west = 360
+
+      this.paths.forEach(polygon => {
+        polygon.forEach(coordinate => {
+          var ewc = coordinate[0]
+          var nsc = coordinate[1]
+
+          // Chathams making my life harder xoxo
+          if (ewc < 0) {
+            ewc = ewc + 360
+          }
+
+          if (ewc > east) {
+            east = ewc
+          }
+          if (ewc < west) {
+            west = ewc
+          }
+          if (nsc > north) {
+            north = nsc
+          }
+          if (nsc < south) {
+            south = nsc
+          }
+        })
+      })
+
+      if (east > 180) {
+        east = east - 360
+      }
+
+      return {
+        north: north,
+        south: south,
+        east: east,
+        west: west
+      }
+    },
+    center() {
+      if (this.limits) {
+        // Do the east-west calc separately... 
+        // Chathams are on the wrong side of the antimeridian :(
+        var east = this.limits.east
+        if (east < 0) {
+          east = east + 360
+        }
+
+        var ewCentre = ((east + this.limits.west) / 2)
+
+        if (ewCentre > 180) {
+          ewCentre = ewCentre - 360
+        }
+
+        return [ewCentre, ((this.limits.north + this.limits.south) / 2)]
+      } else {
+        return [0, 0]
+      }
     }
   },
   methods: {
@@ -156,8 +248,11 @@ export default {
   },
   watch: {
     $route(to, from) {
-      this.electoratesStore.fetch(to.params.id)
-      this.electoratesStore.fetchHistory(to.params.id)
+      if (to.fullPath.startsWith("/electorates/")) {
+        this.electoratesStore.fetch(to.params.id)
+        this.electoratesStore.fetchHistory(to.params.id)
+        this.electoratesStore.fetchShape(to.params.id)
+      }
     }
   },
   mounted() {

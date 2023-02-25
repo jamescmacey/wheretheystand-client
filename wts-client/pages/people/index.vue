@@ -13,29 +13,8 @@
         <h4 class="col-12">All MPs</h4>
         <div class="col-12">
           <Card>
-            <div v-for="(person, i) in people" :key="person.id">
-              <NuxtLink class="router-link" :to="'/people/' + person.slug">
-                <div v-if="person.image" class="d-flex align-items-center">
-                  <div class="flex-shrink-0">
-                    <img v-if="person.image" :src="person.image" class="me-3 person-image" :alt="person.display_name">
-                  </div>
-                  <div class="flex-grow-1 ms-3">
-                    <h6><strong>{{ person.display_name }}</strong></h6>
-                    <p class="text-muted person-description">
-                      <ColourDot v-if="person.colour" :colour="person.colour"></ColourDot>{{ person.description }}
-                    </p>
-                  </div>
-                </div>
-
-                <div v-else>
-                  <h6><strong>{{ person.display_name }}</strong></h6>
-                  <p v-if="person.description" class="text-muted person-description">
-                    <ColourDot v-if="person.colour" :colour="person.colour"></ColourDot>{{ person.description }}
-                  </p>
-                </div>
-              </NuxtLink>
-              <hr v-if="i < (people.length - 1)">
-            </div>
+            <PersonList :people="people">
+            </PersonList>
           </Card>
         </div>
       </div>

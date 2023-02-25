@@ -31,7 +31,7 @@
             <NuxtLink :class="[$route.fullPath.startsWith('/hansard/') ? 'active nav-link' : 'nav-link']" to="/hansard/" active-class="active">Hansard</NuxtLink>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/docs/about/">About</a>
+            <NuxtLink :class="[$route.fullPath.startsWith('/about/') ? 'active nav-link' : 'nav-link']" to="/about/" active-class="active">About</NuxtLink>
           </li>
         </ul>
       </div>

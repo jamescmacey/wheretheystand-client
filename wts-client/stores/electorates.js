@@ -6,7 +6,8 @@ export const useElectoratesStore = defineStore('electorates', {
         return {
             items: [],
             data: {
-                histories: {}
+                histories: {},
+                shapes: {}
             }
         }
     },
@@ -17,7 +18,8 @@ export const useElectoratesStore = defineStore('electorates', {
             }
             return state.items.find(item => item.id === id)
         },
-        historyByIdentifier: (state) => (id) => { return state.data.histories[id] }
+        historyByIdentifier: (state) => (id) => { return state.data.histories[id] },
+        shapeByIdentifier: (state) => (id) => { return state.data.shapes[id] }
     },
     actions: {
         async fetch(id) {
@@ -30,6 +32,12 @@ export const useElectoratesStore = defineStore('electorates', {
             if (!this.historyByIdentifier(id)) {
                 const item = await $fetch(API_BASE + 'electorates/' + id + '/history/')
                 this.data.histories[id] = item
+            }
+        },
+        async fetchShape(id) {
+            if (!this.shapeByIdentifier(id)) {
+                const item = await $fetch(API_BASE + 'electorates/' + id + '/shape/')
+                this.data.shapes[id] = item
             }
         }
     }
