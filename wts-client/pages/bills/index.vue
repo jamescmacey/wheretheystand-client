@@ -3,64 +3,16 @@
         <PageHeader pageTitle="Bills"></PageHeader>
         <div class="container">
             <div class="row mt-3">
-                <ais-instant-search :search-client="searchClient" :search-function="searchFunction"
-                    index-name="wts_SearchObject_prod">
-                    <ais-configure v-bind="searchParameters"></ais-configure>
-                    <ais-search-box />
-                    <!--<ais-powered-by class="my-3"></ais-powered-by>-->
-                    <ais-infinite-hits :class-names="{
-                        'ais-InfiniteHits-item': 'ais-bills-hits-item'
-                    }">
-                        <template v-slot:item="{ item }">
-                            <Card>
-                                <h2>{{ item.primaryName }}</h2>
-                            <p>{{ item.byline }}</p>
-                            </Card>
-                            
-                        </template>
-                    </ais-infinite-hits>
-                </ais-instant-search>
-
+                <div class="col-12">
+                    <h4>Bills are proposed changes to the law, and must each pass through several stages in Parliament before becoming law.</h4>
+                    <p>Before any bill becomes law, there are three main votes it must pass: these are the first, second and third readings. For most bills, there is a chance for members of the public to make submissions at the select committee stage, which happens between the first and second readings.</p><p>After a bill passes its third reading vote, it is granted Royal Assent by the Governor-General and becomes law, subject to any commencement provisions contained within the bill.</p>
+                    <p>WhereTheyStand contains all bills from the 51st Parliament and later (2014—present). These are imported from Parliament's own website on a regular basis and are automatically linked with voting records and MPs' profiles to make it easier for you to find what you are looking for.</p>
+                </div>
+                <div class="col-12">
+                    <BillFilter></BillFilter>
+                </div>
             </div>
 
         </div>
     </div>
 </template>
-
-<style>
-.ais-bills-hits-item {
-    background: transparent !important;
-    display: block !important;
-    padding: 0 !important;
-    font-size: inherit !important;
-    font-weight: inherit !important;
-    line-height: inherit !important;
-    box-shadow: inherit !important;
-    border-radius: inherit !important;
-}
-
-</style>
-
-<script>
-import algoliasearch from 'algoliasearch/lite'
-import 'instantsearch.css/themes/satellite-min.css'
-
-export default {
-    data() {
-        return {
-            searchClient: algoliasearch(
-                'CRQORWX9YD',
-                '0ba096387d4ce562803bec690404e72b'
-            ),
-            searchFunction(helper) {
-                helper.addDisjunctiveFacetRefinement('type', 'Bill')
-                helper.search()
-            },
-            searchParameters: {
-                disjunctiveFacets: ["type"],
-            }
-        }
-    }
-}
-
-</script>

@@ -14,6 +14,10 @@
             <ul>
               <li v-for="(interest, j) in interestsForType(i)" :key="j">
                 {{ interest.description }}
+                <span v-if="interest.nzbn_match.nzbn"><br v-if="interest.nzbn_match.entity_classifications_descs">
+                  <span class="text-muted" v-if="interest.nzbn_match.entity_classifications_descs" v-for="(classification, k) in interest.nzbn_match.entity_classifications_descs" :key="k">{{ classification }}</span>
+                  <br><small><ExternalLinkInline :link="'https://www.nzbn.govt.nz/mynzbn/nzbndetails/' + interest.nzbn_match.nzbn">View on NZBN Registry</ExternalLinkInline></small>
+                </span>
               </li>
             </ul>
             </div>
