@@ -12,7 +12,7 @@
         <h6 class="text-muted">{{ formatDate(date) }}</h6>
         <hr />
         <h6 class="text-muted text-center">
-            WhereTheyStand has no totals for this vote. <a href="#">Learn more.</a>
+            WhereTheyStand has no totals for this vote. It might have been a voice vote, or there might have been an import error.
         </h6>
     </Card>
 </template>

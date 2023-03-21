@@ -9,7 +9,7 @@ export const useNotificationsStore = defineStore('notifications', {
                     id: 0,
                     linkBehaviour: 'none',
                     title: 'New look',
-                    message: 'WhereTheyStand has had a facelift! The new design is still in the early stages, so if you run into any issues, try refreshing the page. You\'re always welcome to leave feedback via the link in the footer.'
+                    message: 'WhereTheyStand has had a facelift! The new design is still in the early stages (this is the minimum viable product), so if you run into any issues, try refreshing the page. You\'re always welcome to leave feedback via the link in the footer.'
                 }
             ],
             toasts: [

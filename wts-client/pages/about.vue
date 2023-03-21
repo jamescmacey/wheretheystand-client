@@ -20,8 +20,6 @@
             with substantial disclosure.</p>
           <p>Most of the funding for running WhereTheyStand comes from me. Of course, I've taken steps to keep costs
             down, including by utilising student discounts I have access to, and reserving cloud capacity ahead of time.
-            Nevertheless, there are substantial
-            yearly costs to keep the site online, in the region of NZD $400 to NZD $500.
           </p>
           <ExternalLinkButton link="https://www.buymeacoffee.com/jamescmacey">If you really like this site, please
             consider buying me a hot choccy!</ExternalLinkButton>
@@ -32,7 +30,7 @@
             </ExternalLinkInline> is a great site built by the mySociety charity in the UK. It sets a gold standard for
             sites like these and I can only hope to get there with WhereTheyStand one day.</p>
           <p>Secondly, the data and information that is presented on WhereTheyStand comes from a wide range of
-            organisations. They are not affiliated with WhereTheyStand (save for some API access agreements), but public
+            organisations. They are not affiliated with WhereTheyStand, but public
             information they provide is used on WhereTheyStand:
           <ul>
             <li><strong>Office of the Clerk of the House of Representatives</strong>: Bill data, Hansard (Parliamentary
@@ -47,8 +45,6 @@
             <li><strong>Twitter</strong>: MP and Party Twitter account statistics</li>
           </ul>
           </p>
-          <p>Thirdly, lots of open source software has been used in the creation of WhereTheyStand and this needs to be
-            acknowledged to fulfil licensing obligations.</p>
         </Card>
       </div>
     </div>
