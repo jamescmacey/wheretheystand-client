@@ -1,0 +1,1 @@
+import{_ as t,o,c as n,b as a,k as r}from"./entry-4f6a8f6f.mjs";const s={name:"DisplayControlButton"};function c(e,_,l,p,u,d){return o(),n("button",null,[a("h6",null,[r(e.$slots,"default",{},void 0,!0)])])}var i=t(s,[["render",c],["__scopeId","data-v-10ac7a85"]]);export{i as _};

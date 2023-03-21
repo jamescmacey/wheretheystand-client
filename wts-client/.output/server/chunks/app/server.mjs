@@ -7304,7 +7304,7 @@ const _sfc_main$F = {
       this.loading = true;
       var url2 = API_BASE + "client/random/";
       var to2 = await $fetch(url2);
-      this.$router.push(to2.to);
+      await navigateTo(to2.to);
       return;
     }
   }
@@ -7312,7 +7312,7 @@ const _sfc_main$F = {
 function _sfc_ssrRender$w(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
   const _component_FontAwesomeIcon = vue_cjs_prod.resolveComponent("FontAwesomeIcon");
   const _component_Spinner = __nuxt_component_0$1;
-  _push(`<a${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ href: "#" }, _attrs))} data-v-93270e28> Or, go to a random page `);
+  _push(`<a${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ href: "/api/client/random-redirect/" }, _attrs))} data-v-3472c291> Or, go to a random page `);
   if (!$data.loading) {
     _push(serverRenderer.exports.ssrRenderComponent(_component_FontAwesomeIcon, { icon: ["fas", "arrow-right"] }, null, _parent));
   } else {
@@ -7331,7 +7331,7 @@ _sfc_main$F.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/RandomResource.vue");
   return _sfc_setup$F ? _sfc_setup$F(props, ctx) : void 0;
 };
-const __nuxt_component_2$2 = /* @__PURE__ */ _export_sfc(_sfc_main$F, [["ssrRender", _sfc_ssrRender$w], ["__scopeId", "data-v-93270e28"]]);
+const __nuxt_component_2$2 = /* @__PURE__ */ _export_sfc(_sfc_main$F, [["ssrRender", _sfc_ssrRender$w], ["__scopeId", "data-v-3472c291"]]);
 const __default__$2 = {
   name: "Home",
   components: {},
@@ -72218,11 +72218,21 @@ _sfc_main$n.setup = (props, ctx) => {
 };
 const __nuxt_component_0 = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["ssrRender", _sfc_ssrRender$l], ["__scopeId", "data-v-0c162054"]]);
 const _sfc_main$m = {
-  name: "Navbar"
+  name: "Navbar",
+  data() {
+    return {
+      visible: false
+    };
+  },
+  methods: {
+    toggle() {
+      this.visible = !this.visible;
+    }
+  }
 };
 function _sfc_ssrRender$k(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
   const _component_NuxtLink = __nuxt_component_1$7;
-  _push(`<nav${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "navbar navbar-expand-lg navbar-dark bg-theme1" }, _attrs))} data-v-96395c74><div class="container-fluid" data-v-96395c74>`);
+  _push(`<nav${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ class: "navbar navbar-expand-lg navbar-dark bg-theme1" }, _attrs))} data-v-af99c12c><div class="container-fluid" data-v-af99c12c>`);
   _push(serverRenderer.exports.ssrRenderComponent(_component_NuxtLink, {
     class: "navbar-brand",
     to: "/"
@@ -72238,7 +72248,7 @@ function _sfc_ssrRender$k(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" data-v-96395c74><span class="navbar-toggler-icon" data-v-96395c74></span></button><div class="collapse navbar-collapse" id="navbarSupportedContent" data-v-96395c74><ul class="navbar-nav me-auto" data-v-96395c74><li class="nav-item" data-v-96395c74>`);
+  _push(`<button class="navbar-toggler" type="button" aria-controls="navbarSupportedContent"${serverRenderer.exports.ssrRenderAttr("aria-expanded", $data.visible)} aria-label="Toggle navigation" data-v-af99c12c><span class="navbar-toggler-icon" data-v-af99c12c></span></button><div class="${serverRenderer.exports.ssrRenderClass([{ collapse: !$data.visible }, "navbar-collapse"])}" id="navbarSupportedContent" data-v-af99c12c><ul class="navbar-nav me-auto" data-v-af99c12c><li class="nav-item" data-v-af99c12c>`);
   _push(serverRenderer.exports.ssrRenderComponent(_component_NuxtLink, {
     class: [_ctx.$route.fullPath.startsWith("/people/") ? "active nav-link" : "nav-link"],
     to: "/people/",
@@ -72255,7 +72265,7 @@ function _sfc_ssrRender$k(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li class="nav-item" data-v-96395c74>`);
+  _push(`</li><li class="nav-item" data-v-af99c12c>`);
   _push(serverRenderer.exports.ssrRenderComponent(_component_NuxtLink, {
     class: [_ctx.$route.fullPath.startsWith("/parties/") ? "active nav-link" : "nav-link"],
     to: "/parties/",
@@ -72272,7 +72282,7 @@ function _sfc_ssrRender$k(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li class="nav-item" data-v-96395c74>`);
+  _push(`</li><li class="nav-item" data-v-af99c12c>`);
   _push(serverRenderer.exports.ssrRenderComponent(_component_NuxtLink, {
     class: [_ctx.$route.fullPath.startsWith("/electorates/") ? "active nav-link" : "nav-link"],
     to: "/electorates/",
@@ -72289,7 +72299,7 @@ function _sfc_ssrRender$k(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li class="nav-item" data-v-96395c74>`);
+  _push(`</li><li class="nav-item" data-v-af99c12c>`);
   _push(serverRenderer.exports.ssrRenderComponent(_component_NuxtLink, {
     class: [_ctx.$route.fullPath.startsWith("/bills/") ? "active nav-link" : "nav-link"],
     to: "/bills/",
@@ -72306,7 +72316,7 @@ function _sfc_ssrRender$k(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li class="nav-item" data-v-96395c74>`);
+  _push(`</li><li class="nav-item" data-v-af99c12c>`);
   _push(serverRenderer.exports.ssrRenderComponent(_component_NuxtLink, {
     class: [_ctx.$route.fullPath.startsWith("/votes/") ? "active nav-link" : "nav-link"],
     to: "/votes/",
@@ -72323,7 +72333,7 @@ function _sfc_ssrRender$k(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li class="nav-item" data-v-96395c74>`);
+  _push(`</li><li class="nav-item" data-v-af99c12c>`);
   _push(serverRenderer.exports.ssrRenderComponent(_component_NuxtLink, {
     class: [_ctx.$route.fullPath.startsWith("/about/") ? "active nav-link" : "nav-link"],
     to: "/about/",
@@ -72340,7 +72350,7 @@ function _sfc_ssrRender$k(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li class="nav-item" data-v-96395c74><a class="${serverRenderer.exports.ssrRenderClass([_ctx.$route.fullPath.startsWith("/search/") ? "active nav-link" : "nav-link"])}" href="/search/" active-class="active" data-v-96395c74>Search</a></li></ul></div></div></nav>`);
+  _push(`</li><li class="nav-item" data-v-af99c12c><a class="${serverRenderer.exports.ssrRenderClass([_ctx.$route.fullPath.startsWith("/search/") ? "active nav-link" : "nav-link"])}" href="/search/" active-class="active" data-v-af99c12c>Search</a></li></ul></div></div></nav>`);
 }
 const _sfc_setup$m = _sfc_main$m.setup;
 _sfc_main$m.setup = (props, ctx) => {
@@ -72348,7 +72358,7 @@ _sfc_main$m.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/Navbar.vue");
   return _sfc_setup$m ? _sfc_setup$m(props, ctx) : void 0;
 };
-const __nuxt_component_1 = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["ssrRender", _sfc_ssrRender$k], ["__scopeId", "data-v-96395c74"]]);
+const __nuxt_component_1 = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["ssrRender", _sfc_ssrRender$k], ["__scopeId", "data-v-af99c12c"]]);
 const _sfc_main$l = {
   name: "Footer"
 };
