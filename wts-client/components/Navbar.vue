@@ -3,12 +3,12 @@
     <div class="container-fluid">
       <NuxtLink class="navbar-brand" to="/">WhereTheyStand</NuxtLink>
 
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button"
+        aria-controls="navbarSupportedContent" :aria-expanded="visible" aria-label="Toggle navigation" @click="toggle()">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div class="navbar-collapse" :class="{collapse : !visible}" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
             <NuxtLink :class="[$route.fullPath.startsWith('/people/') ? 'active nav-link' : 'nav-link']" to="/people/" active-class="active">People</NuxtLink>
@@ -80,6 +80,16 @@
 
 <script>
 export default {
-  name: 'Navbar'
+  name: 'Navbar',
+  data() {
+    return {
+      visible: false
+    }
+  },
+  methods: {
+    toggle () {
+      this.visible = !this.visible
+    }
+  }
 }
 </script>
