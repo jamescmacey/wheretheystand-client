@@ -1,5 +1,13 @@
 <template>
   <div id="party-view" v-if="party">
+    <Head>
+    <Meta name="twitter:title" :content="party.display_name + '- WhereTheyStand'" />
+    <Meta name="twitter:description" :content="pageSubtitle" />
+    <Meta name="description" :content="pageSubtitle" />
+    <Meta property="og:title" :content="party.display_name + '- WhereTheyStand'" />
+    <Meta property="og:description" :content="pageSubtitle" />
+
+    </Head>
     <PageHeader :pageTitle="party.display_name" :pageSubtitle="pageSubtitle" :colour="party.colour" :pageLinks="links"></PageHeader>
     <NuxtPage :party="party"></NuxtPage>
   </div>
@@ -24,10 +32,6 @@ export default {
         {
           to: '/parties/' + this.$route.params.id,
           name: 'Overview'
-        },
-        {
-          to: '/parties/' + this.$route.params.id + '/documents',
-          name: 'Documents'
         }
       ]
     },

@@ -1,5 +1,13 @@
 <template>
   <div id="electorate-view" v-if="electorate">
+    <Head>
+    <Meta name="twitter:title" :content="electorate.name + '- WhereTheyStand'" />
+    <Meta name="twitter:description" :content="electorate.description" />
+    <Meta name="description" :content="electorate.description" />
+    <Meta property="og:title" :content="electorate.name + '- WhereTheyStand'" />
+    <Meta property="og:description" :content="electorate.description" />
+
+    </Head>
     <PageHeader :pageTitle="electorate.name" :pageSubtitle="electorate.description"></PageHeader>
     <div class="container-fluid hero pt-0">
       <mapbox-map v-if="shape && shape['wts-comment'] != 'noshape'"

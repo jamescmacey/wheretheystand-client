@@ -34,7 +34,8 @@
               </Card>
               <Card :gradient="true" v-else>
                 <p><strong>WhereTheyStand hasn't checked who {{ person.display_name }} votes similarly to.</strong></p>
-                <p>Please check back at a later date.</p>
+                <p>This feature is coming soon, so please check back at a later date.</p>
+                <p>In the meantime, click on any voting record to see more information about that bill and its votes.</p>
               </Card>
             </div>
           </div>

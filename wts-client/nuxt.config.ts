@@ -12,7 +12,7 @@ export default defineNuxtConfig({
     ],
     build: {
         //transpile: ['chart.js']
-        //transpile: ['vue-mapbox-ts', 'chart.js'] 
+        transpile: ['vue-mapbox-ts', 'chart.js'] 
     },
     buildModules: [
         '@pinia/nuxt',

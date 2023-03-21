@@ -1,5 +1,13 @@
 <template>
   <div id="vote-view" v-if="vote">
+    <Head>
+    <Meta name="twitter:title" :content="vote.name + '- WhereTheyStand'" />
+    <Meta v-if="vote.question_text" name="twitter:description" :content="vote.question_text" />
+    <Meta v-if="vote.question_text" name="description" :content="vote.question_text" />
+    <Meta property="og:title" :content="vote.name + '- WhereTheyStand'" />
+    <Meta v-if="vote.question_text" property="og:description" :content="vote.question_text" />
+
+    </Head>
     <PageHeader :pageTitle="vote.bill.name" :pageSubtitle="readingOrdinal" :pageDate="vote.vote_date" :backLink="'/bills/' + vote.bill.id" :backText="vote.bill.name"></PageHeader>
     <div class="container mt-3">
       <VoteSummary :vote="vote" :countsOnly="true"></VoteSummary>
