@@ -1,10 +1,10 @@
 <template>
   <div id="party-view" v-if="party">
     <Head>
-    <Meta name="twitter:title" :content="party.display_name + '- WhereTheyStand'" />
+    <Meta name="twitter:title" :content="party.display_name + ' - WhereTheyStand'" />
     <Meta name="twitter:description" :content="pageSubtitle" />
     <Meta name="description" :content="pageSubtitle" />
-    <Meta property="og:title" :content="party.display_name + '- WhereTheyStand'" />
+    <Meta property="og:title" :content="party.display_name + ' - WhereTheyStand'" />
     <Meta property="og:description" :content="pageSubtitle" />
 
     </Head>

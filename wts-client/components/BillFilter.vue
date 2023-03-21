@@ -1,7 +1,7 @@
 <template>
     <div>
         <h4>Filter bills</h4>
-        <Head v-if="prefetchData && (prefetchData.count > 0)">
+        <Head v-if="prefetchData && prefetchData.count && (prefetchData.count > 0)">
             <Link v-if="prefetchData.previous && (prefetchData.page == 2)" rel="prev" href="/bills"></Link>
             <Link v-if="prefetchData.previous && (prefetchData.page != 2)" rel="prev" :href="'/bills?page=' + (prefetchData.page - 1)"></Link>
             <Link v-if="prefetchData.next" rel="next" :href="'/bills?page=' + (prefetchData.page + 1)"></Link>
@@ -194,7 +194,29 @@
                 </Card>
             </NuxtLink>
 
-            <nav v-if="!isLoading" aria-label="bills_pagination">
+            <nav v-if="!isLoading && !hasLoadedData && prefetchData && (displayCount > 1)" aria-label="bills_pagination">
+                <ul class="pagination mb-1">
+                    <li class="page-item" :class="{ disabled: !displayPrevious }">
+                        <a class="page-link" href="#results-marker" @click="getPage(displayPage - 1)">Previous</a>
+                    </li>
+                    <li class="page-item" v-if="displayPrevious"><a class="page-link" href="#results-marker"
+                            @click="getPage(displayPage - 1)">{{ displayPage - 1
+                            }}</a></li>
+                    <li class="page-item active" aria-current="page">
+                        <a class="page-link" href="#results-marker" @click="getPage(displayPage)">{{ displayPage }}</a>
+                    </li>
+                    <li class="page-item" v-if="displayNext"><a class="page-link" href="#results-marker"
+                            @click="getPage(displayPage + 1)">{{ displayPage + 1 }}</a>
+                    </li>
+                    <li class="page-item" :class="{ disabled: !displayNext }">
+                        <a class="page-link" href="#results-marker" @click="getPage(displayPage + 1)">Next</a>
+                    </li>
+                </ul>
+                <a @click="getPage(1)" id="back-to-start" href="#results-marker" v-if="displayPage != 1"><small>Back to
+                        start</small></a>
+            </nav>
+
+            <nav v-if="!isLoading && hasLoadedData && (displayCount > 1)" aria-label="bills_pagination">
                 <ul class="pagination mb-1">
                     <li class="page-item" :class="{ disabled: !displayPrevious }">
                         <a class="page-link" href="#results-marker" @click="getPage(displayPage - 1)">Previous</a>
@@ -323,35 +345,35 @@ export default {
             return JSON.stringify(this.filterSettings)
         },
         displayBills() {
-            if (!this.hasLoadedData) {
+            if (!this.hasLoadedData && this.prefetchData) {
                 return this.prefetchData.results
             } else {
                 return this.bills
             }
         },
         displayCount() {
-            if (!this.hasLoadedData) {
+            if (!this.hasLoadedData && this.prefetchData) {
                 return this.prefetchData.count
             } else {
                 return this.count
             }
         },
         displayPage() {
-            if (!this.hasLoadedData) {
+            if (!this.hasLoadedData && this.prefetchData) {
                 return this.prefetchData.page
             } else {
                 return this.page
             }
         },
         displayNext() {
-            if (!this.hasLoadedData) {
+            if (!this.hasLoadedData && this.prefetchData) {
                 return this.prefetchData.next
             } else {
                 return this.next
             }
         },
         displayPrevious() {
-            if (!this.hasLoadedData) {
+            if (!this.hasLoadedData && this.prefetchData) {
                 return this.prefetchData.previous
             } else {
                 return this.previous

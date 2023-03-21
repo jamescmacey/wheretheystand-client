@@ -1,10 +1,10 @@
 <template>
   <div id="bill-view" v-if="bill">
     <Head>
-    <Meta name="twitter:title" :content="bill.name + '- WhereTheyStand'" />
+    <Meta name="twitter:title" :content="bill.name + ' - WhereTheyStand'" />
     <Meta name="twitter:description" :content="bill.description" />
     <Meta name="description" :content="bill.description" />
-    <Meta property="og:title" :content="bill.name + '- WhereTheyStand'" />
+    <Meta property="og:title" :content="bill.name + ' - WhereTheyStand'" />
     <Meta property="og:description" :content="bill.description" />
 
     </Head>

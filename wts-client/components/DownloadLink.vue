@@ -21,7 +21,7 @@ export default {
   name: 'DownloadLink',
   data () {
     return {
-      apiRoot: "http://0.0.0.0:8000"
+      apiRoot: "https://wheretheystand.nz"
     }
   },
   props: {

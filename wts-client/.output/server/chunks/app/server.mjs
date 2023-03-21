@@ -1,7 +1,10 @@
 import { v as vue_cjs_prod, s as serverRenderer } from '../handlers/renderer.mjs';
 import { hasProtocol, isEqual as isEqual$1, withBase, withQuery, joinURL } from 'ufo';
-import { format, parse as parse$2, formatDistanceToNow, parseISO } from 'date-fns';
+import { format, parse as parse$1, formatDistanceToNow, parseISO } from 'date-fns';
 import { defineStore, createPinia, setActivePinia } from 'pinia/dist/pinia.mjs';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faHistory, faTimes, faCheck, faMapSigns, faQuestion, faChevronUp, faChevronDown, faExternalLinkAlt, faInfoCircle, faArrowRight, faPeopleGroup, faPerson, faArrowLeft, faFileCsv, faFileCode, faFileExcel, faBook, faFileLines, faForwardFast, faCalendar, faPenNib, faMicrophoneLines } from '@fortawesome/free-solid-svg-icons';
+import { faTwitter, faFacebook, faInstagram, faSnapchat, faWikipediaW } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import require$$2$1 from 'fs';
 import require$$0$3 from 'url';
@@ -2922,3025 +2925,6 @@ var vueRouter_cjs = {};
 	exports.viewDepthKey = viewDepthKey;
 } (vueRouter_cjs));
 
-/*!
- * Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com
- * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
- * Copyright 2022 Fonticons, Inc.
- */
-function ownKeys(object, enumerableOnly) {
-  var keys = Object.keys(object);
-
-  if (Object.getOwnPropertySymbols) {
-    var symbols = Object.getOwnPropertySymbols(object);
-    enumerableOnly && (symbols = symbols.filter(function (sym) {
-      return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-    })), keys.push.apply(keys, symbols);
-  }
-
-  return keys;
-}
-
-function _objectSpread2(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = null != arguments[i] ? arguments[i] : {};
-    i % 2 ? ownKeys(Object(source), !0).forEach(function (key) {
-      _defineProperty(target, key, source[key]);
-    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) {
-      Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
-    });
-  }
-
-  return target;
-}
-
-function _typeof(obj) {
-  "@babel/helpers - typeof";
-
-  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
-    return typeof obj;
-  } : function (obj) {
-    return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-  }, _typeof(obj);
-}
-
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-}
-
-function _defineProperties(target, props) {
-  for (var i = 0; i < props.length; i++) {
-    var descriptor = props[i];
-    descriptor.enumerable = descriptor.enumerable || false;
-    descriptor.configurable = true;
-    if ("value" in descriptor) descriptor.writable = true;
-    Object.defineProperty(target, descriptor.key, descriptor);
-  }
-}
-
-function _createClass(Constructor, protoProps, staticProps) {
-  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-  if (staticProps) _defineProperties(Constructor, staticProps);
-  Object.defineProperty(Constructor, "prototype", {
-    writable: false
-  });
-  return Constructor;
-}
-
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-}
-
-function _slicedToArray(arr, i) {
-  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
-}
-
-function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
-}
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
-}
-
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
-}
-
-function _iterableToArrayLimit(arr, i) {
-  var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
-
-  if (_i == null) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-
-  var _s, _e;
-
-  try {
-    for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
-
-      if (i && _arr.length === i) break;
-    }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
-    try {
-      if (!_n && _i["return"] != null) _i["return"]();
-    } finally {
-      if (_d) throw _e;
-    }
-  }
-
-  return _arr;
-}
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
-}
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
-
-  return arr2;
-}
-
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-var noop$4 = function noop() {};
-
-var _WINDOW = {};
-var _DOCUMENT = {};
-var _MUTATION_OBSERVER = null;
-var _PERFORMANCE = {
-  mark: noop$4,
-  measure: noop$4
-};
-
-try {
-  if ("undefined" !== 'undefined') ;
-  if (typeof document !== 'undefined') _DOCUMENT = document;
-  if (typeof MutationObserver !== 'undefined') _MUTATION_OBSERVER = MutationObserver;
-  if (typeof performance !== 'undefined') _PERFORMANCE = performance;
-} catch (e) {}
-
-var _ref = _WINDOW.navigator || {},
-    _ref$userAgent = _ref.userAgent,
-    userAgent = _ref$userAgent === void 0 ? '' : _ref$userAgent;
-var WINDOW = _WINDOW;
-var DOCUMENT = _DOCUMENT;
-var MUTATION_OBSERVER = _MUTATION_OBSERVER;
-var PERFORMANCE = _PERFORMANCE;
-!!WINDOW.document;
-var IS_DOM = !!DOCUMENT.documentElement && !!DOCUMENT.head && typeof DOCUMENT.addEventListener === 'function' && typeof DOCUMENT.createElement === 'function';
-var IS_IE = ~userAgent.indexOf('MSIE') || ~userAgent.indexOf('Trident/');
-
-var NAMESPACE_IDENTIFIER = '___FONT_AWESOME___';
-var UNITS_IN_GRID = 16;
-var DEFAULT_FAMILY_PREFIX = 'fa';
-var DEFAULT_REPLACEMENT_CLASS = 'svg-inline--fa';
-var DATA_FA_I2SVG = 'data-fa-i2svg';
-var DATA_FA_PSEUDO_ELEMENT = 'data-fa-pseudo-element';
-var DATA_FA_PSEUDO_ELEMENT_PENDING = 'data-fa-pseudo-element-pending';
-var DATA_PREFIX = 'data-prefix';
-var DATA_ICON = 'data-icon';
-var HTML_CLASS_I2SVG_BASE_CLASS = 'fontawesome-i2svg';
-var MUTATION_APPROACH_ASYNC = 'async';
-var TAGNAMES_TO_SKIP_FOR_PSEUDOELEMENTS = ['HTML', 'HEAD', 'STYLE', 'SCRIPT'];
-var PRODUCTION = function () {
-  try {
-    return "production" === 'production';
-  } catch (e) {
-    return false;
-  }
-}();
-var PREFIX_TO_STYLE = {
-  'fas': 'solid',
-  'fa-solid': 'solid',
-  'far': 'regular',
-  'fa-regular': 'regular',
-  'fal': 'light',
-  'fa-light': 'light',
-  'fat': 'thin',
-  'fa-thin': 'thin',
-  'fad': 'duotone',
-  'fa-duotone': 'duotone',
-  'fab': 'brands',
-  'fa-brands': 'brands',
-  'fak': 'kit',
-  'fa-kit': 'kit',
-  'fa': 'solid'
-};
-var STYLE_TO_PREFIX = {
-  'solid': 'fas',
-  'regular': 'far',
-  'light': 'fal',
-  'thin': 'fat',
-  'duotone': 'fad',
-  'brands': 'fab',
-  'kit': 'fak'
-};
-var PREFIX_TO_LONG_STYLE = {
-  'fab': 'fa-brands',
-  'fad': 'fa-duotone',
-  'fak': 'fa-kit',
-  'fal': 'fa-light',
-  'far': 'fa-regular',
-  'fas': 'fa-solid',
-  'fat': 'fa-thin'
-};
-var LONG_STYLE_TO_PREFIX = {
-  'fa-brands': 'fab',
-  'fa-duotone': 'fad',
-  'fa-kit': 'fak',
-  'fa-light': 'fal',
-  'fa-regular': 'far',
-  'fa-solid': 'fas',
-  'fa-thin': 'fat'
-};
-var ICON_SELECTION_SYNTAX_PATTERN = /fa[srltdbk\-\ ]/; // eslint-disable-line no-useless-escape
-
-var LAYERS_TEXT_CLASSNAME = 'fa-layers-text';
-var FONT_FAMILY_PATTERN = /Font ?Awesome ?([56 ]*)(Solid|Regular|Light|Thin|Duotone|Brands|Free|Pro|Kit)?.*/i; // TODO: do we need to handle font-weight for kit SVG pseudo-elements?
-
-var FONT_WEIGHT_TO_PREFIX = {
-  '900': 'fas',
-  '400': 'far',
-  'normal': 'far',
-  '300': 'fal',
-  '100': 'fat'
-};
-var oneToTen = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-var oneToTwenty = oneToTen.concat([11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
-var ATTRIBUTES_WATCHED_FOR_MUTATION = ['class', 'data-prefix', 'data-icon', 'data-fa-transform', 'data-fa-mask'];
-var DUOTONE_CLASSES = {
-  GROUP: 'duotone-group',
-  SWAP_OPACITY: 'swap-opacity',
-  PRIMARY: 'primary',
-  SECONDARY: 'secondary'
-};
-var RESERVED_CLASSES = [].concat(_toConsumableArray(Object.keys(STYLE_TO_PREFIX)), ['2xs', 'xs', 'sm', 'lg', 'xl', '2xl', 'beat', 'border', 'fade', 'beat-fade', 'bounce', 'flip-both', 'flip-horizontal', 'flip-vertical', 'flip', 'fw', 'inverse', 'layers-counter', 'layers-text', 'layers', 'li', 'pull-left', 'pull-right', 'pulse', 'rotate-180', 'rotate-270', 'rotate-90', 'rotate-by', 'shake', 'spin-pulse', 'spin-reverse', 'spin', 'stack-1x', 'stack-2x', 'stack', 'ul', DUOTONE_CLASSES.GROUP, DUOTONE_CLASSES.SWAP_OPACITY, DUOTONE_CLASSES.PRIMARY, DUOTONE_CLASSES.SECONDARY]).concat(oneToTen.map(function (n) {
-  return "".concat(n, "x");
-})).concat(oneToTwenty.map(function (n) {
-  return "w-".concat(n);
-}));
-
-var initial = WINDOW.FontAwesomeConfig || {};
-
-function getAttrConfig(attr) {
-  var element = DOCUMENT.querySelector('script[' + attr + ']');
-
-  if (element) {
-    return element.getAttribute(attr);
-  }
-}
-
-function coerce(val) {
-  // Getting an empty string will occur if the attribute is set on the HTML tag but without a value
-  // We'll assume that this is an indication that it should be toggled to true
-  if (val === '') return true;
-  if (val === 'false') return false;
-  if (val === 'true') return true;
-  return val;
-}
-
-if (DOCUMENT && typeof DOCUMENT.querySelector === 'function') {
-  var attrs = [['data-family-prefix', 'familyPrefix'], ['data-style-default', 'styleDefault'], ['data-replacement-class', 'replacementClass'], ['data-auto-replace-svg', 'autoReplaceSvg'], ['data-auto-add-css', 'autoAddCss'], ['data-auto-a11y', 'autoA11y'], ['data-search-pseudo-elements', 'searchPseudoElements'], ['data-observe-mutations', 'observeMutations'], ['data-mutate-approach', 'mutateApproach'], ['data-keep-original-source', 'keepOriginalSource'], ['data-measure-performance', 'measurePerformance'], ['data-show-missing-icons', 'showMissingIcons']];
-  attrs.forEach(function (_ref) {
-    var _ref2 = _slicedToArray(_ref, 2),
-        attr = _ref2[0],
-        key = _ref2[1];
-
-    var val = coerce(getAttrConfig(attr));
-
-    if (val !== undefined && val !== null) {
-      initial[key] = val;
-    }
-  });
-}
-
-var _default$2 = {
-  familyPrefix: DEFAULT_FAMILY_PREFIX,
-  styleDefault: 'solid',
-  replacementClass: DEFAULT_REPLACEMENT_CLASS,
-  autoReplaceSvg: true,
-  autoAddCss: true,
-  autoA11y: true,
-  searchPseudoElements: false,
-  observeMutations: true,
-  mutateApproach: 'async',
-  keepOriginalSource: true,
-  measurePerformance: false,
-  showMissingIcons: true
-};
-
-var _config = _objectSpread2(_objectSpread2({}, _default$2), initial);
-
-if (!_config.autoReplaceSvg) _config.observeMutations = false;
-var config = {};
-Object.keys(_config).forEach(function (key) {
-  Object.defineProperty(config, key, {
-    enumerable: true,
-    set: function set(val) {
-      _config[key] = val;
-
-      _onChangeCb.forEach(function (cb) {
-        return cb(config);
-      });
-    },
-    get: function get() {
-      return _config[key];
-    }
-  });
-});
-WINDOW.FontAwesomeConfig = config;
-var _onChangeCb = [];
-function onChange(cb) {
-  _onChangeCb.push(cb);
-
-  return function () {
-    _onChangeCb.splice(_onChangeCb.indexOf(cb), 1);
-  };
-}
-
-var d = UNITS_IN_GRID;
-var meaninglessTransform = {
-  size: 16,
-  x: 0,
-  y: 0,
-  rotate: 0,
-  flipX: false,
-  flipY: false
-};
-function insertCss(css) {
-  if (!css || !IS_DOM) {
-    return;
-  }
-
-  var style = DOCUMENT.createElement('style');
-  style.setAttribute('type', 'text/css');
-  style.innerHTML = css;
-  var headChildren = DOCUMENT.head.childNodes;
-  var beforeChild = null;
-
-  for (var i = headChildren.length - 1; i > -1; i--) {
-    var child = headChildren[i];
-    var tagName = (child.tagName || '').toUpperCase();
-
-    if (['STYLE', 'LINK'].indexOf(tagName) > -1) {
-      beforeChild = child;
-    }
-  }
-
-  DOCUMENT.head.insertBefore(style, beforeChild);
-  return css;
-}
-var idPool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-function nextUniqueId() {
-  var size = 12;
-  var id = '';
-
-  while (size-- > 0) {
-    id += idPool[Math.random() * 62 | 0];
-  }
-
-  return id;
-}
-function toArray(obj) {
-  var array = [];
-
-  for (var i = (obj || []).length >>> 0; i--;) {
-    array[i] = obj[i];
-  }
-
-  return array;
-}
-function classArray(node) {
-  if (node.classList) {
-    return toArray(node.classList);
-  } else {
-    return (node.getAttribute('class') || '').split(' ').filter(function (i) {
-      return i;
-    });
-  }
-}
-function htmlEscape$1(str) {
-  return "".concat(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-function joinAttributes(attributes) {
-  return Object.keys(attributes || {}).reduce(function (acc, attributeName) {
-    return acc + "".concat(attributeName, "=\"").concat(htmlEscape$1(attributes[attributeName]), "\" ");
-  }, '').trim();
-}
-function joinStyles(styles) {
-  return Object.keys(styles || {}).reduce(function (acc, styleName) {
-    return acc + "".concat(styleName, ": ").concat(styles[styleName].trim(), ";");
-  }, '');
-}
-function transformIsMeaningful(transform) {
-  return transform.size !== meaninglessTransform.size || transform.x !== meaninglessTransform.x || transform.y !== meaninglessTransform.y || transform.rotate !== meaninglessTransform.rotate || transform.flipX || transform.flipY;
-}
-function transformForSvg(_ref) {
-  var transform = _ref.transform,
-      containerWidth = _ref.containerWidth,
-      iconWidth = _ref.iconWidth;
-  var outer = {
-    transform: "translate(".concat(containerWidth / 2, " 256)")
-  };
-  var innerTranslate = "translate(".concat(transform.x * 32, ", ").concat(transform.y * 32, ") ");
-  var innerScale = "scale(".concat(transform.size / 16 * (transform.flipX ? -1 : 1), ", ").concat(transform.size / 16 * (transform.flipY ? -1 : 1), ") ");
-  var innerRotate = "rotate(".concat(transform.rotate, " 0 0)");
-  var inner = {
-    transform: "".concat(innerTranslate, " ").concat(innerScale, " ").concat(innerRotate)
-  };
-  var path = {
-    transform: "translate(".concat(iconWidth / 2 * -1, " -256)")
-  };
-  return {
-    outer: outer,
-    inner: inner,
-    path: path
-  };
-}
-function transformForCss(_ref2) {
-  var transform = _ref2.transform,
-      _ref2$width = _ref2.width,
-      width = _ref2$width === void 0 ? UNITS_IN_GRID : _ref2$width,
-      _ref2$height = _ref2.height,
-      height = _ref2$height === void 0 ? UNITS_IN_GRID : _ref2$height,
-      _ref2$startCentered = _ref2.startCentered,
-      startCentered = _ref2$startCentered === void 0 ? false : _ref2$startCentered;
-  var val = '';
-
-  if (startCentered && IS_IE) {
-    val += "translate(".concat(transform.x / d - width / 2, "em, ").concat(transform.y / d - height / 2, "em) ");
-  } else if (startCentered) {
-    val += "translate(calc(-50% + ".concat(transform.x / d, "em), calc(-50% + ").concat(transform.y / d, "em)) ");
-  } else {
-    val += "translate(".concat(transform.x / d, "em, ").concat(transform.y / d, "em) ");
-  }
-
-  val += "scale(".concat(transform.size / d * (transform.flipX ? -1 : 1), ", ").concat(transform.size / d * (transform.flipY ? -1 : 1), ") ");
-  val += "rotate(".concat(transform.rotate, "deg) ");
-  return val;
-}
-
-var baseStyles = ":root, :host {\n  --fa-font-solid: normal 900 1em/1 \"Font Awesome 6 Solid\";\n  --fa-font-regular: normal 400 1em/1 \"Font Awesome 6 Regular\";\n  --fa-font-light: normal 300 1em/1 \"Font Awesome 6 Light\";\n  --fa-font-thin: normal 100 1em/1 \"Font Awesome 6 Thin\";\n  --fa-font-duotone: normal 900 1em/1 \"Font Awesome 6 Duotone\";\n  --fa-font-brands: normal 400 1em/1 \"Font Awesome 6 Brands\";\n}\n\nsvg:not(:root).svg-inline--fa, svg:not(:host).svg-inline--fa {\n  overflow: visible;\n  box-sizing: content-box;\n}\n\n.svg-inline--fa {\n  display: var(--fa-display, inline-block);\n  height: 1em;\n  overflow: visible;\n  vertical-align: -0.125em;\n}\n.svg-inline--fa.fa-2xs {\n  vertical-align: 0.1em;\n}\n.svg-inline--fa.fa-xs {\n  vertical-align: 0em;\n}\n.svg-inline--fa.fa-sm {\n  vertical-align: -0.0714285705em;\n}\n.svg-inline--fa.fa-lg {\n  vertical-align: -0.2em;\n}\n.svg-inline--fa.fa-xl {\n  vertical-align: -0.25em;\n}\n.svg-inline--fa.fa-2xl {\n  vertical-align: -0.3125em;\n}\n.svg-inline--fa.fa-pull-left {\n  margin-right: var(--fa-pull-margin, 0.3em);\n  width: auto;\n}\n.svg-inline--fa.fa-pull-right {\n  margin-left: var(--fa-pull-margin, 0.3em);\n  width: auto;\n}\n.svg-inline--fa.fa-li {\n  width: var(--fa-li-width, 2em);\n  top: 0.25em;\n}\n.svg-inline--fa.fa-fw {\n  width: var(--fa-fw-width, 1.25em);\n}\n\n.fa-layers svg.svg-inline--fa {\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  position: absolute;\n  right: 0;\n  top: 0;\n}\n\n.fa-layers-counter, .fa-layers-text {\n  display: inline-block;\n  position: absolute;\n  text-align: center;\n}\n\n.fa-layers {\n  display: inline-block;\n  height: 1em;\n  position: relative;\n  text-align: center;\n  vertical-align: -0.125em;\n  width: 1em;\n}\n.fa-layers svg.svg-inline--fa {\n  -webkit-transform-origin: center center;\n          transform-origin: center center;\n}\n\n.fa-layers-text {\n  left: 50%;\n  top: 50%;\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n  -webkit-transform-origin: center center;\n          transform-origin: center center;\n}\n\n.fa-layers-counter {\n  background-color: var(--fa-counter-background-color, #ff253a);\n  border-radius: var(--fa-counter-border-radius, 1em);\n  box-sizing: border-box;\n  color: var(--fa-inverse, #fff);\n  line-height: var(--fa-counter-line-height, 1);\n  max-width: var(--fa-counter-max-width, 5em);\n  min-width: var(--fa-counter-min-width, 1.5em);\n  overflow: hidden;\n  padding: var(--fa-counter-padding, 0.25em 0.5em);\n  right: var(--fa-right, 0);\n  text-overflow: ellipsis;\n  top: var(--fa-top, 0);\n  -webkit-transform: scale(var(--fa-counter-scale, 0.25));\n          transform: scale(var(--fa-counter-scale, 0.25));\n  -webkit-transform-origin: top right;\n          transform-origin: top right;\n}\n\n.fa-layers-bottom-right {\n  bottom: var(--fa-bottom, 0);\n  right: var(--fa-right, 0);\n  top: auto;\n  -webkit-transform: scale(var(--fa-layers-scale, 0.25));\n          transform: scale(var(--fa-layers-scale, 0.25));\n  -webkit-transform-origin: bottom right;\n          transform-origin: bottom right;\n}\n\n.fa-layers-bottom-left {\n  bottom: var(--fa-bottom, 0);\n  left: var(--fa-left, 0);\n  right: auto;\n  top: auto;\n  -webkit-transform: scale(var(--fa-layers-scale, 0.25));\n          transform: scale(var(--fa-layers-scale, 0.25));\n  -webkit-transform-origin: bottom left;\n          transform-origin: bottom left;\n}\n\n.fa-layers-top-right {\n  top: var(--fa-top, 0);\n  right: var(--fa-right, 0);\n  -webkit-transform: scale(var(--fa-layers-scale, 0.25));\n          transform: scale(var(--fa-layers-scale, 0.25));\n  -webkit-transform-origin: top right;\n          transform-origin: top right;\n}\n\n.fa-layers-top-left {\n  left: var(--fa-left, 0);\n  right: auto;\n  top: var(--fa-top, 0);\n  -webkit-transform: scale(var(--fa-layers-scale, 0.25));\n          transform: scale(var(--fa-layers-scale, 0.25));\n  -webkit-transform-origin: top left;\n          transform-origin: top left;\n}\n\n.fa-1x {\n  font-size: 1em;\n}\n\n.fa-2x {\n  font-size: 2em;\n}\n\n.fa-3x {\n  font-size: 3em;\n}\n\n.fa-4x {\n  font-size: 4em;\n}\n\n.fa-5x {\n  font-size: 5em;\n}\n\n.fa-6x {\n  font-size: 6em;\n}\n\n.fa-7x {\n  font-size: 7em;\n}\n\n.fa-8x {\n  font-size: 8em;\n}\n\n.fa-9x {\n  font-size: 9em;\n}\n\n.fa-10x {\n  font-size: 10em;\n}\n\n.fa-2xs {\n  font-size: 0.625em;\n  line-height: 0.1em;\n  vertical-align: 0.225em;\n}\n\n.fa-xs {\n  font-size: 0.75em;\n  line-height: 0.0833333337em;\n  vertical-align: 0.125em;\n}\n\n.fa-sm {\n  font-size: 0.875em;\n  line-height: 0.0714285718em;\n  vertical-align: 0.0535714295em;\n}\n\n.fa-lg {\n  font-size: 1.25em;\n  line-height: 0.05em;\n  vertical-align: -0.075em;\n}\n\n.fa-xl {\n  font-size: 1.5em;\n  line-height: 0.0416666682em;\n  vertical-align: -0.125em;\n}\n\n.fa-2xl {\n  font-size: 2em;\n  line-height: 0.03125em;\n  vertical-align: -0.1875em;\n}\n\n.fa-fw {\n  text-align: center;\n  width: 1.25em;\n}\n\n.fa-ul {\n  list-style-type: none;\n  margin-left: var(--fa-li-margin, 2.5em);\n  padding-left: 0;\n}\n.fa-ul > li {\n  position: relative;\n}\n\n.fa-li {\n  left: calc(var(--fa-li-width, 2em) * -1);\n  position: absolute;\n  text-align: center;\n  width: var(--fa-li-width, 2em);\n  line-height: inherit;\n}\n\n.fa-border {\n  border-color: var(--fa-border-color, #eee);\n  border-radius: var(--fa-border-radius, 0.1em);\n  border-style: var(--fa-border-style, solid);\n  border-width: var(--fa-border-width, 0.08em);\n  padding: var(--fa-border-padding, 0.2em 0.25em 0.15em);\n}\n\n.fa-pull-left {\n  float: left;\n  margin-right: var(--fa-pull-margin, 0.3em);\n}\n\n.fa-pull-right {\n  float: right;\n  margin-left: var(--fa-pull-margin, 0.3em);\n}\n\n.fa-beat {\n  -webkit-animation-name: fa-beat;\n          animation-name: fa-beat;\n  -webkit-animation-delay: var(--fa-animation-delay, 0);\n          animation-delay: var(--fa-animation-delay, 0);\n  -webkit-animation-direction: var(--fa-animation-direction, normal);\n          animation-direction: var(--fa-animation-direction, normal);\n  -webkit-animation-duration: var(--fa-animation-duration, 1s);\n          animation-duration: var(--fa-animation-duration, 1s);\n  -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n          animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n  -webkit-animation-timing-function: var(--fa-animation-timing, ease-in-out);\n          animation-timing-function: var(--fa-animation-timing, ease-in-out);\n}\n\n.fa-bounce {\n  -webkit-animation-name: fa-bounce;\n          animation-name: fa-bounce;\n  -webkit-animation-delay: var(--fa-animation-delay, 0);\n          animation-delay: var(--fa-animation-delay, 0);\n  -webkit-animation-direction: var(--fa-animation-direction, normal);\n          animation-direction: var(--fa-animation-direction, normal);\n  -webkit-animation-duration: var(--fa-animation-duration, 1s);\n          animation-duration: var(--fa-animation-duration, 1s);\n  -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n          animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n  -webkit-animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.28, 0.84, 0.42, 1));\n          animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.28, 0.84, 0.42, 1));\n}\n\n.fa-fade {\n  -webkit-animation-name: fa-fade;\n          animation-name: fa-fade;\n  -webkit-animation-delay: var(--fa-animation-delay, 0);\n          animation-delay: var(--fa-animation-delay, 0);\n  -webkit-animation-direction: var(--fa-animation-direction, normal);\n          animation-direction: var(--fa-animation-direction, normal);\n  -webkit-animation-duration: var(--fa-animation-duration, 1s);\n          animation-duration: var(--fa-animation-duration, 1s);\n  -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n          animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n  -webkit-animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.4, 0, 0.6, 1));\n          animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.4, 0, 0.6, 1));\n}\n\n.fa-beat-fade {\n  -webkit-animation-name: fa-beat-fade;\n          animation-name: fa-beat-fade;\n  -webkit-animation-delay: var(--fa-animation-delay, 0);\n          animation-delay: var(--fa-animation-delay, 0);\n  -webkit-animation-direction: var(--fa-animation-direction, normal);\n          animation-direction: var(--fa-animation-direction, normal);\n  -webkit-animation-duration: var(--fa-animation-duration, 1s);\n          animation-duration: var(--fa-animation-duration, 1s);\n  -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n          animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n  -webkit-animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.4, 0, 0.6, 1));\n          animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.4, 0, 0.6, 1));\n}\n\n.fa-flip {\n  -webkit-animation-name: fa-flip;\n          animation-name: fa-flip;\n  -webkit-animation-delay: var(--fa-animation-delay, 0);\n          animation-delay: var(--fa-animation-delay, 0);\n  -webkit-animation-direction: var(--fa-animation-direction, normal);\n          animation-direction: var(--fa-animation-direction, normal);\n  -webkit-animation-duration: var(--fa-animation-duration, 1s);\n          animation-duration: var(--fa-animation-duration, 1s);\n  -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n          animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n  -webkit-animation-timing-function: var(--fa-animation-timing, ease-in-out);\n          animation-timing-function: var(--fa-animation-timing, ease-in-out);\n}\n\n.fa-shake {\n  -webkit-animation-name: fa-shake;\n          animation-name: fa-shake;\n  -webkit-animation-delay: var(--fa-animation-delay, 0);\n          animation-delay: var(--fa-animation-delay, 0);\n  -webkit-animation-direction: var(--fa-animation-direction, normal);\n          animation-direction: var(--fa-animation-direction, normal);\n  -webkit-animation-duration: var(--fa-animation-duration, 1s);\n          animation-duration: var(--fa-animation-duration, 1s);\n  -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n          animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n  -webkit-animation-timing-function: var(--fa-animation-timing, linear);\n          animation-timing-function: var(--fa-animation-timing, linear);\n}\n\n.fa-spin {\n  -webkit-animation-name: fa-spin;\n          animation-name: fa-spin;\n  -webkit-animation-delay: var(--fa-animation-delay, 0);\n          animation-delay: var(--fa-animation-delay, 0);\n  -webkit-animation-direction: var(--fa-animation-direction, normal);\n          animation-direction: var(--fa-animation-direction, normal);\n  -webkit-animation-duration: var(--fa-animation-duration, 2s);\n          animation-duration: var(--fa-animation-duration, 2s);\n  -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n          animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n  -webkit-animation-timing-function: var(--fa-animation-timing, linear);\n          animation-timing-function: var(--fa-animation-timing, linear);\n}\n\n.fa-spin-reverse {\n  --fa-animation-direction: reverse;\n}\n\n.fa-pulse,\n.fa-spin-pulse {\n  -webkit-animation-name: fa-spin;\n          animation-name: fa-spin;\n  -webkit-animation-direction: var(--fa-animation-direction, normal);\n          animation-direction: var(--fa-animation-direction, normal);\n  -webkit-animation-duration: var(--fa-animation-duration, 1s);\n          animation-duration: var(--fa-animation-duration, 1s);\n  -webkit-animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n          animation-iteration-count: var(--fa-animation-iteration-count, infinite);\n  -webkit-animation-timing-function: var(--fa-animation-timing, steps(8));\n          animation-timing-function: var(--fa-animation-timing, steps(8));\n}\n\n@media (prefers-reduced-motion: reduce) {\n  .fa-beat,\n.fa-bounce,\n.fa-fade,\n.fa-beat-fade,\n.fa-flip,\n.fa-pulse,\n.fa-shake,\n.fa-spin,\n.fa-spin-pulse {\n    -webkit-animation-delay: -1ms;\n            animation-delay: -1ms;\n    -webkit-animation-duration: 1ms;\n            animation-duration: 1ms;\n    -webkit-animation-iteration-count: 1;\n            animation-iteration-count: 1;\n    transition-delay: 0s;\n    transition-duration: 0s;\n  }\n}\n@-webkit-keyframes fa-beat {\n  0%, 90% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n  }\n  45% {\n    -webkit-transform: scale(var(--fa-beat-scale, 1.25));\n            transform: scale(var(--fa-beat-scale, 1.25));\n  }\n}\n@keyframes fa-beat {\n  0%, 90% {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n  }\n  45% {\n    -webkit-transform: scale(var(--fa-beat-scale, 1.25));\n            transform: scale(var(--fa-beat-scale, 1.25));\n  }\n}\n@-webkit-keyframes fa-bounce {\n  0% {\n    -webkit-transform: scale(1, 1) translateY(0);\n            transform: scale(1, 1) translateY(0);\n  }\n  10% {\n    -webkit-transform: scale(var(--fa-bounce-start-scale-x, 1.1), var(--fa-bounce-start-scale-y, 0.9)) translateY(0);\n            transform: scale(var(--fa-bounce-start-scale-x, 1.1), var(--fa-bounce-start-scale-y, 0.9)) translateY(0);\n  }\n  30% {\n    -webkit-transform: scale(var(--fa-bounce-jump-scale-x, 0.9), var(--fa-bounce-jump-scale-y, 1.1)) translateY(var(--fa-bounce-height, -0.5em));\n            transform: scale(var(--fa-bounce-jump-scale-x, 0.9), var(--fa-bounce-jump-scale-y, 1.1)) translateY(var(--fa-bounce-height, -0.5em));\n  }\n  50% {\n    -webkit-transform: scale(var(--fa-bounce-land-scale-x, 1.05), var(--fa-bounce-land-scale-y, 0.95)) translateY(0);\n            transform: scale(var(--fa-bounce-land-scale-x, 1.05), var(--fa-bounce-land-scale-y, 0.95)) translateY(0);\n  }\n  57% {\n    -webkit-transform: scale(1, 1) translateY(var(--fa-bounce-rebound, -0.125em));\n            transform: scale(1, 1) translateY(var(--fa-bounce-rebound, -0.125em));\n  }\n  64% {\n    -webkit-transform: scale(1, 1) translateY(0);\n            transform: scale(1, 1) translateY(0);\n  }\n  100% {\n    -webkit-transform: scale(1, 1) translateY(0);\n            transform: scale(1, 1) translateY(0);\n  }\n}\n@keyframes fa-bounce {\n  0% {\n    -webkit-transform: scale(1, 1) translateY(0);\n            transform: scale(1, 1) translateY(0);\n  }\n  10% {\n    -webkit-transform: scale(var(--fa-bounce-start-scale-x, 1.1), var(--fa-bounce-start-scale-y, 0.9)) translateY(0);\n            transform: scale(var(--fa-bounce-start-scale-x, 1.1), var(--fa-bounce-start-scale-y, 0.9)) translateY(0);\n  }\n  30% {\n    -webkit-transform: scale(var(--fa-bounce-jump-scale-x, 0.9), var(--fa-bounce-jump-scale-y, 1.1)) translateY(var(--fa-bounce-height, -0.5em));\n            transform: scale(var(--fa-bounce-jump-scale-x, 0.9), var(--fa-bounce-jump-scale-y, 1.1)) translateY(var(--fa-bounce-height, -0.5em));\n  }\n  50% {\n    -webkit-transform: scale(var(--fa-bounce-land-scale-x, 1.05), var(--fa-bounce-land-scale-y, 0.95)) translateY(0);\n            transform: scale(var(--fa-bounce-land-scale-x, 1.05), var(--fa-bounce-land-scale-y, 0.95)) translateY(0);\n  }\n  57% {\n    -webkit-transform: scale(1, 1) translateY(var(--fa-bounce-rebound, -0.125em));\n            transform: scale(1, 1) translateY(var(--fa-bounce-rebound, -0.125em));\n  }\n  64% {\n    -webkit-transform: scale(1, 1) translateY(0);\n            transform: scale(1, 1) translateY(0);\n  }\n  100% {\n    -webkit-transform: scale(1, 1) translateY(0);\n            transform: scale(1, 1) translateY(0);\n  }\n}\n@-webkit-keyframes fa-fade {\n  50% {\n    opacity: var(--fa-fade-opacity, 0.4);\n  }\n}\n@keyframes fa-fade {\n  50% {\n    opacity: var(--fa-fade-opacity, 0.4);\n  }\n}\n@-webkit-keyframes fa-beat-fade {\n  0%, 100% {\n    opacity: var(--fa-beat-fade-opacity, 0.4);\n    -webkit-transform: scale(1);\n            transform: scale(1);\n  }\n  50% {\n    opacity: 1;\n    -webkit-transform: scale(var(--fa-beat-fade-scale, 1.125));\n            transform: scale(var(--fa-beat-fade-scale, 1.125));\n  }\n}\n@keyframes fa-beat-fade {\n  0%, 100% {\n    opacity: var(--fa-beat-fade-opacity, 0.4);\n    -webkit-transform: scale(1);\n            transform: scale(1);\n  }\n  50% {\n    opacity: 1;\n    -webkit-transform: scale(var(--fa-beat-fade-scale, 1.125));\n            transform: scale(var(--fa-beat-fade-scale, 1.125));\n  }\n}\n@-webkit-keyframes fa-flip {\n  50% {\n    -webkit-transform: rotate3d(var(--fa-flip-x, 0), var(--fa-flip-y, 1), var(--fa-flip-z, 0), var(--fa-flip-angle, -180deg));\n            transform: rotate3d(var(--fa-flip-x, 0), var(--fa-flip-y, 1), var(--fa-flip-z, 0), var(--fa-flip-angle, -180deg));\n  }\n}\n@keyframes fa-flip {\n  50% {\n    -webkit-transform: rotate3d(var(--fa-flip-x, 0), var(--fa-flip-y, 1), var(--fa-flip-z, 0), var(--fa-flip-angle, -180deg));\n            transform: rotate3d(var(--fa-flip-x, 0), var(--fa-flip-y, 1), var(--fa-flip-z, 0), var(--fa-flip-angle, -180deg));\n  }\n}\n@-webkit-keyframes fa-shake {\n  0% {\n    -webkit-transform: rotate(-15deg);\n            transform: rotate(-15deg);\n  }\n  4% {\n    -webkit-transform: rotate(15deg);\n            transform: rotate(15deg);\n  }\n  8%, 24% {\n    -webkit-transform: rotate(-18deg);\n            transform: rotate(-18deg);\n  }\n  12%, 28% {\n    -webkit-transform: rotate(18deg);\n            transform: rotate(18deg);\n  }\n  16% {\n    -webkit-transform: rotate(-22deg);\n            transform: rotate(-22deg);\n  }\n  20% {\n    -webkit-transform: rotate(22deg);\n            transform: rotate(22deg);\n  }\n  32% {\n    -webkit-transform: rotate(-12deg);\n            transform: rotate(-12deg);\n  }\n  36% {\n    -webkit-transform: rotate(12deg);\n            transform: rotate(12deg);\n  }\n  40%, 100% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg);\n  }\n}\n@keyframes fa-shake {\n  0% {\n    -webkit-transform: rotate(-15deg);\n            transform: rotate(-15deg);\n  }\n  4% {\n    -webkit-transform: rotate(15deg);\n            transform: rotate(15deg);\n  }\n  8%, 24% {\n    -webkit-transform: rotate(-18deg);\n            transform: rotate(-18deg);\n  }\n  12%, 28% {\n    -webkit-transform: rotate(18deg);\n            transform: rotate(18deg);\n  }\n  16% {\n    -webkit-transform: rotate(-22deg);\n            transform: rotate(-22deg);\n  }\n  20% {\n    -webkit-transform: rotate(22deg);\n            transform: rotate(22deg);\n  }\n  32% {\n    -webkit-transform: rotate(-12deg);\n            transform: rotate(-12deg);\n  }\n  36% {\n    -webkit-transform: rotate(12deg);\n            transform: rotate(12deg);\n  }\n  40%, 100% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg);\n  }\n}\n@-webkit-keyframes fa-spin {\n  0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg);\n  }\n  100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg);\n  }\n}\n@keyframes fa-spin {\n  0% {\n    -webkit-transform: rotate(0deg);\n            transform: rotate(0deg);\n  }\n  100% {\n    -webkit-transform: rotate(360deg);\n            transform: rotate(360deg);\n  }\n}\n.fa-rotate-90 {\n  -webkit-transform: rotate(90deg);\n          transform: rotate(90deg);\n}\n\n.fa-rotate-180 {\n  -webkit-transform: rotate(180deg);\n          transform: rotate(180deg);\n}\n\n.fa-rotate-270 {\n  -webkit-transform: rotate(270deg);\n          transform: rotate(270deg);\n}\n\n.fa-flip-horizontal {\n  -webkit-transform: scale(-1, 1);\n          transform: scale(-1, 1);\n}\n\n.fa-flip-vertical {\n  -webkit-transform: scale(1, -1);\n          transform: scale(1, -1);\n}\n\n.fa-flip-both,\n.fa-flip-horizontal.fa-flip-vertical {\n  -webkit-transform: scale(-1, -1);\n          transform: scale(-1, -1);\n}\n\n.fa-rotate-by {\n  -webkit-transform: rotate(var(--fa-rotate-angle, none));\n          transform: rotate(var(--fa-rotate-angle, none));\n}\n\n.fa-stack {\n  display: inline-block;\n  vertical-align: middle;\n  height: 2em;\n  position: relative;\n  width: 2.5em;\n}\n\n.fa-stack-1x,\n.fa-stack-2x {\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  position: absolute;\n  right: 0;\n  top: 0;\n  z-index: var(--fa-stack-z-index, auto);\n}\n\n.svg-inline--fa.fa-stack-1x {\n  height: 1em;\n  width: 1.25em;\n}\n.svg-inline--fa.fa-stack-2x {\n  height: 2em;\n  width: 2.5em;\n}\n\n.fa-inverse {\n  color: var(--fa-inverse, #fff);\n}\n\n.sr-only,\n.fa-sr-only {\n  position: absolute;\n  width: 1px;\n  height: 1px;\n  padding: 0;\n  margin: -1px;\n  overflow: hidden;\n  clip: rect(0, 0, 0, 0);\n  white-space: nowrap;\n  border-width: 0;\n}\n\n.sr-only-focusable:not(:focus),\n.fa-sr-only-focusable:not(:focus) {\n  position: absolute;\n  width: 1px;\n  height: 1px;\n  padding: 0;\n  margin: -1px;\n  overflow: hidden;\n  clip: rect(0, 0, 0, 0);\n  white-space: nowrap;\n  border-width: 0;\n}\n\n.svg-inline--fa .fa-primary {\n  fill: var(--fa-primary-color, currentColor);\n  opacity: var(--fa-primary-opacity, 1);\n}\n\n.svg-inline--fa .fa-secondary {\n  fill: var(--fa-secondary-color, currentColor);\n  opacity: var(--fa-secondary-opacity, 0.4);\n}\n\n.svg-inline--fa.fa-swap-opacity .fa-primary {\n  opacity: var(--fa-secondary-opacity, 0.4);\n}\n\n.svg-inline--fa.fa-swap-opacity .fa-secondary {\n  opacity: var(--fa-primary-opacity, 1);\n}\n\n.svg-inline--fa mask .fa-primary,\n.svg-inline--fa mask .fa-secondary {\n  fill: black;\n}\n\n.fad.fa-inverse,\n.fa-duotone.fa-inverse {\n  color: var(--fa-inverse, #fff);\n}";
-
-function css() {
-  var dfp = DEFAULT_FAMILY_PREFIX;
-  var drc = DEFAULT_REPLACEMENT_CLASS;
-  var fp = config.familyPrefix;
-  var rc = config.replacementClass;
-  var s = baseStyles;
-
-  if (fp !== dfp || rc !== drc) {
-    var dPatt = new RegExp("\\.".concat(dfp, "\\-"), 'g');
-    var customPropPatt = new RegExp("\\--".concat(dfp, "\\-"), 'g');
-    var rPatt = new RegExp("\\.".concat(drc), 'g');
-    s = s.replace(dPatt, ".".concat(fp, "-")).replace(customPropPatt, "--".concat(fp, "-")).replace(rPatt, ".".concat(rc));
-  }
-
-  return s;
-}
-
-var _cssInserted = false;
-
-function ensureCss() {
-  if (config.autoAddCss && !_cssInserted) {
-    insertCss(css());
-    _cssInserted = true;
-  }
-}
-
-var InjectCSS = {
-  mixout: function mixout() {
-    return {
-      dom: {
-        css: css,
-        insertCss: ensureCss
-      }
-    };
-  },
-  hooks: function hooks() {
-    return {
-      beforeDOMElementCreation: function beforeDOMElementCreation() {
-        ensureCss();
-      },
-      beforeI2svg: function beforeI2svg() {
-        ensureCss();
-      }
-    };
-  }
-};
-
-var w = WINDOW || {};
-if (!w[NAMESPACE_IDENTIFIER]) w[NAMESPACE_IDENTIFIER] = {};
-if (!w[NAMESPACE_IDENTIFIER].styles) w[NAMESPACE_IDENTIFIER].styles = {};
-if (!w[NAMESPACE_IDENTIFIER].hooks) w[NAMESPACE_IDENTIFIER].hooks = {};
-if (!w[NAMESPACE_IDENTIFIER].shims) w[NAMESPACE_IDENTIFIER].shims = [];
-var namespace = w[NAMESPACE_IDENTIFIER];
-
-var functions = [];
-
-var listener = function listener() {
-  DOCUMENT.removeEventListener('DOMContentLoaded', listener);
-  loaded = 1;
-  functions.map(function (fn) {
-    return fn();
-  });
-};
-
-var loaded = false;
-
-if (IS_DOM) {
-  loaded = (DOCUMENT.documentElement.doScroll ? /^loaded|^c/ : /^loaded|^i|^c/).test(DOCUMENT.readyState);
-  if (!loaded) DOCUMENT.addEventListener('DOMContentLoaded', listener);
-}
-
-function domready (fn) {
-  if (!IS_DOM) return;
-  loaded ? setTimeout(fn, 0) : functions.push(fn);
-}
-
-function toHtml(abstractNodes) {
-  var tag = abstractNodes.tag,
-      _abstractNodes$attrib = abstractNodes.attributes,
-      attributes = _abstractNodes$attrib === void 0 ? {} : _abstractNodes$attrib,
-      _abstractNodes$childr = abstractNodes.children,
-      children = _abstractNodes$childr === void 0 ? [] : _abstractNodes$childr;
-
-  if (typeof abstractNodes === 'string') {
-    return htmlEscape$1(abstractNodes);
-  } else {
-    return "<".concat(tag, " ").concat(joinAttributes(attributes), ">").concat(children.map(toHtml).join(''), "</").concat(tag, ">");
-  }
-}
-
-function iconFromMapping(mapping, prefix, iconName) {
-  if (mapping && mapping[prefix] && mapping[prefix][iconName]) {
-    return {
-      prefix: prefix,
-      iconName: iconName,
-      icon: mapping[prefix][iconName]
-    };
-  }
-}
-
-/**
- * Internal helper to bind a function known to have 4 arguments
- * to a given context.
- */
-
-var bindInternal4 = function bindInternal4(func, thisContext) {
-  return function (a, b, c, d) {
-    return func.call(thisContext, a, b, c, d);
-  };
-};
-
-/**
- * # Reduce
- *
- * A fast object `.reduce()` implementation.
- *
- * @param  {Object}   subject      The object to reduce over.
- * @param  {Function} fn           The reducer function.
- * @param  {mixed}    initialValue The initial value for the reducer, defaults to subject[0].
- * @param  {Object}   thisContext  The context for the reducer.
- * @return {mixed}                 The final result.
- */
-
-
-var reduce = function fastReduceObject(subject, fn, initialValue, thisContext) {
-  var keys = Object.keys(subject),
-      length = keys.length,
-      iterator = thisContext !== undefined ? bindInternal4(fn, thisContext) : fn,
-      i,
-      key,
-      result;
-
-  if (initialValue === undefined) {
-    i = 1;
-    result = subject[keys[0]];
-  } else {
-    i = 0;
-    result = initialValue;
-  }
-
-  for (; i < length; i++) {
-    key = keys[i];
-    result = iterator(result, subject[key], key, subject);
-  }
-
-  return result;
-};
-
-/**
- * ucs2decode() and codePointAt() are both works of Mathias Bynens and licensed under MIT
- *
- * Copyright Mathias Bynens <https://mathiasbynens.be/>
-
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
-
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
-
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
-function ucs2decode(string) {
-  var output = [];
-  var counter = 0;
-  var length = string.length;
-
-  while (counter < length) {
-    var value = string.charCodeAt(counter++);
-
-    if (value >= 0xD800 && value <= 0xDBFF && counter < length) {
-      var extra = string.charCodeAt(counter++);
-
-      if ((extra & 0xFC00) == 0xDC00) {
-        // eslint-disable-line eqeqeq
-        output.push(((value & 0x3FF) << 10) + (extra & 0x3FF) + 0x10000);
-      } else {
-        output.push(value);
-        counter--;
-      }
-    } else {
-      output.push(value);
-    }
-  }
-
-  return output;
-}
-
-function toHex(unicode) {
-  var decoded = ucs2decode(unicode);
-  return decoded.length === 1 ? decoded[0].toString(16) : null;
-}
-function codePointAt(string, index) {
-  var size = string.length;
-  var first = string.charCodeAt(index);
-  var second;
-
-  if (first >= 0xD800 && first <= 0xDBFF && size > index + 1) {
-    second = string.charCodeAt(index + 1);
-
-    if (second >= 0xDC00 && second <= 0xDFFF) {
-      return (first - 0xD800) * 0x400 + second - 0xDC00 + 0x10000;
-    }
-  }
-
-  return first;
-}
-
-function normalizeIcons(icons) {
-  return Object.keys(icons).reduce(function (acc, iconName) {
-    var icon = icons[iconName];
-    var expanded = !!icon.icon;
-
-    if (expanded) {
-      acc[icon.iconName] = icon.icon;
-    } else {
-      acc[iconName] = icon;
-    }
-
-    return acc;
-  }, {});
-}
-
-function defineIcons(prefix, icons) {
-  var params = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-  var _params$skipHooks = params.skipHooks,
-      skipHooks = _params$skipHooks === void 0 ? false : _params$skipHooks;
-  var normalized = normalizeIcons(icons);
-
-  if (typeof namespace.hooks.addPack === 'function' && !skipHooks) {
-    namespace.hooks.addPack(prefix, normalizeIcons(icons));
-  } else {
-    namespace.styles[prefix] = _objectSpread2(_objectSpread2({}, namespace.styles[prefix] || {}), normalized);
-  }
-  /**
-   * Font Awesome 4 used the prefix of `fa` for all icons. With the introduction
-   * of new styles we needed to differentiate between them. Prefix `fa` is now an alias
-   * for `fas` so we'll ease the upgrade process for our users by automatically defining
-   * this as well.
-   */
-
-
-  if (prefix === 'fas') {
-    defineIcons('fa', icons);
-  }
-}
-
-var styles = namespace.styles,
-    shims = namespace.shims;
-var LONG_STYLE = Object.values(PREFIX_TO_LONG_STYLE);
-var _defaultUsablePrefix = null;
-var _byUnicode = {};
-var _byLigature = {};
-var _byOldName = {};
-var _byOldUnicode = {};
-var _byAlias = {};
-var PREFIXES = Object.keys(PREFIX_TO_STYLE);
-
-function isReserved(name) {
-  return ~RESERVED_CLASSES.indexOf(name);
-}
-
-function getIconName(familyPrefix, cls) {
-  var parts = cls.split('-');
-  var prefix = parts[0];
-  var iconName = parts.slice(1).join('-');
-
-  if (prefix === familyPrefix && iconName !== '' && !isReserved(iconName)) {
-    return iconName;
-  } else {
-    return null;
-  }
-}
-var build = function build() {
-  var lookup = function lookup(reducer) {
-    return reduce(styles, function (o, style, prefix) {
-      o[prefix] = reduce(style, reducer, {});
-      return o;
-    }, {});
-  };
-
-  _byUnicode = lookup(function (acc, icon, iconName) {
-    if (icon[3]) {
-      acc[icon[3]] = iconName;
-    }
-
-    if (icon[2]) {
-      var aliases = icon[2].filter(function (a) {
-        return typeof a === 'number';
-      });
-      aliases.forEach(function (alias) {
-        acc[alias.toString(16)] = iconName;
-      });
-    }
-
-    return acc;
-  });
-  _byLigature = lookup(function (acc, icon, iconName) {
-    acc[iconName] = iconName;
-
-    if (icon[2]) {
-      var aliases = icon[2].filter(function (a) {
-        return typeof a === 'string';
-      });
-      aliases.forEach(function (alias) {
-        acc[alias] = iconName;
-      });
-    }
-
-    return acc;
-  });
-  _byAlias = lookup(function (acc, icon, iconName) {
-    var aliases = icon[2];
-    acc[iconName] = iconName;
-    aliases.forEach(function (alias) {
-      acc[alias] = iconName;
-    });
-    return acc;
-  }); // If we have a Kit, we can't determine if regular is available since we
-  // could be auto-fetching it. We'll have to assume that it is available.
-
-  var hasRegular = 'far' in styles || config.autoFetchSvg;
-  var shimLookups = reduce(shims, function (acc, shim) {
-    var maybeNameMaybeUnicode = shim[0];
-    var prefix = shim[1];
-    var iconName = shim[2];
-
-    if (prefix === 'far' && !hasRegular) {
-      prefix = 'fas';
-    }
-
-    if (typeof maybeNameMaybeUnicode === 'string') {
-      acc.names[maybeNameMaybeUnicode] = {
-        prefix: prefix,
-        iconName: iconName
-      };
-    }
-
-    if (typeof maybeNameMaybeUnicode === 'number') {
-      acc.unicodes[maybeNameMaybeUnicode.toString(16)] = {
-        prefix: prefix,
-        iconName: iconName
-      };
-    }
-
-    return acc;
-  }, {
-    names: {},
-    unicodes: {}
-  });
-  _byOldName = shimLookups.names;
-  _byOldUnicode = shimLookups.unicodes;
-  _defaultUsablePrefix = getCanonicalPrefix(config.styleDefault);
-};
-onChange(function (c) {
-  _defaultUsablePrefix = getCanonicalPrefix(c.styleDefault);
-});
-build();
-function byUnicode(prefix, unicode) {
-  return (_byUnicode[prefix] || {})[unicode];
-}
-function byLigature(prefix, ligature) {
-  return (_byLigature[prefix] || {})[ligature];
-}
-function byAlias(prefix, alias) {
-  return (_byAlias[prefix] || {})[alias];
-}
-function byOldName(name) {
-  return _byOldName[name] || {
-    prefix: null,
-    iconName: null
-  };
-}
-function byOldUnicode(unicode) {
-  var oldUnicode = _byOldUnicode[unicode];
-  var newUnicode = byUnicode('fas', unicode);
-  return oldUnicode || (newUnicode ? {
-    prefix: 'fas',
-    iconName: newUnicode
-  } : null) || {
-    prefix: null,
-    iconName: null
-  };
-}
-function getDefaultUsablePrefix() {
-  return _defaultUsablePrefix;
-}
-var emptyCanonicalIcon = function emptyCanonicalIcon() {
-  return {
-    prefix: null,
-    iconName: null,
-    rest: []
-  };
-};
-function getCanonicalPrefix(styleOrPrefix) {
-  var style = PREFIX_TO_STYLE[styleOrPrefix];
-  var prefix = STYLE_TO_PREFIX[styleOrPrefix] || STYLE_TO_PREFIX[style];
-  var defined = styleOrPrefix in namespace.styles ? styleOrPrefix : null;
-  return prefix || defined || null;
-}
-function getCanonicalIcon(values) {
-  var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var _params$skipLookups = params.skipLookups,
-      skipLookups = _params$skipLookups === void 0 ? false : _params$skipLookups;
-  var givenPrefix = null;
-  var canonical = values.reduce(function (acc, cls) {
-    var iconName = getIconName(config.familyPrefix, cls);
-
-    if (styles[cls]) {
-      cls = LONG_STYLE.includes(cls) ? LONG_STYLE_TO_PREFIX[cls] : cls;
-      givenPrefix = cls;
-      acc.prefix = cls;
-    } else if (PREFIXES.indexOf(cls) > -1) {
-      givenPrefix = cls;
-      acc.prefix = getCanonicalPrefix(cls);
-    } else if (iconName) {
-      acc.iconName = iconName;
-    } else if (cls !== config.replacementClass) {
-      acc.rest.push(cls);
-    }
-
-    if (!skipLookups && acc.prefix && acc.iconName) {
-      var shim = givenPrefix === 'fa' ? byOldName(acc.iconName) : {};
-      var aliasIconName = byAlias(acc.prefix, acc.iconName);
-
-      if (shim.prefix) {
-        givenPrefix = null;
-      }
-
-      acc.iconName = shim.iconName || aliasIconName || acc.iconName;
-      acc.prefix = shim.prefix || acc.prefix;
-
-      if (acc.prefix === 'far' && !styles['far'] && styles['fas'] && !config.autoFetchSvg) {
-        // Allow a fallback from the regular style to solid if regular is not available
-        // but only if we aren't auto-fetching SVGs
-        acc.prefix = 'fas';
-      }
-    }
-
-    return acc;
-  }, emptyCanonicalIcon());
-
-  if (canonical.prefix === 'fa' || givenPrefix === 'fa') {
-    // The fa prefix is not canonical. So if it has made it through until this point
-    // we will shift it to the correct prefix.
-    canonical.prefix = getDefaultUsablePrefix() || 'fas';
-  }
-
-  return canonical;
-}
-
-var Library = /*#__PURE__*/function () {
-  function Library() {
-    _classCallCheck(this, Library);
-
-    this.definitions = {};
-  }
-
-  _createClass(Library, [{
-    key: "add",
-    value: function add() {
-      var _this = this;
-
-      for (var _len = arguments.length, definitions = new Array(_len), _key = 0; _key < _len; _key++) {
-        definitions[_key] = arguments[_key];
-      }
-
-      var additions = definitions.reduce(this._pullDefinitions, {});
-      Object.keys(additions).forEach(function (key) {
-        _this.definitions[key] = _objectSpread2(_objectSpread2({}, _this.definitions[key] || {}), additions[key]);
-        defineIcons(key, additions[key]);
-        var longPrefix = PREFIX_TO_LONG_STYLE[key];
-        if (longPrefix) defineIcons(longPrefix, additions[key]);
-        build();
-      });
-    }
-  }, {
-    key: "reset",
-    value: function reset() {
-      this.definitions = {};
-    }
-  }, {
-    key: "_pullDefinitions",
-    value: function _pullDefinitions(additions, definition) {
-      var normalized = definition.prefix && definition.iconName && definition.icon ? {
-        0: definition
-      } : definition;
-      Object.keys(normalized).map(function (key) {
-        var _normalized$key = normalized[key],
-            prefix = _normalized$key.prefix,
-            iconName = _normalized$key.iconName,
-            icon = _normalized$key.icon;
-        var aliases = icon[2];
-        if (!additions[prefix]) additions[prefix] = {};
-
-        if (aliases.length > 0) {
-          aliases.forEach(function (alias) {
-            if (typeof alias === 'string') {
-              additions[prefix][alias] = icon;
-            }
-          });
-        }
-
-        additions[prefix][iconName] = icon;
-      });
-      return additions;
-    }
-  }]);
-
-  return Library;
-}();
-
-var _plugins$1 = [];
-var _hooks = {};
-var providers = {};
-var defaultProviderKeys = Object.keys(providers);
-function registerPlugins(nextPlugins, _ref) {
-  var obj = _ref.mixoutsTo;
-  _plugins$1 = nextPlugins;
-  _hooks = {};
-  Object.keys(providers).forEach(function (k) {
-    if (defaultProviderKeys.indexOf(k) === -1) {
-      delete providers[k];
-    }
-  });
-
-  _plugins$1.forEach(function (plugin) {
-    var mixout = plugin.mixout ? plugin.mixout() : {};
-    Object.keys(mixout).forEach(function (tk) {
-      if (typeof mixout[tk] === 'function') {
-        obj[tk] = mixout[tk];
-      }
-
-      if (_typeof(mixout[tk]) === 'object') {
-        Object.keys(mixout[tk]).forEach(function (sk) {
-          if (!obj[tk]) {
-            obj[tk] = {};
-          }
-
-          obj[tk][sk] = mixout[tk][sk];
-        });
-      }
-    });
-
-    if (plugin.hooks) {
-      var hooks = plugin.hooks();
-      Object.keys(hooks).forEach(function (hook) {
-        if (!_hooks[hook]) {
-          _hooks[hook] = [];
-        }
-
-        _hooks[hook].push(hooks[hook]);
-      });
-    }
-
-    if (plugin.provides) {
-      plugin.provides(providers);
-    }
-  });
-
-  return obj;
-}
-function chainHooks(hook, accumulator) {
-  for (var _len = arguments.length, args = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-    args[_key - 2] = arguments[_key];
-  }
-
-  var hookFns = _hooks[hook] || [];
-  hookFns.forEach(function (hookFn) {
-    accumulator = hookFn.apply(null, [accumulator].concat(args)); // eslint-disable-line no-useless-call
-  });
-  return accumulator;
-}
-function callHooks(hook) {
-  for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-    args[_key2 - 1] = arguments[_key2];
-  }
-
-  var hookFns = _hooks[hook] || [];
-  hookFns.forEach(function (hookFn) {
-    hookFn.apply(null, args);
-  });
-  return undefined;
-}
-function callProvided() {
-  var hook = arguments[0];
-  var args = Array.prototype.slice.call(arguments, 1);
-  return providers[hook] ? providers[hook].apply(null, args) : undefined;
-}
-
-function findIconDefinition(iconLookup) {
-  if (iconLookup.prefix === 'fa') {
-    iconLookup.prefix = 'fas';
-  }
-
-  var iconName = iconLookup.iconName;
-  var prefix = iconLookup.prefix || getDefaultUsablePrefix();
-  if (!iconName) return;
-  iconName = byAlias(prefix, iconName) || iconName;
-  return iconFromMapping(library.definitions, prefix, iconName) || iconFromMapping(namespace.styles, prefix, iconName);
-}
-var library = new Library();
-var noAuto = function noAuto() {
-  config.autoReplaceSvg = false;
-  config.observeMutations = false;
-  callHooks('noAuto');
-};
-var dom = {
-  i2svg: function i2svg() {
-    var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-    if (IS_DOM) {
-      callHooks('beforeI2svg', params);
-      callProvided('pseudoElements2svg', params);
-      return callProvided('i2svg', params);
-    } else {
-      return Promise.reject('Operation requires a DOM of some kind.');
-    }
-  },
-  watch: function watch() {
-    var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    var autoReplaceSvgRoot = params.autoReplaceSvgRoot;
-
-    if (config.autoReplaceSvg === false) {
-      config.autoReplaceSvg = true;
-    }
-
-    config.observeMutations = true;
-    domready(function () {
-      autoReplace({
-        autoReplaceSvgRoot: autoReplaceSvgRoot
-      });
-      callHooks('watch', params);
-    });
-  }
-};
-var parse$1 = {
-  icon: function icon(_icon) {
-    if (_icon === null) {
-      return null;
-    }
-
-    if (_typeof(_icon) === 'object' && _icon.prefix && _icon.iconName) {
-      return {
-        prefix: _icon.prefix,
-        iconName: byAlias(_icon.prefix, _icon.iconName) || _icon.iconName
-      };
-    }
-
-    if (Array.isArray(_icon) && _icon.length === 2) {
-      var iconName = _icon[1].indexOf('fa-') === 0 ? _icon[1].slice(3) : _icon[1];
-      var prefix = getCanonicalPrefix(_icon[0]);
-      return {
-        prefix: prefix,
-        iconName: byAlias(prefix, iconName) || iconName
-      };
-    }
-
-    if (typeof _icon === 'string' && (_icon.indexOf("".concat(config.familyPrefix, "-")) > -1 || _icon.match(ICON_SELECTION_SYNTAX_PATTERN))) {
-      var canonicalIcon = getCanonicalIcon(_icon.split(' '), {
-        skipLookups: true
-      });
-      return {
-        prefix: canonicalIcon.prefix || getDefaultUsablePrefix(),
-        iconName: byAlias(canonicalIcon.prefix, canonicalIcon.iconName) || canonicalIcon.iconName
-      };
-    }
-
-    if (typeof _icon === 'string') {
-      var _prefix = getDefaultUsablePrefix();
-
-      return {
-        prefix: _prefix,
-        iconName: byAlias(_prefix, _icon) || _icon
-      };
-    }
-  }
-};
-var api = {
-  noAuto: noAuto,
-  config: config,
-  dom: dom,
-  parse: parse$1,
-  library: library,
-  findIconDefinition: findIconDefinition,
-  toHtml: toHtml
-};
-
-var autoReplace = function autoReplace() {
-  var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var _params$autoReplaceSv = params.autoReplaceSvgRoot,
-      autoReplaceSvgRoot = _params$autoReplaceSv === void 0 ? DOCUMENT : _params$autoReplaceSv;
-  if ((Object.keys(namespace.styles).length > 0 || config.autoFetchSvg) && IS_DOM && config.autoReplaceSvg) api.dom.i2svg({
-    node: autoReplaceSvgRoot
-  });
-};
-
-function domVariants(val, abstractCreator) {
-  Object.defineProperty(val, 'abstract', {
-    get: abstractCreator
-  });
-  Object.defineProperty(val, 'html', {
-    get: function get() {
-      return val.abstract.map(function (a) {
-        return toHtml(a);
-      });
-    }
-  });
-  Object.defineProperty(val, 'node', {
-    get: function get() {
-      if (!IS_DOM) return;
-      var container = DOCUMENT.createElement('div');
-      container.innerHTML = val.html;
-      return container.children;
-    }
-  });
-  return val;
-}
-
-function asIcon (_ref) {
-  var children = _ref.children,
-      main = _ref.main,
-      mask = _ref.mask,
-      attributes = _ref.attributes,
-      styles = _ref.styles,
-      transform = _ref.transform;
-
-  if (transformIsMeaningful(transform) && main.found && !mask.found) {
-    var width = main.width,
-        height = main.height;
-    var offset = {
-      x: width / height / 2,
-      y: 0.5
-    };
-    attributes['style'] = joinStyles(_objectSpread2(_objectSpread2({}, styles), {}, {
-      'transform-origin': "".concat(offset.x + transform.x / 16, "em ").concat(offset.y + transform.y / 16, "em")
-    }));
-  }
-
-  return [{
-    tag: 'svg',
-    attributes: attributes,
-    children: children
-  }];
-}
-
-function asSymbol (_ref) {
-  var prefix = _ref.prefix,
-      iconName = _ref.iconName,
-      children = _ref.children,
-      attributes = _ref.attributes,
-      symbol = _ref.symbol;
-  var id = symbol === true ? "".concat(prefix, "-").concat(config.familyPrefix, "-").concat(iconName) : symbol;
-  return [{
-    tag: 'svg',
-    attributes: {
-      style: 'display: none;'
-    },
-    children: [{
-      tag: 'symbol',
-      attributes: _objectSpread2(_objectSpread2({}, attributes), {}, {
-        id: id
-      }),
-      children: children
-    }]
-  }];
-}
-
-function makeInlineSvgAbstract(params) {
-  var _params$icons = params.icons,
-      main = _params$icons.main,
-      mask = _params$icons.mask,
-      prefix = params.prefix,
-      iconName = params.iconName,
-      transform = params.transform,
-      symbol = params.symbol,
-      title = params.title,
-      maskId = params.maskId,
-      titleId = params.titleId,
-      extra = params.extra,
-      _params$watchable = params.watchable,
-      watchable = _params$watchable === void 0 ? false : _params$watchable;
-
-  var _ref = mask.found ? mask : main,
-      width = _ref.width,
-      height = _ref.height;
-
-  var isUploadedIcon = prefix === 'fak';
-  var attrClass = [config.replacementClass, iconName ? "".concat(config.familyPrefix, "-").concat(iconName) : ''].filter(function (c) {
-    return extra.classes.indexOf(c) === -1;
-  }).filter(function (c) {
-    return c !== '' || !!c;
-  }).concat(extra.classes).join(' ');
-  var content = {
-    children: [],
-    attributes: _objectSpread2(_objectSpread2({}, extra.attributes), {}, {
-      'data-prefix': prefix,
-      'data-icon': iconName,
-      'class': attrClass,
-      'role': extra.attributes.role || 'img',
-      'xmlns': 'http://www.w3.org/2000/svg',
-      'viewBox': "0 0 ".concat(width, " ").concat(height)
-    })
-  };
-  var uploadedIconWidthStyle = isUploadedIcon && !~extra.classes.indexOf('fa-fw') ? {
-    width: "".concat(width / height * 16 * 0.0625, "em")
-  } : {};
-
-  if (watchable) {
-    content.attributes[DATA_FA_I2SVG] = '';
-  }
-
-  if (title) {
-    content.children.push({
-      tag: 'title',
-      attributes: {
-        id: content.attributes['aria-labelledby'] || "title-".concat(titleId || nextUniqueId())
-      },
-      children: [title]
-    });
-    delete content.attributes.title;
-  }
-
-  var args = _objectSpread2(_objectSpread2({}, content), {}, {
-    prefix: prefix,
-    iconName: iconName,
-    main: main,
-    mask: mask,
-    maskId: maskId,
-    transform: transform,
-    symbol: symbol,
-    styles: _objectSpread2(_objectSpread2({}, uploadedIconWidthStyle), extra.styles)
-  });
-
-  var _ref2 = mask.found && main.found ? callProvided('generateAbstractMask', args) || {
-    children: [],
-    attributes: {}
-  } : callProvided('generateAbstractIcon', args) || {
-    children: [],
-    attributes: {}
-  },
-      children = _ref2.children,
-      attributes = _ref2.attributes;
-
-  args.children = children;
-  args.attributes = attributes;
-
-  if (symbol) {
-    return asSymbol(args);
-  } else {
-    return asIcon(args);
-  }
-}
-function makeLayersTextAbstract(params) {
-  var content = params.content,
-      width = params.width,
-      height = params.height,
-      transform = params.transform,
-      title = params.title,
-      extra = params.extra,
-      _params$watchable2 = params.watchable,
-      watchable = _params$watchable2 === void 0 ? false : _params$watchable2;
-
-  var attributes = _objectSpread2(_objectSpread2(_objectSpread2({}, extra.attributes), title ? {
-    'title': title
-  } : {}), {}, {
-    'class': extra.classes.join(' ')
-  });
-
-  if (watchable) {
-    attributes[DATA_FA_I2SVG] = '';
-  }
-
-  var styles = _objectSpread2({}, extra.styles);
-
-  if (transformIsMeaningful(transform)) {
-    styles['transform'] = transformForCss({
-      transform: transform,
-      startCentered: true,
-      width: width,
-      height: height
-    });
-    styles['-webkit-transform'] = styles['transform'];
-  }
-
-  var styleString = joinStyles(styles);
-
-  if (styleString.length > 0) {
-    attributes['style'] = styleString;
-  }
-
-  var val = [];
-  val.push({
-    tag: 'span',
-    attributes: attributes,
-    children: [content]
-  });
-
-  if (title) {
-    val.push({
-      tag: 'span',
-      attributes: {
-        class: 'sr-only'
-      },
-      children: [title]
-    });
-  }
-
-  return val;
-}
-function makeLayersCounterAbstract(params) {
-  var content = params.content,
-      title = params.title,
-      extra = params.extra;
-
-  var attributes = _objectSpread2(_objectSpread2(_objectSpread2({}, extra.attributes), title ? {
-    'title': title
-  } : {}), {}, {
-    'class': extra.classes.join(' ')
-  });
-
-  var styleString = joinStyles(extra.styles);
-
-  if (styleString.length > 0) {
-    attributes['style'] = styleString;
-  }
-
-  var val = [];
-  val.push({
-    tag: 'span',
-    attributes: attributes,
-    children: [content]
-  });
-
-  if (title) {
-    val.push({
-      tag: 'span',
-      attributes: {
-        class: 'sr-only'
-      },
-      children: [title]
-    });
-  }
-
-  return val;
-}
-
-var styles$1 = namespace.styles;
-function asFoundIcon(icon) {
-  var width = icon[0];
-  var height = icon[1];
-
-  var _icon$slice = icon.slice(4),
-      _icon$slice2 = _slicedToArray(_icon$slice, 1),
-      vectorData = _icon$slice2[0];
-
-  var element = null;
-
-  if (Array.isArray(vectorData)) {
-    element = {
-      tag: 'g',
-      attributes: {
-        class: "".concat(config.familyPrefix, "-").concat(DUOTONE_CLASSES.GROUP)
-      },
-      children: [{
-        tag: 'path',
-        attributes: {
-          class: "".concat(config.familyPrefix, "-").concat(DUOTONE_CLASSES.SECONDARY),
-          fill: 'currentColor',
-          d: vectorData[0]
-        }
-      }, {
-        tag: 'path',
-        attributes: {
-          class: "".concat(config.familyPrefix, "-").concat(DUOTONE_CLASSES.PRIMARY),
-          fill: 'currentColor',
-          d: vectorData[1]
-        }
-      }]
-    };
-  } else {
-    element = {
-      tag: 'path',
-      attributes: {
-        fill: 'currentColor',
-        d: vectorData
-      }
-    };
-  }
-
-  return {
-    found: true,
-    width: width,
-    height: height,
-    icon: element
-  };
-}
-var missingIconResolutionMixin = {
-  found: false,
-  width: 512,
-  height: 512
-};
-
-function maybeNotifyMissing(iconName, prefix) {
-  if (!PRODUCTION && !config.showMissingIcons && iconName) {
-    console.error("Icon with name \"".concat(iconName, "\" and prefix \"").concat(prefix, "\" is missing."));
-  }
-}
-
-function findIcon(iconName, prefix) {
-  var givenPrefix = prefix;
-
-  if (prefix === 'fa' && config.styleDefault !== null) {
-    prefix = getDefaultUsablePrefix();
-  }
-
-  return new Promise(function (resolve, reject) {
-    ({
-      found: false,
-      width: 512,
-      height: 512,
-      icon: callProvided('missingIconAbstract') || {}
-    });
-
-    if (givenPrefix === 'fa') {
-      var shim = byOldName(iconName) || {};
-      iconName = shim.iconName || iconName;
-      prefix = shim.prefix || prefix;
-    }
-
-    if (iconName && prefix && styles$1[prefix] && styles$1[prefix][iconName]) {
-      var icon = styles$1[prefix][iconName];
-      return resolve(asFoundIcon(icon));
-    }
-
-    maybeNotifyMissing(iconName, prefix);
-    resolve(_objectSpread2(_objectSpread2({}, missingIconResolutionMixin), {}, {
-      icon: config.showMissingIcons && iconName ? callProvided('missingIconAbstract') || {} : {}
-    }));
-  });
-}
-
-var noop$1$1 = function noop() {};
-
-var p = config.measurePerformance && PERFORMANCE && PERFORMANCE.mark && PERFORMANCE.measure ? PERFORMANCE : {
-  mark: noop$1$1,
-  measure: noop$1$1
-};
-var preamble = "FA \"6.1.1\"";
-
-var begin = function begin(name) {
-  p.mark("".concat(preamble, " ").concat(name, " begins"));
-  return function () {
-    return end(name);
-  };
-};
-
-var end = function end(name) {
-  p.mark("".concat(preamble, " ").concat(name, " ends"));
-  p.measure("".concat(preamble, " ").concat(name), "".concat(preamble, " ").concat(name, " begins"), "".concat(preamble, " ").concat(name, " ends"));
-};
-
-var perf = {
-  begin: begin,
-  end: end
-};
-
-var noop$2$1 = function noop() {};
-
-function isWatched(node) {
-  var i2svg = node.getAttribute ? node.getAttribute(DATA_FA_I2SVG) : null;
-  return typeof i2svg === 'string';
-}
-
-function hasPrefixAndIcon(node) {
-  var prefix = node.getAttribute ? node.getAttribute(DATA_PREFIX) : null;
-  var icon = node.getAttribute ? node.getAttribute(DATA_ICON) : null;
-  return prefix && icon;
-}
-
-function hasBeenReplaced(node) {
-  return node && node.classList && node.classList.contains && node.classList.contains(config.replacementClass);
-}
-
-function getMutator() {
-  if (config.autoReplaceSvg === true) {
-    return mutators.replace;
-  }
-
-  var mutator = mutators[config.autoReplaceSvg];
-  return mutator || mutators.replace;
-}
-
-function createElementNS(tag) {
-  return DOCUMENT.createElementNS('http://www.w3.org/2000/svg', tag);
-}
-
-function createElement$1(tag) {
-  return DOCUMENT.createElement(tag);
-}
-
-function convertSVG(abstractObj) {
-  var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var _params$ceFn = params.ceFn,
-      ceFn = _params$ceFn === void 0 ? abstractObj.tag === 'svg' ? createElementNS : createElement$1 : _params$ceFn;
-
-  if (typeof abstractObj === 'string') {
-    return DOCUMENT.createTextNode(abstractObj);
-  }
-
-  var tag = ceFn(abstractObj.tag);
-  Object.keys(abstractObj.attributes || []).forEach(function (key) {
-    tag.setAttribute(key, abstractObj.attributes[key]);
-  });
-  var children = abstractObj.children || [];
-  children.forEach(function (child) {
-    tag.appendChild(convertSVG(child, {
-      ceFn: ceFn
-    }));
-  });
-  return tag;
-}
-
-function nodeAsComment(node) {
-  var comment = " ".concat(node.outerHTML, " ");
-  /* BEGIN.ATTRIBUTION */
-
-  comment = "".concat(comment, "Font Awesome fontawesome.com ");
-  /* END.ATTRIBUTION */
-
-  return comment;
-}
-
-var mutators = {
-  replace: function replace(mutation) {
-    var node = mutation[0];
-
-    if (node.parentNode) {
-      mutation[1].forEach(function (abstract) {
-        node.parentNode.insertBefore(convertSVG(abstract), node);
-      });
-
-      if (node.getAttribute(DATA_FA_I2SVG) === null && config.keepOriginalSource) {
-        var comment = DOCUMENT.createComment(nodeAsComment(node));
-        node.parentNode.replaceChild(comment, node);
-      } else {
-        node.remove();
-      }
-    }
-  },
-  nest: function nest(mutation) {
-    var node = mutation[0];
-    var abstract = mutation[1]; // If we already have a replaced node we do not want to continue nesting within it.
-    // Short-circuit to the standard replacement
-
-    if (~classArray(node).indexOf(config.replacementClass)) {
-      return mutators.replace(mutation);
-    }
-
-    var forSvg = new RegExp("".concat(config.familyPrefix, "-.*"));
-    delete abstract[0].attributes.id;
-
-    if (abstract[0].attributes.class) {
-      var splitClasses = abstract[0].attributes.class.split(' ').reduce(function (acc, cls) {
-        if (cls === config.replacementClass || cls.match(forSvg)) {
-          acc.toSvg.push(cls);
-        } else {
-          acc.toNode.push(cls);
-        }
-
-        return acc;
-      }, {
-        toNode: [],
-        toSvg: []
-      });
-      abstract[0].attributes.class = splitClasses.toSvg.join(' ');
-
-      if (splitClasses.toNode.length === 0) {
-        node.removeAttribute('class');
-      } else {
-        node.setAttribute('class', splitClasses.toNode.join(' '));
-      }
-    }
-
-    var newInnerHTML = abstract.map(function (a) {
-      return toHtml(a);
-    }).join('\n');
-    node.setAttribute(DATA_FA_I2SVG, '');
-    node.innerHTML = newInnerHTML;
-  }
-};
-
-function performOperationSync(op) {
-  op();
-}
-
-function perform(mutations, callback) {
-  var callbackFunction = typeof callback === 'function' ? callback : noop$2$1;
-
-  if (mutations.length === 0) {
-    callbackFunction();
-  } else {
-    var frame = performOperationSync;
-
-    if (config.mutateApproach === MUTATION_APPROACH_ASYNC) {
-      frame = WINDOW.requestAnimationFrame || performOperationSync;
-    }
-
-    frame(function () {
-      var mutator = getMutator();
-      var mark = perf.begin('mutate');
-      mutations.map(mutator);
-      mark();
-      callbackFunction();
-    });
-  }
-}
-var disabled = false;
-function disableObservation() {
-  disabled = true;
-}
-function enableObservation() {
-  disabled = false;
-}
-var mo = null;
-function observe(options) {
-  if (!MUTATION_OBSERVER) {
-    return;
-  }
-
-  if (!config.observeMutations) {
-    return;
-  }
-
-  var _options$treeCallback = options.treeCallback,
-      treeCallback = _options$treeCallback === void 0 ? noop$2$1 : _options$treeCallback,
-      _options$nodeCallback = options.nodeCallback,
-      nodeCallback = _options$nodeCallback === void 0 ? noop$2$1 : _options$nodeCallback,
-      _options$pseudoElemen = options.pseudoElementsCallback,
-      pseudoElementsCallback = _options$pseudoElemen === void 0 ? noop$2$1 : _options$pseudoElemen,
-      _options$observeMutat = options.observeMutationsRoot,
-      observeMutationsRoot = _options$observeMutat === void 0 ? DOCUMENT : _options$observeMutat;
-  mo = new MUTATION_OBSERVER(function (objects) {
-    if (disabled) return;
-    var defaultPrefix = getDefaultUsablePrefix();
-    toArray(objects).forEach(function (mutationRecord) {
-      if (mutationRecord.type === 'childList' && mutationRecord.addedNodes.length > 0 && !isWatched(mutationRecord.addedNodes[0])) {
-        if (config.searchPseudoElements) {
-          pseudoElementsCallback(mutationRecord.target);
-        }
-
-        treeCallback(mutationRecord.target);
-      }
-
-      if (mutationRecord.type === 'attributes' && mutationRecord.target.parentNode && config.searchPseudoElements) {
-        pseudoElementsCallback(mutationRecord.target.parentNode);
-      }
-
-      if (mutationRecord.type === 'attributes' && isWatched(mutationRecord.target) && ~ATTRIBUTES_WATCHED_FOR_MUTATION.indexOf(mutationRecord.attributeName)) {
-        if (mutationRecord.attributeName === 'class' && hasPrefixAndIcon(mutationRecord.target)) {
-          var _getCanonicalIcon = getCanonicalIcon(classArray(mutationRecord.target)),
-              prefix = _getCanonicalIcon.prefix,
-              iconName = _getCanonicalIcon.iconName;
-
-          mutationRecord.target.setAttribute(DATA_PREFIX, prefix || defaultPrefix);
-          if (iconName) mutationRecord.target.setAttribute(DATA_ICON, iconName);
-        } else if (hasBeenReplaced(mutationRecord.target)) {
-          nodeCallback(mutationRecord.target);
-        }
-      }
-    });
-  });
-  if (!IS_DOM) return;
-  mo.observe(observeMutationsRoot, {
-    childList: true,
-    attributes: true,
-    characterData: true,
-    subtree: true
-  });
-}
-function disconnect() {
-  if (!mo) return;
-  mo.disconnect();
-}
-
-function styleParser (node) {
-  var style = node.getAttribute('style');
-  var val = [];
-
-  if (style) {
-    val = style.split(';').reduce(function (acc, style) {
-      var styles = style.split(':');
-      var prop = styles[0];
-      var value = styles.slice(1);
-
-      if (prop && value.length > 0) {
-        acc[prop] = value.join(':').trim();
-      }
-
-      return acc;
-    }, {});
-  }
-
-  return val;
-}
-
-function classParser (node) {
-  var existingPrefix = node.getAttribute('data-prefix');
-  var existingIconName = node.getAttribute('data-icon');
-  var innerText = node.innerText !== undefined ? node.innerText.trim() : '';
-  var val = getCanonicalIcon(classArray(node));
-
-  if (!val.prefix) {
-    val.prefix = getDefaultUsablePrefix();
-  }
-
-  if (existingPrefix && existingIconName) {
-    val.prefix = existingPrefix;
-    val.iconName = existingIconName;
-  }
-
-  if (val.iconName && val.prefix) {
-    return val;
-  }
-
-  if (val.prefix && innerText.length > 0) {
-    val.iconName = byLigature(val.prefix, node.innerText) || byUnicode(val.prefix, toHex(node.innerText));
-  }
-
-  return val;
-}
-
-function attributesParser (node) {
-  var extraAttributes = toArray(node.attributes).reduce(function (acc, attr) {
-    if (acc.name !== 'class' && acc.name !== 'style') {
-      acc[attr.name] = attr.value;
-    }
-
-    return acc;
-  }, {});
-  var title = node.getAttribute('title');
-  var titleId = node.getAttribute('data-fa-title-id');
-
-  if (config.autoA11y) {
-    if (title) {
-      extraAttributes['aria-labelledby'] = "".concat(config.replacementClass, "-title-").concat(titleId || nextUniqueId());
-    } else {
-      extraAttributes['aria-hidden'] = 'true';
-      extraAttributes['focusable'] = 'false';
-    }
-  }
-
-  return extraAttributes;
-}
-
-function blankMeta() {
-  return {
-    iconName: null,
-    title: null,
-    titleId: null,
-    prefix: null,
-    transform: meaninglessTransform,
-    symbol: false,
-    mask: {
-      iconName: null,
-      prefix: null,
-      rest: []
-    },
-    maskId: null,
-    extra: {
-      classes: [],
-      styles: {},
-      attributes: {}
-    }
-  };
-}
-function parseMeta(node) {
-  var parser = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
-    styleParser: true
-  };
-
-  var _classParser = classParser(node),
-      iconName = _classParser.iconName,
-      prefix = _classParser.prefix,
-      extraClasses = _classParser.rest;
-
-  var extraAttributes = attributesParser(node);
-  var pluginMeta = chainHooks('parseNodeAttributes', {}, node);
-  var extraStyles = parser.styleParser ? styleParser(node) : [];
-  return _objectSpread2({
-    iconName: iconName,
-    title: node.getAttribute('title'),
-    titleId: node.getAttribute('data-fa-title-id'),
-    prefix: prefix,
-    transform: meaninglessTransform,
-    mask: {
-      iconName: null,
-      prefix: null,
-      rest: []
-    },
-    maskId: null,
-    symbol: false,
-    extra: {
-      classes: extraClasses,
-      styles: extraStyles,
-      attributes: extraAttributes
-    }
-  }, pluginMeta);
-}
-
-var styles$2 = namespace.styles;
-
-function generateMutation(node) {
-  var nodeMeta = config.autoReplaceSvg === 'nest' ? parseMeta(node, {
-    styleParser: false
-  }) : parseMeta(node);
-
-  if (~nodeMeta.extra.classes.indexOf(LAYERS_TEXT_CLASSNAME)) {
-    return callProvided('generateLayersText', node, nodeMeta);
-  } else {
-    return callProvided('generateSvgReplacementMutation', node, nodeMeta);
-  }
-}
-
-function onTree(root) {
-  var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-  if (!IS_DOM) return Promise.resolve();
-  var htmlClassList = DOCUMENT.documentElement.classList;
-
-  var hclAdd = function hclAdd(suffix) {
-    return htmlClassList.add("".concat(HTML_CLASS_I2SVG_BASE_CLASS, "-").concat(suffix));
-  };
-
-  var hclRemove = function hclRemove(suffix) {
-    return htmlClassList.remove("".concat(HTML_CLASS_I2SVG_BASE_CLASS, "-").concat(suffix));
-  };
-
-  var prefixes = config.autoFetchSvg ? Object.keys(PREFIX_TO_STYLE) : Object.keys(styles$2);
-  var prefixesDomQuery = [".".concat(LAYERS_TEXT_CLASSNAME, ":not([").concat(DATA_FA_I2SVG, "])")].concat(prefixes.map(function (p) {
-    return ".".concat(p, ":not([").concat(DATA_FA_I2SVG, "])");
-  })).join(', ');
-
-  if (prefixesDomQuery.length === 0) {
-    return Promise.resolve();
-  }
-
-  var candidates = [];
-
-  try {
-    candidates = toArray(root.querySelectorAll(prefixesDomQuery));
-  } catch (e) {// noop
-  }
-
-  if (candidates.length > 0) {
-    hclAdd('pending');
-    hclRemove('complete');
-  } else {
-    return Promise.resolve();
-  }
-
-  var mark = perf.begin('onTree');
-  var mutations = candidates.reduce(function (acc, node) {
-    try {
-      var mutation = generateMutation(node);
-
-      if (mutation) {
-        acc.push(mutation);
-      }
-    } catch (e) {
-      if (!PRODUCTION) {
-        if (e.name === 'MissingIcon') {
-          console.error(e);
-        }
-      }
-    }
-
-    return acc;
-  }, []);
-  return new Promise(function (resolve, reject) {
-    Promise.all(mutations).then(function (resolvedMutations) {
-      perform(resolvedMutations, function () {
-        hclAdd('active');
-        hclAdd('complete');
-        hclRemove('pending');
-        if (typeof callback === 'function') callback();
-        mark();
-        resolve();
-      });
-    }).catch(function (e) {
-      mark();
-      reject(e);
-    });
-  });
-}
-
-function onNode(node) {
-  var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-  generateMutation(node).then(function (mutation) {
-    if (mutation) {
-      perform([mutation], callback);
-    }
-  });
-}
-
-function resolveIcons(next) {
-  return function (maybeIconDefinition) {
-    var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-    var iconDefinition = (maybeIconDefinition || {}).icon ? maybeIconDefinition : findIconDefinition(maybeIconDefinition || {});
-    var mask = params.mask;
-
-    if (mask) {
-      mask = (mask || {}).icon ? mask : findIconDefinition(mask || {});
-    }
-
-    return next(iconDefinition, _objectSpread2(_objectSpread2({}, params), {}, {
-      mask: mask
-    }));
-  };
-}
-
-var render$h = function render(iconDefinition) {
-  var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var _params$transform = params.transform,
-      transform = _params$transform === void 0 ? meaninglessTransform : _params$transform,
-      _params$symbol = params.symbol,
-      symbol = _params$symbol === void 0 ? false : _params$symbol,
-      _params$mask = params.mask,
-      mask = _params$mask === void 0 ? null : _params$mask,
-      _params$maskId = params.maskId,
-      maskId = _params$maskId === void 0 ? null : _params$maskId,
-      _params$title = params.title,
-      title = _params$title === void 0 ? null : _params$title,
-      _params$titleId = params.titleId,
-      titleId = _params$titleId === void 0 ? null : _params$titleId,
-      _params$classes = params.classes,
-      classes = _params$classes === void 0 ? [] : _params$classes,
-      _params$attributes = params.attributes,
-      attributes = _params$attributes === void 0 ? {} : _params$attributes,
-      _params$styles = params.styles,
-      styles = _params$styles === void 0 ? {} : _params$styles;
-  if (!iconDefinition) return;
-  var prefix = iconDefinition.prefix,
-      iconName = iconDefinition.iconName,
-      icon = iconDefinition.icon;
-  return domVariants(_objectSpread2({
-    type: 'icon'
-  }, iconDefinition), function () {
-    callHooks('beforeDOMElementCreation', {
-      iconDefinition: iconDefinition,
-      params: params
-    });
-
-    if (config.autoA11y) {
-      if (title) {
-        attributes['aria-labelledby'] = "".concat(config.replacementClass, "-title-").concat(titleId || nextUniqueId());
-      } else {
-        attributes['aria-hidden'] = 'true';
-        attributes['focusable'] = 'false';
-      }
-    }
-
-    return makeInlineSvgAbstract({
-      icons: {
-        main: asFoundIcon(icon),
-        mask: mask ? asFoundIcon(mask.icon) : {
-          found: false,
-          width: null,
-          height: null,
-          icon: {}
-        }
-      },
-      prefix: prefix,
-      iconName: iconName,
-      transform: _objectSpread2(_objectSpread2({}, meaninglessTransform), transform),
-      symbol: symbol,
-      title: title,
-      maskId: maskId,
-      titleId: titleId,
-      extra: {
-        attributes: attributes,
-        styles: styles,
-        classes: classes
-      }
-    });
-  });
-};
-var ReplaceElements = {
-  mixout: function mixout() {
-    return {
-      icon: resolveIcons(render$h)
-    };
-  },
-  hooks: function hooks() {
-    return {
-      mutationObserverCallbacks: function mutationObserverCallbacks(accumulator) {
-        accumulator.treeCallback = onTree;
-        accumulator.nodeCallback = onNode;
-        return accumulator;
-      }
-    };
-  },
-  provides: function provides(providers$$1) {
-    providers$$1.i2svg = function (params) {
-      var _params$node = params.node,
-          node = _params$node === void 0 ? DOCUMENT : _params$node,
-          _params$callback = params.callback,
-          callback = _params$callback === void 0 ? function () {} : _params$callback;
-      return onTree(node, callback);
-    };
-
-    providers$$1.generateSvgReplacementMutation = function (node, nodeMeta) {
-      var iconName = nodeMeta.iconName,
-          title = nodeMeta.title,
-          titleId = nodeMeta.titleId,
-          prefix = nodeMeta.prefix,
-          transform = nodeMeta.transform,
-          symbol = nodeMeta.symbol,
-          mask = nodeMeta.mask,
-          maskId = nodeMeta.maskId,
-          extra = nodeMeta.extra;
-      return new Promise(function (resolve, reject) {
-        Promise.all([findIcon(iconName, prefix), mask.iconName ? findIcon(mask.iconName, mask.prefix) : Promise.resolve({
-          found: false,
-          width: 512,
-          height: 512,
-          icon: {}
-        })]).then(function (_ref) {
-          var _ref2 = _slicedToArray(_ref, 2),
-              main = _ref2[0],
-              mask = _ref2[1];
-
-          resolve([node, makeInlineSvgAbstract({
-            icons: {
-              main: main,
-              mask: mask
-            },
-            prefix: prefix,
-            iconName: iconName,
-            transform: transform,
-            symbol: symbol,
-            maskId: maskId,
-            title: title,
-            titleId: titleId,
-            extra: extra,
-            watchable: true
-          })]);
-        }).catch(reject);
-      });
-    };
-
-    providers$$1.generateAbstractIcon = function (_ref3) {
-      var children = _ref3.children,
-          attributes = _ref3.attributes,
-          main = _ref3.main,
-          transform = _ref3.transform,
-          styles = _ref3.styles;
-      var styleString = joinStyles(styles);
-
-      if (styleString.length > 0) {
-        attributes['style'] = styleString;
-      }
-
-      var nextChild;
-
-      if (transformIsMeaningful(transform)) {
-        nextChild = callProvided('generateAbstractTransformGrouping', {
-          main: main,
-          transform: transform,
-          containerWidth: main.width,
-          iconWidth: main.width
-        });
-      }
-
-      children.push(nextChild || main.icon);
-      return {
-        children: children,
-        attributes: attributes
-      };
-    };
-  }
-};
-
-var Layers = {
-  mixout: function mixout() {
-    return {
-      layer: function layer(assembler) {
-        var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-        var _params$classes = params.classes,
-            classes = _params$classes === void 0 ? [] : _params$classes;
-        return domVariants({
-          type: 'layer'
-        }, function () {
-          callHooks('beforeDOMElementCreation', {
-            assembler: assembler,
-            params: params
-          });
-          var children = [];
-          assembler(function (args) {
-            Array.isArray(args) ? args.map(function (a) {
-              children = children.concat(a.abstract);
-            }) : children = children.concat(args.abstract);
-          });
-          return [{
-            tag: 'span',
-            attributes: {
-              class: ["".concat(config.familyPrefix, "-layers")].concat(_toConsumableArray(classes)).join(' ')
-            },
-            children: children
-          }];
-        });
-      }
-    };
-  }
-};
-
-var LayersCounter = {
-  mixout: function mixout() {
-    return {
-      counter: function counter(content) {
-        var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-        var _params$title = params.title,
-            title = _params$title === void 0 ? null : _params$title,
-            _params$classes = params.classes,
-            classes = _params$classes === void 0 ? [] : _params$classes,
-            _params$attributes = params.attributes,
-            attributes = _params$attributes === void 0 ? {} : _params$attributes,
-            _params$styles = params.styles,
-            styles = _params$styles === void 0 ? {} : _params$styles;
-        return domVariants({
-          type: 'counter',
-          content: content
-        }, function () {
-          callHooks('beforeDOMElementCreation', {
-            content: content,
-            params: params
-          });
-          return makeLayersCounterAbstract({
-            content: content.toString(),
-            title: title,
-            extra: {
-              attributes: attributes,
-              styles: styles,
-              classes: ["".concat(config.familyPrefix, "-layers-counter")].concat(_toConsumableArray(classes))
-            }
-          });
-        });
-      }
-    };
-  }
-};
-
-var LayersText = {
-  mixout: function mixout() {
-    return {
-      text: function text(content) {
-        var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-        var _params$transform = params.transform,
-            transform = _params$transform === void 0 ? meaninglessTransform : _params$transform,
-            _params$title = params.title,
-            title = _params$title === void 0 ? null : _params$title,
-            _params$classes = params.classes,
-            classes = _params$classes === void 0 ? [] : _params$classes,
-            _params$attributes = params.attributes,
-            attributes = _params$attributes === void 0 ? {} : _params$attributes,
-            _params$styles = params.styles,
-            styles = _params$styles === void 0 ? {} : _params$styles;
-        return domVariants({
-          type: 'text',
-          content: content
-        }, function () {
-          callHooks('beforeDOMElementCreation', {
-            content: content,
-            params: params
-          });
-          return makeLayersTextAbstract({
-            content: content,
-            transform: _objectSpread2(_objectSpread2({}, meaninglessTransform), transform),
-            title: title,
-            extra: {
-              attributes: attributes,
-              styles: styles,
-              classes: ["".concat(config.familyPrefix, "-layers-text")].concat(_toConsumableArray(classes))
-            }
-          });
-        });
-      }
-    };
-  },
-  provides: function provides(providers$$1) {
-    providers$$1.generateLayersText = function (node, nodeMeta) {
-      var title = nodeMeta.title,
-          transform = nodeMeta.transform,
-          extra = nodeMeta.extra;
-      var width = null;
-      var height = null;
-
-      if (IS_IE) {
-        var computedFontSize = parseInt(getComputedStyle(node).fontSize, 10);
-        var boundingClientRect = node.getBoundingClientRect();
-        width = boundingClientRect.width / computedFontSize;
-        height = boundingClientRect.height / computedFontSize;
-      }
-
-      if (config.autoA11y && !title) {
-        extra.attributes['aria-hidden'] = 'true';
-      }
-
-      return Promise.resolve([node, makeLayersTextAbstract({
-        content: node.innerHTML,
-        width: width,
-        height: height,
-        transform: transform,
-        title: title,
-        extra: extra,
-        watchable: true
-      })]);
-    };
-  }
-};
-
-var CLEAN_CONTENT_PATTERN = new RegExp("\"", 'ug');
-var SECONDARY_UNICODE_RANGE = [1105920, 1112319];
-function hexValueFromContent(content) {
-  var cleaned = content.replace(CLEAN_CONTENT_PATTERN, '');
-  var codePoint = codePointAt(cleaned, 0);
-  var isPrependTen = codePoint >= SECONDARY_UNICODE_RANGE[0] && codePoint <= SECONDARY_UNICODE_RANGE[1];
-  var isDoubled = cleaned.length === 2 ? cleaned[0] === cleaned[1] : false;
-  return {
-    value: isDoubled ? toHex(cleaned[0]) : toHex(cleaned),
-    isSecondary: isPrependTen || isDoubled
-  };
-}
-
-function replaceForPosition(node, position) {
-  var pendingAttribute = "".concat(DATA_FA_PSEUDO_ELEMENT_PENDING).concat(position.replace(':', '-'));
-  return new Promise(function (resolve, reject) {
-    if (node.getAttribute(pendingAttribute) !== null) {
-      // This node is already being processed
-      return resolve();
-    }
-
-    var children = toArray(node.children);
-    var alreadyProcessedPseudoElement = children.filter(function (c) {
-      return c.getAttribute(DATA_FA_PSEUDO_ELEMENT) === position;
-    })[0];
-    var styles = WINDOW.getComputedStyle(node, position);
-    var fontFamily = styles.getPropertyValue('font-family').match(FONT_FAMILY_PATTERN);
-    var fontWeight = styles.getPropertyValue('font-weight');
-    var content = styles.getPropertyValue('content');
-
-    if (alreadyProcessedPseudoElement && !fontFamily) {
-      // If we've already processed it but the current computed style does not result in a font-family,
-      // that probably means that a class name that was previously present to make the icon has been
-      // removed. So we now should delete the icon.
-      node.removeChild(alreadyProcessedPseudoElement);
-      return resolve();
-    } else if (fontFamily && content !== 'none' && content !== '') {
-      var _content = styles.getPropertyValue('content');
-
-      var prefix = ~['Solid', 'Regular', 'Light', 'Thin', 'Duotone', 'Brands', 'Kit'].indexOf(fontFamily[2]) ? STYLE_TO_PREFIX[fontFamily[2].toLowerCase()] : FONT_WEIGHT_TO_PREFIX[fontWeight];
-
-      var _hexValueFromContent = hexValueFromContent(_content),
-          hexValue = _hexValueFromContent.value,
-          isSecondary = _hexValueFromContent.isSecondary;
-
-      var isV4 = fontFamily[0].startsWith('FontAwesome');
-      var iconName = byUnicode(prefix, hexValue);
-      var iconIdentifier = iconName;
-
-      if (isV4) {
-        var iconName4 = byOldUnicode(hexValue);
-
-        if (iconName4.iconName && iconName4.prefix) {
-          iconName = iconName4.iconName;
-          prefix = iconName4.prefix;
-        }
-      } // Only convert the pseudo element in this ::before/::after position into an icon if we haven't
-      // already done so with the same prefix and iconName
-
-
-      if (iconName && !isSecondary && (!alreadyProcessedPseudoElement || alreadyProcessedPseudoElement.getAttribute(DATA_PREFIX) !== prefix || alreadyProcessedPseudoElement.getAttribute(DATA_ICON) !== iconIdentifier)) {
-        node.setAttribute(pendingAttribute, iconIdentifier);
-
-        if (alreadyProcessedPseudoElement) {
-          // Delete the old one, since we're replacing it with a new one
-          node.removeChild(alreadyProcessedPseudoElement);
-        }
-
-        var meta = blankMeta();
-        var extra = meta.extra;
-        extra.attributes[DATA_FA_PSEUDO_ELEMENT] = position;
-        findIcon(iconName, prefix).then(function (main) {
-          var abstract = makeInlineSvgAbstract(_objectSpread2(_objectSpread2({}, meta), {}, {
-            icons: {
-              main: main,
-              mask: emptyCanonicalIcon()
-            },
-            prefix: prefix,
-            iconName: iconIdentifier,
-            extra: extra,
-            watchable: true
-          }));
-          var element = DOCUMENT.createElement('svg');
-
-          if (position === '::before') {
-            node.insertBefore(element, node.firstChild);
-          } else {
-            node.appendChild(element);
-          }
-
-          element.outerHTML = abstract.map(function (a) {
-            return toHtml(a);
-          }).join('\n');
-          node.removeAttribute(pendingAttribute);
-          resolve();
-        }).catch(reject);
-      } else {
-        resolve();
-      }
-    } else {
-      resolve();
-    }
-  });
-}
-
-function replace(node) {
-  return Promise.all([replaceForPosition(node, '::before'), replaceForPosition(node, '::after')]);
-}
-
-function processable(node) {
-  return node.parentNode !== document.head && !~TAGNAMES_TO_SKIP_FOR_PSEUDOELEMENTS.indexOf(node.tagName.toUpperCase()) && !node.getAttribute(DATA_FA_PSEUDO_ELEMENT) && (!node.parentNode || node.parentNode.tagName !== 'svg');
-}
-
-function searchPseudoElements(root) {
-  if (!IS_DOM) return;
-  return new Promise(function (resolve, reject) {
-    var operations = toArray(root.querySelectorAll('*')).filter(processable).map(replace);
-    var end = perf.begin('searchPseudoElements');
-    disableObservation();
-    Promise.all(operations).then(function () {
-      end();
-      enableObservation();
-      resolve();
-    }).catch(function () {
-      end();
-      enableObservation();
-      reject();
-    });
-  });
-}
-
-var PseudoElements = {
-  hooks: function hooks() {
-    return {
-      mutationObserverCallbacks: function mutationObserverCallbacks(accumulator) {
-        accumulator.pseudoElementsCallback = searchPseudoElements;
-        return accumulator;
-      }
-    };
-  },
-  provides: function provides(providers$$1) {
-    providers$$1.pseudoElements2svg = function (params) {
-      var _params$node = params.node,
-          node = _params$node === void 0 ? DOCUMENT : _params$node;
-
-      if (config.searchPseudoElements) {
-        searchPseudoElements(node);
-      }
-    };
-  }
-};
-
-var _unwatched = false;
-var MutationObserver$1 = {
-  mixout: function mixout() {
-    return {
-      dom: {
-        unwatch: function unwatch() {
-          disableObservation();
-          _unwatched = true;
-        }
-      }
-    };
-  },
-  hooks: function hooks() {
-    return {
-      bootstrap: function bootstrap() {
-        observe(chainHooks('mutationObserverCallbacks', {}));
-      },
-      noAuto: function noAuto() {
-        disconnect();
-      },
-      watch: function watch(params) {
-        var observeMutationsRoot = params.observeMutationsRoot;
-
-        if (_unwatched) {
-          enableObservation();
-        } else {
-          observe(chainHooks('mutationObserverCallbacks', {
-            observeMutationsRoot: observeMutationsRoot
-          }));
-        }
-      }
-    };
-  }
-};
-
-var parseTransformString = function parseTransformString(transformString) {
-  var transform = {
-    size: 16,
-    x: 0,
-    y: 0,
-    flipX: false,
-    flipY: false,
-    rotate: 0
-  };
-  return transformString.toLowerCase().split(' ').reduce(function (acc, n) {
-    var parts = n.toLowerCase().split('-');
-    var first = parts[0];
-    var rest = parts.slice(1).join('-');
-
-    if (first && rest === 'h') {
-      acc.flipX = true;
-      return acc;
-    }
-
-    if (first && rest === 'v') {
-      acc.flipY = true;
-      return acc;
-    }
-
-    rest = parseFloat(rest);
-
-    if (isNaN(rest)) {
-      return acc;
-    }
-
-    switch (first) {
-      case 'grow':
-        acc.size = acc.size + rest;
-        break;
-
-      case 'shrink':
-        acc.size = acc.size - rest;
-        break;
-
-      case 'left':
-        acc.x = acc.x - rest;
-        break;
-
-      case 'right':
-        acc.x = acc.x + rest;
-        break;
-
-      case 'up':
-        acc.y = acc.y - rest;
-        break;
-
-      case 'down':
-        acc.y = acc.y + rest;
-        break;
-
-      case 'rotate':
-        acc.rotate = acc.rotate + rest;
-        break;
-    }
-
-    return acc;
-  }, transform);
-};
-var PowerTransforms = {
-  mixout: function mixout() {
-    return {
-      parse: {
-        transform: function transform(transformString) {
-          return parseTransformString(transformString);
-        }
-      }
-    };
-  },
-  hooks: function hooks() {
-    return {
-      parseNodeAttributes: function parseNodeAttributes(accumulator, node) {
-        var transformString = node.getAttribute('data-fa-transform');
-
-        if (transformString) {
-          accumulator.transform = parseTransformString(transformString);
-        }
-
-        return accumulator;
-      }
-    };
-  },
-  provides: function provides(providers) {
-    providers.generateAbstractTransformGrouping = function (_ref) {
-      var main = _ref.main,
-          transform = _ref.transform,
-          containerWidth = _ref.containerWidth,
-          iconWidth = _ref.iconWidth;
-      var outer = {
-        transform: "translate(".concat(containerWidth / 2, " 256)")
-      };
-      var innerTranslate = "translate(".concat(transform.x * 32, ", ").concat(transform.y * 32, ") ");
-      var innerScale = "scale(".concat(transform.size / 16 * (transform.flipX ? -1 : 1), ", ").concat(transform.size / 16 * (transform.flipY ? -1 : 1), ") ");
-      var innerRotate = "rotate(".concat(transform.rotate, " 0 0)");
-      var inner = {
-        transform: "".concat(innerTranslate, " ").concat(innerScale, " ").concat(innerRotate)
-      };
-      var path = {
-        transform: "translate(".concat(iconWidth / 2 * -1, " -256)")
-      };
-      var operations = {
-        outer: outer,
-        inner: inner,
-        path: path
-      };
-      return {
-        tag: 'g',
-        attributes: _objectSpread2({}, operations.outer),
-        children: [{
-          tag: 'g',
-          attributes: _objectSpread2({}, operations.inner),
-          children: [{
-            tag: main.icon.tag,
-            children: main.icon.children,
-            attributes: _objectSpread2(_objectSpread2({}, main.icon.attributes), operations.path)
-          }]
-        }]
-      };
-    };
-  }
-};
-
-var ALL_SPACE = {
-  x: 0,
-  y: 0,
-  width: '100%',
-  height: '100%'
-};
-
-function fillBlack(abstract) {
-  var force = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-
-  if (abstract.attributes && (abstract.attributes.fill || force)) {
-    abstract.attributes.fill = 'black';
-  }
-
-  return abstract;
-}
-
-function deGroup(abstract) {
-  if (abstract.tag === 'g') {
-    return abstract.children;
-  } else {
-    return [abstract];
-  }
-}
-
-var Masks = {
-  hooks: function hooks() {
-    return {
-      parseNodeAttributes: function parseNodeAttributes(accumulator, node) {
-        var maskData = node.getAttribute('data-fa-mask');
-        var mask = !maskData ? emptyCanonicalIcon() : getCanonicalIcon(maskData.split(' ').map(function (i) {
-          return i.trim();
-        }));
-
-        if (!mask.prefix) {
-          mask.prefix = getDefaultUsablePrefix();
-        }
-
-        accumulator.mask = mask;
-        accumulator.maskId = node.getAttribute('data-fa-mask-id');
-        return accumulator;
-      }
-    };
-  },
-  provides: function provides(providers) {
-    providers.generateAbstractMask = function (_ref) {
-      var children = _ref.children,
-          attributes = _ref.attributes,
-          main = _ref.main,
-          mask = _ref.mask,
-          explicitMaskId = _ref.maskId,
-          transform = _ref.transform;
-      var mainWidth = main.width,
-          mainPath = main.icon;
-      var maskWidth = mask.width,
-          maskPath = mask.icon;
-      var trans = transformForSvg({
-        transform: transform,
-        containerWidth: maskWidth,
-        iconWidth: mainWidth
-      });
-      var maskRect = {
-        tag: 'rect',
-        attributes: _objectSpread2(_objectSpread2({}, ALL_SPACE), {}, {
-          fill: 'white'
-        })
-      };
-      var maskInnerGroupChildrenMixin = mainPath.children ? {
-        children: mainPath.children.map(fillBlack)
-      } : {};
-      var maskInnerGroup = {
-        tag: 'g',
-        attributes: _objectSpread2({}, trans.inner),
-        children: [fillBlack(_objectSpread2({
-          tag: mainPath.tag,
-          attributes: _objectSpread2(_objectSpread2({}, mainPath.attributes), trans.path)
-        }, maskInnerGroupChildrenMixin))]
-      };
-      var maskOuterGroup = {
-        tag: 'g',
-        attributes: _objectSpread2({}, trans.outer),
-        children: [maskInnerGroup]
-      };
-      var maskId = "mask-".concat(explicitMaskId || nextUniqueId());
-      var clipId = "clip-".concat(explicitMaskId || nextUniqueId());
-      var maskTag = {
-        tag: 'mask',
-        attributes: _objectSpread2(_objectSpread2({}, ALL_SPACE), {}, {
-          id: maskId,
-          maskUnits: 'userSpaceOnUse',
-          maskContentUnits: 'userSpaceOnUse'
-        }),
-        children: [maskRect, maskOuterGroup]
-      };
-      var defs = {
-        tag: 'defs',
-        children: [{
-          tag: 'clipPath',
-          attributes: {
-            id: clipId
-          },
-          children: deGroup(maskPath)
-        }, maskTag]
-      };
-      children.push(defs, {
-        tag: 'rect',
-        attributes: _objectSpread2({
-          fill: 'currentColor',
-          'clip-path': "url(#".concat(clipId, ")"),
-          mask: "url(#".concat(maskId, ")")
-        }, ALL_SPACE)
-      });
-      return {
-        children: children,
-        attributes: attributes
-      };
-    };
-  }
-};
-
-var MissingIconIndicator = {
-  provides: function provides(providers) {
-    var reduceMotion = false;
-
-    if (WINDOW.matchMedia) {
-      reduceMotion = WINDOW.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    }
-
-    providers.missingIconAbstract = function () {
-      var gChildren = [];
-      var FILL = {
-        fill: 'currentColor'
-      };
-      var ANIMATION_BASE = {
-        attributeType: 'XML',
-        repeatCount: 'indefinite',
-        dur: '2s'
-      }; // Ring
-
-      gChildren.push({
-        tag: 'path',
-        attributes: _objectSpread2(_objectSpread2({}, FILL), {}, {
-          d: 'M156.5,447.7l-12.6,29.5c-18.7-9.5-35.9-21.2-51.5-34.9l22.7-22.7C127.6,430.5,141.5,440,156.5,447.7z M40.6,272H8.5 c1.4,21.2,5.4,41.7,11.7,61.1L50,321.2C45.1,305.5,41.8,289,40.6,272z M40.6,240c1.4-18.8,5.2-37,11.1-54.1l-29.5-12.6 C14.7,194.3,10,216.7,8.5,240H40.6z M64.3,156.5c7.8-14.9,17.2-28.8,28.1-41.5L69.7,92.3c-13.7,15.6-25.5,32.8-34.9,51.5 L64.3,156.5z M397,419.6c-13.9,12-29.4,22.3-46.1,30.4l11.9,29.8c20.7-9.9,39.8-22.6,56.9-37.6L397,419.6z M115,92.4 c13.9-12,29.4-22.3,46.1-30.4l-11.9-29.8c-20.7,9.9-39.8,22.6-56.8,37.6L115,92.4z M447.7,355.5c-7.8,14.9-17.2,28.8-28.1,41.5 l22.7,22.7c13.7-15.6,25.5-32.9,34.9-51.5L447.7,355.5z M471.4,272c-1.4,18.8-5.2,37-11.1,54.1l29.5,12.6 c7.5-21.1,12.2-43.5,13.6-66.8H471.4z M321.2,462c-15.7,5-32.2,8.2-49.2,9.4v32.1c21.2-1.4,41.7-5.4,61.1-11.7L321.2,462z M240,471.4c-18.8-1.4-37-5.2-54.1-11.1l-12.6,29.5c21.1,7.5,43.5,12.2,66.8,13.6V471.4z M462,190.8c5,15.7,8.2,32.2,9.4,49.2h32.1 c-1.4-21.2-5.4-41.7-11.7-61.1L462,190.8z M92.4,397c-12-13.9-22.3-29.4-30.4-46.1l-29.8,11.9c9.9,20.7,22.6,39.8,37.6,56.9 L92.4,397z M272,40.6c18.8,1.4,36.9,5.2,54.1,11.1l12.6-29.5C317.7,14.7,295.3,10,272,8.5V40.6z M190.8,50 c15.7-5,32.2-8.2,49.2-9.4V8.5c-21.2,1.4-41.7,5.4-61.1,11.7L190.8,50z M442.3,92.3L419.6,115c12,13.9,22.3,29.4,30.5,46.1 l29.8-11.9C470,128.5,457.3,109.4,442.3,92.3z M397,92.4l22.7-22.7c-15.6-13.7-32.8-25.5-51.5-34.9l-12.6,29.5 C370.4,72.1,384.4,81.5,397,92.4z'
-        })
-      });
-
-      var OPACITY_ANIMATE = _objectSpread2(_objectSpread2({}, ANIMATION_BASE), {}, {
-        attributeName: 'opacity'
-      });
-
-      var dot = {
-        tag: 'circle',
-        attributes: _objectSpread2(_objectSpread2({}, FILL), {}, {
-          cx: '256',
-          cy: '364',
-          r: '28'
-        }),
-        children: []
-      };
-
-      if (!reduceMotion) {
-        dot.children.push({
-          tag: 'animate',
-          attributes: _objectSpread2(_objectSpread2({}, ANIMATION_BASE), {}, {
-            attributeName: 'r',
-            values: '28;14;28;28;14;28;'
-          })
-        }, {
-          tag: 'animate',
-          attributes: _objectSpread2(_objectSpread2({}, OPACITY_ANIMATE), {}, {
-            values: '1;0;1;1;0;1;'
-          })
-        });
-      }
-
-      gChildren.push(dot);
-      gChildren.push({
-        tag: 'path',
-        attributes: _objectSpread2(_objectSpread2({}, FILL), {}, {
-          opacity: '1',
-          d: 'M263.7,312h-16c-6.6,0-12-5.4-12-12c0-71,77.4-63.9,77.4-107.8c0-20-17.8-40.2-57.4-40.2c-29.1,0-44.3,9.6-59.2,28.7 c-3.9,5-11.1,6-16.2,2.4l-13.1-9.2c-5.6-3.9-6.9-11.8-2.6-17.2c21.2-27.2,46.4-44.7,91.2-44.7c52.3,0,97.4,29.8,97.4,80.2 c0,67.6-77.4,63.5-77.4,107.8C275.7,306.6,270.3,312,263.7,312z'
-        }),
-        children: reduceMotion ? [] : [{
-          tag: 'animate',
-          attributes: _objectSpread2(_objectSpread2({}, OPACITY_ANIMATE), {}, {
-            values: '1;0;0;0;0;1;'
-          })
-        }]
-      });
-
-      if (!reduceMotion) {
-        // Exclamation
-        gChildren.push({
-          tag: 'path',
-          attributes: _objectSpread2(_objectSpread2({}, FILL), {}, {
-            opacity: '0',
-            d: 'M232.5,134.5l7,168c0.3,6.4,5.6,11.5,12,11.5h9c6.4,0,11.7-5.1,12-11.5l7-168c0.3-6.8-5.2-12.5-12-12.5h-23 C237.7,122,232.2,127.7,232.5,134.5z'
-          }),
-          children: [{
-            tag: 'animate',
-            attributes: _objectSpread2(_objectSpread2({}, OPACITY_ANIMATE), {}, {
-              values: '0;0;1;1;0;0;'
-            })
-          }]
-        });
-      }
-
-      return {
-        tag: 'g',
-        attributes: {
-          'class': 'missing'
-        },
-        children: gChildren
-      };
-    };
-  }
-};
-
-var SvgSymbols = {
-  hooks: function hooks() {
-    return {
-      parseNodeAttributes: function parseNodeAttributes(accumulator, node) {
-        var symbolData = node.getAttribute('data-fa-symbol');
-        var symbol = symbolData === null ? false : symbolData === '' ? true : symbolData;
-        accumulator['symbol'] = symbol;
-        return accumulator;
-      }
-    };
-  }
-};
-
-var plugins$2 = [InjectCSS, ReplaceElements, Layers, LayersCounter, LayersText, PseudoElements, MutationObserver$1, PowerTransforms, Masks, MissingIconIndicator, SvgSymbols];
-
-registerPlugins(plugins$2, {
-  mixoutsTo: api
-});
-api.noAuto;
-api.config;
-var library$1 = api.library;
-api.dom;
-api.parse;
-api.findIconDefinition;
-api.toHtml;
-api.icon;
-api.layer;
-api.text;
-api.counter;
-
-/*!
- * Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com
- * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
- * Copyright 2022 Fonticons, Inc.
- */
-var faArrowLeft = {
-  prefix: 'fas',
-  iconName: 'arrow-left',
-  icon: [448, 512, [8592], "f060", "M447.1 256C447.1 273.7 433.7 288 416 288H109.3l105.4 105.4c12.5 12.5 12.5 32.75 0 45.25C208.4 444.9 200.2 448 192 448s-16.38-3.125-22.62-9.375l-160-160c-12.5-12.5-12.5-32.75 0-45.25l160-160c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25L109.3 224H416C433.7 224 447.1 238.3 447.1 256z"]
-};
-var faArrowRight = {
-  prefix: 'fas',
-  iconName: 'arrow-right',
-  icon: [448, 512, [8594], "f061", "M438.6 278.6l-160 160C272.4 444.9 264.2 448 256 448s-16.38-3.125-22.62-9.375c-12.5-12.5-12.5-32.75 0-45.25L338.8 288H32C14.33 288 .0016 273.7 .0016 256S14.33 224 32 224h306.8l-105.4-105.4c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l160 160C451.1 245.9 451.1 266.1 438.6 278.6z"]
-};
-var faBook = {
-  prefix: 'fas',
-  iconName: 'book',
-  icon: [448, 512, [128212], "f02d", "M448 336v-288C448 21.49 426.5 0 400 0H96C42.98 0 0 42.98 0 96v320c0 53.02 42.98 96 96 96h320c17.67 0 32-14.33 32-31.1c0-11.72-6.607-21.52-16-27.1v-81.36C441.8 362.8 448 350.2 448 336zM143.1 128h192C344.8 128 352 135.2 352 144C352 152.8 344.8 160 336 160H143.1C135.2 160 128 152.8 128 144C128 135.2 135.2 128 143.1 128zM143.1 192h192C344.8 192 352 199.2 352 208C352 216.8 344.8 224 336 224H143.1C135.2 224 128 216.8 128 208C128 199.2 135.2 192 143.1 192zM384 448H96c-17.67 0-32-14.33-32-32c0-17.67 14.33-32 32-32h288V448z"]
-};
-var faCalendar = {
-  prefix: 'fas',
-  iconName: 'calendar',
-  icon: [448, 512, [128198, 128197], "f133", "M96 32C96 14.33 110.3 0 128 0C145.7 0 160 14.33 160 32V64H288V32C288 14.33 302.3 0 320 0C337.7 0 352 14.33 352 32V64H400C426.5 64 448 85.49 448 112V160H0V112C0 85.49 21.49 64 48 64H96V32zM448 464C448 490.5 426.5 512 400 512H48C21.49 512 0 490.5 0 464V192H448V464z"]
-};
-var faCheck = {
-  prefix: 'fas',
-  iconName: 'check',
-  icon: [448, 512, [10004, 10003], "f00c", "M438.6 105.4C451.1 117.9 451.1 138.1 438.6 150.6L182.6 406.6C170.1 419.1 149.9 419.1 137.4 406.6L9.372 278.6C-3.124 266.1-3.124 245.9 9.372 233.4C21.87 220.9 42.13 220.9 54.63 233.4L159.1 338.7L393.4 105.4C405.9 92.88 426.1 92.88 438.6 105.4H438.6z"]
-};
-var faChevronDown = {
-  prefix: 'fas',
-  iconName: 'chevron-down',
-  icon: [448, 512, [], "f078", "M224 416c-8.188 0-16.38-3.125-22.62-9.375l-192-192c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L224 338.8l169.4-169.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-192 192C240.4 412.9 232.2 416 224 416z"]
-};
-var faChevronUp = {
-  prefix: 'fas',
-  iconName: 'chevron-up',
-  icon: [448, 512, [], "f077", "M416 352c-8.188 0-16.38-3.125-22.62-9.375L224 173.3l-169.4 169.4c-12.5 12.5-32.75 12.5-45.25 0s-12.5-32.75 0-45.25l192-192c12.5-12.5 32.75-12.5 45.25 0l192 192c12.5 12.5 12.5 32.75 0 45.25C432.4 348.9 424.2 352 416 352z"]
-};
-var faCircleInfo = {
-  prefix: 'fas',
-  iconName: 'circle-info',
-  icon: [512, 512, ["info-circle"], "f05a", "M256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM256 128c17.67 0 32 14.33 32 32c0 17.67-14.33 32-32 32S224 177.7 224 160C224 142.3 238.3 128 256 128zM296 384h-80C202.8 384 192 373.3 192 360s10.75-24 24-24h16v-64H224c-13.25 0-24-10.75-24-24S210.8 224 224 224h32c13.25 0 24 10.75 24 24v88h16c13.25 0 24 10.75 24 24S309.3 384 296 384z"]
-};
-var faInfoCircle = faCircleInfo;
-var faClockRotateLeft = {
-  prefix: 'fas',
-  iconName: 'clock-rotate-left',
-  icon: [512, 512, ["history"], "f1da", "M256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C201.7 512 151.2 495 109.7 466.1C95.2 455.1 91.64 436 101.8 421.5C111.9 407 131.8 403.5 146.3 413.6C177.4 435.3 215.2 448 256 448C362 448 448 362 448 256C448 149.1 362 64 256 64C202.1 64 155 85.46 120.2 120.2L151 151C166.1 166.1 155.4 192 134.1 192H24C10.75 192 0 181.3 0 168V57.94C0 36.56 25.85 25.85 40.97 40.97L74.98 74.98C121.3 28.69 185.3 0 255.1 0L256 0zM256 128C269.3 128 280 138.7 280 152V246.1L344.1 311C354.3 320.4 354.3 335.6 344.1 344.1C335.6 354.3 320.4 354.3 311 344.1L239 272.1C234.5 268.5 232 262.4 232 256V152C232 138.7 242.7 128 256 128V128z"]
-};
-var faHistory = faClockRotateLeft;
-var faFileCode = {
-  prefix: 'fas',
-  iconName: 'file-code',
-  icon: [384, 512, [], "f1c9", "M224 128L224 0H48C21.49 0 0 21.49 0 48v416C0 490.5 21.49 512 48 512h288c26.51 0 48-21.49 48-48V160h-127.1C238.3 160 224 145.7 224 128zM154.1 353.8c7.812 7.812 7.812 20.5 0 28.31C150.2 386.1 145.1 388 140 388s-10.23-1.938-14.14-5.844l-48-48c-7.812-7.812-7.812-20.5 0-28.31l48-48c7.812-7.812 20.47-7.812 28.28 0s7.812 20.5 0 28.31L120.3 320L154.1 353.8zM306.1 305.8c7.812 7.812 7.812 20.5 0 28.31l-48 48C254.2 386.1 249.1 388 244 388s-10.23-1.938-14.14-5.844c-7.812-7.812-7.812-20.5 0-28.31L263.7 320l-33.86-33.84c-7.812-7.812-7.812-20.5 0-28.31s20.47-7.812 28.28 0L306.1 305.8zM256 0v128h128L256 0z"]
-};
-var faFileCsv = {
-  prefix: 'fas',
-  iconName: 'file-csv',
-  icon: [384, 512, [], "f6dd", "M224 0V128C224 145.7 238.3 160 256 160H384V448C384 483.3 355.3 512 320 512H64C28.65 512 0 483.3 0 448V64C0 28.65 28.65 0 64 0H224zM80 224C57.91 224 40 241.9 40 264V344C40 366.1 57.91 384 80 384H96C118.1 384 136 366.1 136 344V336C136 327.2 128.8 320 120 320C111.2 320 104 327.2 104 336V344C104 348.4 100.4 352 96 352H80C75.58 352 72 348.4 72 344V264C72 259.6 75.58 256 80 256H96C100.4 256 104 259.6 104 264V272C104 280.8 111.2 288 120 288C128.8 288 136 280.8 136 272V264C136 241.9 118.1 224 96 224H80zM175.4 310.6L200.8 325.1C205.2 327.7 208 332.5 208 337.6C208 345.6 201.6 352 193.6 352H168C159.2 352 152 359.2 152 368C152 376.8 159.2 384 168 384H193.6C219.2 384 240 363.2 240 337.6C240 320.1 231.1 305.6 216.6 297.4L191.2 282.9C186.8 280.3 184 275.5 184 270.4C184 262.4 190.4 256 198.4 256H216C224.8 256 232 248.8 232 240C232 231.2 224.8 224 216 224H198.4C172.8 224 152 244.8 152 270.4C152 287 160.9 302.4 175.4 310.6zM280 240C280 231.2 272.8 224 264 224C255.2 224 248 231.2 248 240V271.6C248 306.3 258.3 340.3 277.6 369.2L282.7 376.9C285.7 381.3 290.6 384 296 384C301.4 384 306.3 381.3 309.3 376.9L314.4 369.2C333.7 340.3 344 306.3 344 271.6V240C344 231.2 336.8 224 328 224C319.2 224 312 231.2 312 240V271.6C312 294.6 306.5 317.2 296 337.5C285.5 317.2 280 294.6 280 271.6V240zM256 0L384 128H256V0z"]
-};
-var faFileExcel = {
-  prefix: 'fas',
-  iconName: 'file-excel',
-  icon: [384, 512, [], "f1c3", "M224 128L224 0H48C21.49 0 0 21.49 0 48v416C0 490.5 21.49 512 48 512h288c26.51 0 48-21.49 48-48V160h-127.1C238.3 160 224 145.7 224 128zM272.1 264.4L224 344l48.99 79.61C279.6 434.3 271.9 448 259.4 448h-26.43c-5.557 0-10.71-2.883-13.63-7.617L192 396l-27.31 44.38C161.8 445.1 156.6 448 151.1 448H124.6c-12.52 0-20.19-13.73-13.63-24.39L160 344L111 264.4C104.4 253.7 112.1 240 124.6 240h26.43c5.557 0 10.71 2.883 13.63 7.613L192 292l27.31-44.39C222.2 242.9 227.4 240 232.9 240h26.43C271.9 240 279.6 253.7 272.1 264.4zM256 0v128h128L256 0z"]
-};
-var faFileLines = {
-  prefix: 'fas',
-  iconName: 'file-lines',
-  icon: [384, 512, [128462, 61686, 128441, "file-alt", "file-text"], "f15c", "M256 0v128h128L256 0zM224 128L224 0H48C21.49 0 0 21.49 0 48v416C0 490.5 21.49 512 48 512h288c26.51 0 48-21.49 48-48V160h-127.1C238.3 160 224 145.7 224 128zM272 416h-160C103.2 416 96 408.8 96 400C96 391.2 103.2 384 112 384h160c8.836 0 16 7.162 16 16C288 408.8 280.8 416 272 416zM272 352h-160C103.2 352 96 344.8 96 336C96 327.2 103.2 320 112 320h160c8.836 0 16 7.162 16 16C288 344.8 280.8 352 272 352zM288 272C288 280.8 280.8 288 272 288h-160C103.2 288 96 280.8 96 272C96 263.2 103.2 256 112 256h160C280.8 256 288 263.2 288 272z"]
-};
-var faForwardFast = {
-  prefix: 'fas',
-  iconName: 'forward-fast',
-  icon: [512, 512, [9197, "fast-forward"], "f050", "M512 96.03v319.9c0 17.67-14.33 31.1-31.1 31.1C462.3 447.1 448 433.6 448 415.1V284.1l-171.5 156.5C255.9 457.7 224 443.3 224 415.1V284.1l-171.5 156.5C31.88 457.7 0 443.3 0 415.1V96.03c0-27.37 31.88-41.74 52.5-24.62L224 226.8V96.03c0-27.37 31.88-41.74 52.5-24.62L448 226.8V96.03c0-17.67 14.33-31.1 31.1-31.1C497.7 64.03 512 78.36 512 96.03z"]
-};
-var faMicrophoneLines = {
-  prefix: 'fas',
-  iconName: 'microphone-lines',
-  icon: [384, 512, [127897, "microphone-alt"], "f3c9", "M192 352c53.03 0 96-42.97 96-96h-80C199.2 256 192 248.8 192 240S199.2 224 208 224H288V192h-80C199.2 192 192 184.8 192 176S199.2 160 208 160H288V127.1h-80c-8.836 0-16-7.164-16-16s7.164-16 16-16L288 96c0-53.03-42.97-96-96-96s-96 42.97-96 96v160C96 309 138.1 352 192 352zM344 192C330.7 192 320 202.7 320 215.1V256c0 73.33-61.97 132.4-136.3 127.7c-66.08-4.169-119.7-66.59-119.7-132.8L64 215.1C64 202.7 53.25 192 40 192S16 202.7 16 215.1v32.15c0 89.66 63.97 169.6 152 181.7V464H128c-18.19 0-32.84 15.18-31.96 33.57C96.43 505.8 103.8 512 112 512h160c8.222 0 15.57-6.216 15.96-14.43C288.8 479.2 274.2 464 256 464h-40v-33.77C301.7 418.5 368 344.9 368 256V215.1C368 202.7 357.3 192 344 192z"]
-};
-var faPenNib = {
-  prefix: 'fas',
-  iconName: 'pen-nib',
-  icon: [512, 512, [10001], "f5ad", "M368.4 18.34C390.3-3.526 425.7-3.526 447.6 18.34L493.7 64.4C515.5 86.27 515.5 121.7 493.7 143.6L437.9 199.3L312.7 74.06L368.4 18.34zM417.4 224L371.4 377.3C365.4 397.2 350.2 413 330.5 419.6L66.17 508.2C54.83 512 42.32 509.2 33.74 500.9L187.3 347.3C193.6 350.3 200.6 352 207.1 352C234.5 352 255.1 330.5 255.1 304C255.1 277.5 234.5 256 207.1 256C181.5 256 159.1 277.5 159.1 304C159.1 311.4 161.7 318.4 164.7 324.7L11.11 478.3C2.809 469.7-.04 457.2 3.765 445.8L92.39 181.5C98.1 161.8 114.8 146.6 134.7 140.6L287.1 94.6L417.4 224z"]
-};
-var faPeopleGroup = {
-  prefix: 'fas',
-  iconName: 'people-group',
-  icon: [640, 512, [], "e533", "M184 88C184 118.9 158.9 144 128 144C97.07 144 72 118.9 72 88C72 57.07 97.07 32 128 32C158.9 32 184 57.07 184 88zM208.4 196.3C178.7 222.7 160 261.2 160 304C160 338.3 171.1 369.8 192 394.5V416C192 433.7 177.7 448 160 448H96C78.33 448 64 433.7 64 416V389.2C26.16 371.2 0 332.7 0 288C0 226.1 50.14 176 112 176H144C167.1 176 190.2 183.5 208.4 196.3V196.3zM64 245.7C54.04 256.9 48 271.8 48 288C48 304.2 54.04 319.1 64 330.3V245.7zM448 416V394.5C468 369.8 480 338.3 480 304C480 261.2 461.3 222.7 431.6 196.3C449.8 183.5 472 176 496 176H528C589.9 176 640 226.1 640 288C640 332.7 613.8 371.2 576 389.2V416C576 433.7 561.7 448 544 448H480C462.3 448 448 433.7 448 416zM576 330.3C585.1 319.1 592 304.2 592 288C592 271.8 585.1 256.9 576 245.7V330.3zM568 88C568 118.9 542.9 144 512 144C481.1 144 456 118.9 456 88C456 57.07 481.1 32 512 32C542.9 32 568 57.07 568 88zM256 96C256 60.65 284.7 32 320 32C355.3 32 384 60.65 384 96C384 131.3 355.3 160 320 160C284.7 160 256 131.3 256 96zM448 304C448 348.7 421.8 387.2 384 405.2V448C384 465.7 369.7 480 352 480H288C270.3 480 256 465.7 256 448V405.2C218.2 387.2 192 348.7 192 304C192 242.1 242.1 192 304 192H336C397.9 192 448 242.1 448 304zM256 346.3V261.7C246 272.9 240 287.8 240 304C240 320.2 246 335.1 256 346.3zM384 261.7V346.3C393.1 335 400 320.2 400 304C400 287.8 393.1 272.9 384 261.7z"]
-};
-var faPerson = {
-  prefix: 'fas',
-  iconName: 'person',
-  icon: [320, 512, [129485, "male"], "f183", "M208 48C208 74.51 186.5 96 160 96C133.5 96 112 74.51 112 48C112 21.49 133.5 0 160 0C186.5 0 208 21.49 208 48zM152 352V480C152 497.7 137.7 512 120 512C102.3 512 88 497.7 88 480V256.9L59.43 304.5C50.33 319.6 30.67 324.5 15.52 315.4C.3696 306.3-4.531 286.7 4.573 271.5L62.85 174.6C80.2 145.7 111.4 128 145.1 128H174.9C208.6 128 239.8 145.7 257.2 174.6L315.4 271.5C324.5 286.7 319.6 306.3 304.5 315.4C289.3 324.5 269.7 319.6 260.6 304.5L232 256.9V480C232 497.7 217.7 512 200 512C182.3 512 168 497.7 168 480V352L152 352z"]
-};
-var faQuestion = {
-  prefix: 'fas',
-  iconName: 'question',
-  icon: [320, 512, [10067, 10068, 61736], "3f", "M204.3 32.01H96c-52.94 0-96 43.06-96 96c0 17.67 14.31 31.1 32 31.1s32-14.32 32-31.1c0-17.64 14.34-32 32-32h108.3C232.8 96.01 256 119.2 256 147.8c0 19.72-10.97 37.47-30.5 47.33L127.8 252.4C117.1 258.2 112 268.7 112 280v40c0 17.67 14.31 31.99 32 31.99s32-14.32 32-31.99V298.3L256 251.3c39.47-19.75 64-59.42 64-103.5C320 83.95 268.1 32.01 204.3 32.01zM144 400c-22.09 0-40 17.91-40 40s17.91 39.1 40 39.1s40-17.9 40-39.1S166.1 400 144 400z"]
-};
-var faSignsPost = {
-  prefix: 'fas',
-  iconName: 'signs-post',
-  icon: [512, 512, ["map-signs"], "f277", "M223.1 32C223.1 14.33 238.3 0 255.1 0C273.7 0 288 14.33 288 32H441.4C445.6 32 449.7 33.69 452.7 36.69L500.7 84.69C506.9 90.93 506.9 101.1 500.7 107.3L452.7 155.3C449.7 158.3 445.6 160 441.4 160H63.1C46.33 160 31.1 145.7 31.1 128V64C31.1 46.33 46.33 32 63.1 32L223.1 32zM480 320C480 337.7 465.7 352 448 352H70.63C66.38 352 62.31 350.3 59.31 347.3L11.31 299.3C5.065 293.1 5.065 282.9 11.31 276.7L59.31 228.7C62.31 225.7 66.38 223.1 70.63 223.1H223.1V191.1H288V223.1H448C465.7 223.1 480 238.3 480 255.1V320zM255.1 512C238.3 512 223.1 497.7 223.1 480V384H288V480C288 497.7 273.7 512 255.1 512z"]
-};
-var faMapSigns = faSignsPost;
-var faUpRightFromSquare = {
-  prefix: 'fas',
-  iconName: 'up-right-from-square',
-  icon: [512, 512, ["external-link-alt"], "f35d", "M384 320c-17.67 0-32 14.33-32 32v96H64V160h96c17.67 0 32-14.32 32-32s-14.33-32-32-32L64 96c-35.35 0-64 28.65-64 64V448c0 35.34 28.65 64 64 64h288c35.35 0 64-28.66 64-64v-96C416 334.3 401.7 320 384 320zM488 0H352c-12.94 0-24.62 7.797-29.56 19.75c-4.969 11.97-2.219 25.72 6.938 34.88L370.8 96L169.4 297.4c-12.5 12.5-12.5 32.75 0 45.25C175.6 348.9 183.8 352 192 352s16.38-3.125 22.62-9.375L416 141.3l41.38 41.38c9.156 9.141 22.88 11.84 34.88 6.938C504.2 184.6 512 172.9 512 160V24C512 10.74 501.3 0 488 0z"]
-};
-var faExternalLinkAlt = faUpRightFromSquare;
-var faXmark = {
-  prefix: 'fas',
-  iconName: 'xmark',
-  icon: [320, 512, [128473, 10005, 10006, 10060, 215, "close", "multiply", "remove", "times"], "f00d", "M310.6 361.4c12.5 12.5 12.5 32.75 0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3L54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75 0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25 0s12.5 32.75 0 45.25l-105.4 105.4L310.6 361.4z"]
-};
-var faTimes = faXmark;
-
-/*!
- * Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com
- * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
- * Copyright 2022 Fonticons, Inc.
- */
-var faFacebook = {
-  prefix: 'fab',
-  iconName: 'facebook',
-  icon: [512, 512, [62000], "f09a", "M504 256C504 119 393 8 256 8S8 119 8 256c0 123.8 90.69 226.4 209.3 245V327.7h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.3 482.4 504 379.8 504 256z"]
-};
-var faInstagram = {
-  prefix: 'fab',
-  iconName: 'instagram',
-  icon: [448, 512, [], "f16d", "M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"]
-};
-var faSnapchat = {
-  prefix: 'fab',
-  iconName: 'snapchat',
-  icon: [512, 512, [62124, "snapchat-ghost"], "f2ab", "M496.9 366.6c-3.373-9.176-9.8-14.09-17.11-18.15-1.376-.806-2.641-1.451-3.72-1.947-2.182-1.128-4.414-2.22-6.634-3.373-22.8-12.09-40.61-27.34-52.96-45.42a102.9 102.9 0 0 1 -9.089-16.12c-1.054-3.013-1-4.724-.248-6.287a10.22 10.22 0 0 1 2.914-3.038c3.918-2.591 7.96-5.22 10.7-6.993 4.885-3.162 8.754-5.667 11.25-7.44 9.362-6.547 15.91-13.5 20-21.28a42.37 42.37 0 0 0 2.1-35.19c-6.2-16.32-21.61-26.45-40.29-26.45a55.54 55.54 0 0 0 -11.72 1.24c-1.029 .224-2.059 .459-3.063 .72 .174-11.16-.074-22.94-1.066-34.53-3.522-40.76-17.79-62.12-32.67-79.16A130.2 130.2 0 0 0 332.1 36.44C309.5 23.55 283.9 17 256 17S202.6 23.55 180 36.44a129.7 129.7 0 0 0 -33.28 26.78c-14.88 17.04-29.15 38.44-32.67 79.16-.992 11.59-1.24 23.43-1.079 34.53-1-.26-2.021-.5-3.051-.719a55.46 55.46 0 0 0 -11.72-1.24c-18.69 0-34.13 10.13-40.3 26.45a42.42 42.42 0 0 0 2.046 35.23c4.105 7.774 10.65 14.73 20.01 21.28 2.48 1.736 6.361 4.24 11.25 7.44 2.641 1.711 6.5 4.216 10.28 6.72a11.05 11.05 0 0 1 3.3 3.311c.794 1.624 .818 3.373-.36 6.6a102 102 0 0 1 -8.94 15.78c-12.08 17.67-29.36 32.65-51.43 44.64C32.35 348.6 20.2 352.8 15.07 366.7c-3.868 10.53-1.339 22.51 8.494 32.6a49.14 49.14 0 0 0 12.4 9.387 134.3 134.3 0 0 0 30.34 12.14 20.02 20.02 0 0 1 6.126 2.741c3.583 3.137 3.075 7.861 7.849 14.78a34.47 34.47 0 0 0 8.977 9.127c10.02 6.919 21.28 7.353 33.21 7.811 10.78 .41 22.99 .881 36.94 5.481 5.778 1.91 11.78 5.605 18.74 9.92C194.8 480.1 217.7 495 255.1 495s61.29-14.12 78.12-24.43c6.907-4.24 12.87-7.9 18.49-9.758 13.95-4.613 26.16-5.072 36.94-5.481 11.93-.459 23.19-.893 33.21-7.812a34.58 34.58 0 0 0 10.22-11.16c3.434-5.84 3.348-9.919 6.572-12.77a18.97 18.97 0 0 1 5.753-2.629A134.9 134.9 0 0 0 476 408.7a48.34 48.34 0 0 0 13.02-10.19l.124-.149C498.4 388.5 500.7 376.9 496.9 366.6zm-34.01 18.28c-20.75 11.46-34.53 10.23-45.26 17.14-9.114 5.865-3.72 18.51-10.34 23.08-8.134 5.617-32.18-.4-63.24 9.858-25.62 8.469-41.96 32.82-88.04 32.82s-62.04-24.3-88.08-32.88c-31-10.26-55.09-4.241-63.24-9.858-6.609-4.563-1.24-17.21-10.34-23.08-10.74-6.907-24.53-5.679-45.26-17.08-13.21-7.291-5.716-11.8-1.314-13.94 75.14-36.38 87.13-92.55 87.67-96.72 .645-5.046 1.364-9.014-4.191-14.15-5.369-4.96-29.19-19.7-35.8-24.32-10.94-7.638-15.75-15.26-12.2-24.64 2.48-6.485 8.531-8.928 14.88-8.928a27.64 27.64 0 0 1 5.965 .67c12 2.6 23.66 8.617 30.39 10.24a10.75 10.75 0 0 0 2.48 .335c3.6 0 4.86-1.811 4.612-5.927-.768-13.13-2.628-38.72-.558-62.64 2.84-32.91 13.44-49.22 26.04-63.64 6.051-6.932 34.48-36.98 88.86-36.98s82.88 29.92 88.93 36.83c12.61 14.42 23.23 30.73 26.04 63.64 2.071 23.92 .285 49.53-.558 62.64-.285 4.327 1.017 5.927 4.613 5.927a10.65 10.65 0 0 0 2.48-.335c6.745-1.624 18.4-7.638 30.4-10.24a27.64 27.64 0 0 1 5.964-.67c6.386 0 12.4 2.48 14.88 8.928 3.546 9.374-1.24 17-12.19 24.64-6.609 4.612-30.43 19.34-35.8 24.32-5.568 5.134-4.836 9.1-4.191 14.15 .533 4.228 12.51 60.4 87.67 96.72C468.6 373 476.1 377.5 462.9 384.9z"]
-};
-var faTwitter = {
-  prefix: 'fab',
-  iconName: 'twitter',
-  icon: [512, 512, [], "f099", "M459.4 151.7c.325 4.548 .325 9.097 .325 13.65 0 138.7-105.6 298.6-298.6 298.6-59.45 0-114.7-17.22-161.1-47.11 8.447 .974 16.57 1.299 25.34 1.299 49.06 0 94.21-16.57 130.3-44.83-46.13-.975-84.79-31.19-98.11-72.77 6.498 .974 12.99 1.624 19.82 1.624 9.421 0 18.84-1.3 27.61-3.573-48.08-9.747-84.14-51.98-84.14-102.1v-1.299c13.97 7.797 30.21 12.67 47.43 13.32-28.26-18.84-46.78-51.01-46.78-87.39 0-19.49 5.197-37.36 14.29-52.95 51.65 63.67 129.3 105.3 216.4 109.8-1.624-7.797-2.599-15.92-2.599-24.04 0-57.83 46.78-104.9 104.9-104.9 30.21 0 57.5 12.67 76.67 33.14 23.72-4.548 46.46-13.32 66.6-25.34-7.798 24.37-24.37 44.83-46.13 57.83 21.12-2.273 41.58-8.122 60.43-16.24-14.29 20.79-32.16 39.31-52.63 54.25z"]
-};
-var faWikipediaW = {
-  prefix: 'fab',
-  iconName: 'wikipedia-w',
-  icon: [640, 512, [], "f266", "M640 51.2l-.3 12.2c-28.1 .8-45 15.8-55.8 40.3-25 57.8-103.3 240-155.3 358.6H415l-81.9-193.1c-32.5 63.6-68.3 130-99.2 193.1-.3 .3-15 0-15-.3C172 352.3 122.8 243.4 75.8 133.4 64.4 106.7 26.4 63.4 .2 63.7c0-3.1-.3-10-.3-14.2h161.9v13.9c-19.2 1.1-52.8 13.3-43.3 34.2 21.9 49.7 103.6 240.3 125.6 288.6 15-29.7 57.8-109.2 75.3-142.8-13.9-28.3-58.6-133.9-72.8-160-9.7-17.8-36.1-19.4-55.8-19.7V49.8l142.5 .3v13.1c-19.4 .6-38.1 7.8-29.4 26.1 18.9 40 30.6 68.1 48.1 104.7 5.6-10.8 34.7-69.4 48.1-100.8 8.9-20.6-3.9-28.6-38.6-29.4 .3-3.6 0-10.3 .3-13.6 44.4-.3 111.1-.3 123.1-.6v13.6c-22.5 .8-45.8 12.8-58.1 31.7l-59.2 122.8c6.4 16.1 63.3 142.8 69.2 156.7L559.2 91.8c-8.6-23.1-36.4-28.1-47.2-28.3V49.6l127.8 1.1 .2 .5z"]
-};
-
 var __defProp$1 = Object.defineProperty;
 var __defProps$1 = Object.defineProperties;
 var __getOwnPropDescs$1 = Object.getOwnPropertyDescriptors;
@@ -8572,7 +5556,7 @@ const _sfc_main$T = {
   },
   methods: {
     formatDate(date2) {
-      return format(parse$2(date2, "yyyy-MM-dd", new Date()), "d MMMM yyyy");
+      return format(parse$1(date2, "yyyy-MM-dd", new Date()), "d MMMM yyyy");
     }
   }
 };
@@ -8836,7 +5820,7 @@ const _sfc_main$O = {
   name: "DownloadLink",
   data() {
     return {
-      apiRoot: "http://0.0.0.0:8000"
+      apiRoot: "https://wheretheystand.nz"
     };
   },
   props: {
@@ -8907,7 +5891,7 @@ function _sfc_ssrRender$E(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     class: "me-2",
     target: "_blank",
     download: $options.saveName
-  }, _attrs))} data-v-25b6d40b>`);
+  }, _attrs))} data-v-513dc3c1>`);
   _push(serverRenderer.exports.ssrRenderComponent(_component_font_awesome_icon, {
     class: "me-1",
     icon: ["fas", $options.fasIconName]
@@ -8920,7 +5904,7 @@ _sfc_main$O.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/DownloadLink.vue");
   return _sfc_setup$O ? _sfc_setup$O(props, ctx) : void 0;
 };
-const __nuxt_component_4$1 = /* @__PURE__ */ _export_sfc(_sfc_main$O, [["ssrRender", _sfc_ssrRender$E], ["__scopeId", "data-v-25b6d40b"]]);
+const __nuxt_component_4$1 = /* @__PURE__ */ _export_sfc(_sfc_main$O, [["ssrRender", _sfc_ssrRender$E], ["__scopeId", "data-v-513dc3c1"]]);
 const _sfc_main$N = {
   name: "ColourDot",
   props: ["colour"],
@@ -9120,7 +6104,7 @@ const _sfc_main$L = {
   },
   methods: {
     formatDate(date2) {
-      return format(parse$2(date2, "yyyy-MM-dd", new Date()), "d MMMM yyyy");
+      return format(parse$1(date2, "yyyy-MM-dd", new Date()), "d MMMM yyyy");
     }
   },
   computed: {
@@ -9219,7 +6203,7 @@ const _sfc_main$K = {
   props: ["reading", "date", "passed"],
   methods: {
     formatDate(date2) {
-      return format(parse$2(date2, "yyyy-MM-dd", new Date()), "d MMMM yyyy");
+      return format(parse$1(date2, "yyyy-MM-dd", new Date()), "d MMMM yyyy");
     }
   },
   computed: {
@@ -9385,35 +6369,35 @@ const __default__$3 = {
       return JSON.stringify(this.filterSettings);
     },
     displayBills() {
-      if (!this.hasLoadedData) {
+      if (!this.hasLoadedData && this.prefetchData) {
         return this.prefetchData.results;
       } else {
         return this.bills;
       }
     },
     displayCount() {
-      if (!this.hasLoadedData) {
+      if (!this.hasLoadedData && this.prefetchData) {
         return this.prefetchData.count;
       } else {
         return this.count;
       }
     },
     displayPage() {
-      if (!this.hasLoadedData) {
+      if (!this.hasLoadedData && this.prefetchData) {
         return this.prefetchData.page;
       } else {
         return this.page;
       }
     },
     displayNext() {
-      if (!this.hasLoadedData) {
+      if (!this.hasLoadedData && this.prefetchData) {
         return this.prefetchData.next;
       } else {
         return this.next;
       }
     },
     displayPrevious() {
-      if (!this.hasLoadedData) {
+      if (!this.hasLoadedData && this.prefetchData) {
         return this.prefetchData.previous;
       } else {
         return this.previous;
@@ -9460,10 +6444,10 @@ const __default__$3 = {
       }
     },
     relativeDate(date2) {
-      return formatDistanceToNow(parse$2(date2, "yyyy-MM-dd", new Date())) + " ago";
+      return formatDistanceToNow(parse$1(date2, "yyyy-MM-dd", new Date())) + " ago";
     },
     formattedDate(date2) {
-      return format(parse$2(date2, "yyyy-MM-dd", new Date()), "d.M.yyyy");
+      return format(parse$1(date2, "yyyy-MM-dd", new Date()), "d.M.yyyy");
     }
   }
 };
@@ -9484,8 +6468,8 @@ const _sfc_main$I = /* @__PURE__ */ Object.assign(__default__$3, {
       const _component_Spinner = __nuxt_component_0$1;
       const _component_NuxtLink = __nuxt_component_1$7;
       const _component_font_awesome_icon = vue_cjs_prod.resolveComponent("font-awesome-icon");
-      _push(`<div${serverRenderer.exports.ssrRenderAttrs(_attrs)} data-v-01a8be30><h4 data-v-01a8be30>Filter bills</h4>`);
-      if (vue_cjs_prod.unref(prefetchData) && vue_cjs_prod.unref(prefetchData).count > 0) {
+      _push(`<div${serverRenderer.exports.ssrRenderAttrs(_attrs)} data-v-45ff0dca><h4 data-v-45ff0dca>Filter bills</h4>`);
+      if (vue_cjs_prod.unref(prefetchData) && vue_cjs_prod.unref(prefetchData).count && vue_cjs_prod.unref(prefetchData).count > 0) {
         _push(serverRenderer.exports.ssrRenderComponent(_component_Head, null, {
           default: vue_cjs_prod.withCtx((_, _push2, _parent2, _scopeId) => {
             if (_push2) {
@@ -9541,11 +6525,11 @@ const _sfc_main$I = /* @__PURE__ */ Object.assign(__default__$3, {
       _push(serverRenderer.exports.ssrRenderComponent(_component_Card, null, {
         default: vue_cjs_prod.withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
-            _push2(`<form data-v-01a8be30${_scopeId}><div class="row mb-2" data-v-01a8be30${_scopeId}><div class="col-12" data-v-01a8be30${_scopeId}><h5 data-v-01a8be30${_scopeId}>Refine by title</h5><label for="text_filter" data-v-01a8be30${_scopeId}>Title must contain the following:</label><input${serverRenderer.exports.ssrRenderAttr("value", _ctx.filterSettings.titleContains)} class="form-control" type="input" id="text_filter" data-v-01a8be30${_scopeId}><small class="text-muted" data-v-01a8be30${_scopeId}>For less strict textual search, you may wish to use the site-wide search function.</small></div></div><hr data-v-01a8be30${_scopeId}><div class="row" data-v-01a8be30${_scopeId}><div class="col-12 col-xl-3" data-v-01a8be30${_scopeId}><h5 data-v-01a8be30${_scopeId}>Bill types</h5><div class="form-check" data-v-01a8be30${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.filterSettings.billTypes.gov) ? serverRenderer.exports.ssrLooseContain(_ctx.filterSettings.billTypes.gov, "") : _ctx.filterSettings.billTypes.gov) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_goverment" data-v-01a8be30${_scopeId}><label class="form-check-label" for="check_goverment" data-v-01a8be30${_scopeId}> Government bills </label></div><div class="form-check" data-v-01a8be30${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.filterSettings.billTypes.mem) ? serverRenderer.exports.ssrLooseContain(_ctx.filterSettings.billTypes.mem, "") : _ctx.filterSettings.billTypes.mem) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_members" data-v-01a8be30${_scopeId}><label class="form-check-label" for="check_members" data-v-01a8be30${_scopeId}> Members&#39; bills </label></div><div class="form-check" data-v-01a8be30${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.filterSettings.billTypes.loc) ? serverRenderer.exports.ssrLooseContain(_ctx.filterSettings.billTypes.loc, "") : _ctx.filterSettings.billTypes.loc) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_local" data-v-01a8be30${_scopeId}><label class="form-check-label" for="check_local" data-v-01a8be30${_scopeId}> Local bills </label></div><div class="form-check" data-v-01a8be30${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.filterSettings.billTypes.pri) ? serverRenderer.exports.ssrLooseContain(_ctx.filterSettings.billTypes.pri, "") : _ctx.filterSettings.billTypes.pri) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_private" data-v-01a8be30${_scopeId}><label class="form-check-label" for="check_private" data-v-01a8be30${_scopeId}> Private bills </label></div><small data-v-01a8be30${_scopeId}><strong data-v-01a8be30${_scopeId}>OR</strong>: Bills must be any of the selected type to be shown.</small></div><div class="col-12 col-xl-3" data-v-01a8be30${_scopeId}><h5 data-v-01a8be30${_scopeId}>Temporal characteristics</h5><label for="parliament_select" data-v-01a8be30${_scopeId}>Parliamentary term of introduction</label><select class="form-select" id="parliament_select" aria-label="-" data-v-01a8be30${_scopeId}><option value="" selected data-v-01a8be30${_scopeId}>Any</option><option value="53" data-v-01a8be30${_scopeId}>53rd Parliament</option><option value="52" data-v-01a8be30${_scopeId}>52nd Parliament</option><option value="51" data-v-01a8be30${_scopeId}>51st Parliament</option><option value="50" data-v-01a8be30${_scopeId}>50th Parliament</option></select></div><div class="col-12 col-xl-3" data-v-01a8be30${_scopeId}><h5 data-v-01a8be30${_scopeId}>Procedural characteristics</h5><div class="form-check" data-v-01a8be30${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.filterSettings.characteristics.urgencyUsed) ? serverRenderer.exports.ssrLooseContain(_ctx.filterSettings.characteristics.urgencyUsed, "") : _ctx.filterSettings.characteristics.urgencyUsed) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_urgency" data-v-01a8be30${_scopeId}><label class="form-check-label" for="check_urgency" data-v-01a8be30${_scopeId}> Urgency used </label></div><div class="form-check" data-v-01a8be30${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.filterSettings.characteristics.extendedSittingsUsed) ? serverRenderer.exports.ssrLooseContain(_ctx.filterSettings.characteristics.extendedSittingsUsed, "") : _ctx.filterSettings.characteristics.extendedSittingsUsed) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_extended" data-v-01a8be30${_scopeId}><label class="form-check-label" for="check_extended" data-v-01a8be30${_scopeId}> Extended sittings used </label></div><div class="form-check" data-v-01a8be30${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.filterSettings.characteristics.submissionsOpen) ? serverRenderer.exports.ssrLooseContain(_ctx.filterSettings.characteristics.submissionsOpen, "") : _ctx.filterSettings.characteristics.submissionsOpen) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_submissions_open" data-v-01a8be30${_scopeId}><label class="form-check-label" for="check_submissions_open" data-v-01a8be30${_scopeId}> Open for submissions </label></div><label for="voting_method_select" class="mt-2" data-v-01a8be30${_scopeId}>Voting method</label><select class="form-select" id="voting_method_select" aria-label="Voting method" data-v-01a8be30${_scopeId}><option value="" selected data-v-01a8be30${_scopeId}>Any</option><option value="per" data-v-01a8be30${_scopeId}>Personal voting used</option><option value="par" data-v-01a8be30${_scopeId}>Party voting used</option></select><small data-v-01a8be30${_scopeId}><strong data-v-01a8be30${_scopeId}>AND</strong>: Bills must meet all of these criteria to be shown.</small></div></div><hr data-v-01a8be30${_scopeId}><h5 data-v-01a8be30${_scopeId}>Display options</h5><div class="row" data-v-01a8be30${_scopeId}><div class="col-12 col-xl-3" data-v-01a8be30${_scopeId}><label for="per_page_select" data-v-01a8be30${_scopeId}>Results per page</label><select class="form-select" id="per_page_select" aria-label="Results per page" data-v-01a8be30${_scopeId}><option value="10" selected data-v-01a8be30${_scopeId}>10</option><option value="25" data-v-01a8be30${_scopeId}>25</option><option value="50" data-v-01a8be30${_scopeId}>50</option><option value="100" data-v-01a8be30${_scopeId}>100</option></select><div class="form-check" data-v-01a8be30${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.showDescriptions) ? serverRenderer.exports.ssrLooseContain(_ctx.showDescriptions, "") : _ctx.showDescriptions) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_show_descriptions" data-v-01a8be30${_scopeId}><label class="form-check-label" for="check_show_descriptions" data-v-01a8be30${_scopeId}> Show bill descriptions </label></div></div><div class="col-12 col-xl-3" data-v-01a8be30${_scopeId}><label for="order_by_select" data-v-01a8be30${_scopeId}>Order by</label><select class="form-select" id="order_by_select" aria-label="Order by" data-v-01a8be30${_scopeId}><option value="date_modified_desc" selected data-v-01a8be30${_scopeId}>Date modified (newest first)</option><option value="date_modified_asc" data-v-01a8be30${_scopeId}>Date modified (oldest first)</option><option value="introduction_date_desc" data-v-01a8be30${_scopeId}>Introduction date (newest first)</option><option value="introduction_date_asc" data-v-01a8be30${_scopeId}>Introduction date (oldest first)</option><option value="progress_desc" data-v-01a8be30${_scopeId}>Status (later stages first)</option><option value="progress_asc" data-v-01a8be30${_scopeId}>Status (early stages first)</option></select></div></div><hr data-v-01a8be30${_scopeId}><div class="row" data-v-01a8be30${_scopeId}><div class="col-12" data-v-01a8be30${_scopeId}>`);
+            _push2(`<form data-v-45ff0dca${_scopeId}><div class="row mb-2" data-v-45ff0dca${_scopeId}><div class="col-12" data-v-45ff0dca${_scopeId}><h5 data-v-45ff0dca${_scopeId}>Refine by title</h5><label for="text_filter" data-v-45ff0dca${_scopeId}>Title must contain the following:</label><input${serverRenderer.exports.ssrRenderAttr("value", _ctx.filterSettings.titleContains)} class="form-control" type="input" id="text_filter" data-v-45ff0dca${_scopeId}><small class="text-muted" data-v-45ff0dca${_scopeId}>For less strict textual search, you may wish to use the site-wide search function.</small></div></div><hr data-v-45ff0dca${_scopeId}><div class="row" data-v-45ff0dca${_scopeId}><div class="col-12 col-xl-3" data-v-45ff0dca${_scopeId}><h5 data-v-45ff0dca${_scopeId}>Bill types</h5><div class="form-check" data-v-45ff0dca${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.filterSettings.billTypes.gov) ? serverRenderer.exports.ssrLooseContain(_ctx.filterSettings.billTypes.gov, "") : _ctx.filterSettings.billTypes.gov) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_goverment" data-v-45ff0dca${_scopeId}><label class="form-check-label" for="check_goverment" data-v-45ff0dca${_scopeId}> Government bills </label></div><div class="form-check" data-v-45ff0dca${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.filterSettings.billTypes.mem) ? serverRenderer.exports.ssrLooseContain(_ctx.filterSettings.billTypes.mem, "") : _ctx.filterSettings.billTypes.mem) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_members" data-v-45ff0dca${_scopeId}><label class="form-check-label" for="check_members" data-v-45ff0dca${_scopeId}> Members&#39; bills </label></div><div class="form-check" data-v-45ff0dca${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.filterSettings.billTypes.loc) ? serverRenderer.exports.ssrLooseContain(_ctx.filterSettings.billTypes.loc, "") : _ctx.filterSettings.billTypes.loc) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_local" data-v-45ff0dca${_scopeId}><label class="form-check-label" for="check_local" data-v-45ff0dca${_scopeId}> Local bills </label></div><div class="form-check" data-v-45ff0dca${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.filterSettings.billTypes.pri) ? serverRenderer.exports.ssrLooseContain(_ctx.filterSettings.billTypes.pri, "") : _ctx.filterSettings.billTypes.pri) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_private" data-v-45ff0dca${_scopeId}><label class="form-check-label" for="check_private" data-v-45ff0dca${_scopeId}> Private bills </label></div><small data-v-45ff0dca${_scopeId}><strong data-v-45ff0dca${_scopeId}>OR</strong>: Bills must be any of the selected type to be shown.</small></div><div class="col-12 col-xl-3" data-v-45ff0dca${_scopeId}><h5 data-v-45ff0dca${_scopeId}>Temporal characteristics</h5><label for="parliament_select" data-v-45ff0dca${_scopeId}>Parliamentary term of introduction</label><select class="form-select" id="parliament_select" aria-label="-" data-v-45ff0dca${_scopeId}><option value="" selected data-v-45ff0dca${_scopeId}>Any</option><option value="53" data-v-45ff0dca${_scopeId}>53rd Parliament</option><option value="52" data-v-45ff0dca${_scopeId}>52nd Parliament</option><option value="51" data-v-45ff0dca${_scopeId}>51st Parliament</option><option value="50" data-v-45ff0dca${_scopeId}>50th Parliament</option></select></div><div class="col-12 col-xl-3" data-v-45ff0dca${_scopeId}><h5 data-v-45ff0dca${_scopeId}>Procedural characteristics</h5><div class="form-check" data-v-45ff0dca${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.filterSettings.characteristics.urgencyUsed) ? serverRenderer.exports.ssrLooseContain(_ctx.filterSettings.characteristics.urgencyUsed, "") : _ctx.filterSettings.characteristics.urgencyUsed) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_urgency" data-v-45ff0dca${_scopeId}><label class="form-check-label" for="check_urgency" data-v-45ff0dca${_scopeId}> Urgency used </label></div><div class="form-check" data-v-45ff0dca${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.filterSettings.characteristics.extendedSittingsUsed) ? serverRenderer.exports.ssrLooseContain(_ctx.filterSettings.characteristics.extendedSittingsUsed, "") : _ctx.filterSettings.characteristics.extendedSittingsUsed) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_extended" data-v-45ff0dca${_scopeId}><label class="form-check-label" for="check_extended" data-v-45ff0dca${_scopeId}> Extended sittings used </label></div><div class="form-check" data-v-45ff0dca${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.filterSettings.characteristics.submissionsOpen) ? serverRenderer.exports.ssrLooseContain(_ctx.filterSettings.characteristics.submissionsOpen, "") : _ctx.filterSettings.characteristics.submissionsOpen) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_submissions_open" data-v-45ff0dca${_scopeId}><label class="form-check-label" for="check_submissions_open" data-v-45ff0dca${_scopeId}> Open for submissions </label></div><label for="voting_method_select" class="mt-2" data-v-45ff0dca${_scopeId}>Voting method</label><select class="form-select" id="voting_method_select" aria-label="Voting method" data-v-45ff0dca${_scopeId}><option value="" selected data-v-45ff0dca${_scopeId}>Any</option><option value="per" data-v-45ff0dca${_scopeId}>Personal voting used</option><option value="par" data-v-45ff0dca${_scopeId}>Party voting used</option></select><small data-v-45ff0dca${_scopeId}><strong data-v-45ff0dca${_scopeId}>AND</strong>: Bills must meet all of these criteria to be shown.</small></div></div><hr data-v-45ff0dca${_scopeId}><h5 data-v-45ff0dca${_scopeId}>Display options</h5><div class="row" data-v-45ff0dca${_scopeId}><div class="col-12 col-xl-3" data-v-45ff0dca${_scopeId}><label for="per_page_select" data-v-45ff0dca${_scopeId}>Results per page</label><select class="form-select" id="per_page_select" aria-label="Results per page" data-v-45ff0dca${_scopeId}><option value="10" selected data-v-45ff0dca${_scopeId}>10</option><option value="25" data-v-45ff0dca${_scopeId}>25</option><option value="50" data-v-45ff0dca${_scopeId}>50</option><option value="100" data-v-45ff0dca${_scopeId}>100</option></select><div class="form-check" data-v-45ff0dca${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.showDescriptions) ? serverRenderer.exports.ssrLooseContain(_ctx.showDescriptions, "") : _ctx.showDescriptions) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_show_descriptions" data-v-45ff0dca${_scopeId}><label class="form-check-label" for="check_show_descriptions" data-v-45ff0dca${_scopeId}> Show bill descriptions </label></div></div><div class="col-12 col-xl-3" data-v-45ff0dca${_scopeId}><label for="order_by_select" data-v-45ff0dca${_scopeId}>Order by</label><select class="form-select" id="order_by_select" aria-label="Order by" data-v-45ff0dca${_scopeId}><option value="date_modified_desc" selected data-v-45ff0dca${_scopeId}>Date modified (newest first)</option><option value="date_modified_asc" data-v-45ff0dca${_scopeId}>Date modified (oldest first)</option><option value="introduction_date_desc" data-v-45ff0dca${_scopeId}>Introduction date (newest first)</option><option value="introduction_date_asc" data-v-45ff0dca${_scopeId}>Introduction date (oldest first)</option><option value="progress_desc" data-v-45ff0dca${_scopeId}>Status (later stages first)</option><option value="progress_asc" data-v-45ff0dca${_scopeId}>Status (early stages first)</option></select></div></div><hr data-v-45ff0dca${_scopeId}><div class="row" data-v-45ff0dca${_scopeId}><div class="col-12" data-v-45ff0dca${_scopeId}>`);
             if (_ctx.activeString != _ctx.userString && !_ctx.isLoading) {
-              _push2(`<button class="btn btn-primary" type="button" id="button-addon2" data-v-01a8be30${_scopeId}>Refine selection</button>`);
+              _push2(`<button class="btn btn-primary" type="button" id="button-addon2" data-v-45ff0dca${_scopeId}>Refine selection</button>`);
             } else {
-              _push2(`<button disabled class="btn btn-primary" type="button" id="button-addon2" data-v-01a8be30${_scopeId}>Refine selection</button>`);
+              _push2(`<button disabled class="btn btn-primary" type="button" id="button-addon2" data-v-45ff0dca${_scopeId}>Refine selection</button>`);
             }
             if (_ctx.isLoading) {
               _push2(serverRenderer.exports.ssrRenderComponent(_component_Spinner, { class: "ms-2" }, null, _parent2, _scopeId));
@@ -9822,11 +6806,11 @@ const _sfc_main$I = /* @__PURE__ */ Object.assign(__default__$3, {
         }),
         _: 1
       }, _parent));
-      _push(`<span id="results-marker" data-v-01a8be30></span>`);
+      _push(`<span id="results-marker" data-v-45ff0dca></span>`);
       if (_ctx.page) {
-        _push(`<div data-v-01a8be30><h4 data-v-01a8be30>Results</h4> ${serverRenderer.exports.ssrInterpolate(_ctx.displayCount)} result`);
+        _push(`<div data-v-45ff0dca><h4 data-v-45ff0dca>Results</h4> ${serverRenderer.exports.ssrInterpolate(_ctx.displayCount)} result`);
         if (_ctx.displayCount != 1) {
-          _push(`<span data-v-01a8be30>s</span>`);
+          _push(`<span data-v-45ff0dca>s</span>`);
         } else {
           _push(`<!---->`);
         }
@@ -9843,44 +6827,44 @@ const _sfc_main$I = /* @__PURE__ */ Object.assign(__default__$3, {
                 _push2(serverRenderer.exports.ssrRenderComponent(_component_Card, null, {
                   default: vue_cjs_prod.withCtx((_2, _push3, _parent3, _scopeId2) => {
                     if (_push3) {
-                      _push3(`<h6 class="mb-0" data-v-01a8be30${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.name)}</h6><small class="me-1" data-v-01a8be30${_scopeId2}>`);
+                      _push3(`<h6 class="mb-0" data-v-45ff0dca${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.name)}</h6><small class="me-1" data-v-45ff0dca${_scopeId2}>`);
                       if (bill.progress == "inp") {
-                        _push3(`<span class="badge bg-primary text-uppercase" data-v-01a8be30${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.progress_desc)}</span>`);
+                        _push3(`<span class="badge bg-primary text-uppercase" data-v-45ff0dca${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.progress_desc)}</span>`);
                       } else if (bill.progress == "pas") {
-                        _push3(`<span class="badge bg-success text-uppercase" data-v-01a8be30${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.progress_desc)}</span>`);
+                        _push3(`<span class="badge bg-success text-uppercase" data-v-45ff0dca${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.progress_desc)}</span>`);
                       } else if (bill.progress == "ena") {
-                        _push3(`<span class="badge bg-success text-uppercase" data-v-01a8be30${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.progress_desc)}</span>`);
+                        _push3(`<span class="badge bg-success text-uppercase" data-v-45ff0dca${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.progress_desc)}</span>`);
                       } else if (bill.progress == "dis") {
-                        _push3(`<span class="badge bg-warning text-dark text-uppercase" data-v-01a8be30${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.progress_desc)}</span>`);
+                        _push3(`<span class="badge bg-warning text-dark text-uppercase" data-v-45ff0dca${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.progress_desc)}</span>`);
                       } else if (bill.progress == "def") {
-                        _push3(`<span class="badge bg-danger text-uppercase" data-v-01a8be30${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.progress_desc)}</span>`);
+                        _push3(`<span class="badge bg-danger text-uppercase" data-v-45ff0dca${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.progress_desc)}</span>`);
                       } else if (bill.progress == "lap") {
-                        _push3(`<span class="badge bg-danger text-uppercase" data-v-01a8be30${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.progress_desc)}</span>`);
+                        _push3(`<span class="badge bg-danger text-uppercase" data-v-45ff0dca${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.progress_desc)}</span>`);
                       } else if (bill.progress == "unx") {
-                        _push3(`<span class="badge bg-danger text-uppercase" data-v-01a8be30${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.progress_desc)}</span>`);
+                        _push3(`<span class="badge bg-danger text-uppercase" data-v-45ff0dca${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.progress_desc)}</span>`);
                       } else if (bill.progress == "div") {
-                        _push3(`<span class="badge bg-info text-uppercase" data-v-01a8be30${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.progress_desc)}</span>`);
+                        _push3(`<span class="badge bg-info text-uppercase" data-v-45ff0dca${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.progress_desc)}</span>`);
                       } else if (bill.progress == "wit") {
-                        _push3(`<span class="badge bg-warning text-dark text-uppercase" data-v-01a8be30${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.progress_desc)}</span>`);
+                        _push3(`<span class="badge bg-warning text-dark text-uppercase" data-v-45ff0dca${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.progress_desc)}</span>`);
                       } else {
-                        _push3(`<span class="badge bg-secondary text-uppercase" data-v-01a8be30${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.progress_desc)}</span>`);
+                        _push3(`<span class="badge bg-secondary text-uppercase" data-v-45ff0dca${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.progress_desc)}</span>`);
                       }
-                      _push3(`</small><small class="text-muted text-uppercase" data-v-01a8be30${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.type_desc)}</small>`);
+                      _push3(`</small><small class="text-muted text-uppercase" data-v-45ff0dca${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.type_desc)}</small>`);
                       if (bill.description && _ctx.showDescriptions) {
-                        _push3(`<p data-v-01a8be30${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.description)}</p>`);
+                        _push3(`<p data-v-45ff0dca${_scopeId2}>${serverRenderer.exports.ssrInterpolate(bill.description)}</p>`);
                       } else if (_ctx.showDescriptions) {
-                        _push3(`<p class="text-muted" data-v-01a8be30${_scopeId2}> No description. </p>`);
+                        _push3(`<p class="text-muted" data-v-45ff0dca${_scopeId2}> No description. </p>`);
                       } else {
                         _push3(`<!---->`);
                       }
                       if (!_ctx.showDescriptions) {
-                        _push3(`<br data-v-01a8be30${_scopeId2}>`);
+                        _push3(`<br data-v-45ff0dca${_scopeId2}>`);
                       } else {
                         _push3(`<!---->`);
                       }
-                      _push3(`<small data-v-01a8be30${_scopeId2}>`);
+                      _push3(`<small data-v-45ff0dca${_scopeId2}>`);
                       if (bill.date_modified) {
-                        _push3(`<span${serverRenderer.exports.ssrRenderAttr("title", _ctx.formattedDate(bill.date_modified))} class="text-muted" data-v-01a8be30${_scopeId2}>`);
+                        _push3(`<span${serverRenderer.exports.ssrRenderAttr("title", _ctx.formattedDate(bill.date_modified))} class="text-muted" data-v-45ff0dca${_scopeId2}>`);
                         _push3(serverRenderer.exports.ssrRenderComponent(_component_font_awesome_icon, { icon: ["fas", "history"] }, null, _parent3, _scopeId2));
                         _push3(` Last activity ${serverRenderer.exports.ssrInterpolate(_ctx.relativeDate(bill.date_modified))}</span>`);
                       } else {
@@ -10008,22 +6992,45 @@ const _sfc_main$I = /* @__PURE__ */ Object.assign(__default__$3, {
           }, _parent));
         });
         _push(`<!--]-->`);
-        if (!_ctx.isLoading) {
-          _push(`<nav aria-label="bills_pagination" data-v-01a8be30><ul class="pagination mb-1" data-v-01a8be30><li class="${serverRenderer.exports.ssrRenderClass([{ disabled: !_ctx.displayPrevious }, "page-item"])}" data-v-01a8be30><a class="page-link" href="#results-marker" data-v-01a8be30>Previous</a></li>`);
+        if (!_ctx.isLoading && !_ctx.hasLoadedData && vue_cjs_prod.unref(prefetchData) && _ctx.displayCount > 1) {
+          _push(`<nav aria-label="bills_pagination" data-v-45ff0dca><ul class="pagination mb-1" data-v-45ff0dca><li class="${serverRenderer.exports.ssrRenderClass([{ disabled: !_ctx.displayPrevious }, "page-item"])}" data-v-45ff0dca><a class="page-link" href="#results-marker" data-v-45ff0dca>Previous</a></li>`);
           if (_ctx.displayPrevious) {
-            _push(`<li class="page-item" data-v-01a8be30><a class="page-link" href="#results-marker" data-v-01a8be30>${serverRenderer.exports.ssrInterpolate(_ctx.displayPage - 1)}</a></li>`);
+            _push(`<li class="page-item" data-v-45ff0dca><a class="page-link" href="#results-marker" data-v-45ff0dca>${serverRenderer.exports.ssrInterpolate(_ctx.displayPage - 1)}</a></li>`);
           } else {
             _push(`<!---->`);
           }
-          _push(`<li class="page-item active" aria-current="page" data-v-01a8be30><a class="page-link" href="#results-marker" data-v-01a8be30>${serverRenderer.exports.ssrInterpolate(_ctx.displayPage)}</a></li>`);
+          _push(`<li class="page-item active" aria-current="page" data-v-45ff0dca><a class="page-link" href="#results-marker" data-v-45ff0dca>${serverRenderer.exports.ssrInterpolate(_ctx.displayPage)}</a></li>`);
           if (_ctx.displayNext) {
-            _push(`<li class="page-item" data-v-01a8be30><a class="page-link" href="#results-marker" data-v-01a8be30>${serverRenderer.exports.ssrInterpolate(_ctx.displayPage + 1)}</a></li>`);
+            _push(`<li class="page-item" data-v-45ff0dca><a class="page-link" href="#results-marker" data-v-45ff0dca>${serverRenderer.exports.ssrInterpolate(_ctx.displayPage + 1)}</a></li>`);
           } else {
             _push(`<!---->`);
           }
-          _push(`<li class="${serverRenderer.exports.ssrRenderClass([{ disabled: !_ctx.displayNext }, "page-item"])}" data-v-01a8be30><a class="page-link" href="#results-marker" data-v-01a8be30>Next</a></li></ul>`);
+          _push(`<li class="${serverRenderer.exports.ssrRenderClass([{ disabled: !_ctx.displayNext }, "page-item"])}" data-v-45ff0dca><a class="page-link" href="#results-marker" data-v-45ff0dca>Next</a></li></ul>`);
           if (_ctx.displayPage != 1) {
-            _push(`<a id="back-to-start" href="#results-marker" data-v-01a8be30><small data-v-01a8be30>Back to start</small></a>`);
+            _push(`<a id="back-to-start" href="#results-marker" data-v-45ff0dca><small data-v-45ff0dca>Back to start</small></a>`);
+          } else {
+            _push(`<!---->`);
+          }
+          _push(`</nav>`);
+        } else {
+          _push(`<!---->`);
+        }
+        if (!_ctx.isLoading && _ctx.hasLoadedData && _ctx.displayCount > 1) {
+          _push(`<nav aria-label="bills_pagination" data-v-45ff0dca><ul class="pagination mb-1" data-v-45ff0dca><li class="${serverRenderer.exports.ssrRenderClass([{ disabled: !_ctx.displayPrevious }, "page-item"])}" data-v-45ff0dca><a class="page-link" href="#results-marker" data-v-45ff0dca>Previous</a></li>`);
+          if (_ctx.displayPrevious) {
+            _push(`<li class="page-item" data-v-45ff0dca><a class="page-link" href="#results-marker" data-v-45ff0dca>${serverRenderer.exports.ssrInterpolate(_ctx.displayPage - 1)}</a></li>`);
+          } else {
+            _push(`<!---->`);
+          }
+          _push(`<li class="page-item active" aria-current="page" data-v-45ff0dca><a class="page-link" href="#results-marker" data-v-45ff0dca>${serverRenderer.exports.ssrInterpolate(_ctx.displayPage)}</a></li>`);
+          if (_ctx.displayNext) {
+            _push(`<li class="page-item" data-v-45ff0dca><a class="page-link" href="#results-marker" data-v-45ff0dca>${serverRenderer.exports.ssrInterpolate(_ctx.displayPage + 1)}</a></li>`);
+          } else {
+            _push(`<!---->`);
+          }
+          _push(`<li class="${serverRenderer.exports.ssrRenderClass([{ disabled: !_ctx.displayNext }, "page-item"])}" data-v-45ff0dca><a class="page-link" href="#results-marker" data-v-45ff0dca>Next</a></li></ul>`);
+          if (_ctx.displayPage != 1) {
+            _push(`<a id="back-to-start" href="#results-marker" data-v-45ff0dca><small data-v-45ff0dca>Back to start</small></a>`);
           } else {
             _push(`<!---->`);
           }
@@ -10045,7 +7052,7 @@ _sfc_main$I.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/BillFilter.vue");
   return _sfc_setup$I ? _sfc_setup$I(props, ctx) : void 0;
 };
-const __nuxt_component_1$5 = /* @__PURE__ */ _export_sfc(_sfc_main$I, [["__scopeId", "data-v-01a8be30"]]);
+const __nuxt_component_1$5 = /* @__PURE__ */ _export_sfc(_sfc_main$I, [["__scopeId", "data-v-45ff0dca"]]);
 const meta$g = void 0;
 const useElectoratesStore = defineStore("electorates", {
   state() {
@@ -10330,13 +7337,13 @@ const __default__$2 = {
   components: {},
   methods: {
     relativeDate(date2) {
-      return formatDistanceToNow(parse$2(date2, "yyyy-MM-dd", new Date())) + " ago";
+      return formatDistanceToNow(parse$1(date2, "yyyy-MM-dd", new Date())) + " ago";
     },
     formattedDate(date2) {
-      return format(parse$2(date2, "yyyy-MM-dd", new Date()), "d.M.yyyy");
+      return format(parse$1(date2, "yyyy-MM-dd", new Date()), "d.M.yyyy");
     },
     formattedDateFull(date2) {
-      return format(parse$2(date2, "yyyy-MM-dd", new Date()), "d MMMM yyyy");
+      return format(parse$1(date2, "yyyy-MM-dd", new Date()), "d MMMM yyyy");
     }
   }
 };
@@ -13175,7 +10182,7 @@ function _updateBezierControlPoints(points, options, area, loop, indexAxis) {
     capBezierPoints(points, area);
   }
 }
-const getComputedStyle$1 = (element) => window.getComputedStyle(element, null);
+const getComputedStyle = (element) => window.getComputedStyle(element, null);
 const positions = ["top", "right", "bottom", "left"];
 function getPositionedStyle(styles, style, suffix) {
   const result = {};
@@ -13211,7 +10218,7 @@ function getRelativePosition(evt, chart) {
     return evt;
   }
   const { canvas, currentDevicePixelRatio } = chart;
-  const style = getComputedStyle$1(canvas);
+  const style = getComputedStyle(canvas);
   const borderBox = style.boxSizing === "border-box";
   const paddings = getPositionedStyle(style, "padding");
   const borders = getPositionedStyle(style, "border", "width");
@@ -23867,7 +20874,7 @@ const _sfc_main$A = {
   },
   computed: {
     formattedDate() {
-      return format(parse$2(this.bill.date_modified, "yyyy-MM-dd", new Date()), "d.M.yyyy");
+      return format(parse$1(this.bill.date_modified, "yyyy-MM-dd", new Date()), "d.M.yyyy");
     },
     displayedDataset() {
       if (this.activeDataset === "followers") {
@@ -24291,7 +21298,7 @@ const _sfc_main$x = {
   },
   methods: {
     dateFormat(date2) {
-      return format(parse$2(date2, "yyyy-MM-dd", new Date()), "d.M.yyyy");
+      return format(parse$1(date2, "yyyy-MM-dd", new Date()), "d.M.yyyy");
     },
     readingName(reading) {
       return {
@@ -24564,10 +21571,10 @@ const _sfc_main$u = {
   },
   computed: {
     relativeDate() {
-      return formatDistanceToNow(parse$2(this.bill.date_modified, "yyyy-MM-dd", new Date())) + " ago";
+      return formatDistanceToNow(parse$1(this.bill.date_modified, "yyyy-MM-dd", new Date())) + " ago";
     },
     formattedDate() {
-      return format(parse$2(this.bill.date_modified, "yyyy-MM-dd", new Date()), "d.M.yyyy");
+      return format(parse$1(this.bill.date_modified, "yyyy-MM-dd", new Date()), "d.M.yyyy");
     }
   }
 };
@@ -24739,35 +21746,35 @@ const __default__$1 = {
       return JSON.stringify(this.filterSettings);
     },
     displayVotes() {
-      if (!this.hasLoadedData) {
+      if (!this.hasLoadedData && this.prefetchData) {
         return this.prefetchData.results;
       } else {
         return this.votes;
       }
     },
     displayCount() {
-      if (!this.hasLoadedData) {
+      if (!this.hasLoadedData && this.prefetchData) {
         return this.prefetchData.count;
       } else {
         return this.count;
       }
     },
     displayPage() {
-      if (!this.hasLoadedData) {
+      if (!this.hasLoadedData && this.prefetchData) {
         return this.prefetchData.page;
       } else {
         return this.page;
       }
     },
     displayNext() {
-      if (!this.hasLoadedData) {
+      if (!this.hasLoadedData && this.prefetchData) {
         return this.prefetchData.next;
       } else {
         return this.next;
       }
     },
     displayPrevious() {
-      if (!this.hasLoadedData) {
+      if (!this.hasLoadedData && this.prefetchData) {
         return this.prefetchData.previous;
       } else {
         return this.previous;
@@ -24814,17 +21821,14 @@ const __default__$1 = {
       }
     },
     relativeDate(date2) {
-      return formatDistanceToNow(parse$2(date2, "yyyy-MM-dd", new Date())) + " ago";
+      return formatDistanceToNow(parse$1(date2, "yyyy-MM-dd", new Date())) + " ago";
     },
     formattedDate(date2) {
-      return format(parse$2(date2, "yyyy-MM-dd", new Date()), "d.M.yyyy");
+      return format(parse$1(date2, "yyyy-MM-dd", new Date()), "d.M.yyyy");
     },
     formattedDateFull(date2) {
-      return format(parse$2(date2, "yyyy-MM-dd", new Date()), "d MMMM yyyy");
+      return format(parse$1(date2, "yyyy-MM-dd", new Date()), "d MMMM yyyy");
     }
-  },
-  onMounted() {
-    this.getPage(1);
   }
 };
 const _sfc_main$t = /* @__PURE__ */ Object.assign(__default__$1, {
@@ -24843,8 +21847,8 @@ const _sfc_main$t = /* @__PURE__ */ Object.assign(__default__$1, {
       const _component_Card = __nuxt_component_2$4;
       const _component_Spinner = __nuxt_component_0$1;
       const _component_NuxtLink = __nuxt_component_1$7;
-      _push(`<div${serverRenderer.exports.ssrRenderAttrs(_attrs)} data-v-ba059728><h4 data-v-ba059728>Filter votes</h4>`);
-      if (vue_cjs_prod.unref(prefetchData) && vue_cjs_prod.unref(prefetchData).count > 0) {
+      _push(`<div${serverRenderer.exports.ssrRenderAttrs(_attrs)} data-v-3a8552d7><h4 data-v-3a8552d7>Filter votes</h4>`);
+      if (vue_cjs_prod.unref(prefetchData) && vue_cjs_prod.unref(prefetchData).count && vue_cjs_prod.unref(prefetchData).count > 0) {
         _push(serverRenderer.exports.ssrRenderComponent(_component_Head, null, {
           default: vue_cjs_prod.withCtx((_, _push2, _parent2, _scopeId) => {
             if (_push2) {
@@ -24900,11 +21904,11 @@ const _sfc_main$t = /* @__PURE__ */ Object.assign(__default__$1, {
       _push(serverRenderer.exports.ssrRenderComponent(_component_Card, null, {
         default: vue_cjs_prod.withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
-            _push2(`<form data-v-ba059728${_scopeId}><div class="row mb-2" data-v-ba059728${_scopeId}><div class="col-12" data-v-ba059728${_scopeId}><h5 data-v-ba059728${_scopeId}>Refine by bill title</h5><label for="text_filter" data-v-ba059728${_scopeId}>Bill title must contain the following:</label><input${serverRenderer.exports.ssrRenderAttr("value", _ctx.filterSettings.titleContains)} class="form-control" type="input" id="text_filter" data-v-ba059728${_scopeId}><small class="text-muted" data-v-ba059728${_scopeId}>For less strict textual search, you may wish to use the site-wide search function.</small></div></div><hr data-v-ba059728${_scopeId}><div class="row" data-v-ba059728${_scopeId}><div class="col-12 col-xl-3" data-v-ba059728${_scopeId}><h5 data-v-ba059728${_scopeId}>Bill types</h5><div class="form-check" data-v-ba059728${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.filterSettings.billTypes.gov) ? serverRenderer.exports.ssrLooseContain(_ctx.filterSettings.billTypes.gov, "") : _ctx.filterSettings.billTypes.gov) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_goverment" data-v-ba059728${_scopeId}><label class="form-check-label" for="check_goverment" data-v-ba059728${_scopeId}> Government bills </label></div><div class="form-check" data-v-ba059728${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.filterSettings.billTypes.mem) ? serverRenderer.exports.ssrLooseContain(_ctx.filterSettings.billTypes.mem, "") : _ctx.filterSettings.billTypes.mem) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_members" data-v-ba059728${_scopeId}><label class="form-check-label" for="check_members" data-v-ba059728${_scopeId}> Members&#39; bills </label></div><div class="form-check" data-v-ba059728${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.filterSettings.billTypes.loc) ? serverRenderer.exports.ssrLooseContain(_ctx.filterSettings.billTypes.loc, "") : _ctx.filterSettings.billTypes.loc) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_local" data-v-ba059728${_scopeId}><label class="form-check-label" for="check_local" data-v-ba059728${_scopeId}> Local bills </label></div><div class="form-check" data-v-ba059728${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.filterSettings.billTypes.pri) ? serverRenderer.exports.ssrLooseContain(_ctx.filterSettings.billTypes.pri, "") : _ctx.filterSettings.billTypes.pri) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_private" data-v-ba059728${_scopeId}><label class="form-check-label" for="check_private" data-v-ba059728${_scopeId}> Private bills </label></div><small data-v-ba059728${_scopeId}><strong data-v-ba059728${_scopeId}>OR</strong>: Votes must be for a bill of one of the selected types to be shown.</small></div><div class="col-12 col-xl-3" data-v-ba059728${_scopeId}><h5 data-v-ba059728${_scopeId}>Vote options</h5><label for="parliament_select" data-v-ba059728${_scopeId}>Parliamentary term</label><select class="form-select" id="parliament_select" aria-label="-" data-v-ba059728${_scopeId}><option value="" selected data-v-ba059728${_scopeId}>Any</option><option value="53" data-v-ba059728${_scopeId}>53rd Parliament</option><option value="52" data-v-ba059728${_scopeId}>52nd Parliament</option><option value="51" data-v-ba059728${_scopeId}>51st Parliament</option><option value="50" data-v-ba059728${_scopeId}>50th Parliament</option></select><label for="vote_type_select" class="mt-2" data-v-ba059728${_scopeId}>Vote type</label><select class="form-select" id="vote_type_select" aria-label="Vote type" data-v-ba059728${_scopeId}><option value="" selected data-v-ba059728${_scopeId}>Any</option><option value="personal" data-v-ba059728${_scopeId}>Personal vote</option><option value="party" data-v-ba059728${_scopeId}>Party vote</option></select><small data-v-ba059728${_scopeId}><strong data-v-ba059728${_scopeId}>AND</strong>: Votes must meet both of these criteria to be shown.</small></div><div class="col-12 col-xl-3" data-v-ba059728${_scopeId}><h5 data-v-ba059728${_scopeId}>Display options</h5><label for="per_page_select" data-v-ba059728${_scopeId}>Results per page</label><select class="form-select" id="per_page_select" aria-label="Results per page" data-v-ba059728${_scopeId}><option value="10" selected data-v-ba059728${_scopeId}>10</option><option value="25" data-v-ba059728${_scopeId}>25</option><option value="50" data-v-ba059728${_scopeId}>50</option><option value="100" data-v-ba059728${_scopeId}>100</option></select><label for="order_by_select" class="mt-2" data-v-ba059728${_scopeId}>Order by</label><select class="form-select" id="order_by_select" aria-label="Order by" data-v-ba059728${_scopeId}><option value="date_desc" selected data-v-ba059728${_scopeId}>Date (newest first)</option><option value="date_asc" data-v-ba059728${_scopeId}>Date (oldest first)</option><option value="reading_desc" data-v-ba059728${_scopeId}>Reading (latest first)</option><option value="reading_asc" data-v-ba059728${_scopeId}>Reading (earliest first)</option></select></div></div><hr data-v-ba059728${_scopeId}><div class="row" data-v-ba059728${_scopeId}><div class="col-12" data-v-ba059728${_scopeId}>`);
+            _push2(`<form data-v-3a8552d7${_scopeId}><div class="row mb-2" data-v-3a8552d7${_scopeId}><div class="col-12" data-v-3a8552d7${_scopeId}><h5 data-v-3a8552d7${_scopeId}>Refine by bill title</h5><label for="text_filter" data-v-3a8552d7${_scopeId}>Bill title must contain the following:</label><input${serverRenderer.exports.ssrRenderAttr("value", _ctx.filterSettings.titleContains)} class="form-control" type="input" id="text_filter" data-v-3a8552d7${_scopeId}><small class="text-muted" data-v-3a8552d7${_scopeId}>For less strict textual search, you may wish to use the site-wide search function.</small></div></div><hr data-v-3a8552d7${_scopeId}><div class="row" data-v-3a8552d7${_scopeId}><div class="col-12 col-xl-3" data-v-3a8552d7${_scopeId}><h5 data-v-3a8552d7${_scopeId}>Bill types</h5><div class="form-check" data-v-3a8552d7${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.filterSettings.billTypes.gov) ? serverRenderer.exports.ssrLooseContain(_ctx.filterSettings.billTypes.gov, "") : _ctx.filterSettings.billTypes.gov) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_goverment" data-v-3a8552d7${_scopeId}><label class="form-check-label" for="check_goverment" data-v-3a8552d7${_scopeId}> Government bills </label></div><div class="form-check" data-v-3a8552d7${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.filterSettings.billTypes.mem) ? serverRenderer.exports.ssrLooseContain(_ctx.filterSettings.billTypes.mem, "") : _ctx.filterSettings.billTypes.mem) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_members" data-v-3a8552d7${_scopeId}><label class="form-check-label" for="check_members" data-v-3a8552d7${_scopeId}> Members&#39; bills </label></div><div class="form-check" data-v-3a8552d7${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.filterSettings.billTypes.loc) ? serverRenderer.exports.ssrLooseContain(_ctx.filterSettings.billTypes.loc, "") : _ctx.filterSettings.billTypes.loc) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_local" data-v-3a8552d7${_scopeId}><label class="form-check-label" for="check_local" data-v-3a8552d7${_scopeId}> Local bills </label></div><div class="form-check" data-v-3a8552d7${_scopeId}><input${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray(_ctx.filterSettings.billTypes.pri) ? serverRenderer.exports.ssrLooseContain(_ctx.filterSettings.billTypes.pri, "") : _ctx.filterSettings.billTypes.pri) ? " checked" : ""} class="form-check-input" type="checkbox" value="" id="check_private" data-v-3a8552d7${_scopeId}><label class="form-check-label" for="check_private" data-v-3a8552d7${_scopeId}> Private bills </label></div><small data-v-3a8552d7${_scopeId}><strong data-v-3a8552d7${_scopeId}>OR</strong>: Votes must be for a bill of one of the selected types to be shown.</small></div><div class="col-12 col-xl-3" data-v-3a8552d7${_scopeId}><h5 data-v-3a8552d7${_scopeId}>Vote options</h5><label for="parliament_select" data-v-3a8552d7${_scopeId}>Parliamentary term</label><select class="form-select" id="parliament_select" aria-label="-" data-v-3a8552d7${_scopeId}><option value="" selected data-v-3a8552d7${_scopeId}>Any</option><option value="53" data-v-3a8552d7${_scopeId}>53rd Parliament</option><option value="52" data-v-3a8552d7${_scopeId}>52nd Parliament</option><option value="51" data-v-3a8552d7${_scopeId}>51st Parliament</option><option value="50" data-v-3a8552d7${_scopeId}>50th Parliament</option></select><label for="vote_type_select" class="mt-2" data-v-3a8552d7${_scopeId}>Vote type</label><select class="form-select" id="vote_type_select" aria-label="Vote type" data-v-3a8552d7${_scopeId}><option value="" selected data-v-3a8552d7${_scopeId}>Any</option><option value="personal" data-v-3a8552d7${_scopeId}>Personal vote</option><option value="party" data-v-3a8552d7${_scopeId}>Party vote</option></select><small data-v-3a8552d7${_scopeId}><strong data-v-3a8552d7${_scopeId}>AND</strong>: Votes must meet both of these criteria to be shown.</small></div><div class="col-12 col-xl-3" data-v-3a8552d7${_scopeId}><h5 data-v-3a8552d7${_scopeId}>Display options</h5><label for="per_page_select" data-v-3a8552d7${_scopeId}>Results per page</label><select class="form-select" id="per_page_select" aria-label="Results per page" data-v-3a8552d7${_scopeId}><option value="10" selected data-v-3a8552d7${_scopeId}>10</option><option value="25" data-v-3a8552d7${_scopeId}>25</option><option value="50" data-v-3a8552d7${_scopeId}>50</option><option value="100" data-v-3a8552d7${_scopeId}>100</option></select><label for="order_by_select" class="mt-2" data-v-3a8552d7${_scopeId}>Order by</label><select class="form-select" id="order_by_select" aria-label="Order by" data-v-3a8552d7${_scopeId}><option value="date_desc" selected data-v-3a8552d7${_scopeId}>Date (newest first)</option><option value="date_asc" data-v-3a8552d7${_scopeId}>Date (oldest first)</option><option value="reading_desc" data-v-3a8552d7${_scopeId}>Reading (latest first)</option><option value="reading_asc" data-v-3a8552d7${_scopeId}>Reading (earliest first)</option></select></div></div><hr data-v-3a8552d7${_scopeId}><div class="row" data-v-3a8552d7${_scopeId}><div class="col-12" data-v-3a8552d7${_scopeId}>`);
             if (_ctx.activeString != _ctx.userString && !_ctx.isLoading) {
-              _push2(`<button class="btn btn-primary" type="button" id="button-addon2" data-v-ba059728${_scopeId}>Refine selection</button>`);
+              _push2(`<button class="btn btn-primary" type="button" id="button-addon2" data-v-3a8552d7${_scopeId}>Refine selection</button>`);
             } else {
-              _push2(`<button disabled class="btn btn-primary" type="button" id="button-addon2" data-v-ba059728${_scopeId}>Refine selection</button>`);
+              _push2(`<button disabled class="btn btn-primary" type="button" id="button-addon2" data-v-3a8552d7${_scopeId}>Refine selection</button>`);
             }
             if (_ctx.isLoading) {
               _push2(serverRenderer.exports.ssrRenderComponent(_component_Spinner, { class: "ms-2" }, null, _parent2, _scopeId));
@@ -25114,11 +22118,11 @@ const _sfc_main$t = /* @__PURE__ */ Object.assign(__default__$1, {
         }),
         _: 1
       }, _parent));
-      _push(`<span id="results-marker" data-v-ba059728></span>`);
+      _push(`<span id="results-marker" data-v-3a8552d7></span>`);
       if (_ctx.page) {
-        _push(`<div data-v-ba059728><h4 data-v-ba059728>Results</h4> ${serverRenderer.exports.ssrInterpolate(_ctx.displayCount)} result`);
+        _push(`<div data-v-3a8552d7><h4 data-v-3a8552d7>Results</h4> ${serverRenderer.exports.ssrInterpolate(_ctx.displayCount)} result`);
         if (_ctx.displayCount != 1) {
-          _push(`<span data-v-ba059728>s</span>`);
+          _push(`<span data-v-3a8552d7>s</span>`);
         } else {
           _push(`<!---->`);
         }
@@ -25135,13 +22139,13 @@ const _sfc_main$t = /* @__PURE__ */ Object.assign(__default__$1, {
                 _push2(serverRenderer.exports.ssrRenderComponent(_component_Card, null, {
                   default: vue_cjs_prod.withCtx((_2, _push3, _parent3, _scopeId2) => {
                     if (_push3) {
-                      _push3(`<div class="row" data-v-ba059728${_scopeId2}><div class="col-12 col-xl-5" data-v-ba059728${_scopeId2}><h6 class="mb-0" data-v-ba059728${_scopeId2}>${serverRenderer.exports.ssrInterpolate(vote.name)}</h6><small class="me-1" data-v-ba059728${_scopeId2}>`);
+                      _push3(`<div class="row" data-v-3a8552d7${_scopeId2}><div class="col-12 col-xl-5" data-v-3a8552d7${_scopeId2}><h6 class="mb-0" data-v-3a8552d7${_scopeId2}>${serverRenderer.exports.ssrInterpolate(vote.name)}</h6><small class="me-1" data-v-3a8552d7${_scopeId2}>`);
                       if (vote.type_desc) {
-                        _push3(`<span class="badge bg-primary text-uppercase" data-v-ba059728${_scopeId2}>${serverRenderer.exports.ssrInterpolate(vote.type_desc)}</span>`);
+                        _push3(`<span class="badge bg-primary text-uppercase" data-v-3a8552d7${_scopeId2}>${serverRenderer.exports.ssrInterpolate(vote.type_desc)}</span>`);
                       } else {
                         _push3(`<!---->`);
                       }
-                      _push3(`</small><small class="text-muted text-uppercase" data-v-ba059728${_scopeId2}>${serverRenderer.exports.ssrInterpolate(_ctx.formattedDateFull(vote.date))}</small><hr class="col-12 d-xl-none mt-2" data-v-ba059728${_scopeId2}></div><div class="col-12 col-xl-7" data-v-ba059728${_scopeId2}><div class="row" data-v-ba059728${_scopeId2}><div class="col-3 text-center" data-v-ba059728${_scopeId2}><h3 data-v-ba059728${_scopeId2}>${serverRenderer.exports.ssrInterpolate(vote.ayes)}</h3><h6 class="text-muted text-uppercase" data-v-ba059728${_scopeId2}><span class="dot-yes" data-v-ba059728${_scopeId2}></span> Ayes</h6></div><div class="col-3 text-center" data-v-ba059728${_scopeId2}><h3 data-v-ba059728${_scopeId2}>${serverRenderer.exports.ssrInterpolate(vote.noes)}</h3><h6 class="text-muted text-uppercase" data-v-ba059728${_scopeId2}><span class="dot-no" data-v-ba059728${_scopeId2}></span> Noes</h6></div><div class="col-3 text-center" data-v-ba059728${_scopeId2}><h3 data-v-ba059728${_scopeId2}>${serverRenderer.exports.ssrInterpolate(vote.abstentions)}</h3><h6 class="text-muted text-uppercase" data-v-ba059728${_scopeId2}><span class="dot-abstain" data-v-ba059728${_scopeId2}></span> Abstentions</h6></div><div class="col-3 text-center" data-v-ba059728${_scopeId2}><h3 data-v-ba059728${_scopeId2}>${serverRenderer.exports.ssrInterpolate(vote.absent)}</h3><h6 class="text-muted text-uppercase" data-v-ba059728${_scopeId2}><span class="dot-absent" data-v-ba059728${_scopeId2}></span> Absent</h6></div></div></div></div>`);
+                      _push3(`</small><small class="text-muted text-uppercase" data-v-3a8552d7${_scopeId2}>${serverRenderer.exports.ssrInterpolate(_ctx.formattedDateFull(vote.date))}</small><hr class="col-12 d-xl-none mt-2" data-v-3a8552d7${_scopeId2}></div><div class="col-12 col-xl-7" data-v-3a8552d7${_scopeId2}><div class="row" data-v-3a8552d7${_scopeId2}><div class="col-3 text-center" data-v-3a8552d7${_scopeId2}><h3 data-v-3a8552d7${_scopeId2}>${serverRenderer.exports.ssrInterpolate(vote.ayes)}</h3><h6 class="text-muted text-uppercase" data-v-3a8552d7${_scopeId2}><span class="dot-yes" data-v-3a8552d7${_scopeId2}></span> Ayes</h6></div><div class="col-3 text-center" data-v-3a8552d7${_scopeId2}><h3 data-v-3a8552d7${_scopeId2}>${serverRenderer.exports.ssrInterpolate(vote.noes)}</h3><h6 class="text-muted text-uppercase" data-v-3a8552d7${_scopeId2}><span class="dot-no" data-v-3a8552d7${_scopeId2}></span> Noes</h6></div><div class="col-3 text-center" data-v-3a8552d7${_scopeId2}><h3 data-v-3a8552d7${_scopeId2}>${serverRenderer.exports.ssrInterpolate(vote.abstentions)}</h3><h6 class="text-muted text-uppercase" data-v-3a8552d7${_scopeId2}><span class="dot-abstain" data-v-3a8552d7${_scopeId2}></span> Abstentions</h6></div><div class="col-3 text-center" data-v-3a8552d7${_scopeId2}><h3 data-v-3a8552d7${_scopeId2}>${serverRenderer.exports.ssrInterpolate(vote.absent)}</h3><h6 class="text-muted text-uppercase" data-v-3a8552d7${_scopeId2}><span class="dot-absent" data-v-3a8552d7${_scopeId2}></span> Absent</h6></div></div></div></div>`);
                     } else {
                       return [
                         vue_cjs_prod.createVNode("div", { class: "row" }, [
@@ -25253,22 +22257,45 @@ const _sfc_main$t = /* @__PURE__ */ Object.assign(__default__$1, {
           }, _parent));
         });
         _push(`<!--]-->`);
-        if (!_ctx.isLoading) {
-          _push(`<nav aria-label="votes_pagination" data-v-ba059728><ul class="pagination mb-1" data-v-ba059728><li class="${serverRenderer.exports.ssrRenderClass([{ disabled: !_ctx.displayPrevious }, "page-item"])}" data-v-ba059728><a class="page-link" href="#results-marker" data-v-ba059728>Previous</a></li>`);
+        if (!_ctx.isLoading && !_ctx.hasLoadedData && vue_cjs_prod.unref(prefetchData) && _ctx.displayCount > 1) {
+          _push(`<nav aria-label="votes_pagination" data-v-3a8552d7><ul class="pagination mb-1" data-v-3a8552d7><li class="${serverRenderer.exports.ssrRenderClass([{ disabled: !_ctx.displayPrevious }, "page-item"])}" data-v-3a8552d7><a class="page-link" href="#results-marker" data-v-3a8552d7>Previous</a></li>`);
           if (_ctx.displayPrevious) {
-            _push(`<li class="page-item" data-v-ba059728><a class="page-link" href="#results-marker" data-v-ba059728>${serverRenderer.exports.ssrInterpolate(_ctx.displayPage - 1)}</a></li>`);
+            _push(`<li class="page-item" data-v-3a8552d7><a class="page-link" href="#results-marker" data-v-3a8552d7>${serverRenderer.exports.ssrInterpolate(_ctx.displayPage - 1)}</a></li>`);
           } else {
             _push(`<!---->`);
           }
-          _push(`<li class="page-item active" aria-current="page" data-v-ba059728><a class="page-link" href="#results-marker" data-v-ba059728>${serverRenderer.exports.ssrInterpolate(_ctx.displayPage)}</a></li>`);
+          _push(`<li class="page-item active" aria-current="page" data-v-3a8552d7><a class="page-link" href="#results-marker" data-v-3a8552d7>${serverRenderer.exports.ssrInterpolate(_ctx.displayPage)}</a></li>`);
           if (_ctx.displayNext) {
-            _push(`<li class="page-item" data-v-ba059728><a class="page-link" href="#results-marker" data-v-ba059728>${serverRenderer.exports.ssrInterpolate(_ctx.displayPage + 1)}</a></li>`);
+            _push(`<li class="page-item" data-v-3a8552d7><a class="page-link" href="#results-marker" data-v-3a8552d7>${serverRenderer.exports.ssrInterpolate(_ctx.displayPage + 1)}</a></li>`);
           } else {
             _push(`<!---->`);
           }
-          _push(`<li class="${serverRenderer.exports.ssrRenderClass([{ disabled: !_ctx.displayNext }, "page-item"])}" data-v-ba059728><a class="page-link" href="#results-marker" data-v-ba059728>Next</a></li></ul>`);
+          _push(`<li class="${serverRenderer.exports.ssrRenderClass([{ disabled: !_ctx.displayNext }, "page-item"])}" data-v-3a8552d7><a class="page-link" href="#results-marker" data-v-3a8552d7>Next</a></li></ul>`);
           if (_ctx.displayPage != 1) {
-            _push(`<a id="back-to-start" href="#results-marker" data-v-ba059728><small data-v-ba059728>Back to start</small></a>`);
+            _push(`<a id="back-to-start" href="#results-marker" data-v-3a8552d7><small data-v-3a8552d7>Back to start</small></a>`);
+          } else {
+            _push(`<!---->`);
+          }
+          _push(`</nav>`);
+        } else {
+          _push(`<!---->`);
+        }
+        if (!_ctx.isLoading && _ctx.hasLoadedData && _ctx.displayCount > 1) {
+          _push(`<nav aria-label="votes_pagination" data-v-3a8552d7><ul class="pagination mb-1" data-v-3a8552d7><li class="${serverRenderer.exports.ssrRenderClass([{ disabled: !_ctx.displayPrevious }, "page-item"])}" data-v-3a8552d7><a class="page-link" href="#results-marker" data-v-3a8552d7>Previous</a></li>`);
+          if (_ctx.displayPrevious) {
+            _push(`<li class="page-item" data-v-3a8552d7><a class="page-link" href="#results-marker" data-v-3a8552d7>${serverRenderer.exports.ssrInterpolate(_ctx.displayPage - 1)}</a></li>`);
+          } else {
+            _push(`<!---->`);
+          }
+          _push(`<li class="page-item active" aria-current="page" data-v-3a8552d7><a class="page-link" href="#results-marker" data-v-3a8552d7>${serverRenderer.exports.ssrInterpolate(_ctx.displayPage)}</a></li>`);
+          if (_ctx.displayNext) {
+            _push(`<li class="page-item" data-v-3a8552d7><a class="page-link" href="#results-marker" data-v-3a8552d7>${serverRenderer.exports.ssrInterpolate(_ctx.displayPage + 1)}</a></li>`);
+          } else {
+            _push(`<!---->`);
+          }
+          _push(`<li class="${serverRenderer.exports.ssrRenderClass([{ disabled: !_ctx.displayNext }, "page-item"])}" data-v-3a8552d7><a class="page-link" href="#results-marker" data-v-3a8552d7>Next</a></li></ul>`);
+          if (_ctx.displayPage != 1) {
+            _push(`<a id="back-to-start" href="#results-marker" data-v-3a8552d7><small data-v-3a8552d7>Back to start</small></a>`);
           } else {
             _push(`<!---->`);
           }
@@ -25290,7 +22317,7 @@ _sfc_main$t.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/VoteFilter.vue");
   return _sfc_setup$t ? _sfc_setup$t(props, ctx) : void 0;
 };
-const __nuxt_component_1$1 = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["__scopeId", "data-v-ba059728"]]);
+const __nuxt_component_1$1 = /* @__PURE__ */ _export_sfc(_sfc_main$t, [["__scopeId", "data-v-3a8552d7"]]);
 const meta = void 0;
 const routes = [
   {
@@ -25646,7 +22673,7 @@ const PiniaNuxtPlugin = (context, inject2) => {
     }
   }
 };
-library$1.add(faHistory, faTimes, faCheck, faMapSigns, faQuestion, faChevronUp, faChevronDown, faExternalLinkAlt, faTwitter, faFacebook, faInstagram, faSnapchat, faWikipediaW, faInfoCircle, faArrowRight, faPeopleGroup, faPerson, faArrowLeft, faFileCsv, faFileCode, faFileExcel, faBook, faFileLines, faForwardFast, faCalendar, faPenNib, faMicrophoneLines);
+library.add(faHistory, faTimes, faCheck, faMapSigns, faQuestion, faChevronUp, faChevronDown, faExternalLinkAlt, faTwitter, faFacebook, faInstagram, faSnapchat, faWikipediaW, faInfoCircle, faArrowRight, faPeopleGroup, faPerson, faArrowLeft, faFileCsv, faFileCode, faFileExcel, faBook, faFileLines, faForwardFast, faCalendar, faPenNib, faMicrophoneLines);
 const _47Users_47jcm_47Local_32Documents_47GitHub_47wheretheystand_45client_47wts_45client_47plugins_47fontawesome_46js = defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component("FontAwesomeIcon", FontAwesomeIcon);
 });
@@ -75907,7 +72934,7 @@ const _sfc_main$h = {
   },
   methods: {
     formatDate(date2) {
-      return format(parse$2(date2, "yyyy-MM-dd", new Date()), "d MMMM yyyy");
+      return format(parse$1(date2, "yyyy-MM-dd", new Date()), "d MMMM yyyy");
     },
     formatDateTime(datetime) {
       return format(parseISO(datetime), "d MMMM yyyy 'at' HH:mm OOOO");
@@ -75984,13 +73011,13 @@ function _sfc_ssrRender$g(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
   const _component_VoteSummary = __nuxt_component_1$6;
   const _component_VoteSummaryBare = __nuxt_component_7$1;
   if ($options.bill) {
-    _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ id: "bill-view" }, _attrs))} data-v-7fb37eb8>`);
+    _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ id: "bill-view" }, _attrs))} data-v-47cecab8>`);
     _push(serverRenderer.exports.ssrRenderComponent(_component_Head, null, {
       default: vue_cjs_prod.withCtx((_, _push2, _parent2, _scopeId) => {
         if (_push2) {
           _push2(serverRenderer.exports.ssrRenderComponent(_component_Meta, {
             name: "twitter:title",
-            content: $options.bill.name + "- WhereTheyStand"
+            content: $options.bill.name + " - WhereTheyStand"
           }, null, _parent2, _scopeId));
           _push2(serverRenderer.exports.ssrRenderComponent(_component_Meta, {
             name: "twitter:description",
@@ -76002,7 +73029,7 @@ function _sfc_ssrRender$g(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
           }, null, _parent2, _scopeId));
           _push2(serverRenderer.exports.ssrRenderComponent(_component_Meta, {
             property: "og:title",
-            content: $options.bill.name + "- WhereTheyStand"
+            content: $options.bill.name + " - WhereTheyStand"
           }, null, _parent2, _scopeId));
           _push2(serverRenderer.exports.ssrRenderComponent(_component_Meta, {
             property: "og:description",
@@ -76012,7 +73039,7 @@ function _sfc_ssrRender$g(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
           return [
             vue_cjs_prod.createVNode(_component_Meta, {
               name: "twitter:title",
-              content: $options.bill.name + "- WhereTheyStand"
+              content: $options.bill.name + " - WhereTheyStand"
             }, null, 8, ["content"]),
             vue_cjs_prod.createVNode(_component_Meta, {
               name: "twitter:description",
@@ -76024,7 +73051,7 @@ function _sfc_ssrRender$g(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
             }, null, 8, ["content"]),
             vue_cjs_prod.createVNode(_component_Meta, {
               property: "og:title",
-              content: $options.bill.name + "- WhereTheyStand"
+              content: $options.bill.name + " - WhereTheyStand"
             }, null, 8, ["content"]),
             vue_cjs_prod.createVNode(_component_Meta, {
               property: "og:description",
@@ -76039,52 +73066,52 @@ function _sfc_ssrRender$g(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
       pageTitle: $options.bill.name,
       pageSubtitle: $options.bill.type_desc
     }, null, _parent));
-    _push(`<div class="container mt-3" data-v-7fb37eb8><div class="row" data-v-7fb37eb8><div class="col-12 col-lg-8" data-v-7fb37eb8><h4 data-v-7fb37eb8>About this bill</h4>`);
+    _push(`<div class="container mt-3" data-v-47cecab8><div class="row" data-v-47cecab8><div class="col-12 col-lg-8" data-v-47cecab8><h4 data-v-47cecab8>About this bill</h4>`);
     _push(serverRenderer.exports.ssrRenderComponent(_component_Card, null, {
       default: vue_cjs_prod.withCtx((_, _push2, _parent2, _scopeId) => {
         if (_push2) {
           _push2(`${serverRenderer.exports.ssrInterpolate($options.bill.description)} `);
           if ($options.bill.voting_method != "unk") {
-            _push2(`<h5 class="mt-3" data-v-7fb37eb8${_scopeId}>Voting method</h5>`);
+            _push2(`<h5 class="mt-3" data-v-47cecab8${_scopeId}>Voting method</h5>`);
           } else {
             _push2(`<!---->`);
           }
           if ($options.bill.voting_method == "per") {
-            _push2(`<span data-v-7fb37eb8${_scopeId}>`);
+            _push2(`<span data-v-47cecab8${_scopeId}>`);
             _push2(serverRenderer.exports.ssrRenderComponent(_component_FontAwesomeIcon, { icon: ["fas", "person"] }, null, _parent2, _scopeId));
-            _push2(` <strong data-v-7fb37eb8${_scopeId}>Personal voting: </strong> MPs voted individually on this bill. </span>`);
+            _push2(` <strong data-v-47cecab8${_scopeId}>Personal voting: </strong> MPs voted individually on this bill. </span>`);
           } else {
             _push2(`<!---->`);
           }
           if ($options.bill.voting_method == "par") {
-            _push2(`<span data-v-7fb37eb8${_scopeId}>`);
+            _push2(`<span data-v-47cecab8${_scopeId}>`);
             _push2(serverRenderer.exports.ssrRenderComponent(_component_FontAwesomeIcon, { icon: ["fas", "people-group"] }, null, _parent2, _scopeId));
-            _push2(` <strong data-v-7fb37eb8${_scopeId}>Party voting: </strong> Parties decided whether or not to support this bill and cast votes on behalf of all their MPs. </span>`);
+            _push2(` <strong data-v-47cecab8${_scopeId}>Party voting: </strong> Parties decided whether or not to support this bill and cast votes on behalf of all their MPs. </span>`);
           } else {
             _push2(`<!---->`);
           }
           if ($options.bill.voting_method == "mix") {
-            _push2(`<span data-v-7fb37eb8${_scopeId}>`);
+            _push2(`<span data-v-47cecab8${_scopeId}>`);
             _push2(serverRenderer.exports.ssrRenderComponent(_component_FontAwesomeIcon, { icon: ["fas", "people-group"] }, null, _parent2, _scopeId));
             _push2(` / `);
             _push2(serverRenderer.exports.ssrRenderComponent(_component_FontAwesomeIcon, { icon: ["fas", "person"] }, null, _parent2, _scopeId));
-            _push2(` <strong data-v-7fb37eb8${_scopeId}>Mixed voting: </strong> Both personal and party voting were used at different stages of this bill&#39;s progression. </span>`);
+            _push2(` <strong data-v-47cecab8${_scopeId}>Mixed voting: </strong> Both personal and party voting were used at different stages of this bill&#39;s progression. </span>`);
           } else {
             _push2(`<!---->`);
           }
           if ($options.bill.urgency_used || $options.bill.extended_sittings_used) {
-            _push2(`<h5 class="mt-3" data-v-7fb37eb8${_scopeId}>Procedural notes</h5>`);
+            _push2(`<h5 class="mt-3" data-v-47cecab8${_scopeId}>Procedural notes</h5>`);
           } else {
             _push2(`<!---->`);
           }
-          _push2(`<ul class="procedural-list pb-0 ps-0" data-v-7fb37eb8${_scopeId}>`);
+          _push2(`<ul class="procedural-list pb-0 ps-0" data-v-47cecab8${_scopeId}>`);
           if ($options.bill.urgency_used) {
-            _push2(`<li class="procedural-list" data-v-7fb37eb8${_scopeId}>`);
+            _push2(`<li class="procedural-list" data-v-47cecab8${_scopeId}>`);
             _push2(serverRenderer.exports.ssrRenderComponent(_component_FontAwesomeIcon, {
               class: "me-2",
               icon: ["fas", "forward-fast"]
             }, null, _parent2, _scopeId));
-            _push2(`<strong data-v-7fb37eb8${_scopeId}>Urgency used: </strong> This bill was progressed through one or more stages using urgency. Urgency allows the Government to fast-track the legislative process by extending the sitting hours of the House of Representatives and skipping the select committee stage of a bill, and allows bills to pass through more than one stage per sitting day. <br data-v-7fb37eb8${_scopeId}><small data-v-7fb37eb8${_scopeId}>`);
+            _push2(`<strong data-v-47cecab8${_scopeId}>Urgency used: </strong> This bill was progressed through one or more stages using urgency. Urgency allows the Government to fast-track the legislative process by extending the sitting hours of the House of Representatives and skipping the select committee stage of a bill, and allows bills to pass through more than one stage per sitting day. <br data-v-47cecab8${_scopeId}><small data-v-47cecab8${_scopeId}>`);
             _push2(serverRenderer.exports.ssrRenderComponent(_component_ExternalLinkInline, { link: "https://www.parliament.nz/en/visit-and-learn/how-parliament-works/fact-sheets/what-is-urgency/" }, {
               default: vue_cjs_prod.withCtx((_2, _push3, _parent3, _scopeId2) => {
                 if (_push3) {
@@ -76102,12 +73129,12 @@ function _sfc_ssrRender$g(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
             _push2(`<!---->`);
           }
           if ($options.bill.extended_sittings_used) {
-            _push2(`<li class="procedural-list" data-v-7fb37eb8${_scopeId}>`);
+            _push2(`<li class="procedural-list" data-v-47cecab8${_scopeId}>`);
             _push2(serverRenderer.exports.ssrRenderComponent(_component_FontAwesomeIcon, {
               class: "me-2",
               icon: ["fa", "calendar"]
             }, null, _parent2, _scopeId));
-            _push2(`<strong data-v-7fb37eb8${_scopeId}>Extended sittings used: </strong> This bill was progressed during one or more extended sittings of the House of Representatives. This enables MPs to meet for longer than normal to consider legislation. It does not alter the stages that a bill must pass through to become law. <br data-v-7fb37eb8${_scopeId}><small data-v-7fb37eb8${_scopeId}>`);
+            _push2(`<strong data-v-47cecab8${_scopeId}>Extended sittings used: </strong> This bill was progressed during one or more extended sittings of the House of Representatives. This enables MPs to meet for longer than normal to consider legislation. It does not alter the stages that a bill must pass through to become law. <br data-v-47cecab8${_scopeId}><small data-v-47cecab8${_scopeId}>`);
             _push2(serverRenderer.exports.ssrRenderComponent(_component_ExternalLinkInline, { link: "https://www.parliament.nz/en/visit-and-learn/how-parliament-works/fact-sheets/a-closer-look-at-extended-hours/" }, {
               default: vue_cjs_prod.withCtx((_2, _push3, _parent3, _scopeId2) => {
                 if (_push3) {
@@ -76126,12 +73153,12 @@ function _sfc_ssrRender$g(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
           }
           _push2(`</ul>`);
           if ($options.bill.pco_url || $options.actUrl) {
-            _push2(`<h5 class="mt-3" data-v-7fb37eb8${_scopeId}>Read the bill</h5>`);
+            _push2(`<h5 class="mt-3" data-v-47cecab8${_scopeId}>Read the bill</h5>`);
           } else {
             _push2(`<!---->`);
           }
           if ($options.bill.pco_url) {
-            _push2(`<span data-v-7fb37eb8${_scopeId}>`);
+            _push2(`<span data-v-47cecab8${_scopeId}>`);
             _push2(serverRenderer.exports.ssrRenderComponent(_component_FontAwesomeIcon, {
               class: "me-2",
               icon: ["fas", "file-lines"]
@@ -76156,12 +73183,12 @@ function _sfc_ssrRender$g(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
             _push2(`<!---->`);
           }
           if ($options.bill.pco_url && $options.actUrl) {
-            _push2(`<br data-v-7fb37eb8${_scopeId}>`);
+            _push2(`<br data-v-47cecab8${_scopeId}>`);
           } else {
             _push2(`<!---->`);
           }
           if ($options.actUrl) {
-            _push2(`<span data-v-7fb37eb8${_scopeId}>`);
+            _push2(`<span data-v-47cecab8${_scopeId}>`);
             _push2(serverRenderer.exports.ssrRenderComponent(_component_FontAwesomeIcon, {
               class: "me-2",
               icon: ["fas", "book"]
@@ -76183,9 +73210,9 @@ function _sfc_ssrRender$g(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
           } else {
             _push2(`<!---->`);
           }
-          _push2(`<hr data-v-7fb37eb8${_scopeId}><div class="row" data-v-7fb37eb8${_scopeId}>`);
+          _push2(`<hr data-v-47cecab8${_scopeId}><div class="row" data-v-47cecab8${_scopeId}>`);
           if (!$options.bill.parliament_api_id) {
-            _push2(`<div class="col-12 col-xl-6" data-v-7fb37eb8${_scopeId}>`);
+            _push2(`<div class="col-12 col-xl-6" data-v-47cecab8${_scopeId}>`);
             _push2(serverRenderer.exports.ssrRenderComponent(_component_ExternalLinkInline, {
               link: "https://www.parliament.nz/en/pb/bills-and-laws/bills-proposed-laws/document/" + $options.bill.legacy_document_id
             }, {
@@ -76202,7 +73229,7 @@ function _sfc_ssrRender$g(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
             }, _parent2, _scopeId));
             _push2(`</div>`);
           } else {
-            _push2(`<div class="col-12 col-xl-6" data-v-7fb37eb8${_scopeId}>`);
+            _push2(`<div class="col-12 col-xl-6" data-v-47cecab8${_scopeId}>`);
             _push2(serverRenderer.exports.ssrRenderComponent(_component_ExternalLinkInline, {
               link: "https://bills.parliament.nz/v/6/" + $options.bill.parliament_api_id
             }, {
@@ -76219,7 +73246,7 @@ function _sfc_ssrRender$g(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
             }, _parent2, _scopeId));
             _push2(`</div>`);
           }
-          _push2(`<div class="col-12 col-xl-6 text-xl-end" data-v-7fb37eb8${_scopeId}>`);
+          _push2(`<div class="col-12 col-xl-6 text-xl-end" data-v-47cecab8${_scopeId}>`);
           _push2(serverRenderer.exports.ssrRenderComponent(_component_DownloadLink, {
             class: "ms-xl-2 me-xl-0",
             resourceType: "bill",
@@ -76377,9 +73404,9 @@ function _sfc_ssrRender$g(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
       _: 1
     }, _parent));
     if ($options.bill.people_responsible.length > 0) {
-      _push(`<h4 data-v-7fb37eb8>Member`);
+      _push(`<h4 data-v-47cecab8>Member`);
       if ($options.bill.people_responsible.length > 1) {
-        _push(`<span data-v-7fb37eb8>s</span>`);
+        _push(`<span data-v-47cecab8>s</span>`);
       } else {
         _push(`<!---->`);
       }
@@ -76387,17 +73414,17 @@ function _sfc_ssrRender$g(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     } else {
       _push(`<!---->`);
     }
-    _push(`<div class="row" data-v-7fb37eb8><!--[-->`);
+    _push(`<div class="row" data-v-47cecab8><!--[-->`);
     serverRenderer.exports.ssrRenderList($options.bill.people_responsible, (person) => {
-      _push(`<div class="col-12 col-lg-6" data-v-7fb37eb8>`);
+      _push(`<div class="col-12 col-lg-6" data-v-47cecab8>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_PersonCard, { person }, null, _parent));
       _push(`</div>`);
     });
-    _push(`<!--]--></div></div><div class="col-12 col-lg-4" data-v-7fb37eb8><h4 data-v-7fb37eb8>Progress</h4>`);
+    _push(`<!--]--></div></div><div class="col-12 col-lg-4" data-v-47cecab8><h4 data-v-47cecab8>Progress</h4>`);
     _push(serverRenderer.exports.ssrRenderComponent(_component_Card, { gradient: true }, {
       default: vue_cjs_prod.withCtx((_, _push2, _parent2, _scopeId) => {
         if (_push2) {
-          _push2(`<h3 data-v-7fb37eb8${_scopeId}>${serverRenderer.exports.ssrInterpolate($options.bill.progress_desc)}</h3><p data-v-7fb37eb8${_scopeId}>${serverRenderer.exports.ssrInterpolate($options.progressExplanation)}</p>`);
+          _push2(`<h3 data-v-47cecab8${_scopeId}>${serverRenderer.exports.ssrInterpolate($options.bill.progress_desc)}</h3><p data-v-47cecab8${_scopeId}>${serverRenderer.exports.ssrInterpolate($options.progressExplanation)}</p>`);
         } else {
           return [
             vue_cjs_prod.createVNode("h3", null, vue_cjs_prod.toDisplayString($options.bill.progress_desc), 1),
@@ -76407,7 +73434,7 @@ function _sfc_ssrRender$g(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
       }),
       _: 1
     }, _parent));
-    _push(`</div></div><h3 data-v-7fb37eb8>Votes</h3><div class="row" data-v-7fb37eb8><div class="col-12 col-lg-4" data-v-7fb37eb8>`);
+    _push(`</div></div><h3 data-v-47cecab8>Votes</h3><div class="row" data-v-47cecab8><div class="col-12 col-lg-4" data-v-47cecab8>`);
     if ($options.firstReading) {
       _push(serverRenderer.exports.ssrRenderComponent(_component_NuxtLink, {
         class: "vote-link",
@@ -76440,7 +73467,7 @@ function _sfc_ssrRender$g(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
       _push(serverRenderer.exports.ssrRenderComponent(_component_Card, { missing: true }, {
         default: vue_cjs_prod.withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
-            _push2(`<h6 class="text-uppercase text-muted" data-v-7fb37eb8${_scopeId}><strong data-v-7fb37eb8${_scopeId}>1st reading</strong></h6><h6 class="text-muted" data-v-7fb37eb8${_scopeId}>This vote has not yet occurred, or is not yet recorded on WhereTheyStand.</h6>`);
+            _push2(`<h6 class="text-uppercase text-muted" data-v-47cecab8${_scopeId}><strong data-v-47cecab8${_scopeId}>1st reading</strong></h6><h6 class="text-muted" data-v-47cecab8${_scopeId}>This vote has not yet occurred, or is not yet recorded on WhereTheyStand.</h6>`);
           } else {
             return [
               vue_cjs_prod.createVNode("h6", { class: "text-uppercase text-muted" }, [
@@ -76455,7 +73482,7 @@ function _sfc_ssrRender$g(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     } else {
       _push(`<!---->`);
     }
-    _push(`</div><div class="col-12 col-lg-4" data-v-7fb37eb8>`);
+    _push(`</div><div class="col-12 col-lg-4" data-v-47cecab8>`);
     if ($options.secondReading) {
       _push(serverRenderer.exports.ssrRenderComponent(_component_NuxtLink, {
         class: "vote-link",
@@ -76488,7 +73515,7 @@ function _sfc_ssrRender$g(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
       _push(serverRenderer.exports.ssrRenderComponent(_component_Card, { missing: true }, {
         default: vue_cjs_prod.withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
-            _push2(`<h6 class="text-uppercase text-muted" data-v-7fb37eb8${_scopeId}><strong data-v-7fb37eb8${_scopeId}>2nd reading</strong></h6><h6 class="text-muted" data-v-7fb37eb8${_scopeId}>This vote has not yet occurred, or is not yet recorded on WhereTheyStand.</h6>`);
+            _push2(`<h6 class="text-uppercase text-muted" data-v-47cecab8${_scopeId}><strong data-v-47cecab8${_scopeId}>2nd reading</strong></h6><h6 class="text-muted" data-v-47cecab8${_scopeId}>This vote has not yet occurred, or is not yet recorded on WhereTheyStand.</h6>`);
           } else {
             return [
               vue_cjs_prod.createVNode("h6", { class: "text-uppercase text-muted" }, [
@@ -76503,7 +73530,7 @@ function _sfc_ssrRender$g(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     } else {
       _push(`<!---->`);
     }
-    _push(`</div><div class="col-12 col-lg-4" data-v-7fb37eb8>`);
+    _push(`</div><div class="col-12 col-lg-4" data-v-47cecab8>`);
     if ($options.thirdReading) {
       _push(serverRenderer.exports.ssrRenderComponent(_component_NuxtLink, {
         class: "vote-link",
@@ -76536,7 +73563,7 @@ function _sfc_ssrRender$g(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
       _push(serverRenderer.exports.ssrRenderComponent(_component_Card, { missing: true }, {
         default: vue_cjs_prod.withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
-            _push2(`<h6 class="text-uppercase text-muted" data-v-7fb37eb8${_scopeId}><strong data-v-7fb37eb8${_scopeId}>3rd reading</strong></h6><h6 class="text-muted" data-v-7fb37eb8${_scopeId}>This vote has not yet occurred, or is not yet recorded on WhereTheyStand.</h6>`);
+            _push2(`<h6 class="text-uppercase text-muted" data-v-47cecab8${_scopeId}><strong data-v-47cecab8${_scopeId}>3rd reading</strong></h6><h6 class="text-muted" data-v-47cecab8${_scopeId}>This vote has not yet occurred, or is not yet recorded on WhereTheyStand.</h6>`);
           } else {
             return [
               vue_cjs_prod.createVNode("h6", { class: "text-uppercase text-muted" }, [
@@ -76551,7 +73578,7 @@ function _sfc_ssrRender$g(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     } else {
       _push(`<!---->`);
     }
-    _push(`</div></div><p class="text-muted" data-v-7fb37eb8>Only reading votes are shown here; these votes determine whether the Bill progresses through Parliament. Other votes, such as votes on whether to amend parts of the Bill, can be seen in Hansard.</p><p class="text-muted" data-v-7fb37eb8>Bill details last synced with the Parliament website ${serverRenderer.exports.ssrInterpolate($options.relativeDate)}. <br data-v-7fb37eb8><small data-v-7fb37eb8>(${serverRenderer.exports.ssrInterpolate($options.formatDateTime($options.bill.last_retrieved))})</small></p></div></div>`);
+    _push(`</div></div><p class="text-muted" data-v-47cecab8>Only reading votes are shown here; these votes determine whether the Bill progresses through Parliament. Other votes, such as votes on whether to amend parts of the Bill, can be seen in Hansard.</p><p class="text-muted" data-v-47cecab8>Bill details last synced with the Parliament website ${serverRenderer.exports.ssrInterpolate($options.relativeDate)}. <br data-v-47cecab8><small data-v-47cecab8>(${serverRenderer.exports.ssrInterpolate($options.formatDateTime($options.bill.last_retrieved))})</small></p></div></div>`);
   } else {
     _push(`<!---->`);
   }
@@ -76562,7 +73589,7 @@ _sfc_main$h.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/bills/[id]/index.vue");
   return _sfc_setup$h ? _sfc_setup$h(props, ctx) : void 0;
 };
-const index$k = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["ssrRender", _sfc_ssrRender$g], ["__scopeId", "data-v-7fb37eb8"]]);
+const index$k = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["ssrRender", _sfc_ssrRender$g], ["__scopeId", "data-v-47cecab8"]]);
 const index$l = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": index$k
@@ -76686,7 +73713,7 @@ const _sfc_main$f = {
   },
   methods: {
     formatDate(date2) {
-      return format(parse$2(date2, "yyyy-MM-dd", new Date()), "d MMMM yyyy");
+      return format(parse$1(date2, "yyyy-MM-dd", new Date()), "d MMMM yyyy");
     }
   },
   watch: {
@@ -76713,13 +73740,13 @@ function _sfc_ssrRender$e(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
   const _component_colour_dot = __nuxt_component_3$3;
   const _component_ColourDot = __nuxt_component_3$3;
   if ($options.electorate) {
-    _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ id: "electorate-view" }, _attrs))} data-v-39bea13c>`);
+    _push(`<div${serverRenderer.exports.ssrRenderAttrs(vue_cjs_prod.mergeProps({ id: "electorate-view" }, _attrs))} data-v-29689862>`);
     _push(serverRenderer.exports.ssrRenderComponent(_component_Head, null, {
       default: vue_cjs_prod.withCtx((_, _push2, _parent2, _scopeId) => {
         if (_push2) {
           _push2(serverRenderer.exports.ssrRenderComponent(_component_Meta, {
             name: "twitter:title",
-            content: $options.electorate.name + "- WhereTheyStand"
+            content: $options.electorate.name + " - WhereTheyStand"
           }, null, _parent2, _scopeId));
           _push2(serverRenderer.exports.ssrRenderComponent(_component_Meta, {
             name: "twitter:description",
@@ -76731,7 +73758,7 @@ function _sfc_ssrRender$e(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
           }, null, _parent2, _scopeId));
           _push2(serverRenderer.exports.ssrRenderComponent(_component_Meta, {
             property: "og:title",
-            content: $options.electorate.name + "- WhereTheyStand"
+            content: $options.electorate.name + " - WhereTheyStand"
           }, null, _parent2, _scopeId));
           _push2(serverRenderer.exports.ssrRenderComponent(_component_Meta, {
             property: "og:description",
@@ -76741,7 +73768,7 @@ function _sfc_ssrRender$e(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
           return [
             vue_cjs_prod.createVNode(_component_Meta, {
               name: "twitter:title",
-              content: $options.electorate.name + "- WhereTheyStand"
+              content: $options.electorate.name + " - WhereTheyStand"
             }, null, 8, ["content"]),
             vue_cjs_prod.createVNode(_component_Meta, {
               name: "twitter:description",
@@ -76753,7 +73780,7 @@ function _sfc_ssrRender$e(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
             }, null, 8, ["content"]),
             vue_cjs_prod.createVNode(_component_Meta, {
               property: "og:title",
-              content: $options.electorate.name + "- WhereTheyStand"
+              content: $options.electorate.name + " - WhereTheyStand"
             }, null, 8, ["content"]),
             vue_cjs_prod.createVNode(_component_Meta, {
               property: "og:description",
@@ -76768,7 +73795,7 @@ function _sfc_ssrRender$e(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
       pageTitle: $options.electorate.name,
       pageSubtitle: $options.electorate.description
     }, null, _parent));
-    _push(`<div class="container-fluid hero pt-0" data-v-39bea13c>`);
+    _push(`<div class="container-fluid hero pt-0" data-v-29689862>`);
     if ($options.shape && $options.shape["wts-comment"] != "noshape") {
       _push(serverRenderer.exports.ssrRenderComponent(_component_mapbox_map, {
         accessToken: "pk.eyJ1IjoiamFtZXNjbWFjZXkiLCJhIjoiY2xiN2VhYzVqMGE5YTN2bnhuM3l6d3pxbyJ9.CN_c4Tf7wXMtxyLKWrtvJg",
@@ -76807,9 +73834,9 @@ function _sfc_ssrRender$e(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     } else {
       _push(`<!---->`);
     }
-    _push(`</div><div class="mt-3 container" data-v-39bea13c>`);
+    _push(`</div><div class="mt-3 container" data-v-29689862>`);
     if (($options.electorate.status === "current" || $options.electorate.status === "retiring") && $options.electorate.incumbent) {
-      _push(`<div data-v-39bea13c><div class="row" data-v-39bea13c><div class="col-12 col-xl-4" data-v-39bea13c><h4 data-v-39bea13c>Incumbent Member of Parliament</h4>`);
+      _push(`<div data-v-29689862><div class="row" data-v-29689862><div class="col-12 col-xl-4" data-v-29689862><h4 data-v-29689862>Incumbent Member of Parliament</h4>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_PersonCard, {
         person: $options.electorate.incumbent
       }, null, _parent));
@@ -76818,20 +73845,20 @@ function _sfc_ssrRender$e(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
       _push(`<!---->`);
     }
     if ($options.electorate.status !== "current") {
-      _push(`<div data-v-39bea13c><div class="row" data-v-39bea13c><div class="col-12" data-v-39bea13c>`);
+      _push(`<div data-v-29689862><div class="row" data-v-29689862><div class="col-12" data-v-29689862>`);
       if ($options.electorate.status === "retiring") {
         _push(serverRenderer.exports.ssrRenderComponent(_component_Card, null, {
           default: vue_cjs_prod.withCtx((_, _push2, _parent2, _scopeId) => {
             if (_push2) {
-              _push2(`<h5 data-v-39bea13c${_scopeId}>This electorate is retiring`);
+              _push2(`<h5 data-v-29689862${_scopeId}>This electorate is retiring`);
               if ($options.electorate.valid_to) {
-                _push2(`<span data-v-39bea13c${_scopeId}> on ${serverRenderer.exports.ssrInterpolate($options.formatDate($options.electorate.valid_to))}</span>`);
+                _push2(`<span data-v-29689862${_scopeId}> on ${serverRenderer.exports.ssrInterpolate($options.formatDate($options.electorate.valid_to))}</span>`);
               } else {
                 _push2(`<!---->`);
               }
               _push2(`.</h5>`);
               if ($options.electorate.replaced_by) {
-                _push2(`<p data-v-39bea13c${_scopeId}>The electorate of ${serverRenderer.exports.ssrInterpolate($options.electorate.name)} will be replaced by `);
+                _push2(`<p data-v-29689862${_scopeId}>The electorate of ${serverRenderer.exports.ssrInterpolate($options.electorate.name)} will be replaced by `);
                 _push2(serverRenderer.exports.ssrRenderComponent(_component_NuxtLink, {
                   to: "/electorates/" + $options.electorate.replaced_by.slug
                 }, {
@@ -76881,15 +73908,15 @@ function _sfc_ssrRender$e(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
         _push(serverRenderer.exports.ssrRenderComponent(_component_Card, null, {
           default: vue_cjs_prod.withCtx((_, _push2, _parent2, _scopeId) => {
             if (_push2) {
-              _push2(`<h5 data-v-39bea13c${_scopeId}>This electorate retired`);
+              _push2(`<h5 data-v-29689862${_scopeId}>This electorate retired`);
               if ($options.electorate.valid_to) {
-                _push2(`<span data-v-39bea13c${_scopeId}> on ${serverRenderer.exports.ssrInterpolate($options.formatDate($options.electorate.valid_to))}</span>`);
+                _push2(`<span data-v-29689862${_scopeId}> on ${serverRenderer.exports.ssrInterpolate($options.formatDate($options.electorate.valid_to))}</span>`);
               } else {
                 _push2(`<!---->`);
               }
               _push2(`.</h5>`);
               if ($options.electorate.replaced_by) {
-                _push2(`<p data-v-39bea13c${_scopeId}>The electorate of ${serverRenderer.exports.ssrInterpolate($options.electorate.name)} has been replaced by `);
+                _push2(`<p data-v-29689862${_scopeId}>The electorate of ${serverRenderer.exports.ssrInterpolate($options.electorate.name)} has been replaced by `);
                 _push2(serverRenderer.exports.ssrRenderComponent(_component_NuxtLink, {
                   to: "/electorates/" + $options.electorate.replaced_by.slug
                 }, {
@@ -76939,13 +73966,13 @@ function _sfc_ssrRender$e(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     } else {
       _push(`<!---->`);
     }
-    _push(`<div class="row" data-v-39bea13c><div class="col-12" data-v-39bea13c><h4 data-v-39bea13c>Previous MPs</h4><div class="form-check" data-v-39bea13c><input class="form-check-input" type="checkbox" value=""${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray($data.showReasons) ? serverRenderer.exports.ssrLooseContain($data.showReasons, "") : $data.showReasons) ? " checked" : ""} id="showReasons" data-v-39bea13c><label class="form-check-label" for="showReasons" data-v-39bea13c> Show reasons for commencement and conclusion of terms </label></div></div><div class="col-12" data-v-39bea13c>`);
+    _push(`<div class="row" data-v-29689862><div class="col-12" data-v-29689862><h4 data-v-29689862>Previous MPs</h4><div class="form-check" data-v-29689862><input class="form-check-input" type="checkbox" value=""${serverRenderer.exports.ssrIncludeBooleanAttr(Array.isArray($data.showReasons) ? serverRenderer.exports.ssrLooseContain($data.showReasons, "") : $data.showReasons) ? " checked" : ""} id="showReasons" data-v-29689862><label class="form-check-label" for="showReasons" data-v-29689862> Show reasons for commencement and conclusion of terms </label></div></div><div class="col-12" data-v-29689862>`);
     _push(serverRenderer.exports.ssrRenderComponent(_component_Card, null, {
       default: vue_cjs_prod.withCtx((_, _push2, _parent2, _scopeId) => {
         if (_push2) {
           _push2(`<!--[-->`);
           serverRenderer.exports.ssrRenderList($options.affiliations, (affiliation, i) => {
-            _push2(`<div data-v-39bea13c${_scopeId}>`);
+            _push2(`<div data-v-29689862${_scopeId}>`);
             _push2(serverRenderer.exports.ssrRenderComponent(_component_NuxtLink, {
               class: "NuxtLink",
               to: "/people/" + affiliation.person.slug
@@ -76953,15 +73980,15 @@ function _sfc_ssrRender$e(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
               default: vue_cjs_prod.withCtx((_2, _push3, _parent3, _scopeId2) => {
                 if (_push3) {
                   if (i == 0 || $options.affiliations[i].person.id != $options.affiliations[i - 1].person.id) {
-                    _push3(`<div data-v-39bea13c${_scopeId2}>`);
+                    _push3(`<div data-v-29689862${_scopeId2}>`);
                     if (affiliation.person.image) {
-                      _push3(`<div class="d-flex align-items-center" data-v-39bea13c${_scopeId2}><div class="flex-shrink-0" data-v-39bea13c${_scopeId2}>`);
+                      _push3(`<div class="d-flex align-items-center" data-v-29689862${_scopeId2}><div class="flex-shrink-0" data-v-29689862${_scopeId2}>`);
                       if (affiliation.person.image) {
-                        _push3(`<img${serverRenderer.exports.ssrRenderAttr("src", affiliation.person.image)} class="me-3 person-image"${serverRenderer.exports.ssrRenderAttr("alt", affiliation.person.display_name)} data-v-39bea13c${_scopeId2}>`);
+                        _push3(`<img${serverRenderer.exports.ssrRenderAttr("src", affiliation.person.image)} class="me-3 person-image"${serverRenderer.exports.ssrRenderAttr("alt", affiliation.person.display_name)} data-v-29689862${_scopeId2}>`);
                       } else {
                         _push3(`<!---->`);
                       }
-                      _push3(`</div><div class="flex-grow-1 ms-3" data-v-39bea13c${_scopeId2}><h5 data-v-39bea13c${_scopeId2}><strong data-v-39bea13c${_scopeId2}>${serverRenderer.exports.ssrInterpolate(affiliation.person.display_name)}</strong></h5><p class="text-muted" data-v-39bea13c${_scopeId2}>`);
+                      _push3(`</div><div class="flex-grow-1 ms-3" data-v-29689862${_scopeId2}><h5 data-v-29689862${_scopeId2}><strong data-v-29689862${_scopeId2}>${serverRenderer.exports.ssrInterpolate(affiliation.person.display_name)}</strong></h5><p class="text-muted" data-v-29689862${_scopeId2}>`);
                       if (affiliation.person.colour) {
                         _push3(serverRenderer.exports.ssrRenderComponent(_component_colour_dot, {
                           colour: affiliation.person.colour
@@ -76971,7 +73998,7 @@ function _sfc_ssrRender$e(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
                       }
                       _push3(` Currently: ${serverRenderer.exports.ssrInterpolate(affiliation.person.description)}</p></div></div>`);
                     } else {
-                      _push3(`<div data-v-39bea13c${_scopeId2}><h6 data-v-39bea13c${_scopeId2}><strong data-v-39bea13c${_scopeId2}>${serverRenderer.exports.ssrInterpolate(affiliation.person.display_name)}</strong></h6><p class="text-muted person-description" data-v-39bea13c${_scopeId2}>`);
+                      _push3(`<div data-v-29689862${_scopeId2}><h6 data-v-29689862${_scopeId2}><strong data-v-29689862${_scopeId2}>${serverRenderer.exports.ssrInterpolate(affiliation.person.display_name)}</strong></h6><p class="text-muted person-description" data-v-29689862${_scopeId2}>`);
                       if (affiliation.person.colour) {
                         _push3(serverRenderer.exports.ssrRenderComponent(_component_ColourDot, {
                           colour: affiliation.person.colour
@@ -76985,27 +74012,27 @@ function _sfc_ssrRender$e(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
                   } else {
                     _push3(`<!---->`);
                   }
-                  _push3(`<div class="row" data-v-39bea13c${_scopeId2}><div class="col-1" data-v-39bea13c${_scopeId2}></div><div class="col-11" data-v-39bea13c${_scopeId2}><div class="row" data-v-39bea13c${_scopeId2}><div class="col-12 col-md-6" data-v-39bea13c${_scopeId2}><h6 class="affiliation-date-heading" data-v-39bea13c${_scopeId2}>Started:</h6> ${serverRenderer.exports.ssrInterpolate($options.formatDate(affiliation.start_date))} `);
+                  _push3(`<div class="row" data-v-29689862${_scopeId2}><div class="col-1" data-v-29689862${_scopeId2}></div><div class="col-11" data-v-29689862${_scopeId2}><div class="row" data-v-29689862${_scopeId2}><div class="col-12 col-md-6" data-v-29689862${_scopeId2}><h6 class="affiliation-date-heading" data-v-29689862${_scopeId2}>Started:</h6> ${serverRenderer.exports.ssrInterpolate($options.formatDate(affiliation.start_date))} `);
                   if ($data.showReasons && affiliation.start_reason_desc) {
-                    _push3(`<h6 class="affiliation-date-heading" data-v-39bea13c${_scopeId2}>Reason: </h6>`);
+                    _push3(`<h6 class="affiliation-date-heading" data-v-29689862${_scopeId2}>Reason: </h6>`);
                   } else {
                     _push3(`<!---->`);
                   }
                   if ($data.showReasons && affiliation.start_reason_desc) {
-                    _push3(`<span data-v-39bea13c${_scopeId2}>${serverRenderer.exports.ssrInterpolate(affiliation.start_reason_desc)}</span>`);
+                    _push3(`<span data-v-29689862${_scopeId2}>${serverRenderer.exports.ssrInterpolate(affiliation.start_reason_desc)}</span>`);
                   } else {
                     _push3(`<!---->`);
                   }
                   _push3(`</div>`);
                   if (affiliation.end_date) {
-                    _push3(`<div class="col-12 col-md-6" data-v-39bea13c${_scopeId2}><h6 class="affiliation-date-heading" data-v-39bea13c${_scopeId2}>Ended:</h6> ${serverRenderer.exports.ssrInterpolate($options.formatDate(affiliation.end_date))} `);
+                    _push3(`<div class="col-12 col-md-6" data-v-29689862${_scopeId2}><h6 class="affiliation-date-heading" data-v-29689862${_scopeId2}>Ended:</h6> ${serverRenderer.exports.ssrInterpolate($options.formatDate(affiliation.end_date))} `);
                     if ($data.showReasons && affiliation.end_reason_desc) {
-                      _push3(`<h6 class="affiliation-date-heading" data-v-39bea13c${_scopeId2}>Reason: </h6>`);
+                      _push3(`<h6 class="affiliation-date-heading" data-v-29689862${_scopeId2}>Reason: </h6>`);
                     } else {
                       _push3(`<!---->`);
                     }
                     if ($data.showReasons && affiliation.end_reason_desc) {
-                      _push3(`<span data-v-39bea13c${_scopeId2}>${serverRenderer.exports.ssrInterpolate(affiliation.end_reason_desc)}</span>`);
+                      _push3(`<span data-v-29689862${_scopeId2}>${serverRenderer.exports.ssrInterpolate(affiliation.end_reason_desc)}</span>`);
                     } else {
                       _push3(`<!---->`);
                     }
@@ -77015,13 +74042,13 @@ function _sfc_ssrRender$e(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
                   }
                   _push3(`</div>`);
                   if (i < $options.affiliations.length - 1 && $options.affiliations[i].person.id == $options.affiliations[i + 1].person.id) {
-                    _push3(`<hr data-v-39bea13c${_scopeId2}>`);
+                    _push3(`<hr data-v-29689862${_scopeId2}>`);
                   } else {
                     _push3(`<!---->`);
                   }
                   _push3(`</div></div>`);
                   if (i < $options.affiliations.length - 1 && $options.affiliations[i].person.id != $options.affiliations[i + 1].person.id) {
-                    _push3(`<hr data-v-39bea13c${_scopeId2}>`);
+                    _push3(`<hr data-v-29689862${_scopeId2}>`);
                   } else {
                     _push3(`<!---->`);
                   }
@@ -77102,7 +74129,7 @@ function _sfc_ssrRender$e(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
             }, _parent2, _scopeId));
             _push2(`</div>`);
           });
-          _push2(`<!--]--><hr data-v-39bea13c${_scopeId}><p class="text-muted" data-v-39bea13c${_scopeId}>These dates correspond to when an MP was eligible to sit and vote in the House of Representatives, not when they were declared elected. This list only includes MPs with profiles on WhereTheyStand, so it may contain some gaps.</p>`);
+          _push2(`<!--]--><hr data-v-29689862${_scopeId}><p class="text-muted" data-v-29689862${_scopeId}>These dates correspond to when an MP was eligible to sit and vote in the House of Representatives, not when they were declared elected. This list only includes MPs with profiles on WhereTheyStand, so it may contain some gaps.</p>`);
         } else {
           return [
             (vue_cjs_prod.openBlock(true), vue_cjs_prod.createBlock(vue_cjs_prod.Fragment, null, vue_cjs_prod.renderList($options.affiliations, (affiliation, i) => {
@@ -77196,11 +74223,11 @@ function _sfc_ssrRender$e(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }, _parent));
     _push(`</div></div>`);
     if ($options.electorate.replaced_electorate) {
-      _push(`<div data-v-39bea13c><div class="row" data-v-39bea13c><div class="col-12" data-v-39bea13c><h4 data-v-39bea13c>History</h4>`);
+      _push(`<div data-v-29689862><div class="row" data-v-29689862><div class="col-12" data-v-29689862><h4 data-v-29689862>History</h4>`);
       _push(serverRenderer.exports.ssrRenderComponent(_component_Card, null, {
         default: vue_cjs_prod.withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
-            _push2(`<h5 data-v-39bea13c${_scopeId}>This electorate replaced the `);
+            _push2(`<h5 data-v-29689862${_scopeId}>This electorate replaced the `);
             _push2(serverRenderer.exports.ssrRenderComponent(_component_NuxtLink, {
               to: "/electorates/" + $options.electorate.replaced_electorate.slug
             }, {
@@ -77215,7 +74242,7 @@ function _sfc_ssrRender$e(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
               }),
               _: 1
             }, _parent2, _scopeId));
-            _push2(` electorate on ${serverRenderer.exports.ssrInterpolate($options.formatDate($options.electorate.valid_from))}.</h5><p data-v-39bea13c${_scopeId}>See `);
+            _push2(` electorate on ${serverRenderer.exports.ssrInterpolate($options.formatDate($options.electorate.valid_from))}.</h5><p data-v-29689862${_scopeId}>See `);
             _push2(serverRenderer.exports.ssrRenderComponent(_component_NuxtLink, {
               to: "/electorates/" + $options.electorate.replaced_electorate.slug
             }, {
@@ -77277,7 +74304,7 @@ _sfc_main$f.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("pages/electorates/[id]/index.vue");
   return _sfc_setup$f ? _sfc_setup$f(props, ctx) : void 0;
 };
-const index$g = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["ssrRender", _sfc_ssrRender$e], ["__scopeId", "data-v-39bea13c"]]);
+const index$g = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["ssrRender", _sfc_ssrRender$e], ["__scopeId", "data-v-29689862"]]);
 const index$h = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   "default": index$g
@@ -77366,13 +74393,13 @@ const __default__ = {
   components: {},
   methods: {
     relativeDate(date2) {
-      return formatDistanceToNow(parse$2(date2, "yyyy-MM-dd", new Date())) + " ago";
+      return formatDistanceToNow(parse$1(date2, "yyyy-MM-dd", new Date())) + " ago";
     },
     formattedDate(date2) {
-      return format(parse$2(date2, "yyyy-MM-dd", new Date()), "d.M.yyyy");
+      return format(parse$1(date2, "yyyy-MM-dd", new Date()), "d.M.yyyy");
     },
     formattedDateFull(date2) {
-      return format(parse$2(date2, "yyyy-MM-dd", new Date()), "d MMMM yyyy");
+      return format(parse$1(date2, "yyyy-MM-dd", new Date()), "d MMMM yyyy");
     }
   }
 };
@@ -77872,7 +74899,7 @@ function _sfc_ssrRender$a(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
         if (_push2) {
           _push2(serverRenderer.exports.ssrRenderComponent(_component_Meta, {
             name: "twitter:title",
-            content: $options.party.display_name + "- WhereTheyStand"
+            content: $options.party.display_name + " - WhereTheyStand"
           }, null, _parent2, _scopeId));
           _push2(serverRenderer.exports.ssrRenderComponent(_component_Meta, {
             name: "twitter:description",
@@ -77884,7 +74911,7 @@ function _sfc_ssrRender$a(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
           }, null, _parent2, _scopeId));
           _push2(serverRenderer.exports.ssrRenderComponent(_component_Meta, {
             property: "og:title",
-            content: $options.party.display_name + "- WhereTheyStand"
+            content: $options.party.display_name + " - WhereTheyStand"
           }, null, _parent2, _scopeId));
           _push2(serverRenderer.exports.ssrRenderComponent(_component_Meta, {
             property: "og:description",
@@ -77894,7 +74921,7 @@ function _sfc_ssrRender$a(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
           return [
             vue_cjs_prod.createVNode(_component_Meta, {
               name: "twitter:title",
-              content: $options.party.display_name + "- WhereTheyStand"
+              content: $options.party.display_name + " - WhereTheyStand"
             }, null, 8, ["content"]),
             vue_cjs_prod.createVNode(_component_Meta, {
               name: "twitter:description",
@@ -77906,7 +74933,7 @@ function _sfc_ssrRender$a(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
             }, null, 8, ["content"]),
             vue_cjs_prod.createVNode(_component_Meta, {
               property: "og:title",
-              content: $options.party.display_name + "- WhereTheyStand"
+              content: $options.party.display_name + " - WhereTheyStand"
             }, null, 8, ["content"]),
             vue_cjs_prod.createVNode(_component_Meta, {
               property: "og:description",
@@ -78026,7 +75053,7 @@ const _sfc_main$8 = {
   },
   methods: {
     formatDate(date2) {
-      return format(parse$2(date2, "yyyy-MM-dd", new Date()), "d MMMM yyyy");
+      return format(parse$1(date2, "yyyy-MM-dd", new Date()), "d MMMM yyyy");
     },
     ordinal_suffix_of(i) {
       var j = i % 10;
@@ -79039,7 +76066,7 @@ const _sfc_main$5 = {
       return this.peopleStore.interestsByIdentifier(this.$route.params.id);
     },
     formattedReportDate() {
-      return format(parse$2(this.interests.filing_date, "yyyy-MM-dd", new Date()), "d MMMM yyyy");
+      return format(parse$1(this.interests.filing_date, "yyyy-MM-dd", new Date()), "d MMMM yyyy");
     },
     hasChangedDebt() {
       if (this.interests) {
@@ -79678,7 +76705,7 @@ const _sfc_main$1 = {
   },
   methods: {
     formatDate(date2) {
-      return format(parse$2(date2, "yyyy-MM-dd", new Date()), "d MMMM yyyy");
+      return format(parse$1(date2, "yyyy-MM-dd", new Date()), "d MMMM yyyy");
     }
   },
   data() {
@@ -79774,7 +76801,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
         if (_push2) {
           _push2(serverRenderer.exports.ssrRenderComponent(_component_Meta, {
             name: "twitter:title",
-            content: $options.vote.name + "- WhereTheyStand"
+            content: $options.vote.name + " - WhereTheyStand"
           }, null, _parent2, _scopeId));
           if ($options.vote.question_text) {
             _push2(serverRenderer.exports.ssrRenderComponent(_component_Meta, {
@@ -79794,7 +76821,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
           }
           _push2(serverRenderer.exports.ssrRenderComponent(_component_Meta, {
             property: "og:title",
-            content: $options.vote.name + "- WhereTheyStand"
+            content: $options.vote.name + " - WhereTheyStand"
           }, null, _parent2, _scopeId));
           if ($options.vote.question_text) {
             _push2(serverRenderer.exports.ssrRenderComponent(_component_Meta, {
@@ -79808,7 +76835,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
           return [
             vue_cjs_prod.createVNode(_component_Meta, {
               name: "twitter:title",
-              content: $options.vote.name + "- WhereTheyStand"
+              content: $options.vote.name + " - WhereTheyStand"
             }, null, 8, ["content"]),
             $options.vote.question_text ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_Meta, {
               key: 0,
@@ -79822,7 +76849,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
             }, null, 8, ["content"])) : vue_cjs_prod.createCommentVNode("", true),
             vue_cjs_prod.createVNode(_component_Meta, {
               property: "og:title",
-              content: $options.vote.name + "- WhereTheyStand"
+              content: $options.vote.name + " - WhereTheyStand"
             }, null, 8, ["content"]),
             $options.vote.question_text ? (vue_cjs_prod.openBlock(), vue_cjs_prod.createBlock(_component_Meta, {
               key: 2,
