@@ -1,1 +1,0 @@
-import{_ as e,o as s,c as o,b as t}from"./entry-6994fce1.mjs";const n={},_={class:"spinner-grow spinner-grow-sm text-theme2",role:"status"},c=t("span",{class:"visually-hidden"},"Loading...",-1),r=[c];function a(i,d){return s(),o("div",_,r)}var p=e(n,[["render",a]]);export{p as _};
