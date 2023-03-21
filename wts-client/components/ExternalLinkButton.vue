@@ -20,4 +20,11 @@ export default {
 </script>
 
 <style scoped>
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
 </style>

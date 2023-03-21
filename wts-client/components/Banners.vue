@@ -10,6 +10,10 @@
                         </a>
                         <button type="button" @click="closeBanner(banner.id)" class="btn ms-4 btn-sm btn-outline-light text-uppercase">Dismiss</button>
                     </div>
+                    <div class="basic-banner" v-else-if="banner.linkBehaviour === 'none'">
+                            <strong v-if="banner.title">{{ banner.title }}: </strong>{{ banner.message }}
+                        <button type="button" @click="closeBanner(banner.id)" class="btn ms-2 btn-sm btn-outline-light text-uppercase">Dismiss</button>
+                    </div>
                     <div v-else-if="banner.linkBehaviour === 'same'">
                         <a :href="banner.link" v-if="banner.linkType === 'external'">
                             <strong v-if="banner.title">{{ banner.title }}: </strong>{{ banner.message }}
@@ -34,9 +38,17 @@
     margin-bottom: 0px;
 }
 
+button {
+    border-radius: 0px;
+}
+
 a {
     color: white;
     text-decoration: none;
+}
+
+.basic-banner {
+    color: white;
 }
 </style>
 

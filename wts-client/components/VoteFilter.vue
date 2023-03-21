@@ -1,18 +1,17 @@
 <template>
     <div>
-        <h4>Filter bills</h4>
+        <h4>Filter votes</h4>
         <Head v-if="prefetchData && (prefetchData.count > 0)">
-            <Link v-if="prefetchData.previous && (prefetchData.page == 2)" rel="prev" href="/bills"></Link>
-            <Link v-if="prefetchData.previous && (prefetchData.page != 2)" rel="prev" :href="'/bills?page=' + (prefetchData.page - 1)"></Link>
-            <Link v-if="prefetchData.next" rel="next" :href="'/bills?page=' + (prefetchData.page + 1)"></Link>
+            <Link v-if="prefetchData.previous && (prefetchData.page == 2)" rel="prev" href="/votes"></Link>
+            <Link v-if="prefetchData.previous && (prefetchData.page != 2)" rel="prev" :href="'/votes?page=' + (prefetchData.page - 1)"></Link>
+            <Link v-if="prefetchData.next" rel="next" :href="'/votes?page=' + (prefetchData.page + 1)"></Link>
         </Head>
-
         <Card>
             <form @submit.prevent="applyFilter()">
                 <div class="row mb-2">
                     <div class="col-12">
-                        <h5>Refine by title</h5>
-                        <label for="text_filter">Title must contain the following:</label>
+                        <h5>Refine by bill title</h5>
+                        <label for="text_filter">Bill title must contain the following:</label>
                         <input v-model="filterSettings.titleContains" class="form-control" type="input" id="text_filter">
                         <small class="text-muted">For less strict textual search, you may wish to use the site-wide search
                             function.</small>
@@ -50,18 +49,12 @@
                                 Private bills
                             </label>
                         </div>
-                        <small><strong>OR</strong>: Bills must be any of the selected type to be shown.</small>
+                        <small><strong>OR</strong>: Votes must be for a bill of one of the selected types to be
+                            shown.</small>
                     </div>
-                    <!--
-                <div class="col-12 col-xl-3">
-                    <h5>Members of Parliament</h5>
-                    <PersonMultiSelect></PersonMultiSelect>
-                    <small><strong>OR</strong>: Bills must be sponsored by any one of these MPs to be shown.</small>
-                </div>
-                -->
                     <div class="col-12 col-xl-3">
-                        <h5>Temporal characteristics</h5>
-                        <label for="parliament_select">Parliamentary term of introduction</label>
+                        <h5>Vote options</h5>
+                        <label for="parliament_select">Parliamentary term</label>
                         <select v-model="filterSettings.parliamentaryTerm" class="form-select" id="parliament_select"
                             aria-label="-">
                             <option value="" selected>Any</option>
@@ -70,45 +63,18 @@
                             <option value="51">51st Parliament</option>
                             <option value="50">50th Parliament</option>
                         </select>
+                        <label for="vote_type_select" class="mt-2">Vote type</label>
+                        <select v-model="filterSettings.characteristics.type" class="form-select" id="vote_type_select"
+                            aria-label="Vote type">
+                            <option value="" selected>Any</option>
+                            <option value="personal">Personal vote</option>
+                            <option value="party">Party vote</option>
+                        </select>
+                        <small><strong>AND</strong>: Votes must meet both of these criteria to be shown.</small>
 
                     </div>
                     <div class="col-12 col-xl-3">
-                        <h5>Procedural characteristics</h5>
-                        <div class="form-check">
-                            <input v-model="filterSettings.characteristics.urgencyUsed" class="form-check-input"
-                                type="checkbox" value="" id="check_urgency">
-                            <label class="form-check-label" for="check_urgency">
-                                Urgency used
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input v-model="filterSettings.characteristics.extendedSittingsUsed" class="form-check-input"
-                                type="checkbox" value="" id="check_extended">
-                            <label class="form-check-label" for="check_extended">
-                                Extended sittings used
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input v-model="filterSettings.characteristics.submissionsOpen" class="form-check-input"
-                                type="checkbox" value="" id="check_submissions_open">
-                            <label class="form-check-label" for="check_submissions_open">
-                                Open for submissions
-                            </label>
-                        </div>
-                        <label for="voting_method_select" class="mt-2">Voting method</label>
-                        <select v-model="filterSettings.characteristics.votingMethod" class="form-select"
-                            id="voting_method_select" aria-label="Voting method">
-                            <option value="" selected>Any</option>
-                            <option value="per">Personal voting used</option>
-                            <option value="par">Party voting used</option>
-                        </select>
-                        <small><strong>AND</strong>: Bills must meet all of these criteria to be shown.</small>
-                    </div>
-                </div>
-                <hr>
-                <h5>Display options</h5>
-                <div class="row">
-                    <div class="col-12 col-xl-3">
+                        <h5>Display options</h5>
                         <label for="per_page_select">Results per page</label>
                         <select v-model="filterSettings.format.perPage" class="form-select" id="per_page_select"
                             aria-label="Results per page">
@@ -117,24 +83,13 @@
                             <option value="50">50</option>
                             <option value="100">100</option>
                         </select>
-                        <div class="form-check">
-                            <input v-model="showDescriptions" class="form-check-input" type="checkbox" value=""
-                                id="check_show_descriptions">
-                            <label class="form-check-label" for="check_show_descriptions">
-                                Show bill descriptions
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-12 col-xl-3">
-                        <label for="order_by_select">Order by</label>
+                        <label for="order_by_select" class="mt-2">Order by</label>
                         <select v-model="filterSettings.format.orderBy" class="form-select" id="order_by_select"
                             aria-label="Order by">
-                            <option value="date_modified_desc" selected>Date modified (newest first)</option>
-                            <option value="date_modified_asc">Date modified (oldest first)</option>
-                            <option value="introduction_date_desc">Introduction date (newest first)</option>
-                            <option value="introduction_date_asc">Introduction date (oldest first)</option>
-                            <option value="progress_desc">Status (later stages first)</option>
-                            <option value="progress_asc">Status (early stages first)</option>
+                            <option value="date_desc" selected>Date (newest first)</option>
+                            <option value="date_asc">Date (oldest first)</option>
+                            <option value="reading_desc">Reading (latest first)</option>
+                            <option value="reading_asc">Reading (earliest first)</option>
                         </select>
                     </div>
                 </div>
@@ -155,46 +110,43 @@
         <div v-if="page">
             <h4>Results</h4>
             {{ displayCount }} result<span v-if="displayCount != 1">s</span>.
-            <NuxtLink :title="bill.name" v-for="bill in displayBills" :key="bill.id" :to="'/bills/' + bill.id"
-                class="bill-link">
+            <NuxtLink :title="vote.name" v-for="vote in displayVotes" :key="vote.id" :to="'/votes/' + vote.id" class="vote-link">
                 <Card>
-                    <h6 class="mb-0">{{ bill.name }}</h6>
+                    <div class="row">
+                        <div class="col-12 col-xl-5">
+                            <h6 class="mb-0">{{ vote.name }}</h6>
                     <small class="me-1">
-                        <span v-if="bill.progress == 'inp'" class="badge bg-primary text-uppercase"> {{ bill.progress_desc
-                        }}</span>
-                        <span v-else-if="bill.progress == 'pas'" class="badge bg-success text-uppercase"> {{
-                            bill.progress_desc }}</span>
-                        <span v-else-if="bill.progress == 'ena'" class="badge bg-success text-uppercase"> {{
-                            bill.progress_desc }}</span>
-                        <span v-else-if="bill.progress == 'dis'" class="badge bg-warning text-dark text-uppercase"> {{
-                            bill.progress_desc }}</span>
-                        <span v-else-if="bill.progress == 'def'" class="badge bg-danger text-uppercase"> {{
-                            bill.progress_desc }}</span>
-                        <span v-else-if="bill.progress == 'lap'" class="badge bg-danger text-uppercase"> {{
-                            bill.progress_desc }}</span>
-                        <span v-else-if="bill.progress == 'unx'" class="badge bg-danger text-uppercase"> {{
-                            bill.progress_desc }}</span>
-                        <span v-else-if="bill.progress == 'div'" class="badge bg-info text-uppercase"> {{ bill.progress_desc
-                        }}</span>
-                        <span v-else-if="bill.progress == 'wit'" class="badge bg-warning text-dark text-uppercase"> {{
-                            bill.progress_desc }}</span>
-                        <span v-else class="badge bg-secondary text-uppercase"> {{ bill.progress_desc }}</span>
+                        <span v-if="vote.type_desc" class="badge bg-primary text-uppercase">{{ vote.type_desc }}</span>
                     </small>
-                    <small class="text-muted text-uppercase">{{ bill.type_desc }}</small>
-                    <p v-if="bill.description && showDescriptions">
-                        {{ bill.description }}
-                    </p>
-                    <p v-else-if="showDescriptions" class="text-muted">
-                        No description.
-                    </p>
-                    <br v-if="!showDescriptions">
-                    <small><span v-if="bill.date_modified" :title="formattedDate(bill.date_modified)"
-                            class="text-muted"><font-awesome-icon :icon="['fas', 'history']"></font-awesome-icon> Last
-                            activity {{ relativeDate(bill.date_modified) }}</span></small>
+                    <small class="text-muted text-uppercase">{{ formattedDateFull(vote.date) }}</small>
+                    <hr class="col-12 d-xl-none mt-2">        
+                </div>
+                        <div class="col-12 col-xl-7">
+                            <div class="row">
+                                <div class="col-3 text-center">
+                                    <h3>{{ vote.ayes }}</h3>
+                                    <h6 class="text-muted text-uppercase"><span class="dot-yes"></span> Ayes</h6>
+                                </div>
+                                <div class="col-3 text-center">
+                                    <h3>{{ vote.noes }}</h3>
+                                    <h6 class="text-muted text-uppercase"><span class="dot-no"></span> Noes</h6>
+                                </div>
+                                <div class="col-3 text-center">
+                                    <h3>{{ vote.abstentions }}</h3>
+                                    <h6 class="text-muted text-uppercase"><span class="dot-abstain"></span> Abstentions</h6>
+                                </div>
+                                <div class="col-3 text-center">
+                                    <h3>{{ vote.absent }}</h3>
+                                    <h6 class="text-muted text-uppercase"><span class="dot-absent"></span> Absent</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                 </Card>
             </NuxtLink>
 
-            <nav v-if="!isLoading" aria-label="bills_pagination">
+            <nav v-if="!isLoading" aria-label="votes_pagination">
                 <ul class="pagination mb-1">
                     <li class="page-item" :class="{ disabled: !displayPrevious }">
                         <a class="page-link" href="#results-marker" @click="getPage(displayPage - 1)">Previous</a>
@@ -235,7 +187,7 @@ select {
     border-radius: var(--wts-card-border-radius);
 }
 
-.bill-link {
+.vote-link {
     color: inherit;
     text-decoration: inherit;
 }
@@ -251,9 +203,10 @@ if (query.hasOwnProperty('page')) {
 }
 
 const { data: prefetchData } = await useFetch(
-    API_BASE + 'bills/?page=' + initialPage + '&per_page=10'
+    API_BASE + 'votes/?page=' + initialPage + '&per_page=10'
 )
 </script>
+
 
 
 <script>
@@ -261,18 +214,16 @@ import { API_BASE } from '~~/stores/config';
 import { parse, format, formatDistanceToNow } from 'date-fns'
 
 export default {
-    name: 'BillFilter',
+    name: 'VoteFilter',
     data() {
         return {
-            page: 1,
-            perPage: 10,
-            hasLoadedData: false,
-            next: false,
-            bills: [],
-            previous: false,
+            votes: [],
             count: 0,
+            page: 1,
+            previous: false,
+            next: false,
+            hasLoadedData: false,
             isLoading: false,
-            showDescriptions: true,
             filterSettings: {
                 titleContains: "",
                 billTypes: {
@@ -286,11 +237,12 @@ export default {
                     urgencyUsed: false,
                     extendedSittingsUsed: false,
                     submissionsOpen: false,
-                    votingMethod: ""
+                    votingMethod: "",
+                    type: ""
                 },
                 format: {
                     perPage: 10,
-                    orderBy: "date_modified_desc"
+                    orderBy: "date_desc"
                 }
             },
             activeFilter: {
@@ -306,11 +258,12 @@ export default {
                     urgencyUsed: false,
                     extendedSittingsUsed: false,
                     submissionsOpen: false,
-                    votingMethod: ""
+                    votingMethod: "",
+                    type: ""
                 },
                 format: {
                     perPage: 10,
-                    orderBy: "date_modified_desc"
+                    orderBy: "date_desc"
                 }
             }
         }
@@ -322,11 +275,11 @@ export default {
         userString() {
             return JSON.stringify(this.filterSettings)
         },
-        displayBills() {
+        displayVotes() {
             if (!this.hasLoadedData) {
                 return this.prefetchData.results
             } else {
-                return this.bills
+                return this.votes
             }
         },
         displayCount() {
@@ -361,7 +314,7 @@ export default {
     methods: {
         async getPage(page) {
             this.isLoading = true;
-            var url = API_BASE + 'bills/?'
+            var url = API_BASE + 'votes/?'
             var r = await $fetch(url + new URLSearchParams({
                 page: page,
                 per_page: this.activeFilter.format.perPage
@@ -378,7 +331,7 @@ export default {
 
             this.isLoading = false;
             this.hasLoadedData = true;
-            this.bills = r.results
+            this.votes = r.results
             this.count = r.count
             if (r.previous) {
                 this.previous = true
@@ -405,7 +358,14 @@ export default {
         },
         formattedDate(date) {
             return format(parse(date, 'yyyy-MM-dd', new Date()), 'd.M.yyyy')
+        },
+        formattedDateFull(date) {
+            return format(parse(date, 'yyyy-MM-dd', new Date()), 'd MMMM yyyy')
         }
+    },
+    onMounted() {
+        this.getPage(1)
     }
 }
+
 </script>

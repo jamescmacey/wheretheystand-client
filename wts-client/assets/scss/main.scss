@@ -30,6 +30,10 @@ $input-btn-padding-x: 1rem;
 $border-radius: 2px;
 $link-color: $theme2;
 
+$wts-card-border-radius: 0px;
+$badge-border-radius: $wts-card-border-radius;
+
+
 // Finally load bootstrap
 @import "node_modules/bootstrap/scss/bootstrap";
 

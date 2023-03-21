@@ -1,5 +1,12 @@
 <template>
   <div id="bill-view" v-if="bill">
+    <Head>
+    <Meta name="twitter:title" :content="bill.name + '- WhereTheyStand'" />
+    <Meta name="twitter:description" :content="bill.description" />
+    <Meta property="og:title" :content="bill.name + '- WhereTheyStand'" />
+    <Meta property="og:description" :content="bill.description" />
+
+    </Head>
     <PageHeader :pageTitle="bill.name" :pageSubtitle="bill.type_desc"></PageHeader>
     <div class="container mt-3">
       <div class="row">
@@ -20,7 +27,7 @@
             </span>
             <span v-if="bill.voting_method == 'mix'">
               <FontAwesomeIcon :icon="['fas', 'people-group']">
-              </FontAwesomeIcon> / <FontAwesomeIcon :icon="['fas', 'person']"> </FontAwesomeIcon><strong>Mixed voting:
+              </FontAwesomeIcon> / <FontAwesomeIcon :icon="['fas', 'person']"> </FontAwesomeIcon> <strong>Mixed voting:
               </strong> Both personal and party voting were used at different stages of this bill's progression.
             </span>
 
@@ -74,7 +81,6 @@
                   View on Parliament website</ExternalLinkInline>
               </div>
               <div class="col-12 col-xl-6 text-xl-end">
-                <BillCite :bill="bill"></BillCite>
                 <DownloadLink class="ms-xl-2 me-xl-0" resourceType="bill" fileType="json" :friendlyName="bill.name"
                   :resourceId="bill.id"></DownloadLink>
               </div>
@@ -202,7 +208,7 @@ export default {
         } else if (this.bill.dates.second_reading_date) {
           return 'This Bill passed its second reading on ' + this.formatDate(this.bill.dates.second_reading_date) + ' and is awaiting the Commitee of the whole House stage.'
         } else if (this.bill.dates.first_reading_date) {
-          var msg = 'This Bill passed its first reading on ' + this.formatDate(this.bill.dates.introduction_date) + '. '
+          var msg = 'This Bill passed its first reading on ' + this.formatDate(this.bill.dates.first_reading_date) + '. '
           if (this.bill.dates.report_back_date) {
             msg = msg + 'The Select Committee reported back on ' + this.formatDate(this.bill.dates.report_back_date) + ' and the Bill is awaiting its second reading. '
           } else if (this.bill.dates.submissions_due_date) {
@@ -215,7 +221,7 @@ export default {
       }
       const EXPLANATIONS = {
         ena: 'This Bill has been passed by Parliament, and signed into law by the Governor-General in a step called Royal Assent. This doesn\'t mean that everything the Act implements has come into force yet, but it does mean that the Act is on the statute books.',
-        pas: 'This Bill has been passed by Parliament, but hasn\'t been given Royal Assent by the Governor-General. This means that most of the work required to turn the Bill into law is complete, because in New Zealand, the Governor-General has never refused to give Royal Assent to legislation.',
+        pas: 'This Bill has been passed by Parliament, but hasn\'t been given Royal Assent by the Governor-General. Once this happens, the Bill will become law.',
         def: 'This Bill has been defeated in a vote of MPs, which means that it will not be progressing and will not become law.',
         wit: 'This Bill has been withdrawn, which means that it will not be progressing and will not become law.',
         lap: 'This Bill has lapsed. At the end of each Parliamentary term, bills which are still in progress lapse unless they are reinstated in the next term.',

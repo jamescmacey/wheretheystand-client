@@ -24,20 +24,56 @@ export const useElectoratesStore = defineStore('electorates', {
     actions: {
         async fetch(id) {
             if (!this.byIdentifier(id)) {
-                const item = await $fetch(API_BASE + 'electorates/' + id + '/')
-                this.items.push(item)
+                var state = this
+                await useFetch(API_BASE + 'electorates/' + id + '/', {
+                    onResponse({ request, response, options }) {
+                        state.items.push(response._data)
+                    },
+                    onResponseError({ request, response, options }) {
+                        const store = useNotificationsStore()
+                        store.postResponseError(response)
+                    },
+                    onRequestError({ request, options, error }) {
+                        const store = useNotificationsStore()
+                        store.addToast('Error fetching resource (request)', error)
+                    }
+                })
             }
         },
         async fetchHistory(id) {
             if (!this.historyByIdentifier(id)) {
-                const item = await $fetch(API_BASE + 'electorates/' + id + '/history/')
-                this.data.histories[id] = item
+                var state = this
+                await useFetch(API_BASE + 'electorates/' + id + '/history/', {
+                    onResponse({ request, response, options }) {
+                        state.data.histories[id] = response._data
+                    },
+                    onResponseError({ request, response, options }) {
+                        const store = useNotificationsStore()
+                        store.postResponseError(response)
+                    },
+                    onRequestError({ request, options, error }) {
+                        const store = useNotificationsStore()
+                        store.addToast('Error fetching resource (request)', error)
+                    }
+                })
             }
         },
         async fetchShape(id) {
             if (!this.shapeByIdentifier(id)) {
-                const item = await $fetch(API_BASE + 'electorates/' + id + '/shape/')
-                this.data.shapes[id] = item
+                var state = this
+                await useFetch(API_BASE + 'electorates/' + id + '/shape/', {
+                    onResponse({ request, response, options }) {
+                        state.data.shapes[id] = response._data
+                    },
+                    onResponseError({ request, response, options }) {
+                        const store = useNotificationsStore()
+                        store.postResponseError(response)
+                    },
+                    onRequestError({ request, options, error }) {
+                        const store = useNotificationsStore()
+                        store.addToast('Error fetching resource (request)', error)
+                    }
+                })
             }
         }
     }

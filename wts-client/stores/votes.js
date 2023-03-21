@@ -15,8 +15,20 @@ export const useVotesStore = defineStore('votes', {
     actions: {
         async fetch(id) {
             if (!this.byID(id)) {
-                const vote = await $fetch(API_BASE + 'votes/' + id + '/')
-                this.items.push(vote)
+                var state = this
+                await useFetch(API_BASE + 'votes/' + id + '/', {
+                    onResponse({ request, response, options }) {
+                        state.items.push(response._data)
+                    },
+                    onResponseError({ request, response, options }) {
+                        const store = useNotificationsStore()
+                        store.postResponseError(response)
+                    },
+                    onRequestError({ request, options, error }) {
+                        const store = useNotificationsStore()
+                        store.addToast('Error fetching resource (request)', error)
+                    }
+                })
             }
         }
     }

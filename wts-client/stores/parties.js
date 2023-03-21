@@ -24,20 +24,56 @@ export const usePartiesStore = defineStore('parties', {
     actions: {
         async fetch(id) {
             if (!this.byIdentifier(id)) {
-                const item = await $fetch(API_BASE + 'parties/' + id + '/')
-                this.items.push(item)
+                var state = this
+                await useFetch(API_BASE + 'parties/' + id + '/', {
+                    onResponse({ request, response, options }) {
+                        state.items.push(response._data)
+                    },
+                    onResponseError({ request, response, options }) {
+                        const store = useNotificationsStore()
+                        store.postResponseError(response)
+                    },
+                    onRequestError({ request, options, error }) {
+                        const store = useNotificationsStore()
+                        store.addToast('Error fetching resource (request)', error)
+                    }
+                })
             }
         },
         async fetchMembers(id) {
             if (!this.membersByIdentifier(id)) {
-                const item = await $fetch(API_BASE + 'parties/' + id + '/members/')
-                this.data.members[id] = item
+                var state = this
+                await useFetch(API_BASE + 'parties/' + id + '/members/', {
+                    onResponse({ request, response, options }) {
+                        state.data.members[id] = response._data
+                    },
+                    onResponseError({ request, response, options }) {
+                        const store = useNotificationsStore()
+                        store.postResponseError(response)
+                    },
+                    onRequestError({ request, options, error }) {
+                        const store = useNotificationsStore()
+                        store.addToast('Error fetching resource (request)', error)
+                    }
+                })
             }
         },
         async fetchLeaders(id) {
             if (!this.leadersByIdentifier(id)) {
-                const item = await $fetch(API_BASE + 'parties/' + id + '/leaders/')
-                this.data.leaders[id] = item
+                var state = this
+                await useFetch(API_BASE + 'parties/' + id + '/leaders/', {
+                    onResponse({ request, response, options }) {
+                        state.data.leaders[id] = response._data
+                    },
+                    onResponseError({ request, response, options }) {
+                        const store = useNotificationsStore()
+                        store.postResponseError(response)
+                    },
+                    onRequestError({ request, options, error }) {
+                        const store = useNotificationsStore()
+                        store.addToast('Error fetching resource (request)', error)
+                    }
+                })
             }
         },
     }

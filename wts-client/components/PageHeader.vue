@@ -1,5 +1,8 @@
 <template>
   <div>
+    <Head>
+      <Title>{{ metaTitle }}</Title>
+    </Head>
     <div class="container-fluid hero" :style="{ backgroundImage: gradient }">
       <div class="container">
         <div v-if="!image">
@@ -51,6 +54,10 @@ export default {
     image: String,
     colour: String,
     secondaryColour: String,
+    metaPageTitle: {
+      type: String,
+      default: null
+    },
     pageLinks: {
       type: Array,
       default: () => { return [] }
@@ -65,6 +72,15 @@ export default {
     }
   },
   computed: {
+    metaTitle() {
+      if (this.metaPageTitle) {
+        return this.metaPageTitle
+      } else if (this.pageTitle) {
+        return this.pageTitle
+      } else {
+        return ""
+      }
+    },
     harmony: function () {
       var harmonizer = new Harmonizer()
 

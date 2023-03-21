@@ -29,10 +29,10 @@
                 <RouterLink class="text-light footer-link" to="/about">About WhereTheyStand</RouterLink>
               </li>
               <li>
-                <RouterLink class="text-light footer-link" to="/feedback">Feedback</RouterLink>
+                <a class="text-light footer-link" href="/feedback">Feedback</a>
               </li>
               <li>
-                <RouterLink class="text-light footer-link" to="/corrections">Corrections</RouterLink>
+                <a class="text-light footer-link" href="/corrections">Corrections</a>
               </li>
               <li>
                 <RouterLink class="text-light footer-link" to="/terms">Copyright and Privacy</RouterLink>
@@ -48,7 +48,8 @@
               </li>
               <Card :gradient='true'>
                 <h5>Like WhereTheyStand?</h5>
-                <p>You can shout me a hot chocolate (or two).</p>
+                You can shout me a hot chocolate (or two).<br>
+                <ExternalLinkInline class="text-light footer-link" link="https://www.buymeacoffee.com/jamescmacey">buymeacoffee.com/jamescmacey</ExternalLinkInline>
               </Card>
             </ul>
           </div>
