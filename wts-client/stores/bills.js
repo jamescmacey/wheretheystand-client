@@ -15,8 +15,20 @@ export const useBillsStore = defineStore('bills', {
     actions: {
         async fetch(id) {
             if (!this.byID(id)) {
-                const bill = await $fetch(API_BASE + 'bills/' + id + '/')
-                this.items.push(bill)
+                var state = this
+                await useFetch(API_BASE + 'bills/' + id + '/', {
+                    onResponse({ request, response, options }) {
+                        state.items.push(response._data)
+                    },
+                    onResponseError({ request, response, options }) {
+                        const store = useNotificationsStore()
+                        store.postResponseError(response)
+                    },
+                    onRequestError({ request, options, error }) {
+                        const store = useNotificationsStore()
+                        store.addToast('Error fetching resource (request)', error)
+                    }
+                })
             }
         }
     }

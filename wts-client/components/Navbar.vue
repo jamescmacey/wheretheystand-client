@@ -28,13 +28,10 @@
             </NuxtLink>
           </li>
           <li class="nav-item">
-            <NuxtLink :class="[$route.fullPath.startsWith('/hansard/') ? 'active nav-link' : 'nav-link']" to="/hansard/" active-class="active">Hansard</NuxtLink>
-          </li>
-          <li class="nav-item">
             <NuxtLink :class="[$route.fullPath.startsWith('/about/') ? 'active nav-link' : 'nav-link']" to="/about/" active-class="active">About</NuxtLink>
           </li>
           <li class="nav-item">
-            <NuxtLink :class="[$route.fullPath.startsWith('/search/') ? 'active nav-link' : 'nav-link']" to="/search/" active-class="active">Search</NuxtLink>
+            <a :class="[$route.fullPath.startsWith('/search/') ? 'active nav-link' : 'nav-link']" href="/search/" active-class="active">Search</a>
           </li>
         </ul>
       </div>

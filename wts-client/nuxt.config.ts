@@ -9,10 +9,12 @@ export default defineNuxtConfig({
         '~/plugins/vue-gtag.client.js',
         '~/plugins/fontawesome.js',
         '~/plugins/vue-mapbox.js',
-        '~/plugins/instantsearch.js'
     ],
-    //build: { transpile: ['vue-mapbox-ts'] },
+    build: {
+        //transpile: ['chart.js']
+        //transpile: ['vue-mapbox-ts', 'chart.js'] 
+    },
     buildModules: [
         '@pinia/nuxt',
-      ],
+    ],
 })

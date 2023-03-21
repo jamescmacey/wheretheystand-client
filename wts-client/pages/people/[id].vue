@@ -1,6 +1,7 @@
 <template>
   <div id="person-view" v-if="person">
-    <PageHeader :pageTitle="person.display_name" :pageSubtitle="person.description" :image="person.image" :colour="person.colour" :pageLinks="links"></PageHeader>
+    <PageHeader :pageTitle="person.display_name" :pageSubtitle="person.description" :image="person.image"
+      :colour="person.colour" :pageLinks="links"></PageHeader>
     <NuxtPage :person="person"></NuxtPage>
   </div>
 </template>
@@ -12,14 +13,16 @@ export default {
   name: 'Person',
   setup() {
     const peopleStore = usePeopleStore()
-
     return { peopleStore }
+    
   },
-  created () {
-    this.peopleStore.fetch(this.$route.params.id)
+  created() {
+    this.peopleStore.fetch(this.$route.params.id).then(function(response) {
+    })
+    
   },
   computed: {
-    links () {
+    links() {
       return [
         {
           to: '/people/' + this.$route.params.id,
@@ -39,13 +42,11 @@ export default {
         }
       ]
     },
-    person () {
+    person() {
       return this.peopleStore.byIdentifier(this.$route.params.id)
-    }
+    },
   }
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

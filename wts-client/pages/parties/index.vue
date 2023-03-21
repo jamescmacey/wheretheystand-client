@@ -20,6 +20,7 @@
                     </div>
                 </div>
 
+                <!--
                 <h5 class="mt-3">Registered parties without seats in Parliament</h5>
                 <p class="mt-0">These parties are registered with the Electoral Commission, but don't have any seats in Parliament.</p>
                 <div class="row">
@@ -33,7 +34,7 @@
                 <h5 class="mt-3">Deregistered parties</h5>
                 <p class="mt-0">These parties are no longer registered with the Electoral Commission and don't have seats in Parliament.</p>
                 <div class="row">
-                </div>
+                </div>-->
 
                 <p class="text-muted">For registered parties, their registered name is shown on this page. Some parties may have adopted different names in a Parliamentary context or for marketing purposes.</p>
             </div>
@@ -55,7 +56,7 @@ export default {
     },
     created() {
         this.groupsStore.fetchParties("allInParliament");
-        this.groupsStore.fetchParties("allOutOfParliament");
+        //this.groupsStore.fetchParties("allOutOfParliament");
     },
     computed: {
         parties() {

@@ -4,9 +4,9 @@
         <div class="container">
             <div class="row mt-3">
                 <div class="col-12">
-                    <h4>Parliament votes on bills and amendments many time before they become law.</h4>
+                    <h4>Parliament votes on bills and amendments many times before they become law.</h4>
                     <p>There are four types of votes that can happen:
-                        <ul>
+                        <ul id="vote-types-list">
                         <li>
                             <FontAwesomeIcon :icon="['fas', 'person']">
                             </FontAwesomeIcon> <strong>Personal votes: </strong> MPs' votes were cast and recorded
@@ -33,7 +33,18 @@
                         or third reading). Over time, this will be expanded to include other votes, like those during the
                         Committee of the whole House stage.</p>
                 </div>
+                <div class="col-12">
+                    <VoteFilter></VoteFilter>
+                </div>
         </div>
 
     </div>
 </div></template>
+
+<style scoped>
+#vote-types-list {
+    padding: 0;
+    list-style-type: none;
+}
+
+</style>
