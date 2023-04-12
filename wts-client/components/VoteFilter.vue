@@ -11,7 +11,6 @@
             <Link v-if="prefetchData.next" rel="next" :href="'/votes?page=' + (prefetchData.page + 1)">
             </Link>
         </Head>
-        <button @click="$forceUpdate()">Update</button>
         <Card>
             <form @submit.prevent="applyFilter()">
                 <div class="row mb-2">
