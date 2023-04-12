@@ -18,8 +18,7 @@
 
             <h5 class="mt-3" v-if="bill.voting_method != 'unk'">Voting method</h5>
             <span v-if="bill.voting_method == 'per'">
-              <FontAwesomeIcon :icon="['fas', 'person']">
-              </FontAwesomeIcon> <strong>Personal voting: </strong> MPs voted individually on this bill.
+              <FontAwesomeIcon :icon="['fas', 'person']" /> <strong>Personal voting: </strong> MPs voted individually on this bill.
             </span>
             <span v-if="bill.voting_method == 'par'">
               <FontAwesomeIcon :icon="['fas', 'people-group']">
@@ -60,13 +59,13 @@
 
             <h5 class="mt-3" v-if="bill.pco_url || actUrl">Read the bill</h5>
             <span v-if="bill.pco_url">
-              <FontAwesomeIcon class="me-2" :icon="['fas', 'file-lines']"></FontAwesomeIcon>Bill text:
+              <FontAwesomeIcon class="me-2" :icon="['fas', 'file-lines']" />Bill text:
               <ExternalLinkInline :link="bill.pco_url">
                 {{ bill.name }} (legislation.govt.nz)</ExternalLinkInline>
             </span>
             <br v-if="bill.pco_url && actUrl">
             <span v-if="actUrl">
-              <FontAwesomeIcon class="me-2" :icon="['fas', 'book']"></FontAwesomeIcon>Act text:
+              <FontAwesomeIcon class="me-2" :icon="['fas', 'book']" />Act text:
               <ExternalLinkInline :link="actUrl">
                 {{ bill.enactment.act }} (legislation.govt.nz)</ExternalLinkInline>
             </span>

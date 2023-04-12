@@ -51,6 +51,15 @@ useHead({
 </script>
 
 <style>
+a {
+  text-decoration: none
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+
 .flex-wrapper-gx {
   display: flex;
   min-height: 100vh;

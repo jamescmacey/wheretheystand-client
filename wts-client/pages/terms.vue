@@ -32,7 +32,6 @@
                     'Basic details about your browser and network',
                     'access any resource on WhereTheyStand',
                     'limited system resources can be protected from abuse and misuse, and to produce aggregated insights into how users access WhereTheyStand.',
-                    ''
                   ],
                   [
                     'Your activity on WhereTheyStand',

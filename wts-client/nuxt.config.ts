@@ -1,20 +1,18 @@
-import { defineNuxtConfig } from 'nuxt'
-
-// https://v3.nuxtjs.org/api/configuration/nuxt.config
+// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     css: [
-        '~/assets/scss/main.scss'
+        '~/assets/scss/main.scss',
     ],
     plugins: [
-        '~/plugins/vue-gtag.client.js',
+        '~/plugins/bootstrap.client.js',
         '~/plugins/fontawesome.js',
-        '~/plugins/vue-mapbox.js',
+        '~/plugins/vue-gtag.client.js'
     ],
     build: {
         //transpile: ['chart.js']
-        transpile: ['vue-mapbox-ts', 'chart.js'] 
+        transpile: ['chart.js'] 
     },
-    buildModules: [
-        '@pinia/nuxt',
-    ],
+    modules: [
+        '@pinia/nuxt'
+    ]
 })

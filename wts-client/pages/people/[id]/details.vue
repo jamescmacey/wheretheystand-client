@@ -132,7 +132,7 @@
 </template>
 
 <script>
-import { parse, format } from 'date-fns'
+import { parse, format, differenceInYears } from 'date-fns'
 import { usePeopleStore } from '../../../stores/people'
 export default {
   name: 'PersonDetails',
@@ -176,12 +176,23 @@ export default {
       return this.peopleStore.detailsByIdentifier(this.$route.params.id)
     },
     currentAge () {
-      return 'TODO years'
-      //return moment().diff(this.details.bio.birth_date, 'years') + ' years'
+      if (this.details.bio.birth_date) {
+        const birthDate = parse(this.details.bio.birth_date, "yyyy-MM-dd", new Date());
+        const age = differenceInYears(new Date(), birthDate)
+        return age + ' years'
+      } else {
+        return 'Unkown'
+      }
     },
     ageAtDeath () {
-      return 'TODO years'
-      //return moment(this.details.bio.death_date, 'YYYY-MM-DD').diff(this.details.bio.birth_date, 'years') + ' years'
+      if (this.details.bio.birth_date && this.details.bio.death_date) {
+        const birthDate = parse(this.details.bio.birth_date, "yyyy-MM-dd", new Date());
+        const deathDate = parse(this.details.bio.death_date, "yyyy-MM-dd", new Date());
+        const age = differenceInYears(deathDate, birthDate)
+        return age + ' years'
+      } else {
+        return 'Unkown'
+      }
     }
   }
 }

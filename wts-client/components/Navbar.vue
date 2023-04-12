@@ -8,7 +8,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="navbar-collapse" :class="{collapse : !visible}" id="navbarSupportedContent">
+      <div class="navbar-collapse text-light" :class="{collapse : !visible}" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
             <NuxtLink :class="[$route.fullPath.startsWith('/people/') ? 'active nav-link' : 'nav-link']" to="/people/" active-class="active">People</NuxtLink>
@@ -40,6 +40,9 @@
 </template>
 
 <style scoped>
+a:hover {
+  text-decoration: none
+}
 .navbar {
   font-family: "Open Sans", sans-serif;
   font-weight: 600;
@@ -74,7 +77,7 @@
 .navbar-nav>li>a {
   /* (80px - line-height of 27px) / 2 = 26.5px */
   line-height: 27px;
-  color: rgba(146, 146, 146, 1);
+  color: #ffffff8c;
 }
 </style>
 

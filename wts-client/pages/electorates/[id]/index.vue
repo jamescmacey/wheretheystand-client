@@ -1,21 +1,29 @@
 <template>
   <div id="electorate-view" v-if="electorate">
+
     <Head>
-    <Meta name="twitter:title" :content="electorate.name + ' - WhereTheyStand'" />
-    <Meta name="twitter:description" :content="electorate.description" />
-    <Meta name="description" :content="electorate.description" />
-    <Meta property="og:title" :content="electorate.name + ' - WhereTheyStand'" />
-    <Meta property="og:description" :content="electorate.description" />
+      <Meta name="twitter:title" :content="electorate.name + ' - WhereTheyStand'" />
+      <Meta name="twitter:description" :content="electorate.description" />
+      <Meta name="description" :content="electorate.description" />
+      <Meta property="og:title" :content="electorate.name + ' - WhereTheyStand'" />
+      <Meta property="og:description" :content="electorate.description" />
 
     </Head>
     <PageHeader :pageTitle="electorate.name" :pageSubtitle="electorate.description"></PageHeader>
     <div class="container-fluid hero pt-0">
-      <mapbox-map v-if="shape && shape['wts-comment'] != 'noshape'"
+      <!--<mapbox-map v-if="shape && shape['wts-comment'] != 'noshape'"
         accessToken="pk.eyJ1IjoiamFtZXNjbWFjZXkiLCJhIjoiY2xiN2VhYzVqMGE5YTN2bnhuM3l6d3pxbyJ9.CN_c4Tf7wXMtxyLKWrtvJg"
         height="500px" mapStyle="mapbox://styles/jamescmacey/clef24lj5000b01mlaqsjy2dl"
         :customAttribution="['Representation Commission', 'Stats NZ', 'Electoral Commission']" :center="center" :zoom="9"
         :autoResize="true">
         <mapbox-geogeometry-polygon v-for="(path, i) in paths" :key="i" :path="path" :opacity="0.2" /></mapbox-map>
+        -->
+      
+      <!--
+      <GMapMap v-if="shape && shape['wts-comment'] != 'noshape'" :center="centerGoogle" :zoom="7" map-type-id="terrain"
+        height="500px">
+      </GMapMap>
+      -->
     </div>
     <div class="mt-3 container">
       <div v-if="(electorate.status === 'current' || electorate.status === 'retiring') && electorate.incumbent">
@@ -166,7 +174,8 @@ export default {
       return this.electoratesStore.historyByIdentifier(this.$route.params.id)
     },
     shape() {
-      return this.electoratesStore.shapeByIdentifier(this.$route.params.id)
+      return null
+      //return this.electoratesStore.shapeByIdentifier(this.$route.params.id)
     },
     paths() {
       if (!this.shape || this.shape['wts-comment'] == 'noshape') {
@@ -247,6 +256,9 @@ export default {
       } else {
         return [0, 0]
       }
+    },
+    centerGoogle() {
+      return {lat: this.center[0], lng: this.center[1]}
     }
   },
   methods: {
