@@ -46,6 +46,11 @@ export default {
         } else {
           return false
         }
+      }).sort((a, b) => {
+        if (a.last_name.toLowerCase() < b.last_name.toLowerCase()) {
+          return -1
+        }
+        return 1
       })
     },
     leaders () {

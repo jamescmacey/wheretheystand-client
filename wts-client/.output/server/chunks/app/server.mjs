@@ -1476,7 +1476,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/about-1a3393bd.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/about-8299f421.mjs').then((m) => m.default || m)
   },
   {
     name: "bills-id",
@@ -1484,7 +1484,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/index-4f228d91.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index-b6c638b3.mjs').then((m) => m.default || m)
   },
   {
     name: "bills",
@@ -1492,7 +1492,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/index-ee6ce4b0.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index-ade4de15.mjs').then((m) => m.default || m)
   },
   {
     name: "electorates-id",
@@ -1500,7 +1500,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/index-11c8a737.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index-63363c33.mjs').then((m) => m.default || m)
   },
   {
     name: "electorates",
@@ -1508,7 +1508,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/index-9e1c5c28.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index-5c5ec462.mjs').then((m) => m.default || m)
   },
   {
     name: "index",
@@ -1535,14 +1535,14 @@ const _routes = [
         meta: {},
         alias: [],
         redirect: void 0,
-        component: () => import('./_nuxt/index-2d5a2b26.mjs').then((m) => m.default || m)
+        component: () => import('./_nuxt/index-8fa4de45.mjs').then((m) => m.default || m)
       }
     ],
     name: void 0,
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/_id_-5b00a3fd.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/_id_-dfc387ce.mjs').then((m) => m.default || m)
   },
   {
     name: "parties",
@@ -1550,7 +1550,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/index-df2bdd3a.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index-ecd98b49.mjs').then((m) => m.default || m)
   },
   {
     path: "/people/:id()",
@@ -1592,7 +1592,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/_id_-485ba041.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/_id_-e4e0e452.mjs').then((m) => m.default || m)
   },
   {
     name: "people",
@@ -1600,7 +1600,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/index-be3af0bd.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index-1893d0fb.mjs').then((m) => m.default || m)
   },
   {
     name: "terms",
@@ -1608,7 +1608,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/terms-4b6ce0dd.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/terms-e6ed9518.mjs').then((m) => m.default || m)
   },
   {
     name: "votes-id",
@@ -1616,7 +1616,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/index-1eaa8862.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index-edef7d96.mjs').then((m) => m.default || m)
   },
   {
     name: "votes",
@@ -1624,7 +1624,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/index-098bf1e6.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index-a3930a8b.mjs').then((m) => m.default || m)
   }
 ];
 const routerOptions0 = {

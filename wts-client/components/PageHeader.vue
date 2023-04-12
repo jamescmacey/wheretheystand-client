@@ -33,9 +33,9 @@
     </div>
     <div v-if="backLink" class="container-fluid" :style="{backgroundColor: harmony[1]}">
       <div class="container py-2">
-        <RouterLink :to="backLink">
+        <NuxtLink class="back-link" :to="backLink">
           <FontAwesomeIcon :icon="['fas','arrow-left']"></FontAwesomeIcon> {{ backText }}
-        </RouterLink>
+        </NuxtLink>
       </div>
     </div>
   </div>
@@ -121,9 +121,13 @@ li {
   margin: 0 10px;
 }
 
-a {
+.nav-link {
   color: #212121;
   text-decoration: none;
+}
+
+.back-link {
+  color: white
 }
 
 a:hover {
