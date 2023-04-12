@@ -1,11 +1,17 @@
 <template>
     <div>
         <h4>Filter votes</h4>
+
         <Head v-if="prefetchData && prefetchData.count && (prefetchData.count > 0)">
-            <Link v-if="prefetchData.previous && (prefetchData.page == 2)" rel="prev" href="/votes"></Link>
-            <Link v-if="prefetchData.previous && (prefetchData.page != 2)" rel="prev" :href="'/votes?page=' + (prefetchData.page - 1)"></Link>
-            <Link v-if="prefetchData.next" rel="next" :href="'/votes?page=' + (prefetchData.page + 1)"></Link>
+            <Link v-if="prefetchData.previous && (prefetchData.page == 2)" rel="prev" href="/votes">
+            </Link>
+            <Link v-if="prefetchData.previous && (prefetchData.page != 2)" rel="prev"
+                :href="'/votes?page=' + (prefetchData.page - 1)">
+            </Link>
+            <Link v-if="prefetchData.next" rel="next" :href="'/votes?page=' + (prefetchData.page + 1)">
+            </Link>
         </Head>
+        <button @click="$forceUpdate()">Update</button>
         <Card>
             <form @submit.prevent="applyFilter()">
                 <div class="row mb-2">
@@ -110,17 +116,19 @@
         <div v-if="page">
             <h4>Results</h4>
             {{ displayCount }} result<span v-if="displayCount != 1">s</span>.
-            <NuxtLink :title="vote.name" v-for="vote in displayVotes" :key="vote.id" :to="'/votes/' + vote.id" class="vote-link">
+            <NuxtLink :title="vote.name" v-for="vote in displayVotes" :key="vote.id" :to="'/votes/' + vote.id"
+                class="vote-link">
                 <Card>
                     <div class="row">
                         <div class="col-12 col-xl-5">
                             <h6 class="mb-0">{{ vote.name }}</h6>
-                    <small class="me-1">
-                        <span v-if="vote.type_desc" class="badge bg-primary text-uppercase">{{ vote.type_desc }}</span>
-                    </small>
-                    <small class="text-muted text-uppercase">{{ formattedDateFull(vote.date) }}</small>
-                    <hr class="col-12 d-xl-none mt-2">        
-                </div>
+                            <small class="me-1">
+                                <span v-if="vote.type_desc" class="badge bg-primary text-uppercase">{{ vote.type_desc
+                                }}</span>
+                            </small>
+                            <small class="text-muted text-uppercase">{{ formattedDateFull(vote.date) }}</small>
+                            <hr class="col-12 d-xl-none mt-2">
+                        </div>
                         <div class="col-12 col-xl-7">
                             <div class="row">
                                 <div class="col-3 text-center">
@@ -142,7 +150,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                 </Card>
             </NuxtLink>
 
@@ -215,27 +223,26 @@ select {
 }
 </style>
 
-<script setup>
-import { API_BASE } from '~~/stores/config';
-import { useRoute } from 'vue-router';
-const query = useRoute().query;
-var initialPage = 1
-if (query.hasOwnProperty('page')) {
-    initialPage = query.page
-}
-
-const { data: prefetchData } = await useFetch(
-    API_BASE + 'votes/?page=' + initialPage + '&per_page=10'
-)
-</script>
-
-
 
 <script>
 import { API_BASE } from '~~/stores/config';
 import { parse, format, formatDistanceToNow } from 'date-fns'
+import { useRoute } from 'vue-router';
 
 export default {
+    async setup() {
+        const query = useRoute().query;
+        var initialPage = 1
+        if (query.hasOwnProperty('page')) {
+            initialPage = query.page
+        }
+
+        const { data: prefetchData } = await useFetch(
+            API_BASE + 'votes/?page=' + initialPage + '&per_page=10'
+        )
+
+        return {prefetchData: prefetchData}
+    },
     name: 'VoteFilter',
     data() {
         return {

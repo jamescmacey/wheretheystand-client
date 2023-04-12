@@ -1,0 +1,1 @@
+import{a as e,o as s,b as o,f as t}from"./entry.bab167bf.js";const n={},c={class:"spinner-grow spinner-grow-sm text-theme2",role:"status"},_=t("span",{class:"visually-hidden"},"Loading...",-1),a=[_];function r(i,d){return s(),o("div",c,a)}const p=e(n,[["render",r]]);export{p as _};

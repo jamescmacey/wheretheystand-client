@@ -1,10 +1,15 @@
 <template>
     <div>
         <h4>Filter bills</h4>
+
         <Head v-if="prefetchData && prefetchData.count && (prefetchData.count > 0)">
-            <Link v-if="prefetchData.previous && (prefetchData.page == 2)" rel="prev" href="/bills"></Link>
-            <Link v-if="prefetchData.previous && (prefetchData.page != 2)" rel="prev" :href="'/bills?page=' + (prefetchData.page - 1)"></Link>
-            <Link v-if="prefetchData.next" rel="next" :href="'/bills?page=' + (prefetchData.page + 1)"></Link>
+            <Link v-if="prefetchData.previous && (prefetchData.page == 2)" rel="prev" href="/bills">
+            </Link>
+            <Link v-if="prefetchData.previous && (prefetchData.page != 2)" rel="prev"
+                :href="'/bills?page=' + (prefetchData.page - 1)">
+            </Link>
+            <Link v-if="prefetchData.next" rel="next" :href="'/bills?page=' + (prefetchData.page + 1)">
+            </Link>
         </Head>
 
         <Card>
@@ -263,26 +268,26 @@ select {
 }
 </style>
 
-<script setup>
-import { API_BASE } from '~~/stores/config';
-import { useRoute } from 'vue-router';
-const query = useRoute().query;
-var initialPage = 1
-if (query.hasOwnProperty('page')) {
-    initialPage = query.page
-}
-
-const { data: prefetchData } = await useFetch(
-    API_BASE + 'bills/?page=' + initialPage + '&per_page=10'
-)
-</script>
-
 
 <script>
 import { API_BASE } from '~~/stores/config';
 import { parse, format, formatDistanceToNow } from 'date-fns'
+import { useRoute } from 'vue-router';
 
 export default {
+    async setup() {
+        const query = useRoute().query;
+        var initialPage = 1
+        if (query.hasOwnProperty('page')) {
+            initialPage = query.page
+        }
+
+        const { data: prefetchData } = await useFetch(
+            API_BASE + 'bills/?page=' + initialPage + '&per_page=10'
+        )
+
+        return {prefetchData: prefetchData}
+    },
     name: 'BillFilter',
     data() {
         return {
