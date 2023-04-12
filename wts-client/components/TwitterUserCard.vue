@@ -47,7 +47,7 @@ import Card from './Card.vue'
 import { ScatterChart } from 'vue-chart-3'
 import { Chart, registerables } from 'chart.js'
 Chart.register(...registerables)
-import { parse, format } from 'date-fns'
+import { parse, format, fromUnixTime } from 'date-fns'
 
 export default {
   name: 'TwitterUserCard',
@@ -171,8 +171,7 @@ export default {
           x: {
             ticks: {
               callback: function (label, index, labels) {
-                // return moment(label).format('D.M.YYYY')
-                return label
+                return format(fromUnixTime(label/1000),"d.M.yyyy")
               }
             }
           }
@@ -191,8 +190,7 @@ export default {
                   label[0] = Intl.NumberFormat('en-NZ').format(context.parsed.y)
                 }
                 if (context.parsed.x !== null) {
-                  // label[1] = moment(context.parsed.x).format('D.M.YYYY')
-                  label[1] = context.parsed.x
+                  label[1] = format(fromUnixTime(context.parsed.x/1000),"d.M.yyyy")
                 }
                 return label
               }

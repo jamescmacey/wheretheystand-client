@@ -122,7 +122,7 @@ li {
 }
 
 a {
-  color: white;
+  color: #212121;
   text-decoration: none;
 }
 
