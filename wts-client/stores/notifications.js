@@ -5,39 +5,37 @@ export const useNotificationsStore = defineStore('notifications', {
     state () {
         return {
             banners: [
-                {
-                    id: 0,
-                    linkBehaviour: 'none',
-                    title: 'New look',
-                    message: 'WhereTheyStand has had a facelift! The new design is still in the early stages (this is the minimum viable product), so if you run into any issues, try refreshing the page. You\'re always welcome to leave feedback via the link in the footer.'
-                }
             ],
             toasts: [
             ],
-            loaded: true,
+            loaded: false,
             toastId: 0
         }
     },
     actions: {
-        async fetch() {
+        async fetchNotifications() {
+            var state = this
             if (!this.loaded) {
-                var state = this
-                await useFetch(API_BASE + 'notifications/banners/', {
+                await useFetch(API_BASE + 'banners/', {
                     onResponse({ request, response, options }) {
-                        this.banners = response._data
+                        state.banners = response._data
+                        state.loaded = true
                     },
                     onResponseError({ request, response, options }) {
+                        state.postResponseError(response)
                     },
                     onRequestError({ request, options, error }) {
+                        state.addToast('Error fetching resource (request)', error)
                     }
                 })
             }
         },
-        addToast(title, message) {
+        addToast(title, message, error = null) {
             this.toasts.push({
                 id: this.toastId,
                 title: title,
-                message: message
+                message: message,
+                error: error
             })
             this.toastId = this.toastId + 1
         },
@@ -53,8 +51,12 @@ export const useNotificationsStore = defineStore('notifications', {
                 this.banners.splice(removeIndex, 1)
             }
         },
-        postResponseError(response) {
-            this.addToast('Error fetching resource (response)', response.status + ' ' + response._data.detail)
+        postResponseError(response, fatalError = false) {
+            if (fatalError) {
+                this.addToast('Error fetching resource (response)', response.status + ' ' + response._data.detail, { statusCode: response.status, statusMessage: response._data.detail })
+            } else {
+                this.addToast('Error fetching resource (response)', response.status + ' ' + response._data.detail)
+            }
         }
     }
 })

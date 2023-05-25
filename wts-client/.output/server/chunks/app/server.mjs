@@ -1,5 +1,5 @@
-import { h, defineComponent, computed, watch, version, unref, reactive, useSSRContext, Suspense, nextTick, Transition, provide, getCurrentInstance, inject, ref, watchEffect, toRef, onServerPrefetch, resolveComponent, mergeProps, createApp, shallowReactive, markRaw, effectScope, isRef, isReactive, toRaw, getCurrentScope, onScopeDispose, onErrorCaptured, createVNode, resolveDynamicComponent, toRefs, shallowRef, isReadonly, defineAsyncComponent, withCtx, openBlock, createBlock, toDisplayString, createCommentVNode, createTextVNode } from 'vue';
-import { $fetch } from 'ofetch';
+import { h, defineComponent, computed, watch, version, unref, reactive, useSSRContext, ref, createElementBlock, Suspense, nextTick, Transition, provide, getCurrentInstance, inject, watchEffect, toRef, onServerPrefetch, resolveComponent, mergeProps, createApp, shallowReactive, markRaw, effectScope, isRef, isReactive, toRaw, getCurrentScope, onScopeDispose, onErrorCaptured, createVNode, resolveDynamicComponent, toRefs, shallowRef, isReadonly, defineAsyncComponent, withCtx, openBlock, createBlock, toDisplayString, createCommentVNode, createTextVNode } from 'vue';
+import { $fetch as $fetch$1 } from 'ofetch';
 import { createHooks } from 'hookable';
 import { getContext, executeAsync } from 'unctx';
 import { renderSSRHead } from '@unhead/ssr';
@@ -9,7 +9,7 @@ import { RouterView, createMemoryHistory, createRouter } from 'vue-router';
 import { sendRedirect, createError as createError$1, setResponseStatus as setResponseStatus$1 } from 'h3';
 import { hasProtocol, parseURL, joinURL, parseQuery, withTrailingSlash, withoutTrailingSlash, isEqual } from 'ufo';
 import { parse, icon, library } from '@fortawesome/fontawesome-svg-core';
-import { faHistory, faTimes, faCheck, faMapSigns, faQuestion, faChevronUp, faChevronDown, faExternalLinkAlt, faInfoCircle, faArrowRight, faPeopleGroup, faPerson, faArrowLeft, faFileCsv, faFileCode, faFileExcel, faBook, faFileLines, faForwardFast, faCalendar, faPenNib, faMicrophoneLines } from '@fortawesome/free-solid-svg-icons';
+import { faHistory, faTimes, faCheck, faMapSigns, faQuestion, faChevronUp, faChevronDown, faExternalLinkAlt, faInfoCircle, faArrowRight, faPeopleGroup, faPerson, faArrowLeft, faFileCsv, faFileCode, faFileExcel, faBook, faUserCircle, faFileLines, faForwardFast, faCalendar, faPenNib, faMicrophoneLines } from '@fortawesome/free-solid-svg-icons';
 import { faTwitter, faFacebook, faInstagram, faSnapchat, faWikipediaW } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { ssrRenderAttrs, ssrRenderSlot, ssrInterpolate, ssrRenderComponent, ssrRenderSuspense, ssrRenderVNode, ssrRenderList, ssrRenderAttr, ssrRenderClass, ssrRenderStyle } from 'vue/server-renderer';
@@ -17,6 +17,7 @@ import humps from 'humps';
 import { hash } from 'ohash';
 import { defu } from 'defu';
 import { Harmonizer } from 'color-harmony';
+import { PassageUser } from '@passageidentity/passage-elements/passage-user';
 import { a as useRuntimeConfig$1 } from '../nitro/node-server.mjs';
 import 'node-fetch-native/polyfill';
 import 'node:http';
@@ -1476,7 +1477,15 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/about-8299f421.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/about-bddef441.mjs').then((m) => m.default || m)
+  },
+  {
+    name: "auth",
+    path: "/auth",
+    meta: {},
+    alias: [],
+    redirect: void 0,
+    component: () => import('./_nuxt/auth-0ccddcf9.mjs').then((m) => m.default || m)
   },
   {
     name: "bills-id",
@@ -1484,7 +1493,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/index-b6c638b3.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index-82423990.mjs').then((m) => m.default || m)
   },
   {
     name: "bills",
@@ -1492,7 +1501,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/index-ade4de15.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index-df5a892f.mjs').then((m) => m.default || m)
   },
   {
     name: "electorates-id",
@@ -1500,7 +1509,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/index-63363c33.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index-bcc1f23e.mjs').then((m) => m.default || m)
   },
   {
     name: "electorates",
@@ -1508,7 +1517,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/index-5c5ec462.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index-bfeeff36.mjs').then((m) => m.default || m)
   },
   {
     name: "index",
@@ -1516,7 +1525,15 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/index-1b5bcc24.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index-cdb2ea56.mjs').then((m) => m.default || m)
+  },
+  {
+    name: "me",
+    path: "/me",
+    meta: {},
+    alias: [],
+    redirect: void 0,
+    component: () => import('./_nuxt/me-7ba0309c.mjs').then((m) => m.default || m)
   },
   {
     path: "/parties/:id()",
@@ -1527,7 +1544,7 @@ const _routes = [
         meta: {},
         alias: [],
         redirect: void 0,
-        component: () => import('./_nuxt/documents-6ae66999.mjs').then((m) => m.default || m)
+        component: () => import('./_nuxt/documents-d9ba35bc.mjs').then((m) => m.default || m)
       },
       {
         name: "parties-id",
@@ -1535,14 +1552,14 @@ const _routes = [
         meta: {},
         alias: [],
         redirect: void 0,
-        component: () => import('./_nuxt/index-8fa4de45.mjs').then((m) => m.default || m)
+        component: () => import('./_nuxt/index-532d521a.mjs').then((m) => m.default || m)
       }
     ],
     name: void 0,
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/_id_-dfc387ce.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/_id_-eaf179e2.mjs').then((m) => m.default || m)
   },
   {
     name: "parties",
@@ -1550,7 +1567,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/index-ecd98b49.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index-5519427d.mjs').then((m) => m.default || m)
   },
   {
     path: "/people/:id()",
@@ -1561,7 +1578,7 @@ const _routes = [
         meta: {},
         alias: [],
         redirect: void 0,
-        component: () => import('./_nuxt/details-c7d6b475.mjs').then((m) => m.default || m)
+        component: () => import('./_nuxt/details-9222aff6.mjs').then((m) => m.default || m)
       },
       {
         name: "people-id-expenses",
@@ -1569,7 +1586,7 @@ const _routes = [
         meta: {},
         alias: [],
         redirect: void 0,
-        component: () => import('./_nuxt/expenses-cae01898.mjs').then((m) => m.default || m)
+        component: () => import('./_nuxt/expenses-d0c0c452.mjs').then((m) => m.default || m)
       },
       {
         name: "people-id",
@@ -1577,7 +1594,7 @@ const _routes = [
         meta: {},
         alias: [],
         redirect: void 0,
-        component: () => import('./_nuxt/index-f3ca7a4d.mjs').then((m) => m.default || m)
+        component: () => import('./_nuxt/index-f5c3cc18.mjs').then((m) => m.default || m)
       },
       {
         name: "people-id-interests",
@@ -1585,14 +1602,14 @@ const _routes = [
         meta: {},
         alias: [],
         redirect: void 0,
-        component: () => import('./_nuxt/interests-ce1095ec.mjs').then((m) => m.default || m)
+        component: () => import('./_nuxt/interests-9dda6f00.mjs').then((m) => m.default || m)
       }
     ],
     name: void 0,
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/_id_-e4e0e452.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/_id_-5e1b99cf.mjs').then((m) => m.default || m)
   },
   {
     name: "people",
@@ -1600,7 +1617,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/index-1893d0fb.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index-99e2dd1c.mjs').then((m) => m.default || m)
   },
   {
     name: "terms",
@@ -1608,7 +1625,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/terms-e6ed9518.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/terms-865e4e06.mjs').then((m) => m.default || m)
   },
   {
     name: "votes-id",
@@ -1616,7 +1633,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/index-edef7d96.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index-deae98a9.mjs').then((m) => m.default || m)
   },
   {
     name: "votes",
@@ -1624,7 +1641,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/index-4a47b324.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index-80e0d7ce.mjs').then((m) => m.default || m)
   }
 ];
 const routerOptions0 = {
@@ -1834,7 +1851,7 @@ const router_jmwsqit4Rs = /* @__PURE__ */ defineNuxtPlugin({
     return { provide: { router } };
   }
 }, 1);
-library.add(faHistory, faTimes, faCheck, faMapSigns, faQuestion, faChevronUp, faChevronDown, faExternalLinkAlt, faTwitter, faFacebook, faInstagram, faSnapchat, faWikipediaW, faInfoCircle, faArrowRight, faPeopleGroup, faPerson, faArrowLeft, faFileCsv, faFileCode, faFileExcel, faBook, faFileLines, faForwardFast, faCalendar, faPenNib, faMicrophoneLines);
+library.add(faHistory, faTimes, faCheck, faMapSigns, faQuestion, faChevronUp, faChevronDown, faExternalLinkAlt, faTwitter, faFacebook, faInstagram, faSnapchat, faWikipediaW, faInfoCircle, faArrowRight, faPeopleGroup, faPerson, faArrowLeft, faFileCsv, faFileCode, faFileExcel, faBook, faUserCircle, faFileLines, faForwardFast, faCalendar, faPenNib, faMicrophoneLines);
 const fontawesome_klhsrycjcK = /* @__PURE__ */ defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component("FontAwesomeIcon", FontAwesomeIcon);
 });
@@ -1986,43 +2003,41 @@ _sfc_main$9.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/FontAwesomeIcon.vue");
   return _sfc_setup$9 ? _sfc_setup$9(props, ctx) : void 0;
 };
-const __nuxt_component_1 = _sfc_main$9;
+const __nuxt_component_1$1 = _sfc_main$9;
 const API_BASE = "https://wheretheystand.nz/api/";
-const useNotificationsStore = defineStore("notifications", {
+const useNotificationsStore$1 = defineStore("notifications", {
   state() {
     return {
-      banners: [
-        {
-          id: 0,
-          linkBehaviour: "none",
-          title: "New look",
-          message: "WhereTheyStand has had a facelift! The new design is still in the early stages (this is the minimum viable product), so if you run into any issues, try refreshing the page. You're always welcome to leave feedback via the link in the footer."
-        }
-      ],
+      banners: [],
       toasts: [],
-      loaded: true,
+      loaded: false,
       toastId: 0
     };
   },
   actions: {
-    async fetch() {
+    async fetchNotifications() {
+      var state = this;
       if (!this.loaded) {
-        await useFetch(API_BASE + "notifications/banners/", {
+        await useFetch(API_BASE + "banners/", {
           onResponse({ request, response, options }) {
-            this.banners = response._data;
+            state.banners = response._data;
+            state.loaded = true;
           },
           onResponseError({ request, response, options }) {
+            state.postResponseError(response);
           },
           onRequestError({ request, options, error }) {
+            state.addToast("Error fetching resource (request)", error);
           }
         }, "$1J08Qe3nXo");
       }
     },
-    addToast(title, message) {
+    addToast(title, message, error = null) {
       this.toasts.push({
         id: this.toastId,
         title,
-        message
+        message,
+        error
       });
       this.toastId = this.toastId + 1;
     },
@@ -2038,8 +2053,12 @@ const useNotificationsStore = defineStore("notifications", {
         this.banners.splice(removeIndex, 1);
       }
     },
-    postResponseError(response) {
-      this.addToast("Error fetching resource (response)", response.status + " " + response._data.detail);
+    postResponseError(response, fatalError = false) {
+      if (fatalError) {
+        this.addToast("Error fetching resource (response)", response.status + " " + response._data.detail, { statusCode: response.status, statusMessage: response._data.detail });
+      } else {
+        this.addToast("Error fetching resource (response)", response.status + " " + response._data.detail);
+      }
     }
   }
 });
@@ -2053,7 +2072,7 @@ const _export_sfc = (sfc, props) => {
 const _sfc_main$8 = {
   name: "Banners",
   setup() {
-    const notificationsStore = useNotificationsStore();
+    const notificationsStore = useNotificationsStore$1();
     return { notificationsStore };
   },
   methods: {
@@ -2062,19 +2081,19 @@ const _sfc_main$8 = {
     }
   },
   created() {
-    this.notificationsStore.fetch();
+    this.notificationsStore.fetchNotifications();
   }
 };
 function _sfc_ssrRender$6(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
-  const _component_font_awesome_icon = __nuxt_component_1;
+  const _component_font_awesome_icon = __nuxt_component_1$1;
   const _component_NuxtLink = __nuxt_component_0$1;
   _push(`<!--[-->`);
   ssrRenderList($setup.notificationsStore.banners, (banner) => {
-    _push(`<div data-v-3ec68c6a><div class="jumbotron jumbotron-fluid py-3" data-v-3ec68c6a><div class="container text-center" data-v-3ec68c6a><div class="row" data-v-3ec68c6a>`);
-    if (banner.linkBehaviour === "new") {
-      _push(`<div data-v-3ec68c6a><a${ssrRenderAttr("href", banner.link)} target="_blank" data-v-3ec68c6a>`);
+    _push(`<div data-v-d641860e><div class="jumbotron jumbotron-fluid py-3" data-v-d641860e><div class="container text-center" data-v-d641860e><div class="row" data-v-d641860e>`);
+    if (banner.link_behaviour === "new") {
+      _push(`<div data-v-d641860e><a${ssrRenderAttr("href", banner.link)} target="_blank" data-v-d641860e>`);
       if (banner.title) {
-        _push(`<strong data-v-3ec68c6a>${ssrInterpolate(banner.title)}: </strong>`);
+        _push(`<strong data-v-d641860e>${ssrInterpolate(banner.title)}: </strong>`);
       } else {
         _push(`<!---->`);
       }
@@ -2083,21 +2102,33 @@ function _sfc_ssrRender$6(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
         class: "ms-2",
         icon: ["fas", "external-link-alt"]
       }, null, _parent));
-      _push(`</a><button type="button" class="btn ms-4 btn-sm btn-outline-light text-uppercase" data-v-3ec68c6a>Dismiss</button></div>`);
-    } else if (banner.linkBehaviour === "none") {
-      _push(`<div class="basic-banner" data-v-3ec68c6a>`);
-      if (banner.title) {
-        _push(`<strong data-v-3ec68c6a>${ssrInterpolate(banner.title)}: </strong>`);
+      _push(`</a>`);
+      if (!banner.is_persistent) {
+        _push(`<button type="button" class="btn ms-4 btn-sm btn-outline-light text-uppercase" data-v-d641860e>Dismiss</button>`);
       } else {
         _push(`<!---->`);
       }
-      _push(`${ssrInterpolate(banner.message)} <button type="button" class="btn ms-2 btn-sm btn-outline-light text-uppercase" data-v-3ec68c6a>Dismiss</button></div>`);
-    } else if (banner.linkBehaviour === "same") {
-      _push(`<div data-v-3ec68c6a>`);
-      if (banner.linkType === "external") {
-        _push(`<a${ssrRenderAttr("href", banner.link)} data-v-3ec68c6a>`);
+      _push(`</div>`);
+    } else if (banner.link_behaviour === "none") {
+      _push(`<div class="basic-banner" data-v-d641860e>`);
+      if (banner.title) {
+        _push(`<strong data-v-d641860e>${ssrInterpolate(banner.title)}: </strong>`);
+      } else {
+        _push(`<!---->`);
+      }
+      _push(`${ssrInterpolate(banner.message)} `);
+      if (!banner.is_persistent) {
+        _push(`<button type="button" class="btn ms-2 btn-sm btn-outline-light text-uppercase" data-v-d641860e>Dismiss</button>`);
+      } else {
+        _push(`<!---->`);
+      }
+      _push(`</div>`);
+    } else if (banner.link_behaviour === "same") {
+      _push(`<div data-v-d641860e>`);
+      if (banner.link_type === "external") {
+        _push(`<a${ssrRenderAttr("href", banner.link)} data-v-d641860e>`);
         if (banner.title) {
-          _push(`<strong data-v-3ec68c6a>${ssrInterpolate(banner.title)}: </strong>`);
+          _push(`<strong data-v-d641860e>${ssrInterpolate(banner.title)}: </strong>`);
         } else {
           _push(`<!---->`);
         }
@@ -2107,14 +2138,14 @@ function _sfc_ssrRender$6(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
           icon: ["fas", "external-link-alt"]
         }, null, _parent));
         _push(`</a>`);
-      } else if (banner.linkType === "internal") {
+      } else if (banner.link_type === "internal") {
         _push(ssrRenderComponent(_component_NuxtLink, {
           to: banner.link
         }, {
           default: withCtx((_, _push2, _parent2, _scopeId) => {
             if (_push2) {
               if (banner.title) {
-                _push2(`<strong data-v-3ec68c6a${_scopeId}>${ssrInterpolate(banner.title)}: </strong>`);
+                _push2(`<strong data-v-d641860e${_scopeId}>${ssrInterpolate(banner.title)}: </strong>`);
               } else {
                 _push2(`<!---->`);
               }
@@ -2131,7 +2162,12 @@ function _sfc_ssrRender$6(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
       } else {
         _push(`<!---->`);
       }
-      _push(`<button type="button" class="btn ms-4 btn-sm btn-outline-light text-uppercase" data-v-3ec68c6a>Dismiss</button></div>`);
+      if (!banner.is_persistent) {
+        _push(`<button type="button" class="btn ms-4 btn-sm btn-outline-light text-uppercase" data-v-d641860e>Dismiss</button>`);
+      } else {
+        _push(`<!---->`);
+      }
+      _push(`</div>`);
     } else {
       _push(`<!---->`);
     }
@@ -2145,7 +2181,29 @@ _sfc_main$8.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/Banners.vue");
   return _sfc_setup$8 ? _sfc_setup$8(props, ctx) : void 0;
 };
-const __nuxt_component_3$1 = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["ssrRender", _sfc_ssrRender$6], ["__scopeId", "data-v-3ec68c6a"]]);
+const __nuxt_component_3$1 = /* @__PURE__ */ _export_sfc(_sfc_main$8, [["ssrRender", _sfc_ssrRender$6], ["__scopeId", "data-v-d641860e"]]);
+const __nuxt_component_1 = /* @__PURE__ */ defineComponent({
+  name: "ClientOnly",
+  inheritAttrs: false,
+  // eslint-disable-next-line vue/require-prop-types
+  props: ["fallback", "placeholder", "placeholderTag", "fallbackTag"],
+  setup(_, { slots, attrs }) {
+    const mounted = ref(false);
+    return (props) => {
+      var _a;
+      if (mounted.value) {
+        return (_a = slots.default) == null ? void 0 : _a.call(slots);
+      }
+      const slot = slots.fallback || slots.placeholder;
+      if (slot) {
+        return slot();
+      }
+      const fallbackStr = props.fallback || props.placeholder || "";
+      const fallbackTag = props.fallbackTag || props.placeholderTag || "span";
+      return createElementBlock(fallbackTag, attrs, fallbackStr);
+    };
+  }
+});
 const _sfc_main$7 = {
   name: "Navbar",
   data() {
@@ -2161,7 +2219,8 @@ const _sfc_main$7 = {
 };
 function _sfc_ssrRender$5(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
   const _component_NuxtLink = __nuxt_component_0$1;
-  _push(`<nav${ssrRenderAttrs(mergeProps({ class: "navbar navbar-expand-lg navbar-dark bg-theme1" }, _attrs))} data-v-667eb98d><div class="container-fluid" data-v-667eb98d>`);
+  const _component_ClientOnly = __nuxt_component_1;
+  _push(`<nav${ssrRenderAttrs(mergeProps({ class: "navbar navbar-expand-lg navbar-dark bg-theme1" }, _attrs))} data-v-5a94d1d1><div class="container-fluid" data-v-5a94d1d1>`);
   _push(ssrRenderComponent(_component_NuxtLink, {
     class: "navbar-brand",
     to: "/"
@@ -2177,7 +2236,7 @@ function _sfc_ssrRender$5(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`<button class="navbar-toggler" type="button" aria-controls="navbarSupportedContent"${ssrRenderAttr("aria-expanded", $data.visible)} aria-label="Toggle navigation" data-v-667eb98d><span class="navbar-toggler-icon" data-v-667eb98d></span></button><div class="${ssrRenderClass([{ collapse: !$data.visible }, "navbar-collapse text-light"])}" id="navbarSupportedContent" data-v-667eb98d><ul class="navbar-nav me-auto" data-v-667eb98d><li class="nav-item" data-v-667eb98d>`);
+  _push(`<button class="navbar-toggler" type="button" aria-controls="navbarSupportedContent"${ssrRenderAttr("aria-expanded", $data.visible)} aria-label="Toggle navigation" data-v-5a94d1d1><span class="navbar-toggler-icon" data-v-5a94d1d1></span></button><div class="${ssrRenderClass([{ collapse: !$data.visible }, "navbar-collapse text-light"])}" id="navbarSupportedContent" data-v-5a94d1d1><ul class="navbar-nav me-auto" data-v-5a94d1d1><li class="nav-item" data-v-5a94d1d1>`);
   _push(ssrRenderComponent(_component_NuxtLink, {
     class: [_ctx.$route.fullPath.startsWith("/people/") ? "active nav-link" : "nav-link"],
     to: "/people/",
@@ -2194,7 +2253,7 @@ function _sfc_ssrRender$5(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li class="nav-item" data-v-667eb98d>`);
+  _push(`</li><li class="nav-item" data-v-5a94d1d1>`);
   _push(ssrRenderComponent(_component_NuxtLink, {
     class: [_ctx.$route.fullPath.startsWith("/parties/") ? "active nav-link" : "nav-link"],
     to: "/parties/",
@@ -2211,7 +2270,7 @@ function _sfc_ssrRender$5(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li class="nav-item" data-v-667eb98d>`);
+  _push(`</li><li class="nav-item" data-v-5a94d1d1>`);
   _push(ssrRenderComponent(_component_NuxtLink, {
     class: [_ctx.$route.fullPath.startsWith("/electorates/") ? "active nav-link" : "nav-link"],
     to: "/electorates/",
@@ -2228,7 +2287,7 @@ function _sfc_ssrRender$5(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li class="nav-item" data-v-667eb98d>`);
+  _push(`</li><li class="nav-item" data-v-5a94d1d1>`);
   _push(ssrRenderComponent(_component_NuxtLink, {
     class: [_ctx.$route.fullPath.startsWith("/bills/") ? "active nav-link" : "nav-link"],
     to: "/bills/",
@@ -2245,7 +2304,7 @@ function _sfc_ssrRender$5(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li class="nav-item" data-v-667eb98d>`);
+  _push(`</li><li class="nav-item" data-v-5a94d1d1>`);
   _push(ssrRenderComponent(_component_NuxtLink, {
     class: [_ctx.$route.fullPath.startsWith("/votes/") ? "active nav-link" : "nav-link"],
     to: "/votes/",
@@ -2262,7 +2321,7 @@ function _sfc_ssrRender$5(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li class="nav-item" data-v-667eb98d>`);
+  _push(`</li><li class="nav-item" data-v-5a94d1d1>`);
   _push(ssrRenderComponent(_component_NuxtLink, {
     class: [_ctx.$route.fullPath.startsWith("/about/") ? "active nav-link" : "nav-link"],
     to: "/about/",
@@ -2279,7 +2338,9 @@ function _sfc_ssrRender$5(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li class="nav-item" data-v-667eb98d><a class="${ssrRenderClass([_ctx.$route.fullPath.startsWith("/search/") ? "active nav-link" : "nav-link"])}" href="/search/" active-class="active" data-v-667eb98d>Search</a></li></ul></div></div></nav>`);
+  _push(`</li><li class="nav-item" data-v-5a94d1d1><a class="${ssrRenderClass([_ctx.$route.fullPath.startsWith("/search/") ? "active nav-link" : "nav-link"])}" href="/search/" active-class="active" data-v-5a94d1d1>Search</a></li></ul>`);
+  _push(ssrRenderComponent(_component_ClientOnly, null, {}, _parent));
+  _push(`</div></div></nav>`);
 }
 const _sfc_setup$7 = _sfc_main$7.setup;
 _sfc_main$7.setup = (props, ctx) => {
@@ -2287,7 +2348,7 @@ _sfc_main$7.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/Navbar.vue");
   return _sfc_setup$7 ? _sfc_setup$7(props, ctx) : void 0;
 };
-const __nuxt_component_4 = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["ssrRender", _sfc_ssrRender$5], ["__scopeId", "data-v-667eb98d"]]);
+const __nuxt_component_4 = /* @__PURE__ */ _export_sfc(_sfc_main$7, [["ssrRender", _sfc_ssrRender$5], ["__scopeId", "data-v-5a94d1d1"]]);
 const interpolatePath = (route, match) => {
   return match.path.replace(/(:\w+)\([^)]+\)/g, "$1").replace(/(:\w+)[?+*]/g, "$1").replace(/:\w+/g, (r) => {
     var _a;
@@ -2416,7 +2477,7 @@ const _sfc_main$6 = {
   }
 };
 function _sfc_ssrRender$4(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
-  const _component_font_awesome_icon = __nuxt_component_1;
+  const _component_font_awesome_icon = __nuxt_component_1$1;
   _push(`<a${ssrRenderAttrs(mergeProps({
     href: $props.link,
     target: "_blank"
@@ -2510,14 +2571,82 @@ _sfc_main$4.setup = (props, ctx) => {
   return _sfc_setup$4 ? _sfc_setup$4(props, ctx) : void 0;
 };
 const __nuxt_component_2 = /* @__PURE__ */ _export_sfc(_sfc_main$4, [["ssrRender", _sfc_ssrRender$2], ["__scopeId", "data-v-ce0ca63e"]]);
+const useAuthStore = defineStore("authentication", {
+  state() {
+    return {
+      isAuthenticated: false,
+      didCheckAuthentication: false,
+      userType: "guest",
+      requiresSession: false,
+      sessionLink: null
+    };
+  },
+  getters: {},
+  actions: {
+    async checkAuthentication() {
+      if (!this.didCheckAuthentication) {
+        const user = new PassageUser();
+        const userAuthToken = await user.getAuthToken();
+        var state = this;
+        await useFetch(
+          API_BASE + "auth/psg-auth/",
+          {
+            headers: {
+              Authorization: `Bearer ${userAuthToken}`
+            },
+            onResponse({ request, response, options }) {
+              state.userType = response._data.user_type;
+              state.requiresSession = response._data.requires_session;
+              state.didCheckAuthentication = true;
+            },
+            onResponseError({ request, response, options }) {
+              const store = useNotificationsStore();
+              store.postResponseError(response);
+            },
+            onRequestError({ request, options, error }) {
+              const store = useNotificationsStore();
+              store.addToast("Error fetching resource (request)", error);
+            }
+          },
+          "$JH8GhZEIT2"
+        );
+      }
+    },
+    async getSessionLink() {
+      const user = new PassageUser();
+      const userAuthToken = await user.getAuthToken();
+      const data = await $fetch(
+        API_BASE + "auth/session/",
+        {
+          headers: {
+            Authorization: `Bearer ${userAuthToken}`
+          }
+        }
+      );
+      return API_BASE + "auth/initiate/" + data.id + "/" + data.token + "/";
+    }
+  }
+});
 const _sfc_main$3 = {
-  name: "Footer"
+  name: "Footer",
+  setup() {
+    const authStore = useAuthStore();
+    return { authStore };
+  },
+  methods: {
+    async goToDjango() {
+      const sessionLink = await this.authStore.getSessionLink();
+      console.log(sessionLink);
+      await navigateTo(sessionLink, { external: true });
+      return;
+    }
+  }
 };
 function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
   const _component_RouterLink = resolveComponent("RouterLink");
   const _component_ExternalLinkInline = __nuxt_component_6$1;
   const _component_Card = __nuxt_component_2;
-  _push(`<footer${ssrRenderAttrs(mergeProps({ class: "footer text-light" }, _attrs))} data-v-d950ee69><div class="container" data-v-d950ee69><div class="row" data-v-d950ee69><div class="col-12 col-lg-4" data-v-d950ee69><h5 data-v-d950ee69>Pages</h5><hr data-v-d950ee69><ul style="${ssrRenderStyle({ "list-style": "none", "padding-left": "0" })}" data-v-d950ee69><li data-v-d950ee69>`);
+  _push(`<footer${ssrRenderAttrs(mergeProps({ class: "footer text-light" }, _attrs))} data-v-88301dea><div class="container" data-v-88301dea><div class="row" data-v-88301dea><div class="col-12 col-lg-4" data-v-88301dea><h5 data-v-88301dea>Pages</h5><hr data-v-88301dea><ul style="${ssrRenderStyle({ "list-style": "none", "padding-left": "0" })}" data-v-88301dea><li data-v-88301dea>`);
   _push(ssrRenderComponent(_component_RouterLink, {
     class: "text-light footer-link",
     to: "/people"
@@ -2533,7 +2662,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li data-v-d950ee69>`);
+  _push(`</li><li data-v-88301dea>`);
   _push(ssrRenderComponent(_component_RouterLink, {
     class: "text-light footer-link",
     to: "/parties"
@@ -2549,7 +2678,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li data-v-d950ee69>`);
+  _push(`</li><li data-v-88301dea>`);
   _push(ssrRenderComponent(_component_RouterLink, {
     class: "text-light footer-link",
     to: "/electorates"
@@ -2565,7 +2694,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li data-v-d950ee69>`);
+  _push(`</li><li data-v-88301dea>`);
   _push(ssrRenderComponent(_component_RouterLink, {
     class: "text-light footer-link",
     to: "/bills"
@@ -2581,7 +2710,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li data-v-d950ee69>`);
+  _push(`</li><li data-v-88301dea>`);
   _push(ssrRenderComponent(_component_RouterLink, {
     class: "text-light footer-link",
     to: "/votes"
@@ -2597,7 +2726,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li></ul></div><div class="col-12 col-lg-4" data-v-d950ee69><h5 data-v-d950ee69>About</h5><hr data-v-d950ee69><ul style="${ssrRenderStyle({ "list-style": "none", "padding-left": "0" })}" data-v-d950ee69><li data-v-d950ee69>`);
+  _push(`</li></ul></div><div class="col-12 col-lg-4" data-v-88301dea><h5 data-v-88301dea>About</h5><hr data-v-88301dea><ul style="${ssrRenderStyle({ "list-style": "none", "padding-left": "0" })}" data-v-88301dea><li data-v-88301dea>`);
   _push(ssrRenderComponent(_component_RouterLink, {
     class: "text-light footer-link",
     to: "/about"
@@ -2613,7 +2742,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li data-v-d950ee69><a class="text-light footer-link" href="/feedback" data-v-d950ee69>Feedback</a></li><li data-v-d950ee69><a class="text-light footer-link" href="/corrections" data-v-d950ee69>Corrections</a></li><li data-v-d950ee69>`);
+  _push(`</li><li data-v-88301dea><a class="text-light footer-link" href="/feedback" data-v-88301dea>Feedback</a></li><li data-v-88301dea><a class="text-light footer-link" href="/corrections" data-v-88301dea>Corrections</a></li><li data-v-88301dea>`);
   _push(ssrRenderComponent(_component_RouterLink, {
     class: "text-light footer-link",
     to: "/terms"
@@ -2629,7 +2758,29 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li></ul></div><div class="col-12 col-lg-4" data-v-d950ee69><h5 data-v-d950ee69>Social media</h5><hr data-v-d950ee69><ul style="${ssrRenderStyle({ "list-style": "none", "padding-left": "0" })}" data-v-d950ee69><li data-v-d950ee69>`);
+  _push(`</li><li data-v-88301dea>`);
+  _push(ssrRenderComponent(_component_ExternalLinkInline, {
+    class: "text-light footer-link",
+    link: "https://status.wheretheystand.nz"
+  }, {
+    default: withCtx((_, _push2, _parent2, _scopeId) => {
+      if (_push2) {
+        _push2(`System status`);
+      } else {
+        return [
+          createTextVNode("System status")
+        ];
+      }
+    }),
+    _: 1
+  }, _parent));
+  _push(`</li>`);
+  if ($setup.authStore.isAuthenticated && $setup.authStore.requiresSession) {
+    _push(`<li data-v-88301dea><a class="text-light footer-link" href="#" data-v-88301dea> Django </a></li>`);
+  } else {
+    _push(`<!---->`);
+  }
+  _push(`</ul></div><div class="col-12 col-lg-4" data-v-88301dea><h5 data-v-88301dea>Social media</h5><hr data-v-88301dea><ul style="${ssrRenderStyle({ "list-style": "none", "padding-left": "0" })}" data-v-88301dea><li data-v-88301dea>`);
   _push(ssrRenderComponent(_component_ExternalLinkInline, {
     class: "text-light footer-link",
     link: "https://twitter.com/wherestandnz"
@@ -2649,7 +2800,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
   _push(ssrRenderComponent(_component_Card, { gradient: true }, {
     default: withCtx((_, _push2, _parent2, _scopeId) => {
       if (_push2) {
-        _push2(`<h5 data-v-d950ee69${_scopeId}>Like WhereTheyStand?</h5> You can shout me a hot chocolate (or two).<br data-v-d950ee69${_scopeId}>`);
+        _push2(`<h5 data-v-88301dea${_scopeId}>Like WhereTheyStand?</h5> You can shout me a hot chocolate (or two).<br data-v-88301dea${_scopeId}>`);
         _push2(ssrRenderComponent(_component_ExternalLinkInline, {
           class: "text-light footer-link",
           link: "https://www.buymeacoffee.com/jamescmacey"
@@ -2686,7 +2837,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
   }, _parent));
   _push(`</ul></div></div>`);
   if (_ctx.$route.fullPath.length <= 1) {
-    _push(`<small data-v-d950ee69>`);
+    _push(`<small data-v-88301dea>`);
     _push(ssrRenderComponent(_component_ExternalLinkInline, {
       class: "text-light footer-link",
       link: "https://commons.wikimedia.org/wiki/File:Beehive_and_Parliament_House_in_New_Zealand.jpg"
@@ -2706,7 +2857,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
   } else {
     _push(`<!---->`);
   }
-  _push(`<hr data-v-d950ee69><h4 data-v-d950ee69><a class="footer-link text-light special-font" href="https://wheretheystand.nz" data-v-d950ee69>wheretheystand.nz</a></h4></div></footer>`);
+  _push(`<hr data-v-88301dea><h4 data-v-88301dea><a class="footer-link text-light special-font" href="https://wheretheystand.nz" data-v-88301dea>wheretheystand.nz</a></h4></div></footer>`);
 }
 const _sfc_setup$3 = _sfc_main$3.setup;
 _sfc_main$3.setup = (props, ctx) => {
@@ -2714,24 +2865,30 @@ _sfc_main$3.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/Footer.vue");
   return _sfc_setup$3 ? _sfc_setup$3(props, ctx) : void 0;
 };
-const __nuxt_component_6 = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["ssrRender", _sfc_ssrRender$1], ["__scopeId", "data-v-d950ee69"]]);
+const __nuxt_component_6 = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["ssrRender", _sfc_ssrRender$1], ["__scopeId", "data-v-88301dea"]]);
 const _sfc_main$2 = {
   name: "Toasts",
   setup() {
-    const notificationsStore = useNotificationsStore();
+    const notificationsStore = useNotificationsStore$1();
     return { notificationsStore };
   },
   methods: {
     closeToast(id) {
       this.notificationsStore.closeToast(id);
+    },
+    checkError(toast) {
+      if (toast.error && Object.keys(toast.error).length !== 0) {
+        throw createError(toast.error);
+      }
+      return "";
     }
   }
 };
 function _sfc_ssrRender(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
   if ($setup.notificationsStore.toasts.length > 0) {
-    _push(`<div${ssrRenderAttrs(mergeProps({ class: "toast-container position-absolute p-3 top-0 end-0" }, _attrs))} data-v-52d15d7c><!--[-->`);
+    _push(`<div${ssrRenderAttrs(mergeProps({ class: "toast-container position-absolute p-3 top-0 end-0" }, _attrs))} data-v-46111153><!--[-->`);
     ssrRenderList($setup.notificationsStore.toasts, (toast) => {
-      _push(`<div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-v-52d15d7c><div class="toast-header" data-v-52d15d7c><strong class="me-auto" data-v-52d15d7c>${ssrInterpolate(toast.title)}</strong><button type="button" class="btn-close" aria-label="Close" data-v-52d15d7c></button></div><div class="toast-body" data-v-52d15d7c>${ssrInterpolate(toast.message)}</div></div>`);
+      _push(`<div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-v-46111153><div class="toast-header" data-v-46111153>${ssrInterpolate($options.checkError(toast))} <strong class="me-auto" data-v-46111153>${ssrInterpolate(toast.title)}</strong><button type="button" class="btn-close" aria-label="Close" data-v-46111153></button></div><div class="toast-body" data-v-46111153>${ssrInterpolate(toast.message)}</div></div>`);
     });
     _push(`<!--]--></div>`);
   } else {
@@ -2744,7 +2901,7 @@ _sfc_main$2.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/Toasts.vue");
   return _sfc_setup$2 ? _sfc_setup$2(props, ctx) : void 0;
 };
-const __nuxt_component_7 = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["ssrRender", _sfc_ssrRender], ["__scopeId", "data-v-52d15d7c"]]);
+const __nuxt_component_7 = /* @__PURE__ */ _export_sfc(_sfc_main$2, [["ssrRender", _sfc_ssrRender], ["__scopeId", "data-v-46111153"]]);
 const _sfc_main$1 = {
   __name: "app",
   __ssrInlineRender: true,
@@ -2948,8 +3105,8 @@ const _sfc_main = {
   __name: "nuxt-root",
   __ssrInlineRender: true,
   setup(__props) {
-    const ErrorComponent = /* @__PURE__ */ defineAsyncComponent(() => import('./_nuxt/error-component-05bdb571.mjs').then((r) => r.default || r));
-    const IslandRenderer = /* @__PURE__ */ defineAsyncComponent(() => import('./_nuxt/island-renderer-5d0aa00b.mjs').then((r) => r.default || r));
+    const ErrorComponent = /* @__PURE__ */ defineAsyncComponent(() => import('./_nuxt/error-component-a88ab082.mjs').then((r) => r.default || r));
+    const IslandRenderer = /* @__PURE__ */ defineAsyncComponent(() => import('./_nuxt/island-renderer-ff0913a1.mjs').then((r) => r.default || r));
     const nuxtApp = useNuxtApp();
     nuxtApp.deferHydration();
     nuxtApp.ssrContext.url;
@@ -2992,7 +3149,7 @@ _sfc_main.setup = (props, ctx) => {
 };
 const RootComponent = _sfc_main;
 if (!globalThis.$fetch) {
-  globalThis.$fetch = $fetch.create({
+  globalThis.$fetch = $fetch$1.create({
     baseURL: baseURL()
   });
 }
@@ -3014,5 +3171,5 @@ const plugins = normalizePlugins(_plugins);
 }
 const entry$1 = (ctx) => entry(ctx);
 
-export { API_BASE as A, Head as H, Link as L, Meta as M, Title as T, _export_sfc as _, __nuxt_component_2 as a, __nuxt_component_6$1 as b, createError as c, __nuxt_component_0$1 as d, entry$1 as default, __nuxt_component_1 as e, defineStore as f, __nuxt_component_3 as g, useNotificationsStore as h, useHead as i, navigateTo as n, useFetch as u };
+export { API_BASE as A, Head as H, Link as L, Meta as M, Title as T, _export_sfc as _, __nuxt_component_2 as a, __nuxt_component_6$1 as b, createError as c, __nuxt_component_0$1 as d, entry$1 as default, __nuxt_component_1$1 as e, __nuxt_component_1 as f, defineStore as g, __nuxt_component_3 as h, useNotificationsStore$1 as i, useHead as j, navigateTo as n, useFetch as u };
 //# sourceMappingURL=server.mjs.map

@@ -34,6 +34,9 @@
             <a :class="[$route.fullPath.startsWith('/search/') ? 'active nav-link' : 'nav-link']" href="/search/" active-class="active">Search</a>
           </li>
         </ul>
+        <ClientOnly>
+            <AuthStatus></AuthStatus>
+          </ClientOnly>
       </div>
     </div>
   </nav>

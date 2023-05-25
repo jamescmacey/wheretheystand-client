@@ -1,5 +1,5 @@
 <template>
-    <a href="/api/client/random-redirect/">
+    <a v-on:click="randomise()" href="#">
         Or, go to a random page <FontAwesomeIcon v-if="!loading" :icon="['fas','arrow-right']"></FontAwesomeIcon><Spinner class="ms-1" v-if="loading"></Spinner>
     </a>
 </template>

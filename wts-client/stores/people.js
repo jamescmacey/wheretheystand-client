@@ -35,7 +35,7 @@ export const usePeopleStore = defineStore('people', {
         detailsByIdentifier: (state) => (id) => { return state.data.details[id] },
     },
     actions: {
-        async fetch(id) {
+        async fetch(id, fatalError = false) {
             if (!this.byIdentifier(id)) {
                 var state = this
                 await useFetch(API_BASE + 'people/' + id + '/', {
@@ -44,7 +44,7 @@ export const usePeopleStore = defineStore('people', {
                     },
                     onResponseError({ request, response, options }) {
                         const store = useNotificationsStore()
-                        store.postResponseError(response)
+                        store.postResponseError(response, fatalError)
                     },
                     onRequestError({ request, options, error }) {
                         const store = useNotificationsStore()

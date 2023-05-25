@@ -10,10 +10,16 @@ export default defineNuxtConfig({
     ],
     build: {
         //transpile: ['chart.js']
-        transpile: ['chart.js'] 
+        transpile: ['chart.js']
     },
     modules: [
         '@pinia/nuxt'
     ],
-    ssr: true
+    ssr: true,
+    vue: {
+        compilerOptions: {
+            // treat any tag that starts with passage- as custom elements
+            isCustomElement: (tag) => tag.startsWith('passage-'),
+        }
+    }
 })
