@@ -5,8 +5,8 @@
         <h4>Financial interests</h4>
         <p>Each year, Members of Parliament are required to declare their financial interests, along with other specified interests.</p>
         <p>This page shows all the interests that {{ person.display_name }} declared when the register was last compiled. From time to time, amendments are also made and are incorporated into the list you see here.</p>
-        <ExternalLinkButton link="https://www.parliament.nz/en/mps-and-electorates/mps-financial-interests/" text="Learn more on the Parliament website"></ExternalLinkButton>
-        <Card v-if="interests && interests != {}">
+        <ExternalLinkButton link="https://www.parliament.nz/en/mps-and-electorates/members-financial-interests/" text="Learn more on the Parliament website"></ExternalLinkButton>
+        <Card v-if="interests && (Object.keys(interests).length !== 0)">
           <h5>Interests for {{ person.display_name }} as at {{ formattedReportDate }}</h5>
           <div v-for="i in 12" :key="i">
             <div v-if="interestsForType(i).length">
@@ -48,9 +48,11 @@ export default {
   },
   methods: {
     interestsForType (type) {
-      return this.interests.interests.filter((element) => {
-        return (element.type === type.toString())
-      })
+      if (this.interests && (Object.keys(this.interests).length !== 0)) {
+        return this.interests.interests.filter((element) => {
+          return (element.type === type.toString())
+        })
+      } else { return []}
     },
     interestTypeDescription (type) {
       return {
@@ -82,10 +84,13 @@ export default {
       return this.peopleStore.interestsByIdentifier(this.$route.params.id)
     },
     formattedReportDate () {
-      return format(parse(this.interests.filing_date, 'yyyy-MM-dd', new Date()), 'd MMMM yyyy')
+      if (this.interests && (Object.keys(this.interests).length !== 0)) { 
+        console.log(this.interests)
+        return format(parse(this.interests.filing_date, 'yyyy-MM-dd', new Date()), 'd MMMM yyyy')
+      } else { return "" }
     },
     hasChangedDebt () {
-      if (this.interests) {
+      if (this.interests && (Object.keys(this.interests).length !== 0)) {
         return this.interests.interests.filter((element) => {
           return (element.description.endsWith('*'))
         })

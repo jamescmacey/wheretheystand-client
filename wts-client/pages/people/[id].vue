@@ -36,9 +36,7 @@ export default {
     
   },
   created() {
-    this.peopleStore.fetch(this.$route.params.id).then(function(response) {
-    })
-    
+    this.peopleStore.fetch(this.$route.params.id, true)
   },
   computed: {
     links() {

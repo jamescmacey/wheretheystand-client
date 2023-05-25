@@ -37,6 +37,14 @@
               <li>
                 <RouterLink class="text-light footer-link" to="/terms">Copyright and Privacy</RouterLink>
               </li>
+              <li>
+                <ExternalLinkInline class="text-light footer-link" link="https://status.wheretheystand.nz">System status</ExternalLinkInline>
+              </li>
+              <li v-if="authStore.isAuthenticated && authStore.requiresSession">
+                <a class="text-light footer-link" v-on:click="goToDjango()" href="#">
+                  Django
+                </a>
+              </li>
             </ul>
           </div>
           <div class="col-12 col-lg-4">
@@ -87,8 +95,24 @@
 }
 </style>
 
+
 <script>
+import { useAuthStore } from '../stores/auth'
+
 export default {
-  name: 'Footer'
+  name: 'Footer',
+  setup () {
+    const authStore = useAuthStore();
+    return { authStore }
+  },
+  methods: {
+    async goToDjango() {
+      const sessionLink = await this.authStore.getSessionLink()
+      console.log(sessionLink)
+      await navigateTo(sessionLink, { external: true })
+      return
+    }
+  }
 }
+
 </script>

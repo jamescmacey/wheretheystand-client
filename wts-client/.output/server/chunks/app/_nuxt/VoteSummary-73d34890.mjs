@@ -1,4 +1,4 @@
-import { _ as _export_sfc, e as __nuxt_component_1, a as __nuxt_component_2 } from '../server.mjs';
+import { _ as _export_sfc, e as __nuxt_component_1$1, a as __nuxt_component_2 } from '../server.mjs';
 import { mergeProps, useSSRContext, withCtx, openBlock, createBlock, createVNode, toDisplayString, createTextVNode, createCommentVNode } from 'vue';
 import { ssrRenderAttrs, ssrRenderComponent, ssrInterpolate } from 'vue/server-renderer';
 import { format, parse } from 'date-fns';
@@ -72,7 +72,7 @@ const _sfc_main$1 = {
   }
 };
 function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
-  const _component_font_awesome_icon = __nuxt_component_1;
+  const _component_font_awesome_icon = __nuxt_component_1$1;
   _push(`<a${ssrRenderAttrs(mergeProps({
     href: $options.link,
     class: "me-2",

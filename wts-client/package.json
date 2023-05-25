@@ -23,6 +23,7 @@
     "@fortawesome/free-brands-svg-icons": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/vue-fontawesome": "^3.0.3",
+    "@passageidentity/passage-elements": "^1.5.1",
     "@pinia/nuxt": "^0.4.8",
     "bootstrap": "^5.2.3",
     "color-harmony": "^0.3.0",

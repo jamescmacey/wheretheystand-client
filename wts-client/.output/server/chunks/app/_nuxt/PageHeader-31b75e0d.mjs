@@ -1,4 +1,4 @@
-import { _ as _export_sfc, H as Head, T as Title, d as __nuxt_component_0$1, e as __nuxt_component_1 } from '../server.mjs';
+import { _ as _export_sfc, H as Head, T as Title, d as __nuxt_component_0$1, e as __nuxt_component_1$1 } from '../server.mjs';
 import { Harmonizer } from 'color-harmony';
 import { format, parse } from 'date-fns';
 import { withCtx, createTextVNode, toDisplayString, createVNode, useSSRContext } from 'vue';
@@ -66,7 +66,7 @@ function _sfc_ssrRender(_ctx, _push, _parent, _attrs, $props, $setup, $data, $op
   const _component_Head = Head;
   const _component_Title = Title;
   const _component_NuxtLink = __nuxt_component_0$1;
-  const _component_FontAwesomeIcon = __nuxt_component_1;
+  const _component_FontAwesomeIcon = __nuxt_component_1$1;
   _push(`<div${ssrRenderAttrs(_attrs)} data-v-e962b025>`);
   _push(ssrRenderComponent(_component_Head, null, {
     default: withCtx((_, _push2, _parent2, _scopeId) => {
