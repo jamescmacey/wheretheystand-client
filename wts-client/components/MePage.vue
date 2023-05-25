@@ -8,11 +8,6 @@
                     <ClientOnly>
                         <h5>Your details</h5>
                         <strong>Email address: </strong> {{ username }}
-                        <hr>
-                        <ul class="property-list">
-                            <li v-if="firstName.length > 1"><strong>First name: </strong>{{ firstName}}</li>
-                            <li v-if="lastName.length > 1"><strong>Surname: </strong>{{ lastName }}</li>
-                        </ul>
                         <h5>Passkeys</h5>
                         <WebauthnDevice v-for="device in webauthnDevices" :key="device.id" :device="device"></WebauthnDevice>
                     </ClientOnly>
@@ -110,13 +105,11 @@ passage-profile {
 export default {
     name: 'MePage',
     setup() {
-        const { isLoading, isAuthorized, username, firstName, lastName, webauthnDevices } = useAuthStatus()
+        const { isLoading, isAuthorized, username, webauthnDevices } = useAuthStatus()
         return {
             isLoading,
             isAuthorized,
             username,
-            firstName,
-            lastName,
             webauthnDevices
         }
     }

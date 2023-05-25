@@ -3,7 +3,7 @@
         <NuxtLink :class="[$route.fullPath.startsWith('/me/') ? 'active nav-link' : 'nav-link']" to="/me/"
             active-class="active">
             <FontAwesomeIcon class="me-1" :icon="['fas', 'user-circle']">
-            </FontAwesomeIcon> {{ firstName }}
+            </FontAwesomeIcon>
         </NuxtLink>
 
     </div>
@@ -31,14 +31,12 @@ export default {
     name: 'AuthStatus',
     setup() {
         const authStore = useAuthStore();
-        const { isLoading, isAuthorized, username, firstName, lastName } = useAuthStatus()
+        const { isLoading, isAuthorized, username, webauthnDevices } = useAuthStatus()
 
         return {
             isLoading,
             isAuthorized,
             username,
-            firstName,
-            lastName,
             authStore
         }
     },
