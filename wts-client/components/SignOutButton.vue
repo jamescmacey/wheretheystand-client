@@ -20,13 +20,11 @@ import { PassageUser } from '@passageidentity/passage-elements/passage-user'
 export default {
     name: 'SignOutButton',
     setup() {
-        const { isLoading, isAuthorized, username, firstName, lastName } = useAuthStatus()
+        const { isLoading, isAuthorized, username } = useAuthStatus()
         return {
             isLoading,
             isAuthorized,
-            username,
-            firstName,
-            lastName,
+            username
         }
     },
     methods: {
