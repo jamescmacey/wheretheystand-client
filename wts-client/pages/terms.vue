@@ -72,6 +72,10 @@
             <p>
               If you find that you are listed as voting in a way contrary to the way you actually voted, first check that the original Hansard accurately records your position. If it does, and it is still wrong on WhereTheyStand, please get in touch to correct this.
             </p>
+            <h5>Privacy for parties</h5>
+            <p>WhereTheyStand operates a party communication archive, called Venus, which stores all subscriber emails your party sends to it. In the future this archive will be public.</p>
+            <p>In the event that an email containing personal information is inadvertently sent, that email may show on WhereTheyStand—if this is the case, please get in touch and this will be manually edited out.</p>
+            <p>No edits will be made where they do not relate to privacy, safety, or compliance with the law.</p>
           </Card>
         </div>
       </div>
