@@ -79,6 +79,7 @@ a:hover {
   --wts-body: "Open Sans", "Arial", sans-serif;
   --wts-display: "Mulish", "Open Sans", "Arial", sans-serif;
   --wts-card-bg: white;
+  --wts-card-bg-hover: rgb(230, 230, 230);
   /*--wts-card-border-radius: 0px;*/
   --wts-card-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   /*--wts-card-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);*/

@@ -7,7 +7,7 @@
                     <Card>
                         <ClientOnly>
                         <div class="authContainer">
-                            <passage-auth :app-id="'RqTRCEafMhvh0y4p1LqTMQyB'"></passage-auth>
+                            <passage-auth :app-id="'nNhe5mvU7MJOerfpIj77EVb5'"></passage-auth>
                         </div>
                         </ClientOnly>
                     </Card>

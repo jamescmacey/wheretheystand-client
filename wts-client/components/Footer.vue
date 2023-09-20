@@ -19,6 +19,11 @@
               <li>
                 <RouterLink class="text-light footer-link" to="/votes">Votes</RouterLink>
               </li>
+              <!--
+              <li>
+                <RouterLink class="text-light footer-link" to="/ministerial-lists">Ministerial Lists</RouterLink>
+              </li>
+              -->
             </ul>
           </div>
           <div class="col-12 col-lg-4">
@@ -45,6 +50,9 @@
                   Django
                 </a>
               </li>
+              <li v-else-if="authStore.isAuthenticated">
+                <NuxtLink class="text-light footer-link" to="/auth">Admin</NuxtLink>
+              </li>
             </ul>
           </div>
           <div class="col-12 col-lg-4">
@@ -52,7 +60,7 @@
             <hr />
             <ul style="list-style: none; padding-left: 0">
               <li>
-                <ExternalLinkInline class="text-light footer-link" link="https://twitter.com/wherestandnz">Twitter</ExternalLinkInline>
+                <ExternalLinkInline class="text-light footer-link" link="https://x.com/wheretheystand_">X (Twitter)</ExternalLinkInline>
               </li>
               <Card :gradient='true'>
                 <h5>Like WhereTheyStand?</h5>
