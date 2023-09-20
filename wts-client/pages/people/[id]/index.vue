@@ -44,7 +44,7 @@
       <div class="row">
         <div class="col-12">
           <h4>Bills responsible for</h4>
-          <p v-if="bills && bills.length === 0" class="col-12 col-lg-8"><FontAwesomeIcon :icon="['fas', 'info-circle']"></FontAwesomeIcon> {{ person.display_name }} hasn't sponsored any bills. This doesn't include any member's bills that they might have sitting in the 'biscut tin' which haven't been drawn yet.</p>
+          <p v-if="bills && bills.length === 0" class="col-12 col-lg-8"><FontAwesomeIcon :icon="['fas', 'info-circle']"></FontAwesomeIcon> {{ person.display_name }} hasn't sponsored any bills. This doesn't include any member's bills that they might have sitting in the 'biscuit tin' which haven't been drawn yet.</p>
           <p v-else-if="!bills"><Spinner></Spinner> Loading...</p>
           <div v-if="bills" class="row">
             <div v-for="bill in bills.slice(0, billCount)" class="col-12 col-md-6" :key="bill.id">

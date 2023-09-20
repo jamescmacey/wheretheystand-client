@@ -1485,7 +1485,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/auth-0ccddcf9.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/auth-6e4a990b.mjs').then((m) => m.default || m)
   },
   {
     name: "bills-id",
@@ -1517,7 +1517,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/index-bfeeff36.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index-e0dc732c.mjs').then((m) => m.default || m)
   },
   {
     name: "index",
@@ -1578,7 +1578,7 @@ const _routes = [
         meta: {},
         alias: [],
         redirect: void 0,
-        component: () => import('./_nuxt/details-9222aff6.mjs').then((m) => m.default || m)
+        component: () => import('./_nuxt/details-df180ab6.mjs').then((m) => m.default || m)
       },
       {
         name: "people-id-expenses",
@@ -1594,7 +1594,7 @@ const _routes = [
         meta: {},
         alias: [],
         redirect: void 0,
-        component: () => import('./_nuxt/index-f5c3cc18.mjs').then((m) => m.default || m)
+        component: () => import('./_nuxt/index-4f49ae48.mjs').then((m) => m.default || m)
       },
       {
         name: "people-id-interests",
@@ -1625,7 +1625,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/terms-865e4e06.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/terms-e8165b12.mjs').then((m) => m.default || m)
   },
   {
     name: "votes-id",
@@ -2645,8 +2645,9 @@ const _sfc_main$3 = {
 function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $options) {
   const _component_RouterLink = resolveComponent("RouterLink");
   const _component_ExternalLinkInline = __nuxt_component_6$1;
+  const _component_NuxtLink = __nuxt_component_0$1;
   const _component_Card = __nuxt_component_2;
-  _push(`<footer${ssrRenderAttrs(mergeProps({ class: "footer text-light" }, _attrs))} data-v-88301dea><div class="container" data-v-88301dea><div class="row" data-v-88301dea><div class="col-12 col-lg-4" data-v-88301dea><h5 data-v-88301dea>Pages</h5><hr data-v-88301dea><ul style="${ssrRenderStyle({ "list-style": "none", "padding-left": "0" })}" data-v-88301dea><li data-v-88301dea>`);
+  _push(`<footer${ssrRenderAttrs(mergeProps({ class: "footer text-light" }, _attrs))} data-v-936f2948><div class="container" data-v-936f2948><div class="row" data-v-936f2948><div class="col-12 col-lg-4" data-v-936f2948><h5 data-v-936f2948>Pages</h5><hr data-v-936f2948><ul style="${ssrRenderStyle({ "list-style": "none", "padding-left": "0" })}" data-v-936f2948><li data-v-936f2948>`);
   _push(ssrRenderComponent(_component_RouterLink, {
     class: "text-light footer-link",
     to: "/people"
@@ -2662,7 +2663,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li data-v-88301dea>`);
+  _push(`</li><li data-v-936f2948>`);
   _push(ssrRenderComponent(_component_RouterLink, {
     class: "text-light footer-link",
     to: "/parties"
@@ -2678,7 +2679,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li data-v-88301dea>`);
+  _push(`</li><li data-v-936f2948>`);
   _push(ssrRenderComponent(_component_RouterLink, {
     class: "text-light footer-link",
     to: "/electorates"
@@ -2694,7 +2695,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li data-v-88301dea>`);
+  _push(`</li><li data-v-936f2948>`);
   _push(ssrRenderComponent(_component_RouterLink, {
     class: "text-light footer-link",
     to: "/bills"
@@ -2710,7 +2711,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li data-v-88301dea>`);
+  _push(`</li><li data-v-936f2948>`);
   _push(ssrRenderComponent(_component_RouterLink, {
     class: "text-light footer-link",
     to: "/votes"
@@ -2726,7 +2727,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li></ul></div><div class="col-12 col-lg-4" data-v-88301dea><h5 data-v-88301dea>About</h5><hr data-v-88301dea><ul style="${ssrRenderStyle({ "list-style": "none", "padding-left": "0" })}" data-v-88301dea><li data-v-88301dea>`);
+  _push(`</li></ul></div><div class="col-12 col-lg-4" data-v-936f2948><h5 data-v-936f2948>About</h5><hr data-v-936f2948><ul style="${ssrRenderStyle({ "list-style": "none", "padding-left": "0" })}" data-v-936f2948><li data-v-936f2948>`);
   _push(ssrRenderComponent(_component_RouterLink, {
     class: "text-light footer-link",
     to: "/about"
@@ -2742,7 +2743,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li data-v-88301dea><a class="text-light footer-link" href="/feedback" data-v-88301dea>Feedback</a></li><li data-v-88301dea><a class="text-light footer-link" href="/corrections" data-v-88301dea>Corrections</a></li><li data-v-88301dea>`);
+  _push(`</li><li data-v-936f2948><a class="text-light footer-link" href="/feedback" data-v-936f2948>Feedback</a></li><li data-v-936f2948><a class="text-light footer-link" href="/corrections" data-v-936f2948>Corrections</a></li><li data-v-936f2948>`);
   _push(ssrRenderComponent(_component_RouterLink, {
     class: "text-light footer-link",
     to: "/terms"
@@ -2758,7 +2759,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
     }),
     _: 1
   }, _parent));
-  _push(`</li><li data-v-88301dea>`);
+  _push(`</li><li data-v-936f2948>`);
   _push(ssrRenderComponent(_component_ExternalLinkInline, {
     class: "text-light footer-link",
     link: "https://status.wheretheystand.nz"
@@ -2776,21 +2777,39 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
   }, _parent));
   _push(`</li>`);
   if ($setup.authStore.isAuthenticated && $setup.authStore.requiresSession) {
-    _push(`<li data-v-88301dea><a class="text-light footer-link" href="#" data-v-88301dea> Django </a></li>`);
+    _push(`<li data-v-936f2948><a class="text-light footer-link" href="#" data-v-936f2948> Django </a></li>`);
+  } else if ($setup.authStore.isAuthenticated) {
+    _push(`<li data-v-936f2948>`);
+    _push(ssrRenderComponent(_component_NuxtLink, {
+      class: "text-light footer-link",
+      to: "/auth"
+    }, {
+      default: withCtx((_, _push2, _parent2, _scopeId) => {
+        if (_push2) {
+          _push2(`Admin`);
+        } else {
+          return [
+            createTextVNode("Admin")
+          ];
+        }
+      }),
+      _: 1
+    }, _parent));
+    _push(`</li>`);
   } else {
     _push(`<!---->`);
   }
-  _push(`</ul></div><div class="col-12 col-lg-4" data-v-88301dea><h5 data-v-88301dea>Social media</h5><hr data-v-88301dea><ul style="${ssrRenderStyle({ "list-style": "none", "padding-left": "0" })}" data-v-88301dea><li data-v-88301dea>`);
+  _push(`</ul></div><div class="col-12 col-lg-4" data-v-936f2948><h5 data-v-936f2948>Social media</h5><hr data-v-936f2948><ul style="${ssrRenderStyle({ "list-style": "none", "padding-left": "0" })}" data-v-936f2948><li data-v-936f2948>`);
   _push(ssrRenderComponent(_component_ExternalLinkInline, {
     class: "text-light footer-link",
-    link: "https://twitter.com/wherestandnz"
+    link: "https://x.com/wheretheystand_"
   }, {
     default: withCtx((_, _push2, _parent2, _scopeId) => {
       if (_push2) {
-        _push2(`Twitter`);
+        _push2(`X (Twitter)`);
       } else {
         return [
-          createTextVNode("Twitter")
+          createTextVNode("X (Twitter)")
         ];
       }
     }),
@@ -2800,7 +2819,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
   _push(ssrRenderComponent(_component_Card, { gradient: true }, {
     default: withCtx((_, _push2, _parent2, _scopeId) => {
       if (_push2) {
-        _push2(`<h5 data-v-88301dea${_scopeId}>Like WhereTheyStand?</h5> You can shout me a hot chocolate (or two).<br data-v-88301dea${_scopeId}>`);
+        _push2(`<h5 data-v-936f2948${_scopeId}>Like WhereTheyStand?</h5> You can shout me a hot chocolate (or two).<br data-v-936f2948${_scopeId}>`);
         _push2(ssrRenderComponent(_component_ExternalLinkInline, {
           class: "text-light footer-link",
           link: "https://www.buymeacoffee.com/jamescmacey"
@@ -2837,7 +2856,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
   }, _parent));
   _push(`</ul></div></div>`);
   if (_ctx.$route.fullPath.length <= 1) {
-    _push(`<small data-v-88301dea>`);
+    _push(`<small data-v-936f2948>`);
     _push(ssrRenderComponent(_component_ExternalLinkInline, {
       class: "text-light footer-link",
       link: "https://commons.wikimedia.org/wiki/File:Beehive_and_Parliament_House_in_New_Zealand.jpg"
@@ -2857,7 +2876,7 @@ function _sfc_ssrRender$1(_ctx, _push, _parent, _attrs, $props, $setup, $data, $
   } else {
     _push(`<!---->`);
   }
-  _push(`<hr data-v-88301dea><h4 data-v-88301dea><a class="footer-link text-light special-font" href="https://wheretheystand.nz" data-v-88301dea>wheretheystand.nz</a></h4></div></footer>`);
+  _push(`<hr data-v-936f2948><h4 data-v-936f2948><a class="footer-link text-light special-font" href="https://wheretheystand.nz" data-v-936f2948>wheretheystand.nz</a></h4></div></footer>`);
 }
 const _sfc_setup$3 = _sfc_main$3.setup;
 _sfc_main$3.setup = (props, ctx) => {
@@ -2865,7 +2884,7 @@ _sfc_main$3.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/Footer.vue");
   return _sfc_setup$3 ? _sfc_setup$3(props, ctx) : void 0;
 };
-const __nuxt_component_6 = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["ssrRender", _sfc_ssrRender$1], ["__scopeId", "data-v-88301dea"]]);
+const __nuxt_component_6 = /* @__PURE__ */ _export_sfc(_sfc_main$3, [["ssrRender", _sfc_ssrRender$1], ["__scopeId", "data-v-936f2948"]]);
 const _sfc_main$2 = {
   name: "Toasts",
   setup() {

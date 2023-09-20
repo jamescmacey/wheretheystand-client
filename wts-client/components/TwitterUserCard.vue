@@ -1,6 +1,6 @@
 <template>
     <Card>
-      <h5>Twitter account</h5>
+      <h5>X (Twitter) account</h5>
       <a :href="user.profile_url" target="_blank">
         <h6><font-awesome-icon :icon="['fab', 'twitter']"></font-awesome-icon> @{{ user.username }}</h6>
       </a>
@@ -23,14 +23,14 @@
       <h6>Chart settings</h6>
       <div class="row">
         <div class="col-12 col-md-6">
-          <select class="form-select col-12 mb-3" aria-label="Twitter metric type" v-model="activeDataset">
+          <select class="form-select col-12 mb-3" aria-label="X (Twitter) metric type" v-model="activeDataset">
             <option selected value="followers">Followers</option>
             <option value="following">Following</option>
             <option value="tweets">Tweets</option>
           </select>
         </div>
         <div class="col-12 col-md-6 mb-3">
-          <select class="form-select col-12" aria-label="Twitter graph type" v-model="mode">
+          <select class="form-select col-12" aria-label="X (Twitter) graph type" v-model="mode">
             <option selected value="raw">Raw counts</option>
             <option value="percent_change">Percentage daily change</option>
             <option value="number_change">Numeric daily change</option>
@@ -39,6 +39,7 @@
       </div>
       <ScatterChart v-if="user.time_series.length" :chartData="chartData" :options="chartOptions"></ScatterChart>
       <p class="text-muted" v-if="mode === 'number_change'">Since measurements cannot be taken at exactly the same time each day, you may find that daily changes do not show as whole numbers; this is because they are calculated based on the growth over the actual interval between measurements.</p>
+      <p class="text-muted">X (Twitter) changed its API access terms in 2023 which has stopped routine statistics tracking. While the future of this feature is being evaluated, it is disabled.</p>
     </Card>
 </template>
 

@@ -6,7 +6,7 @@
       
             <div class="col-12">
                 <h4>New Zealand has 72 electoral districts, commonly known as electorates.</h4>
-                <p>There are 65 general electorates and 7 Māori electorates. The number, sizes, shapes, and names of these electorates are determined by the Representation Commission after each Census in accordance with requirements set out in the Electoral Act 1993. Generally, this means that the electorate boundaries are reviewed every eight years, or after every second general election.</p>
+                <p>There are 65 general electorates and 7 Māori electorates. The number, sizes, shapes, and names of these electorates are determined by the Representation Commission after each Census in accordance with requirements set out in the Electoral Act 1993. Generally, this means that the electorate boundaries are reviewed every five years, or after every second general election.</p>
                 <p>At an election, voters cast a vote for a candidate who is contesting the electorate they live in. Whichever candidate receives the most votes (a plurality) becomes that electorate's Member of Parliament. In a general election, voters also cast a vote for their preferred political party; this vote determines how the remaining seats in Parliament (usually another 48 seats) are filled.</p>
                 <ExternalLinkButton link="https://vote.nz/enrolling/get-ready-to-enrol/find-your-electorate-on-a-map/" text="Find your electorate on a map"></ExternalLinkButton>
                 <ExternalLinkButton link="https://elections.nz/democracy-in-nz/historical-events/boundary-review-2019-2020/" text="Learn about the 2019-2020 Electorate Boundary Review"></ExternalLinkButton>
