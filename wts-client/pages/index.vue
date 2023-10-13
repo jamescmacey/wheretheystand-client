@@ -77,9 +77,15 @@
           <h4>Elections</h4>
           <Card>
             <div class="election">
+              <h5>2023 General Election</h5>
+              <span>14 October 2023</span><br>
+              <ExternalLinkInline link="https://elections.wheretheystand.nz">Interactive results
+              </ExternalLinkInline>
+            </div>
+            <div class="election">
               <h5>2022 Hamilton West by-election</h5>
               <span>10 December 2022</span><br>
-              <ExternalLinkInline link="https://election.wheretheystand.nz">Interactive results</ExternalLinkInline>
+              <ExternalLinkInline link="https://hamilton-west.election.wheretheystand.nz">Interactive results</ExternalLinkInline>
             </div>
             <hr>
             <div class="election">

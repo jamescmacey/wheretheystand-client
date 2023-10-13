@@ -3,7 +3,7 @@
 
     <Head>
       <Meta name="twitter:card" content="summary" />
-      <Meta name="twitter:site" content="@wherestandnz" />
+      <Meta name="twitter:site" content="@wheretheystand_" />
       <Meta name="twitter:title" content="WhereTheyStand" />
       <Meta name="twitter:description" content="See where your MP stands at wheretheystand.nz" />
       <Meta property="og:site_name" content="WhereTheyStand" />
@@ -44,7 +44,7 @@ import { useNotificationsStore } from './stores/notifications';
 
 useHead({
   titleTemplate: (titleChunk) => {
-    return titleChunk ? `${titleChunk} - WhereTheyStand` : 'WhereTheyStand';
+    return titleChunk ? `${titleChunk} — WhereTheyStand` : 'WhereTheyStand';
   },
   meta: [
     { name: 'description', content: 'WhereTheyStand aggregates and links information about Members of Parliament and political parties, allowing you to find relevant information easily.' }

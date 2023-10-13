@@ -1509,7 +1509,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/index-bcc1f23e.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index-a22e811e.mjs').then((m) => m.default || m)
   },
   {
     name: "electorates",
@@ -1525,7 +1525,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/index-cdb2ea56.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index-9a55507c.mjs').then((m) => m.default || m)
   },
   {
     name: "me",
@@ -1534,6 +1534,22 @@ const _routes = [
     alias: [],
     redirect: void 0,
     component: () => import('./_nuxt/me-7ba0309c.mjs').then((m) => m.default || m)
+  },
+  {
+    name: "ministerial-lists-id",
+    path: "/ministerial-lists/:id()",
+    meta: {},
+    alias: [],
+    redirect: void 0,
+    component: () => import('./_nuxt/index-b8869e8d.mjs').then((m) => m.default || m)
+  },
+  {
+    name: "ministerial-lists",
+    path: "/ministerial-lists",
+    meta: {},
+    alias: [],
+    redirect: void 0,
+    component: () => import('./_nuxt/index-97110595.mjs').then((m) => m.default || m)
   },
   {
     path: "/parties/:id()",
@@ -1609,7 +1625,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/_id_-5e1b99cf.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/_id_-fab0f123.mjs').then((m) => m.default || m)
   },
   {
     name: "people",
@@ -2927,7 +2943,7 @@ const _sfc_main$1 = {
   setup(__props) {
     useHead({
       titleTemplate: (titleChunk) => {
-        return titleChunk ? `${titleChunk} - WhereTheyStand` : "WhereTheyStand";
+        return titleChunk ? `${titleChunk} — WhereTheyStand` : "WhereTheyStand";
       },
       meta: [
         { name: "description", content: "WhereTheyStand aggregates and links information about Members of Parliament and political parties, allowing you to find relevant information easily." }
@@ -2952,7 +2968,7 @@ const _sfc_main$1 = {
             }, null, _parent2, _scopeId));
             _push2(ssrRenderComponent(_component_Meta, {
               name: "twitter:site",
-              content: "@wherestandnz"
+              content: "@wheretheystand_"
             }, null, _parent2, _scopeId));
             _push2(ssrRenderComponent(_component_Meta, {
               name: "twitter:title",
@@ -3028,7 +3044,7 @@ const _sfc_main$1 = {
               }),
               createVNode(_component_Meta, {
                 name: "twitter:site",
-                content: "@wherestandnz"
+                content: "@wheretheystand_"
               }),
               createVNode(_component_Meta, {
                 name: "twitter:title",
