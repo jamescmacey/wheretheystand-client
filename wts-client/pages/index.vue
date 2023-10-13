@@ -82,6 +82,7 @@
               <ExternalLinkInline link="https://elections.wheretheystand.nz">Interactive results
               </ExternalLinkInline>
             </div>
+            <hr>
             <div class="election">
               <h5>2022 Hamilton West by-election</h5>
               <span>10 December 2022</span><br>
