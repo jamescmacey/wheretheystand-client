@@ -9,7 +9,7 @@
         <Meta property="og:image" :content="person.image" />
         <Meta name="twitter:card" content="summary" />
 
-    <Meta name="twitter:site" content="@wherestandnz" />
+    <Meta name="twitter:site" content="@wheretheystand_" />
     <Meta name="twitter:title" :content="person.display_name + ' - WhereTheyStand'" />
     <Meta name="twitter:description" :content="person.description" />
 
