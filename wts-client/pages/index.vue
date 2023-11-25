@@ -77,6 +77,13 @@
           <h4>Elections</h4>
           <Card>
             <div class="election">
+              <h5>2023 Port Waikato by-election</h5>
+              <span>25 November 2023</span><br>
+              <ExternalLinkInline link="https://port-waikato.election.wheretheystand.nz">Interactive results
+              </ExternalLinkInline>
+            </div>
+            <hr>
+            <div class="election">
               <h5>2023 General Election</h5>
               <span>14 October 2023</span><br>
               <ExternalLinkInline link="https://elections.wheretheystand.nz">Interactive results
