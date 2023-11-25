@@ -8,7 +8,7 @@
           <Card>
             <h5>Original content</h5>
             <p>Original content on WhereTheyStand is licensed under a <ExternalLinkInline link="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International Licence.</ExternalLinkInline></p>
-            <p>This excludes the interactive election results available at <ExternalLinkInline link="https://election.wheretheystand.nz">election.wheretheystand.nz</ExternalLinkInline> and at <ExternalLinkInline link="https://tauranga.election.wheretheystand.nz">tauranga.election.wheretheystand.nz</ExternalLinkInline>. While the election results themselves are not subject to copyright, and the mapping contained in the interactive maps belongs to another copyright holder, copyright is retained in the election results interface.</p>
+            <p>This excludes WhereTheyStand's interactive election results sites for by-elections and general elections. While the election results themselves are not subject to copyright, and the mapping contained in the interactive maps belongs to another copyright holder, copyright is retained in the election results interface.</p>
           
             <h5>Third-party content</h5>
             <p>Much of the content on WhereTheyStand is not original. As a rule, you should assume that full copyright is retained in all non-original content (either by me or the original copyright holder) and ask before reuse.</p>

@@ -10,9 +10,10 @@
                 <p>At an election, voters cast a vote for a candidate who is contesting the electorate they live in. Whichever candidate receives the most votes (a plurality) becomes that electorate's Member of Parliament. In a general election, voters also cast a vote for their preferred political party; this vote determines how the remaining seats in Parliament (usually another 48 seats) are filled.</p>
                 <ExternalLinkButton link="https://vote.nz/enrolling/get-ready-to-enrol/find-your-electorate-on-a-map/" text="Find your electorate on a map"></ExternalLinkButton>
                 <ExternalLinkButton link="https://elections.nz/democracy-in-nz/historical-events/boundary-review-2019-2020/" text="Learn about the 2019-2020 Electorate Boundary Review"></ExternalLinkButton>
-                <p>By-elections are special, one-off elections that take place in an electorate outside the normal election cycle. These happen when an electorate MP leaves Parliament early, usually by resigning, and a new electorate MP needs to be elected to replace them. In 2022, there were two by-elections: one in Tauranga, and one in Hamilton West.</p>
+                <p>By-elections are special, one-off elections that take place in an electorate outside the normal election cycle. These happen when an electorate MP leaves Parliament early, usually by resigning, and a new electorate MP needs to be elected to replace them. In 2022, there were two by-elections: one in Tauranga, and one in Hamilton West. In 2023, there was a by-election in Port Waikato.</p>
                 <ExternalLinkButton link="https://tauranga.election.wheretheystand.nz/" text="View Tauranga by-election results (June 2022)"></ExternalLinkButton>
                 <ExternalLinkButton link="https://hamilton-west.election.wheretheystand.nz/" text="View Hamilton West by-election results (December 2022)"></ExternalLinkButton>
+                <ExternalLinkButton link="https://port-waikato.election.wheretheystand.nz/" text="View Port Waikato by-election results (November 2023)"></ExternalLinkButton>
                 <h5 class="mt-3">Current electorates</h5>
                 <div class="row">
                     <div v-for="(electorate, i) in electorates" :key="electorate.id" class="col-12 col-md-6 col-lg-4 col-xl-3">
