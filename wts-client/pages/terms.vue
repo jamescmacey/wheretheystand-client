@@ -4,6 +4,11 @@
     <div class="container">
       <div class="row mt-3">
         <div class="col-12">
+          <h4>Amendments</h4>
+          <Card>
+            <h5>February 2024</h5>
+            <p>Deleted "Most information is held by Microsoft in Australia" and substituted "Most information is held by DigitalOcean in Australia, but DigitalOcean does not have access to that information". This change reflects the position as at 27 January 2024 following a platform migration.</p>
+          </Card>
           <h4>Copyright</h4>
           <Card>
             <h5>Original content</h5>
@@ -54,7 +59,7 @@
               You have the right to correct and access any personal information held about you. However, in the vast majority of cases, identifying you from this information will not be possible; as a result, you won't be able to access or correct this information.
             </p>
             <p>Google Analytics and Google Recaptcha are in use on WhereTheyStand. You may wish to familiarise yourself with Google's privacy policies.</p>
-            <p>Hosting providers for WhereTheyStand hold your information on behalf of WhereTheyStand. Most information is held by Microsoft in Australia.</p>
+            <p>Hosting providers for WhereTheyStand hold your information on behalf of WhereTheyStand. Most information is held by DigitalOcean in Australia, but DigitalOcean does not have access to that information</p>
             <p>Occasionally, personal information about you may be contained in Hansard, the written record of Parliamentary debates. This is then republished on WhereTheyStand. Even if this information is wrong, it cannot and will not be corrected. Republished Hansard is a true copy of a document published under the authority of the House and cannot be the subject of a defamation proceeding.</p>
             <h5>Privacy for Members of Parliament</h5>
             <p>Information about Members of Parliament is collected from a wide variety of sources</p>
