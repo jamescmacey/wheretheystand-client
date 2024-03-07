@@ -70,6 +70,7 @@
                         <select v-model="filterSettings.parliamentaryTerm" class="form-select" id="parliament_select"
                             aria-label="-">
                             <option value="" selected>Any</option>
+                            <option value="54">54th Parliament</option>
                             <option value="53">53rd Parliament</option>
                             <option value="52">52nd Parliament</option>
                             <option value="51">51st Parliament</option>

@@ -1501,7 +1501,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/index-df5a892f.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/index-6adeaf30.mjs').then((m) => m.default || m)
   },
   {
     name: "electorates-id",
@@ -1602,7 +1602,7 @@ const _routes = [
         meta: {},
         alias: [],
         redirect: void 0,
-        component: () => import('./_nuxt/expenses-d0c0c452.mjs').then((m) => m.default || m)
+        component: () => import('./_nuxt/expenses-a1968bf4.mjs').then((m) => m.default || m)
       },
       {
         name: "people-id",
@@ -1641,7 +1641,7 @@ const _routes = [
     meta: {},
     alias: [],
     redirect: void 0,
-    component: () => import('./_nuxt/terms-ad5e9021.mjs').then((m) => m.default || m)
+    component: () => import('./_nuxt/terms-c41fa0d7.mjs').then((m) => m.default || m)
   },
   {
     name: "votes-id",

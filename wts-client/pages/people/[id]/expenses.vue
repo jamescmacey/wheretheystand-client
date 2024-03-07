@@ -3,6 +3,7 @@
     <div class="row mt-3">
       <div class="col-12">
         <h4>Expenses and donations</h4>
+        <p><strong>Note:</strong> These expenses aren't currently being updated because work to display them in a better way is underway. <span class="text-muted">— 7 March 2024.</span></p>
       </div>
     </div>
     <div class="row">
