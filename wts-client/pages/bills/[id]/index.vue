@@ -174,7 +174,7 @@ li.procedural-list {
 </style>
 
 <script>
-import { format, parse, formatDistanceToNow, parseISO } from 'date-fns'
+import { format, parse, formatDistanceToNow, parseISO, compareAsc } from 'date-fns'
 
 import { useBillsStore } from '../../../stores/bills'
 
@@ -209,11 +209,23 @@ export default {
           return 'This Bill passed its second reading on ' + this.formatDate(this.bill.dates.second_reading_date) + ' and is awaiting the Commitee of the whole House stage.'
         } else if (this.bill.dates.first_reading_date) {
           var msg = 'This Bill passed its first reading on ' + this.formatDate(this.bill.dates.first_reading_date) + '. '
+
           if (this.bill.dates.report_back_date) {
-            msg = msg + 'The Select Committee reported back on ' + this.formatDate(this.bill.dates.report_back_date) + ' and the Bill is awaiting its second reading. '
-          } else if (this.bill.dates.submissions_due_date) {
-            msg = msg + 'Public submissions are due on ' + this.formatDate(this.bill.dates.submissions_due_date) + '. '
+            if (compareAsc(parseISO(this.bill.dates.report_back_date), new Date()) > 0) {
+              msg = msg + 'The Select Committee is due to report back on ' + this.formatDate(this.bill.dates.report_back_date) + '. Following this, the Bill will be ready for its second reading. '
+            } else {
+              msg = msg + 'The Select Committee report was due back on ' + this.formatDate(this.bill.dates.report_back_date) + ' and the Bill is awaiting its second reading. '
+            }
           }
+
+          if (this.bill.dates.submissions_due_date) {
+            if (compareAsc(parseISO(this.bill.dates.submissions_due_date), new Date()) > 0) {
+              msg = msg + 'Public submissions are due on ' + this.formatDate(this.bill.dates.submissions_due_date) + '. '
+            } else {
+              msg = msg + 'Public submissions were due on ' + this.formatDate(this.bill.dates.submissions_due_date) + '. '
+            }
+          }
+
           return msg
         } else if (this.bill.dates.introduction_date) {
           return 'This Bill was introduced on ' + this.formatDate(this.bill.dates.introduction_date) + ' and is awaiting its first reading.'
