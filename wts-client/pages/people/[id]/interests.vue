@@ -8,7 +8,7 @@
         <ExternalLinkButton link="https://www.parliament.nz/en/mps-and-electorates/members-financial-interests/" text="Learn more on the Parliament website"></ExternalLinkButton>
         <Card v-if="interests && (Object.keys(interests).length !== 0)">
           <h5>Interests for {{ person.display_name }} as at {{ formattedReportDate }}</h5>
-          <div v-for="i in 12" :key="i">
+          <div v-for="i in 14" :key="i">
             <div v-if="interestsForType(i).length">
             <h6><span class="text-muted">{{ i }} </span> {{ interestTypeDescription(i) }}</h6>
             <ul>
