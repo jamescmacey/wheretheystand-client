@@ -5,7 +5,7 @@
         <h4>Financial interests</h4>
         <p>Each year, Members of Parliament are required to declare their financial interests, along with other specified interests.</p>
         <p>This page shows all the interests that {{ person.display_name }} declared when the register was last compiled. From time to time, amendments are also made and are incorporated into the list you see here.</p>
-        <ExternalLinkButton link="https://www.parliament.nz/en/mps-and-electorates/members-financial-interests/" text="Learn more on the Parliament website"></ExternalLinkButton>
+        <ExternalLinkButton link="https://links.wheretheystand.nz/parliament-financial-interests" text="Learn more on the Parliament website"></ExternalLinkButton>
         <Card v-if="interests && (Object.keys(interests).length !== 0)">
           <h5>Interests for {{ person.display_name }} as at {{ formattedReportDate }}</h5>
           <div v-for="i in 14" :key="i">
@@ -26,7 +26,7 @@
         <Card :missing="true" class="text-center" v-else>
           <p><strong>No interests were found for {{ person.display_name }}</strong></p>
           <p>WhereTheyStand doesn't have interests for recently elected MPs or MPs who left Parliament before the 52nd Parliament opened.</p>
-          <ExternalLinkButton link="https://www.parliament.nz/en/mps-and-electorates/mps-financial-interests/" text="View historic or new registers of financial interests on the Parliament website"></ExternalLinkButton>
+          <ExternalLinkButton link="https://links.wheretheystand.nz/parliament-financial-interests" text="View historic or new registers of financial interests on the Parliament website"></ExternalLinkButton>
         </Card>
         <p v-if="hasChangedDebt" class="text-muted">An asterisk (*) denotes that the interest rate payable in relation to the debt is less than the normal market interest rate that applied at the time the debt was incurred, or, if the terms of the debt have been amended, at the time of that amendment.</p>
         <p v-if="interests && interests != {}" class="text-muted">Due to the original formatting of this material, some interests might exist on the same line.</p>

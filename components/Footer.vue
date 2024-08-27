@@ -34,10 +34,7 @@
                 <RouterLink class="text-light footer-link" to="/about">About WhereTheyStand</RouterLink>
               </li>
               <li>
-                <a class="text-light footer-link" href="/feedback">Feedback</a>
-              </li>
-              <li>
-                <a class="text-light footer-link" href="/corrections">Corrections</a>
+                <RouterLink class="text-light footer-link" to="/contact">Contact, feedback or corrections</RouterLink>
               </li>
               <li>
                 <RouterLink class="text-light footer-link" to="/terms">Copyright and Privacy</RouterLink>
