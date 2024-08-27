@@ -41,7 +41,7 @@
                 sitting day.
                 <br><small>
                   <ExternalLinkInline
-                    link="https://www.parliament.nz/en/visit-and-learn/how-parliament-works/fact-sheets/what-is-urgency/">
+                    link="https://links.wheretheystand.nz/parliament-urgency">
                     Learn more about urgency</ExternalLinkInline>
                 </small>
               </li>
@@ -51,7 +51,7 @@
               the House of Representatives. This enables MPs to meet for longer than normal to consider legislation. It does not alter the stages that a bill must pass through to become law.
               <br><small>
                 <ExternalLinkInline
-                  link="https://www.parliament.nz/en/visit-and-learn/how-parliament-works/fact-sheets/a-closer-look-at-extended-hours/">
+                  link="https://links.wheretheystand.nz/parliament-extended-sittings">
                   Learn more about extended sittings</ExternalLinkInline>
               </small>
             </li>

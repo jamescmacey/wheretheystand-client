@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
-  modules: ['@nuxtjs/algolia', '@pinia/nuxt', 'nuxt-gtag'],
+  modules: ['@nuxtjs/algolia', '@pinia/nuxt', 'nuxt-gtag', 'vue-recaptcha/nuxt'],
   gtag: {
     id: 'G-WBR7239726'
   },
@@ -12,6 +12,13 @@ export default defineNuxtConfig({
     instantSearch: {
       theme: 'reset'
     }
+  },
+  runtimeConfig: {
+    public: {
+      recaptcha: {
+        v2SiteKey: '6LdTEzAqAAAAAN7x97pIOEw1cs5Z3ZMTKuylN_pE',
+      },
+    },
   },
   css: [
     '~/assets/scss/main.scss',

@@ -30,6 +30,7 @@
     "sass-loader": "^13.2.2",
     "vue": "latest",
     "vue-chartjs": "^5.3.1",
-    "vue-instantsearch": "^4.19.3"
+    "vue-instantsearch": "^4.19.3",
+    "vue-recaptcha": "^3.0.0-alpha.2"
   }
 }

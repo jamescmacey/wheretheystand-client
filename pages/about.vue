@@ -13,10 +13,8 @@
             who were members of that or any subsequent parliamentary terms have profiles on WhereTheyStand.</p>
 
           <h5>Site development</h5>
-          <p>WhereTheyStand is a personal side-project by me, James Macey. I am a fourth-year law and commerce student
-            at Victoria University of Wellington, and
-            I work on this site when I have free time. I aim to keep
-            WhereTheyStand completly apolitical; editorial annotations to substantive content will be made rarely and
+          <p>WhereTheyStand is a personal side-project. I work on this site when I have free time, and I aim to keep
+            it completly apolitical; editorial annotations to substantive content will be made rarely and
             with substantial disclosure.</p>
           <p>Most of the funding for running WhereTheyStand comes from me. Of course, I've taken steps to keep costs
             down, including by utilising student discounts I have access to, and reserving cloud capacity ahead of time.
