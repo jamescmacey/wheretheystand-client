@@ -100,6 +100,8 @@ function onSubmit() {
     </template>
 
     <template #right>
+        
+      <UColorModeButton />
       <UButton
         to="https://links.wheretheystand.nz/x"
         target="_blank"

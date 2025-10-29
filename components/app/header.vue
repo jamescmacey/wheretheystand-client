@@ -50,10 +50,6 @@ const items = computed(() => [{
       variant="link"
     />
 
-    <template #right>
-      <UColorModeButton />
-    </template>
-
     <template #body>
       <UNavigationMenu
         :items="items"
