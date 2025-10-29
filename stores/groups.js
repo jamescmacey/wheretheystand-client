@@ -74,6 +74,35 @@ export const useGroupsStore = defineStore('groups', {
                 })
             }
         },
+        async fetchPortfolios(id) {
+            if (!this.byName(id, 'portfolios')) {
+                /*const group = await $fetch(API_BASE + 'electorates/', { params: { group: id }})
+                this.items.push({
+                    items: group,
+                    name: id,
+                    type: 'electorates'
+                })*/
+
+                var state = this
+                await useFetch(API_BASE + 'portfolios/?group=' + id, {
+                    onResponse({ request, response, options }) {
+                        state.items.push({
+                            items: response._data,
+                            name: id,
+                            type: 'portfolios'
+                        })
+                    },
+                    onResponseError({ request, response, options }) {
+                        const store = useNotificationsStore()
+                        store.postResponseError(response)
+                    },
+                    onRequestError({ request, options, error }) {
+                        const store = useNotificationsStore()
+                        store.addToast('Error fetching resource (request)', error)
+                    }
+                })
+            }
+        },
         async fetchParties(id) {
             if (!this.byName(id, 'parties')) {
                 /*const group = await $fetch(API_BASE + 'parties/', { params: { group: id }})

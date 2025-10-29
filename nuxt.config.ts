@@ -2,7 +2,10 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
-  modules: ['@nuxtjs/algolia', '@pinia/nuxt', 'nuxt-gtag', 'vue-recaptcha/nuxt'],
+  modules: ['@nuxtjs/algolia', '@pinia/nuxt', 'nuxt-gtag', 'vue-recaptcha/nuxt', 'nuxt-mapbox', '@nuxt/ui', '@nuxtjs/robots'],
+  css: [
+    '~/assets/css/main.css',
+  ],
   gtag: {
     id: 'G-WBR7239726'
   },
@@ -13,28 +16,17 @@ export default defineNuxtConfig({
       theme: 'reset'
     }
   },
+  mapbox: {
+    accessToken: 'pk.eyJ1IjoiamFtZXNjbWFjZXkiLCJhIjoiY2xiN2VhYzVqMGE5YTN2bnhuM3l6d3pxbyJ9.CN_c4Tf7wXMtxyLKWrtvJg'
+  },
   runtimeConfig: {
     public: {
       recaptcha: {
         v2SiteKey: '6LdTEzAqAAAAAN7x97pIOEw1cs5Z3ZMTKuylN_pE',
       },
+      apiBase: 'https://wheretheystand.nz/api/',
     },
   },
-  css: [
-    '~/assets/scss/main.scss',
-  ],
-  plugins: [
-      '~/plugins/bootstrap.client.js',
-      '~/plugins/fontawesome.js',
-  ],
-  build: {
-      transpile: ['chart.js']
-  },
-  ssr: true,
-  vue: {
-      compilerOptions: {
-          // treat any tag that starts with passage- as custom elements
-          isCustomElement: (tag) => tag.startsWith('passage-'),
-      }
-  }
+  site: { indexable: false },
+  ssr: true
 })
