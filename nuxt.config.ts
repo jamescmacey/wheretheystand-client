@@ -21,9 +21,6 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      recaptcha: {
-        v2SiteKey: '6LdTEzAqAAAAAN7x97pIOEw1cs5Z3ZMTKuylN_pE',
-      },
       apiBase: 'https://wheretheystand.nz/api/',
     },
   },

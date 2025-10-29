@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-app",
+  "name": "wheretheystand-client",
   "private": true,
   "type": "module",
   "scripts": {
@@ -23,11 +23,10 @@
     "nuxt-gtag": "^3.0.0",
     "pinia": "^2.2.2",
     "vue": "latest",
-    "vue-instantsearch": "^4.19.3",
-    "vue-recaptcha": "^3.0.0-alpha.2",
-    "wrangler": "^4.45.1"
+    "vue-instantsearch": "^4.19.3"
   },
   "devDependencies": {
-    "nuxt-mapbox": "^1.6.0"
+    "nuxt-mapbox": "^1.6.0",
+    "wrangler": "^4.45.1"
   }
 }
