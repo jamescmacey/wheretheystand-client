@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2024-04-03',
+  compatibilityDate: '2025-10-29',
   devtools: { enabled: true },
   modules: ['@nuxtjs/algolia', '@pinia/nuxt', 'nuxt-gtag', 'nuxt-mapbox', '@nuxt/ui', '@nuxtjs/robots'],
   css: [
