@@ -1,6 +1,8 @@
 <script setup>
 const search = ref('')
 
+const liveElection = ref(true)
+
 const config = useRuntimeConfig()
 const { data: homepageData } = await useAsyncData('homepageData', () => $fetch(`${config.public.apiBase}client/homepage/`))
 
@@ -28,7 +30,16 @@ const formattedDate = (date) => {
       title="Wondering where they stand?"
       description="WhereTheyStand aggregates voting data, financial information, biographical information, and more."
       orientation="horizontal">
-
+      <div>
+        <UPageCard v-if="liveElection" variant="soft" spotlight spotlightColor="error" to="/elections/2026-general-election">
+        <template #title>
+          <h2 class="text-2xl font-bold"><span class="w-4 h-4 rounded-full bg-red-500 animate-pulse inline-block mr-2"> </span>Live election results</h2>
+        </template>
+        <template #description>
+          <p>Election results for the 2026 general election will be available as they come in.</p>
+        </template>
+      </UPageCard>
+      <USeparator v-if="liveElection" class="my-4" label="or"/>
       <UPageCard variant="soft" spotlight spotlightColor="primary">
         <template #title>
           <h2 class="text-2xl font-bold">Find an MP, electorate or party</h2>
@@ -53,7 +64,7 @@ const formattedDate = (date) => {
         </ULink>
         </template>
       </UPageCard>
-        
+    </div>
     </UPageHero>
   </div>
 <UContainer class="my-8">

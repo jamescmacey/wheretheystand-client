@@ -25,7 +25,10 @@
       <Meta name="theme-color" content="#58787f" />
     </Head>
     <NuxtLoadingIndicator />
-    <NuxtLayout>
+    <NuxtLayout v-if="route.name === 'elections'" name="elections">
+      <NuxtPage />
+    </NuxtLayout>
+    <NuxtLayout v-else>
       <NuxtPage />
     </NuxtLayout>
   </UApp>
@@ -34,7 +37,7 @@
 
 <script setup>
 import { useNotificationsStore } from './stores/notifications';
-
+const route = useRoute()
 useHead({
   titleTemplate: (titleChunk) => {
     return titleChunk ? `${titleChunk} — WhereTheyStand` : 'WhereTheyStand';
