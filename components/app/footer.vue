@@ -1,23 +1,5 @@
 <script setup lang="ts">
 const columns = [{
-  label: 'Pages',
-  children: [{
-    label: 'People',
-    to: '/people'
-  }, {
-    label: 'Parties',
-    to: '/parties'
-  }, {
-    label: 'Electorates',
-    to: '/electorates'
-  }, {
-    label: 'Bills',
-    to: '/bills'
-  }, {
-    label: 'Votes',
-    to: '/votes'
-  }]
-}, {
   label: 'About',
   children: [{
     label: 'About WhereTheyStand',
@@ -100,7 +82,7 @@ function onSubmit() {
     </template>
 
     <template #right>
-        
+
       <UColorModeButton />
       <UButton
         to="https://links.wheretheystand.nz/x"

@@ -37,8 +37,8 @@ const items = computed(() => [{
 
 <template>
   <UHeader :ui="{
-    root: 'bg-theme1/100 backdrop-blur border-b border-theme1/50 h-(--ui-header-height) sticky top-0 z-50',
-  }">
+    root: 'bg-theme1/100 border-b border-theme1/0 h-(--ui-header-height) sticky top-0 z-50',
+  }" mode="drawer">
     <template #left>
       <NuxtLink to="/">
         <AppLogo class="w-auto h-6 shrink-0 text-inverted dark:text-default" />
@@ -55,23 +55,6 @@ const items = computed(() => [{
         :items="items"
         orientation="vertical"
         class="-mx-2.5"
-      />
-
-      <USeparator class="my-6" />
-
-      <UButton
-        label="Sign in"
-        color="neutral"
-        variant="subtle"
-        to="/login"
-        block
-        class="mb-3"
-      />
-      <UButton
-        label="Sign up"
-        color="neutral"
-        to="/signup"
-        block
       />
     </template>
   </UHeader>
