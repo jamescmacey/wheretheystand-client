@@ -9,51 +9,15 @@
             <h2 class="text-2xl font-semibold mt-2" v-if="pageSubtitle">{{ pageSubtitle }}</h2>
             <h3 class="text-sm text-muted mt-2" v-if="pageDate">{{ formatDate(pageDate) }}</h3>
         </UContainer>
-        <div class="bg-white/80">
+        <div class="bg-accented/70">
                 <UContainer>
-                    <UNavigationMenu v-if="items.length > 0" :items="items" variant="link" highlight color="neutral"/>
+                    <div v-if="$slots.search" class="py-4">
+                        <slot name="search" class="w-full" />
+                    </div>
+                    <UNavigationMenu v-else-if="items.length > 0" :items="items" variant="link" highlight color="neutral"/>
                 </UContainer>
         </div>
       </div>
-      
-      <!--<div class="container-fluid hero" :style="{ backgroundImage: gradient }">
-        <div class="container">
-          <div v-if="!image">
-            <h1 class="hero">{{ pageTitle }}</h1>
-            <h3 class="hero" v-if="pageSubtitle">{{ pageSubtitle }}</h3>
-            <h5 class="hero text-uppercase" v-if="pageDate">{{ formatDate(pageDate) }}</h5>
-          </div>
-          <div v-else>
-            <div class="d-flex align-items-center">
-              <div class="flex-shrink-0">
-                <img class="me-3" :src="image" :alt="pageTitle">
-              </div>
-              <div class="flex-grow-1 ms-3">
-                <h1 class="hero">{{ pageTitle }}</h1>
-                <h3 class="hero" v-if="pageSubtitle">{{ pageSubtitle }}</h3>
-                <h5 class="hero text-uppercase" v-if="pageDate">{{ formatDate(pageDate) }}</h5>
-              </div>
-            </div>
-          </div>
-          <nav v-if="pageLinks.length" class="navbar navbar-expand-lg navbar-light sub-nav">
-            <ul class="navbar-nav">
-              <li class="nav-item" v-for="(link, index) in pageLinks" :key="index">
-                <NuxtLink class="nav-link" :to="link.to" active-class="active">{{ link.name }}</NuxtLink>
-              </li>
-            </ul>
-          </nav>
-          <div v-if="$slots.search" class="">
-            <slot name="search" />
-          </div>
-        </div>
-      </div>
-      <div v-if="backLink" class="container-fluid" :style="{backgroundColor: harmony[1]}">
-        <div class="container py-2">
-          <NuxtLink class="back-link" :to="backLink">
-            <FontAwesomeIcon :icon="['fas','arrow-left']"></FontAwesomeIcon> {{ backText }}
-          </NuxtLink>
-        </div>
-      </div>-->
     </div>
   </template>
   
