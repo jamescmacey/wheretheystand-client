@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-10-29',
   devtools: { enabled: true },
-  modules: ['@nuxtjs/algolia', '@pinia/nuxt', 'nuxt-gtag', 'nuxt-mapbox', '@nuxt/ui', '@nuxtjs/robots'],
+  modules: ['@nuxtjs/algolia', '@pinia/nuxt', 'nuxt-gtag', 'nuxt-mapbox', '@nuxt/ui', '@nuxtjs/robots', '@nuxtjs/mdc'],
   css: [
     '~/assets/css/main.css',
   ],

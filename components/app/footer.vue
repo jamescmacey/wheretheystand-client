@@ -18,7 +18,7 @@ const columns = [{
   label: 'Support',
   children: [{
     label: 'Buy Me A Coffee',
-    to: 'https://www.buymeacoffee.com/jamescmacey'
+    to: 'https://links.wheretheystand.nz/buy-me-a-coffee'
   }]
 }]
 
