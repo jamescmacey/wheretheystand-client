@@ -25,19 +25,37 @@
         <NuxtPage :person="person"></NuxtPage>
     </div>
     <div v-else>
-        {{ status }} {{ error }}
+        <UContainer class="my-8">
+            <UCard v-if="status === 'pending'" class="w-full">
+            <div class="my-16 w-1/2 mx-auto flex flex-col items-center justify-center text-center">
+                <h3 class="mb-2 text-muted">Loading {{ route.params.id}}...</h3>
+                <UProgress animation="swing" />
+            </div>
+        </UCard>
+            <UEmpty v-else :title="'Error loading ' + route.params.id"
+                :description="'An error occurred while loading this person. Please try again.'">
+                <template #actions>
+                    <UButton variant="subtle" color="neutral" @click="refresh()" class="mt-4" icon="i-lucide-refresh-cw"
+                        trailing>
+                        Refresh
+                    </UButton>
+                </template>
+            </UEmpty>
+            <p v-if="error && status === 'error'" class="text-muted text-xs text-center mt-4">
+                {{ error.statusCode }}: {{ error }}
+            </p>
+        </UContainer>
     </div>
 </template>
 
 <script setup>
-import { usePeopleStore } from '../../stores/people'
 
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
 const route = useRoute()
 
 const personKey = computed(() => `person-${route.params.id}`)
-const { data: person, status, error, refresh, clear } = await useAsyncData(personKey, () => $fetch(apiBase + '/people/' + route.params.id + '/'))
+const { data: person, status, error, refresh, clear } = await useAsyncData(personKey, () => $fetch(apiBase + 'people/' + route.params.id + '/'))
 
 const links = computed(() => {
     return [
