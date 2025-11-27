@@ -7,7 +7,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
@@ -32,5 +33,8 @@
     "vue-chartjs": "^5.3.1",
     "vue-instantsearch": "^4.19.3",
     "vue-recaptcha": "^3.0.0-alpha.2"
+  },
+  "devDependencies": {
+    "wrangler": "^4.51.0"
   }
 }
