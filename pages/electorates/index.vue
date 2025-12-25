@@ -3,7 +3,7 @@
         <PageHeader pageTitle="Electorates"></PageHeader>
         <UContainer class="my-8">
             <div v-if="status === 'success'">
-                <h2 class="text-2xl font-bold mb-4">New Zealand has {{ electorates.length }} electoral districts,
+                <h2 class="text-2xl font-bold mb-4">New Zealand has {{ sortedElectorates.length }} electoral districts,
                     commonly known as electorates.</h2>
                 <div class="space-y-4 mb-4">
                     <p>There are {{ generalElectorates.length }} general electorates and {{ maoriElectorates.length }}
@@ -33,7 +33,7 @@
                         <UTabs v-model="typeFilter" :content="false" :items="types" class="mb-2" size="sm" />
                     </UTooltip>
                 </div>
-                <p class="text-muted text-sm mb-2">Showing {{ filteredElectorates.length }} of {{ electorates.length }} electorates.</p>
+                <p class="text-muted text-sm mb-2">Showing {{ filteredElectorates.length }} of {{ sortedElectorates.length }} electorates.</p>
 
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -43,7 +43,7 @@
                             {{ electorate.name }}
                         </template>
                         <template #description>
-                            {{ electorate.description }}
+                            {{ electorate.electorate_type === 'general' ? 'General electorate' : 'Māori electorate' }}
                         </template>
                     </UPageCard>
                 </div>
@@ -77,9 +77,9 @@ const route = useRoute()
 
 const { data: electorates, status, error, refresh, clear } = await useAsyncData("electorates", () => $fetch(apiBase + 'electorates/'))
 
-const sortedElectorates = computed(() => electorates.value.sort((a, b) => a.name.localeCompare(b.name)))
-const generalElectorates = computed(() => sortedElectorates.value.filter(electorate => electorate.type === 'general'))
-const maoriElectorates = computed(() => sortedElectorates.value.filter(electorate => electorate.type === 'māori'))
+const sortedElectorates = computed(() => electorates.value.filter(electorate => electorate.status === 'current').sort((a, b) => a.name.localeCompare(b.name)))
+const generalElectorates = computed(() => sortedElectorates.value.filter(electorate => electorate.electorate_type === 'general'))
+const maoriElectorates = computed(() => sortedElectorates.value.filter(electorate => electorate.electorate_type === 'maori'))
 
 const typeFilter = ref('all')
 const types = ref([
@@ -93,7 +93,7 @@ const types = ref([
     },
     {
         label: 'Māori',
-        value: 'māori'
+        value: 'maori'
     }
 ])
 
@@ -109,7 +109,7 @@ const filteredElectorates = computed(() => {
             return (electorate.name.toLowerCase().includes(search.value.toLowerCase()) && (typeFilter.value === 'all' || electorate.type === typeFilter.value))
         })
     } else {
-        return sortedElectorates.value.filter(electorate => electorate.type === typeFilter.value)
+        return sortedElectorates.value.filter(electorate => electorate.electorate_type === typeFilter.value)
     }
 })
 

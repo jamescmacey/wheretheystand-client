@@ -29,8 +29,10 @@ const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
 const route = useRoute()
 
-const billsKey = computed(() => `person-bills-${route.params.id}`)
-const { data: bills, status, error, refresh, clear } = await useAsyncData(billsKey, () => $fetch(apiBase + '/people/' + route.params.id + '/bills/'))
+const billsPage = ref(1)
+
+const billsKey = computed(() => `person-bills-${route.params.id}-page-${billsPage.value}`)
+const { data: bills, status, error, refresh, clear } = await useAsyncData(billsKey, () => $fetch(apiBase + 'bills/?person=' + route.params.id))
 
 const props = defineProps({
     person: {

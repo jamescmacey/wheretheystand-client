@@ -24,13 +24,15 @@
         content="https://storage.googleapis.com/wheretheystand-nz/nzpm_app/favicons/browserconfig.xml" />
       <Meta name="theme-color" content="#58787f" />
     </Head>
-    <NuxtLoadingIndicator />
+    
     <NuxtLayout v-if="route.name === 'elections'" name="elections">
       <NuxtPage />
     </NuxtLayout>
     <NuxtLayout v-else>
       <NuxtPage />
     </NuxtLayout>
+
+    <WTSLoadingIndicator />
   </UApp>
     
 </template>

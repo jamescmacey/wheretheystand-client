@@ -17,7 +17,7 @@
                 <UPageGridItem class="col-span-3 md:col-span-2 sm:col-span-2 lg:col-span-2 w-full">
                     <UCard variant="subtle" v-if="status === 'success' && interests.interests">
                         <h3 class="text-xl font-bold">Interests for {{ person.display_name }} as at {{
-                            formattedDate(interests.filing_date) }}</h3>
+                            formattedDate(interests.as_at) }}</h3>
                         <div v-for="i in 14" :key="i">
                             <div v-if="interestsForType(i).length">
                                 <h6 class="mb-2 mt-4 font-bold text-lg"><span class="text-muted">{{ i }} </span> {{ interestTypeDescription(i) }}</h6>
@@ -28,15 +28,15 @@
                                     <template #title>
                                         {{ interest.description }}
                                     </template>
-                                    <template #description v-if="interest.nzbn_match.nzbn">
-                                        <span class="text-muted">NZBN: {{ interest.nzbn_match.nzbn }}</span>
+                                    <template #description v-if="interest.nzbn">
+                                        <span class="text-muted">NZBN: {{ interest.nzbn }}</span>
                                     </template>
                                 </UPageCard>
                             </div>
                             </div>
                         </div>
                     </UCard>
-                    <UCard variant="subtle" v-else-if="status === 'success'">
+                    <UCard variant="subtle" v-else-if="status === 'success' || (status === 'error' && error.statusCode === 404)">
                         <UEmpty title="No interests found" description="No interests found for this person.  WhereTheyStand doesn't have interests for recently elected MPs or MPs who left Parliament before the 52nd Parliament opened. " />
                     </UCard>
                     <UCard variant="subtle" v-else-if="status === 'pending'" class="w-full">
@@ -71,7 +71,11 @@ const onMounted = () => {
 }
 
 const interestsKey = computed(() => `person-interests-${route.params.id}-${selectedReport.value}`)
-const { data: interests, status, error, refresh, clear } = await useAsyncData(interestsKey, () => $fetch(apiBase + '/people/' + route.params.id + '/interests/' + (selectedReport.value === 'latest' ? '' : selectedReport.value + '/')))
+const { data: interests, status, error, refresh, clear } = await useAsyncData(interestsKey, () => $fetch(apiBase + 'people/' + route.params.id + '/financial-interests/' + (selectedReport.value === 'latest' ? 'latest' : selectedReport.value + '/')))
+
+const availableReportsKey = computed(() => `person-interests-${route.params.id}`)
+const { data: availableInterests, availableReportsStatus, availableReportsError, availableReportsRefresh, availableReportsClear } = await useAsyncData(availableReportsKey, () => $fetch(apiBase + 'people/' + route.params.id + '/financial-interests/'))
+
 
 const props = defineProps({
     person: {
@@ -81,27 +85,26 @@ const props = defineProps({
 })
 
 const availableReports = computed(() => {
-
-    if (interests.value && interests.value.available_dates) {
-        return interests.value.available_dates.sort().reverse().map((date) => {
-            return {
-                label: date === interests.value.available_dates[0] ? 'Latest available (' + formattedDate(date) + ')' : formattedDate(date),
-                value: date
-            }
-        })
-    } else if (interests.value && interests.value.filing_date) {
+    if (availableInterests.value && Array.isArray(availableInterests.value) && availableInterests.value.length > 0) {
+        // sort by as_at date descending (latest first)
+        const sorted = [...availableInterests.value].sort((a, b) => new Date(b.as_at) - new Date(a.as_at));
+        return sorted.map((report, idx) => ({
+            label: idx === 0
+                ? `Latest available (${formattedDate(report.as_at)})`
+                : formattedDate(report.as_at),
+            value: idx === 0 ? 'latest' : report.id
+        }));
+    } else if (interests.value && interests.value.as_at) {
         return [
             {
-                label: 'Latest (' + formattedDate(interests.value.filing_date) + ')',
+                label: 'Latest (' + formattedDate(interests.value.as_at) + ')',
                 value: 'latest'
             }
         ]
     } else {
         return []
     }
-
-
-})
+});
 
 
 import { format } from 'date-fns'
@@ -123,7 +126,7 @@ const hasChangedDebt = computed(() => {
 const interestsForType = (type) => {
     if (interests.value && (Object.keys(interests.value).length !== 0)) {
         return interests.value.interests.filter((element) => {
-            return (element.type === type.toString())
+            return (element.interest_type === type.toString())
         })
     } else { return [] }
 }
