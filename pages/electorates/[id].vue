@@ -1,6 +1,6 @@
 <template>
     <div v-if="status === 'success'">
-        <PageHeader :pageTitle="electorate.name" :pageSubtitle="electorate.description"></PageHeader>
+        <PageHeader :pageTitle="electorate.name" :pageSubtitle="electorate.electorate_type === 'general' ? 'General electorate' : 'Māori electorate'"></PageHeader>
         <UContainer class="my-8">
             <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 gap-4">
                 <div class="col-span-1" v-if="electorate.status === 'current' || electorate.incumbent">
@@ -10,12 +10,12 @@
                     </UCard>
                     <UCard v-else>
                         <div class="flex justify-center my-4">
-                            <img :src="electorate.incumbent.image" :alt="electorate.incumbent.display_name" class="w-32 h-32 rounded-full"></img>
+                            <img :src="electorate.incumbent.photo?.file || '/images/generic-profile-picture.png'" :alt="electorate.incumbent.display_name" class="w-32 h-32 rounded-full"></img>
                         </div>
                         <div class="text-center">
                             <div>
                                 <h4 class="text-xl font-bold">{{ electorate.incumbent.display_name }}</h4>
-                                <p class="text-md text-muted">{{ electorate.incumbent.description }}</p>
+                                <p class="text-md text-muted">{{ electorate.incumbent.cached_description }}</p>
                             </div>
                         </div>
                     </UCard>
@@ -47,11 +47,11 @@
 
             <USeparator icon="i-lucide-history" class="my-8" />
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
-                <div v-if="electorate.replaced_electorate">
+                <div v-if="electorate.replaced">
                     <h3 class="text-lg font-bold mb-2">Former electorate</h3>
-                    <UPageCard :to="'/electorates/' + electorate.replaced_electorate.slug">
+                    <UPageCard :to="'/electorates/' + electorate.replaced.slug">
                         <template #title>
-                            {{ electorate.replaced_electorate.name }}
+                            {{ electorate.replaced.name }}
                         </template>
                         <template #description>
                             Replaced on {{ formatDate(electorate.valid_from) }}
@@ -59,12 +59,12 @@
                     </UPageCard>
                 </div>
                 <div v-else></div>
-                <div v-if="electorate.replaced_by" class="">
+                <div v-if="electorate.replacement" class="">
                     <h3 class="text-lg font-bold mb-2">Replaced by</h3>
-                    <UPageCard :to="'/electorates/' + electorate.replaced_by.slug">
+                    <UPageCard :to="'/electorates/' + electorate.replacement.slug">
                         <template #title>
                             <div class="flex">
-                                {{ electorate.replaced_by.name }}
+                                {{ electorate.replacement.name }}
                             </div>
                             
                         </template>

@@ -4,7 +4,7 @@ const search = ref('')
 const liveElection = ref(true)
 
 const config = useRuntimeConfig()
-const { data: homepageData } = await useAsyncData('homepageData', () => $fetch(`${config.public.apiBase}client/homepage/`))
+const { data: homepageData } = await useAsyncData('homepageData', () => $fetch(`${config.public.apiBaseLegacy}client/homepage/`))
 
 import { formatDistanceToNow, format } from 'date-fns'
 
@@ -24,7 +24,7 @@ const randomPage = async () => {
   }
 
   loadingRandomPage.value = true
-  var url = config.public.apiBase + "client/random/"
+  var url = config.public.apiBaseLegacy + "client/random/"
   const { data, status } = await useAsyncData('randomPage', () => $fetch(url))
   if (status.value === 'success') {
     try {
