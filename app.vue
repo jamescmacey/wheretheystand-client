@@ -32,7 +32,7 @@
       <NuxtPage />
     </NuxtLayout>
 
-    <WTSLoadingIndicator />
+    <AppLoadingIndicator />
   </UApp>
     
 </template>
