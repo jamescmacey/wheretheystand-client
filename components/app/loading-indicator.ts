@@ -1,7 +1,7 @@
 import { defineComponent, h } from 'vue'
 
 export default defineComponent({
-  name: 'WTSLoadingIndicator',
+  name: 'LoadingIndicator',
   props: {
     throttle: {
       type: Number,
@@ -21,7 +21,7 @@ export default defineComponent({
     },
     height: {
       type: Number,
-      default: 3,
+      default: 6,
     },
     color: {
       type: [String, Boolean],
@@ -53,7 +53,7 @@ export default defineComponent({
       class: 'wts-loading-indicator',
       style: {
         position: 'fixed',
-        top: 0,
+        bottom: 0,
         right: 0,
         left: 0,
         pointerEvents: 'none',

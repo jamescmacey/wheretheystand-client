@@ -121,6 +121,62 @@ export default defineNuxtConfig({
             statutoryProvision: "Electoral Act 1993, s 54",
             description: "Close of polling day at the next general election",
           },
+        },
+        billStatuses: {
+          unknown: {
+            description: "Unknown",
+            colour: "neutral"
+          },
+          in_progress: {
+            description: "In progress",
+            colour: "primary"
+          },
+          defeated: {
+            description: "Defeated",
+            colour: "error"
+          },
+          withdrawn: {
+            description: "Withdrawn",
+            colour: "warning"
+          },
+          passed: {
+            description: "Passed",
+            colour: "success"
+          },
+          enacted: {
+            description: "Enacted",
+            colour: "success"
+          },
+          divided: {
+            description: "Divided",
+            colour: "info"
+          },
+          lapsed: {
+            description: "Lapsed",
+            colour: "info"
+          },
+          unknown_not_current: {
+            description: "Unknown / Not Current",
+            colour: "neutral"
+          },
+          discharged: {
+            description: "Discharged",
+            colour: "neutral"
+          },
+        },
+        billTypes: {
+          government: {
+            description: "Government bill",
+          },
+          members: {
+            description: "Member's bill",
+          },
+          private: {
+            description: "Private bill",
+          },
+          local: {
+            description: "Local bill",
+          }
         }
       }
     },

@@ -71,10 +71,10 @@ const onMounted = () => {
 }
 
 const interestsKey = computed(() => `person-interests-${route.params.id}-${selectedReport.value}`)
-const { data: interests, status, error, refresh, clear } = await useAsyncData(interestsKey, () => $fetch(apiBase + 'people/' + route.params.id + '/financial-interests/' + (selectedReport.value === 'latest' ? 'latest' : selectedReport.value + '/')))
+const { data: interests, status, error, refresh, clear } = await useAsyncData(interestsKey, () => $fetch(apiBase + 'people/' + route.params.id + '/financial-interests/' + (selectedReport.value === 'latest' ? 'latest' : selectedReport.value + '/')), { lazy: true })
 
 const availableReportsKey = computed(() => `person-interests-${route.params.id}`)
-const { data: availableInterests, availableReportsStatus, availableReportsError, availableReportsRefresh, availableReportsClear } = await useAsyncData(availableReportsKey, () => $fetch(apiBase + 'people/' + route.params.id + '/financial-interests/'))
+const { data: availableInterests, availableReportsStatus, availableReportsError, availableReportsRefresh, availableReportsClear } = await useAsyncData(availableReportsKey, () => $fetch(apiBase + 'people/' + route.params.id + '/financial-interests/'), { lazy: true })
 
 
 const props = defineProps({

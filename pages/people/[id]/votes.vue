@@ -30,7 +30,7 @@ const apiBase = config.public.apiBase
 const route = useRoute()
 
 const votesKey = computed(() => `person-votes-${route.params.id}`)
-const { data: votes, status, error, refresh, clear } = await useAsyncData(votesKey, () => $fetch(apiBase + '/people/' + route.params.id + '/votes/'))
+const { data: votes, status, error, refresh, clear } = await useAsyncData(votesKey, () => $fetch(apiBase + 'people/' + route.params.id + '/votes/'))
 
 const props = defineProps({
     person: {

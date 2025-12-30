@@ -1,6 +1,5 @@
 <template>
     <UContainer class="my-8">
-
         <div class="mb-8">
             <h3 class="text-xl font-bold mb-2">Electoral history</h3>
             <p>WhereTheyStand's records show that {{ person.display_name }} has stood as a candidate in the following
@@ -43,12 +42,12 @@
 
 
             </div>
-            <UCard variant="subtle" v-else-if="status === 'pending'" class="w-full">
+            <div v-else-if="status === 'pending'" class="w-full">
                 <div class="my-16 w-1/2 mx-auto flex flex-col items-center justify-center text-center">
                     <h3 class="mb-2 text-muted">Loading elections...</h3>
                     <UProgress animation="swing" />
                 </div>
-            </UCard>
+            </div>
             <UCard variant="subtle" v-else class="w-full">
                 <UEmpty title="Error loading elections"
                     description="An error occurred while loading elections. Please try again.">
@@ -70,7 +69,7 @@ const apiBase = config.public.apiBase
 const route = useRoute()
 
 const votesKey = computed(() => `person-elections-${route.params.id}`)
-const { data: results, status, error, refresh, clear } = await useAsyncData(votesKey, () => $fetch(apiBase + 'people/' + route.params.id + '/election-results/'))
+const { data: results, status, error, refresh, clear } = await useAsyncData(votesKey, () => $fetch(apiBase + 'people/' + route.params.id + '/election-results/'), { lazy: true })
 
 const props = defineProps({
     person: {

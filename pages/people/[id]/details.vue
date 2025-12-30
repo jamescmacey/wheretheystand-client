@@ -111,8 +111,8 @@
                         <div class="flex justify-between items-center">
                                 <div>
                                 <h5 class="text-lg font-bold" v-if="affiliation.party">
-                                    <ULink :to="'/parties/' + affiliation.party">
-                                        {{ affiliation.party }}
+                                    <ULink :to="'/parties/' + affiliation.party.slug">
+                                        {{ affiliation.party.display_name }}
                                     </ULink>
                                 </h5>
                                 </div>
@@ -138,7 +138,7 @@
                         <div class="flex justify-between items-center">
                                 <div>
                                 <h5 class="text-lg">
-                                    {{ affiliation.title }} {{ affiliation.conjunction }} {{ affiliation.portfolio }}
+                                    {{ affiliation.title }} {{ affiliation.conjunction }} {{ affiliation.portfolio?.name }}
                                 </h5>
                                 </div>
                                 <div>
