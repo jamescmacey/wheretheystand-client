@@ -25,7 +25,7 @@
       <Meta name="theme-color" content="#58787f" />
     </Head>
     
-    <NuxtLayout v-if="route.name === 'elections'" name="elections">
+    <NuxtLayout v-if="route.name && route.name.startsWith('elections') && route.name !== 'elections'" name="elections">
       <NuxtPage />
     </NuxtLayout>
     <NuxtLayout v-else>
