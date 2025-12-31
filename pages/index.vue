@@ -55,7 +55,7 @@ const randomPage = async () => {
   <div>
     <div
       class="relative bg-[url('https://storage.googleapis.com/wheretheystand-nz/nzpm_app/beehive.jpg')] dark:bg-[url('https://storage.googleapis.com/wheretheystand-nz/nzpm_app/beehive_night.jpg')] bg-cover bg-center bg-no-repeat">
-      <div class="absolute inset-0 bg-white/70 dark:bg-black/70"></div> <!-- Optional overlay -->
+      <div class="absolute inset-0 bg-white/60 dark:bg-black/70"></div> <!-- Optional overlay -->
       <UPageHero class="relative z-10" title="Wondering where they stand?"
         description="WhereTheyStand aggregates voting data, financial information, biographical information, and more."
         orientation="horizontal">

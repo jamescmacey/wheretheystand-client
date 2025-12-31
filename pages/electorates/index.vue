@@ -48,12 +48,12 @@
                     </UPageCard>
                 </div>
             </div>
-            <UCard v-else-if="status === 'pending'" class="w-full">
+            <div v-else-if="status === 'pending'" class="w-full">
                 <div class="my-16 w-1/2 mx-auto flex flex-col items-center justify-center text-center">
-                    <h3 class="mb-2 text-muted">Loading {{ route.params.id }}...</h3>
+                    <h3 class="mb-2 text-muted">Loading electorates...</h3>
                     <UProgress animation="swing" />
                 </div>
-            </UCard>
+            </div>
             <UEmpty v-else :title="'Error loading electorates'"
                 :description="'An error occurred while loading this person. Please try again.'">
                 <template #actions>
@@ -75,7 +75,7 @@ const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
 const route = useRoute()
 
-const { data: electorates, status, error, refresh, clear } = await useAsyncData("electorates", () => $fetch(apiBase + 'electorates/'))
+const { data: electorates, status, error, refresh, clear } = await useAsyncData("electorates", () => $fetch(apiBase + 'electorates/'), { lazy: true })
 
 const sortedElectorates = computed(() => electorates.value.filter(electorate => electorate.status === 'current').sort((a, b) => a.name.localeCompare(b.name)))
 const generalElectorates = computed(() => sortedElectorates.value.filter(electorate => electorate.electorate_type === 'general'))
