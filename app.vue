@@ -38,7 +38,6 @@
 </template>
 
 <script setup>
-import { useNotificationsStore } from './stores/notifications';
 const route = useRoute()
 useHead({
   titleTemplate: (titleChunk) => {

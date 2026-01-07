@@ -2,63 +2,65 @@
 import type { NavigationMenuItem } from '@nuxt/ui'
 
 const route = useRoute()
-const electionSlug = route.params.electionSlug
-const resultsVersionSlug = route.params.resultsVersionSlug
-
-const toast = useToast()
+const electionSlug = computed(() => route.params.electionSlug)
+const resultsVersionSlug = computed(() => route.params.resultsVersionSlug)
 
 const open = ref(false)
 
-const links = [[{
+const linksAvailable = computed(() => {
+  return Boolean(resultsVersionSlug.value && electionSlug.value)
+})
+
+const links = computed(() => [[{
   label: 'Overview',
   icon: 'i-lucide-layout-dashboard',
-  to: '/elections/' + electionSlug + '/' + resultsVersionSlug + '/',
+  to: '/elections/' + electionSlug.value + '/' + resultsVersionSlug.value + '/',
   exact: true,
   onSelect: () => {
     open.value = false
   },
-  disabled: !resultsVersionSlug
+  disabled: !linksAvailable.value
 }, {
   label: 'Candidates',
   icon: 'i-lucide-users',
-  to: '/elections/' + electionSlug + '/' + resultsVersionSlug + '/candidates',
+  to: '/elections/' + electionSlug.value + '/' + resultsVersionSlug.value + '/candidates',
   onSelect: () => {
     open.value = false
   },
-  disabled: !resultsVersionSlug
+  disabled: !linksAvailable.value
 }, {
   label: 'Electorates',
   icon: 'i-lucide-map',
-  to: '/elections/' + electionSlug + '/' + resultsVersionSlug + '/electorates',
+  to: '/elections/' + electionSlug.value + '/' + resultsVersionSlug.value + '/electorates',
   onSelect: () => {
     open.value = false
   },
-  disabled: !resultsVersionSlug
+  disabled: !linksAvailable.value
 }, {
   label: 'Voting places',
   icon: 'i-lucide-map-pin',
-  to: '/elections/' + electionSlug + '/' + resultsVersionSlug + '/voting-places',
+  to: '/elections/' + electionSlug.value + '/' + resultsVersionSlug.value + '/voting-places',
   onSelect: () => {
     open.value = false
   },
-  disabled: !resultsVersionSlug
+  disabled: !linksAvailable.value
 }, {
   label: 'Calculations',
   icon: 'i-lucide-grid-3x2',
-  to: '/elections/' + electionSlug + '/' + resultsVersionSlug + '/calculations',
+  to: '/elections/' + electionSlug.value + '/' + resultsVersionSlug.value + '/calculations',
   onSelect: () => {
     open.value = false
   },
-  disabled: !resultsVersionSlug
+  disabled: !linksAvailable.value
 }, 
 {
   label: 'Settings',
   icon: 'i-lucide-settings',
-  to: '/elections/' + electionSlug + '/' + resultsVersionSlug + '/settings',
+  to: '/elections/' + electionSlug.value + '/' + resultsVersionSlug.value + '/settings',
   onSelect: () => {
     open.value = false
   },
-  disabled: !resultsVersionSlug
+  disabled: !linksAvailable.value
 }], [{
   label: 'All elections',
   icon: 'i-lucide-arrow-left',
@@ -74,12 +76,12 @@ const links = [[{
     label: 'Home',
     to: '/',
     icon: 'i-lucide-house',
-}]] satisfies NavigationMenuItem[][]
+}]] satisfies NavigationMenuItem[][])
 
 const groups = computed(() => [{
   id: 'links',
   label: 'Go to',
-  items: links.flat()
+  items: links.value.flat()
 }])
 
 onMounted(async () => {
@@ -126,7 +128,5 @@ onMounted(async () => {
     <UDashboardSearch :groups="groups" />
 
     <slot />
-
-    <NotificationsSlideover />
   </UDashboardGroup>
 </template>

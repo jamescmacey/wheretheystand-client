@@ -8,7 +8,16 @@ export default defineNuxtConfig({
       enabled: true
     }
   },
-  modules: ['@nuxtjs/algolia', '@pinia/nuxt', 'nuxt-gtag', 'nuxt-mapbox', '@nuxt/ui', '@nuxtjs/robots', '@nuxtjs/mdc'],
+  modules: [
+    '@nuxtjs/algolia',
+    '@pinia/nuxt',
+    'nuxt-gtag',
+    'nuxt-mapbox',
+    '@nuxt/ui',
+    '@nuxtjs/robots',
+    '@nuxtjs/mdc',
+    "@nuxt/image"
+  ],
   css: [
     '~/assets/css/main.css',
   ],

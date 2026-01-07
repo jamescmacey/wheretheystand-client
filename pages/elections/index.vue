@@ -52,7 +52,7 @@ const route = useRoute()
 
 const { data: elections, status, error, refresh, clear } = await useAsyncData("elections", () => $fetch(apiBase + 'elections/'), { lazy: true })
 
-const sortedElections = computed(() => elections.value.sort((a, b) => new Date(b.polling_date).getTime() - new Date(a.polling_date).getTime()))
+const sortedElections = computed(() => elections.value.sort((a, b) => new Date(b.polling_date).getTime() - new Date(a.polling_date).getTime()).filter(election => election.results_versions.length > 0))
 
 const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-NZ', { year: 'numeric', month: 'long', day: 'numeric' })

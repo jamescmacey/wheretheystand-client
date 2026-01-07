@@ -11,6 +11,7 @@
     "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
+    "@nuxt/image": "^2.0.0",
     "@nuxt/ui": "^4.3.0",
     "@nuxtjs/algolia": "^1.10.2",
     "@nuxtjs/mdc": "^0.18.0",
