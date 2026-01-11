@@ -123,6 +123,7 @@ export const useElectionDataStore = defineStore('electionData', {
         * @return {Object} The electorate object
         */
         getElectorateForCandidate: (state) => (electionSlug, resultsVersionSlug, candidate) => {
+            const key = createReferenceDataKey(electionSlug, resultsVersionSlug)
             if (Object.keys(candidate).includes('electorate') && candidate.electorate) {
                 return state.referenceData[key].electorates.find(electorate => electorate.id === candidate.electorate || electorate.number === candidate.electorate)
             } else if (Object.keys(candidate).includes('electorate')) {
@@ -224,7 +225,30 @@ export const useElectionDataStore = defineStore('electionData', {
             // Now get persistent party
             if (!state.persistentData || !state.persistentData.persistent_parties || !referenceParty) return null
             return state.persistentData.persistent_parties.find(persistentParty => persistentParty.id === referenceParty.persistent_party)
-        }
+        },
+
+        /**
+         * Get the persistent electorate for a specific electorate in a given election and results version, if it exists, providing either electorate.id, electorate.number or the electorate object.
+         * @param {string} electionSlug - The election slug
+         * @param {string} resultsVersionSlug - The results version slug
+         * @param {Object} electorate - The electorate object
+         * @return {Object} The persistent electorate object
+         */
+        getPersistentElectorateForElectorate: (state) => (electionSlug, resultsVersionSlug, electorate) => {
+            // We do not have access to "this" inside a Pinia getter,
+            // so we have to use only the state.
+            if (!electorate.persistent_electorate) {
+                const key = createReferenceDataKey(electionSlug, resultsVersionSlug)
+                electorate = state.referenceData[key].electorates.find(electorateObject => electorateObject.id === electorate.id || electorateObject.number === electorate.number)
+                if (!electorate || !electorate.persistent_electorate) {
+                    return null
+                }
+            }
+            // Now get persistent electorate from persistentData
+            if (!state.persistentData || !state.persistentData.persistent_electorates) return null
+            return state.persistentData.persistent_electorates.find(persistentElectorate => persistentElectorate.id === electorate.persistent_electorate)
+        },
+        
     },
 
     actions: {
@@ -314,7 +338,7 @@ export const useElectionDataStore = defineStore('electionData', {
                         computedResult = {
                             electorate: newResult.electorate,
                             resultStatus: 'defaulted',
-                            firstPlace: newResult.results[0].candidate,
+                            firstPlace: [newResult.results[0].candidate],
                             secondPlace: null,
                             margin: null,
                             margin_percentage: null
@@ -329,26 +353,44 @@ export const useElectionDataStore = defineStore('electionData', {
                             margin_percentage: null
                         }
                     } else {
-                        const firstPlace = newResult.results[0]
-                        const secondPlace = newResult.results[1]
+                        // Find all candidates tied for first place
+                        const firstCount = newResult.results[0].count;
+                        const firstPlaceCandidates = newResult.results.filter(r => r.count === firstCount).map(r => r.candidate);
 
-                        if (firstPlace.count === secondPlace.count) {
+                        // Calculate total votes for margin_percentage calculation
+                        const totalVotes = newResult.results.reduce((sum, r) => sum + r.count, 0);
+
+                        // Find second highest count, and all tied for second place (if any)
+                        const secondCount = newResult.results.find(r => r.count < firstCount)?.count;
+                        const secondPlaceCandidates = typeof secondCount !== "undefined"
+                            ? newResult.results.filter(r => r.count === secondCount).map(r => r.candidate)
+                            : [];
+
+                        // For calculating percentage margin, get the fractions as percentages
+                        const firstPercentage = totalVotes > 0 ? firstCount / totalVotes * 100 : 0;
+                        const secondPercentage = (typeof secondCount !== "undefined" && totalVotes > 0)
+                            ? secondCount / totalVotes * 100
+                            : 0;
+
+                        if (firstPlaceCandidates.length > 1) {
+                            // Multiple-way tie for first place (could be 2 or more)
                             computedResult = {
                                 electorate: newResult.electorate,
                                 resultStatus: 'indeterminate',
-                                firstPlace: firstPlace.candidate,
-                                secondPlace: secondPlace.candidate,
+                                firstPlace: firstPlaceCandidates,
+                                secondPlace: secondPlaceCandidates.length > 0 ? secondPlaceCandidates : null,
                                 margin: 0,
                                 margin_percentage: 0
                             }
                         } else {
+                            // Single first place, possibly tie for second
                             computedResult = {
                                 electorate: newResult.electorate,
                                 resultStatus: 'determined',
-                                firstPlace: firstPlace.candidate,
-                                secondPlace: secondPlace.candidate,
-                                margin: firstPlace.count - secondPlace.count,
-                                margin_percentage: firstPlace.per_cent - secondPlace.per_cent
+                                firstPlace: firstPlaceCandidates,
+                                secondPlace: secondPlaceCandidates.length > 0 ? secondPlaceCandidates : null,
+                                margin: firstCount - (secondCount ?? 0),
+                                margin_percentage: (firstPercentage - secondPercentage).toFixed(2)
                             }
                         }
 

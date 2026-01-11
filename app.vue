@@ -10,18 +10,16 @@
       <Meta property="og:title" content="WhereTheyStand" />
       <Meta property="og:description" content="See where your MP stands at wheretheystand.nz" />
       <Link rel="apple-touch-icon" sizes="180x180"
-        href="https://storage.googleapis.com/wheretheystand-nz/nzpm_app/favicons/apple-touch-icon.png" />
+        href="/favicons/apple-touch-icon.png" />
       <Link rel="icon" type="image/png" sizes="32x32"
-        href="https://storage.googleapis.com/wheretheystand-nz/nzpm_app/favicons/favicon-32x32.png" />
+        href="/favicons/favicon-32x32.png" />
       <Link rel="icon" type="image/png" sizes="16x16"
-        href="https://storage.googleapis.com/wheretheystand-nz/nzpm_app/favicons/favicon-16x16.png" />
-      <Link rel="manifest" href="https://storage.googleapis.com/wheretheystand-nz/nzpm_app/favicons/site.webmanifest" />
-      <Link rel="mask-icon"
-        href="https://storage.googleapis.com/wheretheystand-nz/nzpm_app/favicons/safari-pinned-tab.svg" color="#58787f" />
-      <Link rel="shortcut icon" href="https://storage.googleapis.com/wheretheystand-nz/nzpm_app/favicons/favicon.ico" />
+        href="/favicons/favicon-16x16.png" />
+      <Link rel="manifest" href="/favicons/site.webmanifest" />
+     <Link rel="shortcut icon" href="/favicons/favicon.ico" />
       <Meta name="msapplication-TileColor" content="#58787f" />
       <Meta name="msapplication-config"
-        content="https://storage.googleapis.com/wheretheystand-nz/nzpm_app/favicons/browserconfig.xml" />
+        content="/favicons/browserconfig.xml" />
       <Meta name="theme-color" content="#58787f" />
     </Head>
     

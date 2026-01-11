@@ -101,7 +101,7 @@ const randomPage = async () => {
     </div>
     <UContainer class="my-8">
       <UPageGrid>
-        <UPageGridItem>
+        <div>
           <h3 class="text-2xl font-bold mb-4">Recent votes</h3>
           <UCard v-if="homepageData && homepageData.votes">
             <div class="flex flex-col gap-4">
@@ -109,8 +109,8 @@ const randomPage = async () => {
                 :description="formattedDateFull(vote.date)" :to="'/votes/' + vote.id"></UPageCard>
             </div>
           </UCard>
-        </UPageGridItem>
-        <UPageGridItem>
+        </div>
+        <div>
           <h3 class="text-2xl font-bold mb-4">Recently updated bills</h3>
           <UCard v-if="homepageData && homepageData.bills">
             <div class="flex flex-col gap-4">
@@ -118,8 +118,8 @@ const randomPage = async () => {
                 :to="'/bills/' + bill.id"></UPageCard>
             </div>
           </UCard>
-        </UPageGridItem>
-        <UPageGridItem>
+        </div>
+        <div>
           <h3 class="text-2xl font-bold mb-4">Recent elections</h3>
           <UCard>
             <div class="flex flex-col gap-4">
@@ -132,7 +132,7 @@ const randomPage = async () => {
               <UPageCard variant="soft" title="2022 Tauranga by-election" to="/elections/2022-tauranga"></UPageCard>
             </div>
           </UCard>
-        </UPageGridItem>
+        </div>
       </UPageGrid>
     </UContainer>
     <div class="dark:hidden">
