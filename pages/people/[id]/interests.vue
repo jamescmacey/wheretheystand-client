@@ -1,7 +1,7 @@
 <template>
         <UContainer class="my-8">
             <UPageGrid class="grid-cols-1 sm:grid-cols-1 lg:grid-cols-3">
-                <UPageGridItem class="col-span-3 md:col-span-1 md:col-span-1 lg:col-span-1 w-full">
+                <div class="col-span-3 md:col-span-1 md:col-span-1 lg:col-span-1 w-full">
                     <UCard variant="subtle">
                         <div v-if="status === 'success' && interests.interests" class="w-full">
                             <h3 class="text-lg font-bold">Select report</h3>
@@ -13,8 +13,8 @@
                              This page shows all the interests declared when the register was last compiled. From time to time, amendments are also made and are incorporated into the list you see here.</p>
                         <p class="text-sm text-muted py-2">Learn more on the <NuxtLink class="text-primary" href="https://links.wheretheystand.nz/parliament-financial-interests" target="_blank">Parliament website</NuxtLink>.</p>
                     </UCard>
-                </UPageGridItem>
-                <UPageGridItem class="col-span-3 md:col-span-2 sm:col-span-2 lg:col-span-2 w-full">
+                </div>
+                <div class="col-span-3 md:col-span-2 sm:col-span-2 lg:col-span-2 w-full">
                     <UCard variant="subtle" v-if="status === 'success' && interests.interests">
                         <h3 class="text-xl font-bold">Interests for {{ person.display_name }} as at {{
                             formattedDate(interests.as_at) }}</h3>
@@ -54,7 +54,7 @@
                             </template>
                         </UEmpty>
                     </UCard>
-                </UPageGridItem>
+                </div>
             </UPageGrid>
         </UContainer>
 </template>
