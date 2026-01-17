@@ -18,7 +18,7 @@
                 </div>
 
                 <UPageGrid>
-                    <UPageGridItem>
+                    <div>
                         <UCard variant="subtle">
                             <h4 class="text-lg font-bold mb-2">Filter by type</h4>
                             <ais-refinement-list attribute="type">
@@ -48,8 +48,8 @@
                                 </template>
                             </ais-refinement-list>
                         </UCard>
-                    </UPageGridItem>
-                    <UPageGridItem class="col-span-2">
+                    </div>
+                    <div class="col-span-2">
                         <ais-state-results>
                             <template v-slot="{ query }">
                                 <ais-hits v-show="query.length > 0">
@@ -72,7 +72,7 @@
                         </ais-state-results>
 
 
-                    </UPageGridItem>
+                    </div>
                 </UPageGrid>
             </UContainer>
         </ais-instant-search>
