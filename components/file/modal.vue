@@ -1,6 +1,6 @@
 <template>
     <UModal :ui="{ content: 'sm:max-w-3xl' }" :title="title">
-        <UButton icon="i-lucide-file-text" color="neutral" variant="link" class="pl-0">{{ buttonText }}
+        <UButton :icon="icon" color="neutral" variant="link" class="pl-0">{{ buttonText }}
         </UButton>
         <template #body>
             <h2 class="text-lg font-bold mb-2">{{ file.file_name }}</h2>
@@ -56,6 +56,11 @@ const props = defineProps({
         type: String,
         required: false,
         default: 'View file'
+    },
+    icon: {
+        type: String,
+        required: false,
+        default: 'i-lucide-file-text'
     }
 })
 

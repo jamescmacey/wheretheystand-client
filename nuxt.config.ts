@@ -31,6 +31,11 @@ export default defineNuxtConfig({
       theme: 'reset'
     }
   },
+  mdc: {
+    headings: {
+      anchorLinks: false
+    }
+  },
   mapbox: {
     accessToken: 'pk.eyJ1IjoiamFtZXNjbWFjZXkiLCJhIjoiY2xiN2VhYzVqMGE5YTN2bnhuM3l6d3pxbyJ9.CN_c4Tf7wXMtxyLKWrtvJg'
   },
@@ -38,6 +43,7 @@ export default defineNuxtConfig({
     public: {
       apiBase: 'http://127.0.0.1:8000/v2/',
       apiBaseLegacy: 'https://api.wheretheystand.nz/api/',
+      electionsEnabled: process.env.NUXT_PUBLIC_ELECTIONS_ENABLED ?? 'false',
       valueKeys: {
         startReasons: {
           e93_137: {
