@@ -5,6 +5,8 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "clean": "nuxi cleanup",
+    "dev:reset": "nuxi cleanup && nuxt prepare && nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
@@ -12,7 +14,7 @@
   },
   "dependencies": {
     "@nuxt/image": "^2.0.0",
-    "@nuxt/ui": "^4.3.0",
+    "@nuxt/ui": "^4.5.1",
     "@nuxtjs/algolia": "^1.10.2",
     "@nuxtjs/mdc": "^0.18.0",
     "@nuxtjs/robots": "^5.5.6",

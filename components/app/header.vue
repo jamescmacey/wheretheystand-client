@@ -1,5 +1,7 @@
 <script setup lang="ts">
 const route = useRoute()
+const config = useRuntimeConfig()
+const electionsEnabled = String(config.public.electionsEnabled).toLowerCase() === 'true'
 
 const items = computed(() => [{
   label: 'People',
@@ -22,11 +24,11 @@ const items = computed(() => [{
   to: '/votes',
   class: 'text-inverted dark:text-default hover:underline hover:text-inverted dark:hover:text-default'
 },
-{
+...(electionsEnabled ? [{
   label: 'Elections',
   to: '/elections',
   class: 'text-inverted dark:text-default hover:underline hover:text-inverted dark:hover:text-default'
-},
+}] : []),
 {
   label: 'Search',
   to: '/search',

@@ -1,9 +1,11 @@
 <script setup>
 const search = ref('')
+const config = useRuntimeConfig()
 
 const liveElection = ref(true)
+const electionFeaturesEnabled = String(config.public.electionsEnabled).toLowerCase() === 'true'
 
-const config = useRuntimeConfig()
+
 const { data: homepageData } = await useAsyncData('homepageData', () => $fetch(`${config.public.apiBaseLegacy}client/homepage/`))
 
 import { formatDistanceToNow, format } from 'date-fns'
@@ -54,13 +56,13 @@ const randomPage = async () => {
 <template>
   <div>
     <div
-      class="relative bg-[url('https://storage.googleapis.com/wheretheystand-nz/nzpm_app/beehive.jpg')] dark:bg-[url('https://storage.googleapis.com/wheretheystand-nz/nzpm_app/beehive_night.jpg')] bg-cover bg-center bg-no-repeat">
+      class="relative bg-[url('/images/beehive-day.jpg')] dark:bg-[url('/images/beehive-night.jpg')] bg-cover bg-center bg-no-repeat">
       <div class="absolute inset-0 bg-white/60 dark:bg-black/70"></div> <!-- Optional overlay -->
       <UPageHero class="relative z-10" title="Wondering where they stand?"
         description="WhereTheyStand aggregates voting data, financial information, biographical information, and more."
         orientation="horizontal">
         <div>
-          <UPageCard v-if="liveElection" variant="soft" spotlight spotlightColor="error"
+          <UPageCard v-if="liveElection && electionFeaturesEnabled" variant="soft" spotlight spotlightColor="error"
             to="/elections/2026-general-election">
             <template #title>
               <h2 class="text-2xl font-bold"><span
@@ -71,7 +73,7 @@ const randomPage = async () => {
               <p>Election results for the 2026 general election will be available as they come in.</p>
             </template>
           </UPageCard>
-          <USeparator v-if="liveElection" class="my-4" label="or" />
+          <USeparator v-if="liveElection && electionFeaturesEnabled" class="my-4" label="or" />
           <UPageCard variant="soft" spotlight spotlightColor="primary">
             <template #title>
               <h2 class="text-2xl font-bold">Find an MP, electorate or party</h2>
@@ -120,18 +122,18 @@ const randomPage = async () => {
           </UCard>
         </div>
         <div>
-          <h3 class="text-2xl font-bold mb-4">Recent elections</h3>
-          <UCard>
-            <div class="flex flex-col gap-4">
-              <UPageCard variant="soft" title="2023 Port Waikato by-election"
-                to="/elections/2023-port-waikato-by-election">
-              </UPageCard>
-              <UPageCard variant="soft" title="2023 General election" to="/elections/2023-general-election"></UPageCard>
-              <UPageCard variant="soft" title="2022 Hamilton West by-election" to="/elections/2022-hamilton-west">
-              </UPageCard>
-              <UPageCard variant="soft" title="2022 Tauranga by-election" to="/elections/2022-tauranga"></UPageCard>
-            </div>
-          </UCard>
+          <h3 class="text-2xl font-bold mb-4">Update</h3>
+          <UPageCard>
+            <template #title>
+              Feature improvements to WhereTheyStand
+            </template>
+            <template #description>
+              <div class="space-y-2">
+                <p>Over 2025, many things on WhereTheyStand stopped updating.  I have now introduced a new look for the site and rewritten the backend.</p> 
+                <p>In the coming months I'll be making further improvements to get the site in good shape in advance of the 2026 general election.  You can see more about these plans [[link to come]]</p>
+              </div>
+            </template>
+          </UPageCard>
         </div>
       </UPageGrid>
     </UContainer>

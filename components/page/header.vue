@@ -85,7 +85,8 @@
         return this.pageLinks.map(link => ({
           label: link.name,
           to: link.to,
-          exact: true
+          exact: true,
+          disabled: Boolean(link.disabled)
         }))
       }
     },

@@ -1,10 +1,10 @@
 <template>
-    <UBanner icon="i-lucide-alert-circle" close color="warning">
+    <UBanner icon="i-lucide-alert-circle" close color="warning" id="development-banner">
         <template #title>
             <span class="font-bold">This site is under development and is for testing only.  Some information may be missing or incorrect.</span>
         </template>
     </UBanner>
-    <UBanner v-if="banners && banners.length > 0" v-for="banner in banners" :icon="banner.link_type == 'external' ? 'i-lucide-external-link' : null" :key="banner.id" :close="banner.is_persistent ? false : true" :to="banner.link ? banner.link : null" :target="banner.link_behaviour == 'new' ? '_blank' : null">
+    <UBanner :id="banner.id" v-if="banners && banners.length > 0" v-for="banner in banners" :icon="banner.url_tyle == 'external' ? 'i-lucide-external-link' : null" :key="banner.id" :close="banner.is_persistent ? false : true" :to="banner.url ? banner.url : null" :target="banner.url_behaviour == 'new' ? '_blank' : null">
         <template #title>
             <span class="font-bold dark:text-inverted">{{ banner.title }}</span><span v-if="banner.message">: {{ banner.message }}</span>
         </template>
@@ -13,5 +13,5 @@
 
 <script setup>
 const config = useRuntimeConfig();
-const { data: banners } = await useAsyncData('banners', () => $fetch(`${config.public.apiBaseLegacy}banners/`))
+const { data: banners } = await useAsyncData('banners', () => $fetch(`${config.public.apiBase}banners/`))
 </script>

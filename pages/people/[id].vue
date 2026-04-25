@@ -52,6 +52,7 @@
 
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
+const electionsEnabled = String(config.public.electionsEnabled).toLowerCase() === 'true'
 const route = useRoute()
 
 const personKey = computed(() => `person-${route.params.id}`)
@@ -83,10 +84,10 @@ const links = computed(() => {
             to: '/people/' + route.params.id + '/expenses',
             name: 'Expenses',
         },
-        {
+        ...(electionsEnabled ? [{
             to: '/people/' + route.params.id + '/elections',
             name: 'Electoral history'
-        }
+        }] : [])
     ]
 })
 </script>

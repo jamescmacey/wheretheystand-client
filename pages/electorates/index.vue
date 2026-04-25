@@ -37,15 +37,19 @@
 
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <UPageCard v-for="electorate in filteredElectorates" :key="electorate.id"
-                        :to="'/electorates/' + electorate.slug">
+                    <ContentItemCard
+                            v-for="electorate in filteredElectorates"
+                            :key="electorate.id"
+                        :item="electorate"
+                        :to="'/electorates/' + electorate.slug"
+                    >
                         <template #title>
                             {{ electorate.name }}
                         </template>
                         <template #description>
                             {{ electorate.electorate_type === 'general' ? 'General electorate' : 'Māori electorate' }}
                         </template>
-                    </UPageCard>
+                    </ContentItemCard>
                 </div>
             </div>
             <div v-else-if="status === 'pending'" class="w-full">
