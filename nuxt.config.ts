@@ -37,7 +37,7 @@ export default defineNuxtConfig({
     }
   },
   mapbox: {
-    accessToken: 'pk.eyJ1IjoiamFtZXNjbWFjZXkiLCJhIjoiY2xiN2VhYzVqMGE5YTN2bnhuM3l6d3pxbyJ9.CN_c4Tf7wXMtxyLKWrtvJg'
+    accessToken: process.env.MAPBOX_ACCESS_TOKEN
   },
   runtimeConfig: {
     public: {
