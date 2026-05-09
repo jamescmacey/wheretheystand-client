@@ -128,9 +128,10 @@ const randomPage = async () => {
               Feature improvements to WhereTheyStand
             </template>
             <template #description>
-              <div class="space-y-2">
+              <div class="space-y-4">
                 <p>Over 2025, many things on WhereTheyStand stopped updating.  I have now introduced a new look for the site and rewritten the backend.</p> 
-                <p>In the coming months I'll be making further improvements to get the site in good shape in advance of the 2026 general election.  You can see more about these plans [[link to come]]</p>
+                <p>In the coming months I'll be making further improvements to get the site in good shape in advance of the 2026 general election.</p>
+                <UButton to="/blog/updates" variant="link" icon="i-heroicons-arrow-right" class="pl-0" trailing>Learn more</UButton>
               </div>
             </template>
           </UPageCard>

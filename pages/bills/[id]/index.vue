@@ -145,7 +145,7 @@
                     Member<span v-if="members.length > 1">s</span> responsible
                 </h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <ContentItemCard
+                    <WContentItemCard
                         v-for="memberItem in members"
                         :key="memberItem.id"
                         :item="{ colour: memberItem.colour }"
@@ -167,7 +167,7 @@
                                 </div>
                             </div>
                         </template>
-                    </ContentItemCard>
+                    </WContentItemCard>
                 </div>
             </div>
 
@@ -179,7 +179,7 @@
                     Showing reading dates only where available.
                 </p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
-                    <ContentItemCard
+                    <WContentItemCard
                         v-for="row in mergedReadingRows"
                         :key="row.reading"
                         :item="{}"
@@ -245,7 +245,7 @@
                                 </template>
                             </div>
                         </template>
-                    </ContentItemCard>
+                    </WContentItemCard>
                 </div>
 
                 <p v-if="bill.votesNote" class="mt-4 text-xs text-muted">{{ bill.votesNote }}</p>

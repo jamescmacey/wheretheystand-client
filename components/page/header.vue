@@ -7,7 +7,7 @@
         <UContainer class="py-12 text-inverted dark:text-default">
             <h1 class="text-4xl font-semibold">{{ pageTitle }}</h1>
             <h2 class="text-2xl font-semibold mt-2" v-if="pageSubtitle">{{ pageSubtitle }}</h2>
-            <h3 class="text-sm text-muted mt-2" v-if="pageDate">{{ formatDate(pageDate) }}</h3>
+            <h3 class="text-sm mt-2" v-if="pageDate">{{ formatDate(pageDate) }}</h3>
         </UContainer>
         <div class="bg-accented/70">
                 <UContainer>

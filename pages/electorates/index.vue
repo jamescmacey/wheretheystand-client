@@ -37,7 +37,7 @@
 
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <ContentItemCard
+                    <WContentItemCard
                             v-for="electorate in filteredElectorates"
                             :key="electorate.id"
                         :item="electorate"
@@ -49,7 +49,7 @@
                         <template #description>
                             {{ electorate.electorate_type === 'general' ? 'General electorate' : 'Māori electorate' }}
                         </template>
-                    </ContentItemCard>
+                    </WContentItemCard>
                 </div>
             </div>
             <div v-else-if="status === 'pending'" class="w-full">

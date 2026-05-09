@@ -3,7 +3,7 @@
         <div class="mb-8">
             <h3 class="text-xl font-bold mb-2">Bills</h3>
         </div>
-        <ContentPaginatedContent 
+        <WContentPaginatedContent 
             :endpoint="'bills/?person=' + person.slug"
             item-label="bills" 
             :items-per-page="10" 
@@ -79,7 +79,7 @@
                 </div>
             </UCard>
         </template>
-        </ContentPaginatedContent>
+        </WContentPaginatedContent>
     </UContainer>
 </template>
 
