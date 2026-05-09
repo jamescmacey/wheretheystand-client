@@ -1,6 +1,15 @@
-<script setup lang="ts">
-const value = `## About these terms
-These terms set out the copyright and privacy terms of WhereTheyStand.  By using WhereTheyStand you agree to these terms.
+---
+title: Copyright and privacy terms
+description: Copyright and privacy terms for using WhereTheyStand.
+date: 2026-04-25
+---
+
+## About these terms
+These terms set out the copyright and privacy terms of WhereTheyStand.  
+
+::callout{icon="i-lucide-info" color="info"}
+By using WhereTheyStand you agree to these terms, and you accept that your obligations under these terms are entered into in exchange for your use of WhereTheyStand.
+::
 
 ## Copyright
 ### Original content
@@ -42,21 +51,6 @@ WhereTheyStand operates a party communication archive, called Venus, which store
 In the event that an email containing personal information is inadvertently sent, that email may show on WhereTheyStand — if this is the case, please get in touch and this will be manually edited out.
 
 No edits will be made where they do not relate to privacy, safety, or compliance with the law.
-`
-</script>
 
-<template>
-<div>
-    <PageHeader pageTitle="Terms"></PageHeader>
-<UContainer class="my-8">
-    <UCard variant="subtle">
-        <div class="-mt-8">
-        <MDC :value="value"/>
-        </div>
-    </UCard>
-    
-</UContainer>
-
-</div>
-</template>
-
+## Previous versions of these terms
+The version history of these terms is [available on GitHub](https://github.com/jamescmacey/wheretheystand-client/blob/main/content/reference/terms.md) by viewing the commit history for the file from which this page is generated.

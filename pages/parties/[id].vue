@@ -24,7 +24,7 @@
                     v-else
                     class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:auto-rows-[minmax(4.25rem,auto)]"
                 >
-                    <ContentItemCard
+                    <WContentItemCard
                         v-for="mp in orderedLeaderMps"
                         :key="'leader-' + mp.id"
                         class="sm:row-span-2 h-full min-h-0"
@@ -47,8 +47,8 @@
                                 {{ mpCardDescription(mp) }}
                             </p>
                         </div>
-                    </ContentItemCard>
-                    <ContentItemCard
+                    </WContentItemCard>
+                    <WContentItemCard
                         v-for="mp in nonLeaderFilteredMps"
                         :key="mp.id"
                         :item="{ colour: party.colour }"
@@ -67,7 +67,7 @@
                                 </div>
                             </div>
                         </template>
-                    </ContentItemCard>
+                    </WContentItemCard>
                 </div>
             </section>
         </UContainer>

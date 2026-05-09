@@ -24,7 +24,7 @@
                         No parties match your search in this group.
                     </p>
                     <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <ContentItemCard
+                        <WContentItemCard
                             v-for="party in filteredCurrent"
                             :key="party.id"
                             :item="party"
@@ -36,7 +36,7 @@
                             <template #description>
                                 {{ seatLabel(party.seat_count) }}
                             </template>
-                        </ContentItemCard>
+                        </WContentItemCard>
                     </div>
                 </section>
 
@@ -48,7 +48,7 @@
                         No parties match your search in this group.
                     </p>
                     <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <ContentItemCard
+                        <WContentItemCard
                             v-for="party in filteredOther"
                             :key="party.id"
                             :item="party"
@@ -60,7 +60,7 @@
                             <template #description>
                                 {{ seatLabel(party.seat_count) }}
                             </template>
-                        </ContentItemCard>
+                        </WContentItemCard>
                     </div>
                 </section>
             </div>

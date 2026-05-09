@@ -12,7 +12,7 @@
         </div>
 
         
-        <ContentPaginatedContent :endpoint="'credit-card-reconciliations/?person=' + person.id"
+        <WContentPaginatedContent :endpoint="'credit-card-reconciliations/?person=' + person.id"
             item-label="reconciliations" items-per-page="10" url-prefix="reconciliations">
             <template #content="{ items }">
             <UCard variant="subtle" id="reconciliations">
@@ -38,7 +38,7 @@
                 </div>
             </UCard>
         </template>
-        </ContentPaginatedContent>
+        </WContentPaginatedContent>
     </UContainer>
 </template>
 

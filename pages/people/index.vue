@@ -98,7 +98,7 @@
                         {{ section.letter === '#' ? 'Other' : section.letter }}
                     </h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <ContentItemCard
+                        <WContentItemCard
                             v-for="mp in section.people"
                             :key="mp.id"
                             :item="{ colour: mp.party_affiliation?.party?.colour }"
@@ -120,7 +120,7 @@
                                     </div>
                                 </div>
                             </template>
-                        </ContentItemCard>
+                        </WContentItemCard>
                     </div>
                 </div>
             </div>

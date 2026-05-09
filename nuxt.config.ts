@@ -16,7 +16,9 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@nuxtjs/robots',
     '@nuxtjs/mdc',
-    "@nuxt/image"
+    '@nuxt/content',
+    "@nuxt/image",
+    "@nuxtjs/turnstile"
   ],
   css: [
     '~/assets/css/main.css',
@@ -24,16 +26,14 @@ export default defineNuxtConfig({
   gtag: {
     id: 'G-WBR7239726'
   },
+  turnstile: {
+    siteKey: process.env.TURNSTILE_SITE_KEY
+  },
   algolia: {
     apiKey: process.env.ALGOLIA_SEARCH_API_KEY,
     applicationId: process.env.ALGOLIA_APPLICATION_ID,
     instantSearch: {
       theme: 'reset'
-    }
-  },
-  mdc: {
-    headings: {
-      anchorLinks: false
     }
   },
   mapbox: {

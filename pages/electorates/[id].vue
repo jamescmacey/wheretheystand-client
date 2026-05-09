@@ -8,7 +8,7 @@
                     <UCard v-if="!currentIncumbent">
                         <UEmpty title="Vacant" description="No current member of Parliament for this electorate." />
                     </UCard>
-                    <ContentItemCard
+                    <WContentItemCard
                         v-else
                         :item="{ colour: currentIncumbent.person.cached_colour }"
                         :to="'/people/' + currentIncumbent.person.slug"
@@ -27,7 +27,7 @@
                                 {{ incumbentPartyName(currentIncumbent) }}
                             </p>
                         </div>
-                    </ContentItemCard>
+                    </WContentItemCard>
                 </div>
                 <div class="col-span-2">
                     <template v-if="hasMap">

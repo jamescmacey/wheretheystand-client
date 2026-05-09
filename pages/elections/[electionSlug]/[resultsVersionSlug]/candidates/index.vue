@@ -16,7 +16,7 @@
                     <div>
                         <h2 class="text-2xl font-bold">{{ candidates.length }} candidates</h2>
                     </div>
-                    <ContentPaginatedItems :items="candidates" :item-key="item => item.number" item-label="candidates"
+                    <WContentPaginatedItems :items="candidates" :item-key="item => item.number" item-label="candidates"
                         :items-per-page="10" url-prefix="candidates" :query-params="defaultQueryParams" :sync-url="true"
                         :custom-filter="customFilter" :custom-sort="customSort">
                         <template #filters="{ filters, updateFilter }">
@@ -74,7 +74,7 @@
                                 </div>
                             </UPageCard>
                         </template>
-                    </ContentPaginatedItems>
+                    </WContentPaginatedItems>
                 </div>
             </div>
         </template>

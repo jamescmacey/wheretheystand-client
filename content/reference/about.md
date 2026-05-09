@@ -1,5 +1,11 @@
-<script setup lang="ts">
-const value = `## What is WhereTheyStand?
+---
+title: About WhereTheyStand
+description: WhereTheyStand aims to aggregate key data about New Zealand's politicians, Parliament, and political parties.
+---
+
+
+
+## What is WhereTheyStand?
 WhereTheyStand aims to aggregate key data about New Zealand's politicians, Parliament, and political parties.
 
 ## Historical reach
@@ -20,19 +26,3 @@ Secondly, the data and information that is presented on WhereTheyStand comes fro
 * Links to company details in financial interests are provided by the Companies Office through the Ministry of Business, Innovation and Employment.
 * Party name and registration information comes from the Electoral Commission.
 * Electorate boundaries and geographic statistics come from Stats NZ, the Representation Commission and the Electoral Commission.
-`
-</script>
-
-<template>
-<div>
-    <PageHeader pageTitle="About WhereTheyStand"></PageHeader>
-<UContainer class="my-8">
-    <UCard variant="subtle">
-        <MDC :value="value"/>
-    </UCard>
-    
-</UContainer>
-
-</div>
-</template>
-
