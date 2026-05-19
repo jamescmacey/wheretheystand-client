@@ -17,6 +17,11 @@
                     <UNavigationMenu v-else-if="items.length > 0" :items="items" variant="link" highlight color="neutral"/>
                 </UContainer>
         </div>
+        <div v-if="backLink" class="bg-accented/70">
+          <UContainer>
+            <UButton :to="backLink" class="text-sm" icon="i-lucide-arrow-left" color="neutral" variant="link" as="link" :ui="{ root: '!p-0' }">{{ backText }}</UButton>
+          </UContainer>
+        </div>
       </div>
     </div>
   </template>

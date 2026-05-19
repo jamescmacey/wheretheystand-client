@@ -42,7 +42,6 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBase: 'http://127.0.0.1:8000/v2/',
-      apiBaseLegacy: 'https://api.wheretheystand.nz/api/',
       electionsEnabled: process.env.NUXT_PUBLIC_ELECTIONS_ENABLED ?? 'false',
       valueKeys: {
         startReasons: {

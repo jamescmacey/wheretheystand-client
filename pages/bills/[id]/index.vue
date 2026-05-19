@@ -72,7 +72,7 @@
                             </div>
                         </div>
 
-                        <div v-if="votingMethod">
+                        <div v-if="votingMethod && votingMethod.label !== 'unknown'">
                             <h3 class="text-sm font-semibold">Voting method</h3>
                             <p class="mt-1 text-sm text-muted">
                                 <span class="font-semibold text-default">{{ votingMethod.label }}:</span>
@@ -134,8 +134,7 @@
                         </div>
                     </template>
                     <div class="space-y-3">
-                        <p class="text-2xl font-semibold">{{ statusMeta.description }}</p>
-                        <p class="text-sm text-muted">{{ bill.statusSummary }}</p>
+                        <UTimeline size="xs" :default-value="2" :items="timelineItems" />
                     </div>
                 </UCard>
             </div>
@@ -258,6 +257,16 @@
 <script setup lang="ts">
 import { format } from 'date-fns'
 
+const formatDate = (date?: string | null) => {
+    if (!date) return ''
+    const parsedDate =
+        date.length === 10 && /^\d{4}-\d{2}-\d{2}$/.test(date)
+            ? new Date(date + 'T00:00:00')
+            : new Date(date)
+    if (Number.isNaN(parsedDate.getTime())) return String(date)
+    return format(parsedDate, 'd MMMM yyyy')
+}
+
 const props = defineProps({
     bill: {
         type: Object,
@@ -295,6 +304,41 @@ const proceduralNotes = computed(() =>
         ? (bill.value as Record<string, unknown>).proceduralNotes
         : [],
 )
+
+import type { TimelineItem } from '@nuxt/ui'
+
+const timelineItems = ref<TimelineItem[]>([
+  {
+    date: formatDate(bill.value?.introduction_date),
+    title: 'Introduced',
+    icon: 'i-lucide-rocket'
+  },
+  {
+    date: formatDate(bill.value?.first_reading_date),
+    title: '1st reading',
+    icon: 'i-lucide-book-open'
+  },
+  {
+    date: formatDate(bill.value?.second_reading_date),
+    title: '2nd reading',
+    icon: 'i-lucide-book-open'
+  },
+  {
+    date: formatDate(bill.value?.third_reading_date),
+    title: '3rd reading',
+    icon: 'i-lucide-book-open'
+  },
+  {
+    date: formatDate(bill.value?.royal_assent_date),
+    title: 'Royal assent',
+    icon: 'i-lucide-book-open'
+  },
+  {
+    date: formatDate(bill.value?.withdrawn_date),
+    title: 'Withdrawn',
+    icon: 'i-lucide-book-open'
+  }
+])
 
 type ApiVote = {
     id: string
@@ -502,13 +546,5 @@ function totalsForMergedRow(row: Extract<MergedRow, { kind: 'vote' }>) {
     ]
 }
 
-const formatDate = (date?: string | null) => {
-    if (!date) return ''
-    const parsedDate =
-        date.length === 10 && /^\d{4}-\d{2}-\d{2}$/.test(date)
-            ? new Date(date + 'T00:00:00')
-            : new Date(date)
-    if (Number.isNaN(parsedDate.getTime())) return String(date)
-    return format(parsedDate, 'd MMMM yyyy')
-}
+
 </script>
