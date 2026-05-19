@@ -81,21 +81,135 @@
 
 
 <script setup>
+import { AisInstantSearch, AisSearchBox, AisHits, AisRefinementList, AisStateResults, AisStats, AisHighlight } from 'vue-instantsearch/vue3/es'
+import { singleIndex } from 'instantsearch.js/es/lib/stateMappings'
+
 const indexName = 'wts_SearchObject_prod'
 const algolia = useAlgoliaRef()
-const route = useRoute()
-import { AisInstantSearch, AisSearchBox, AisHits, AisRefinementList, AisStateResults, AisStats, AisHighlight } from 'vue-instantsearch/vue3/es'
-import { history } from 'instantsearch.js/es/lib/routers';
-import { singleIndex } from 'instantsearch.js/es/lib/stateMappings';
+const vueRouter = useRouter()
 
-const routing = ref({
-    router: history(),
-    stateMapping: singleIndex("wts_SearchObject_prod"),
-})
+/** Convert Vue Router query to InstantSearch route state (Algolia bracket notation). */
+function queryToRouteState(query) {
+    const routeState = {}
 
-const searchQuery = ref('')
-if (route.query.query && typeof route.query.query === 'string') {
-    searchQuery.value = route.query.query
+    for (const [key, rawValue] of Object.entries(query)) {
+        if (rawValue == null || rawValue === '') {
+            continue
+        }
+
+        if (key === 'query') {
+            routeState.query = Array.isArray(rawValue) ? rawValue[0] : rawValue
+            continue
+        }
+
+        const refinementIndexed = /^refinementList\[([^\]]+)\]\[(\d+)\]$/.exec(key)
+        if (refinementIndexed) {
+            const [, attribute, index] = refinementIndexed
+            if (!routeState.refinementList) {
+                routeState.refinementList = {}
+            }
+            if (!routeState.refinementList[attribute]) {
+                routeState.refinementList[attribute] = []
+            }
+            routeState.refinementList[attribute][Number(index)] = Array.isArray(rawValue) ? rawValue[0] : rawValue
+            continue
+        }
+
+        if (key === 'refinementList' && typeof rawValue === 'object' && !Array.isArray(rawValue)) {
+            routeState.refinementList = rawValue
+            continue
+        }
+
+        routeState[key] = rawValue
+    }
+
+    if (routeState.refinementList) {
+        for (const attribute of Object.keys(routeState.refinementList)) {
+            routeState.refinementList[attribute] = routeState.refinementList[attribute].filter(Boolean)
+        }
+    }
+
+    return routeState
+}
+
+/** Convert InstantSearch route state to Vue Router query (Algolia bracket notation). */
+function routeStateToQuery(routeState) {
+    const query = {}
+
+    if (routeState.query) {
+        query.query = String(routeState.query)
+    }
+
+    if (routeState.refinementList) {
+        for (const [attribute, values] of Object.entries(routeState.refinementList)) {
+            const list = Array.isArray(values) ? values : [values]
+            list.forEach((value, index) => {
+                query[`refinementList[${attribute}][${index}]`] = String(value)
+            })
+        }
+    }
+
+    for (const [key, value] of Object.entries(routeState)) {
+        if (key === 'query' || key === 'refinementList') {
+            continue
+        }
+        query[key] = value
+    }
+
+    return query
+}
+
+function createInstantSearchRouter() {
+    let removeAfterEach
+    let onPopState
+
+    const router = {
+        read() {
+            return queryToRouteState(vueRouter.currentRoute.value.query)
+        },
+        write(routeState) {
+            const query = routeStateToQuery(routeState)
+            if (router.createURL(routeState) === router.createURL(router.read())) {
+                return
+            }
+            vueRouter.push({ query })
+        },
+        createURL(routeState) {
+            return vueRouter.resolve({ query: routeStateToQuery(routeState) }).href
+        },
+        onUpdate(callback) {
+            if (import.meta.server) {
+                return
+            }
+
+            removeAfterEach = vueRouter.afterEach(() => {
+                callback(router.read())
+            })
+
+            onPopState = () => {
+                callback(router.read())
+            }
+            window.addEventListener('popstate', onPopState)
+        },
+        dispose() {
+            if (import.meta.server) {
+                return
+            }
+            if (onPopState) {
+                window.removeEventListener('popstate', onPopState)
+            }
+            if (removeAfterEach) {
+                removeAfterEach()
+            }
+        },
+    }
+
+    return router
+}
+
+const routing = {
+    router: createInstantSearchRouter(),
+    stateMapping: singleIndex(indexName),
 }
 
 </script>

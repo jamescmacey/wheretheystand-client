@@ -14,6 +14,17 @@ export default defineContentConfig({
         description: z.string(),
         date: z.date()
       })
+    }),
+    docs: defineCollection({
+      type: 'page',
+      source: {
+        repository: 'https://github.com/jamescmacey/wheretheystand-django',
+        include: 'docs/*.md'
+      },
+      schema: z.object({
+        title: z.string(),
+        description: z.string()
+      })
     })
   }
 })

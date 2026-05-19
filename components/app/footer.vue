@@ -10,31 +10,17 @@ const columns = [{
   }, {
     label: 'Copyright and privacy',
     to: '/terms'
-  }, {
-    label: 'System status',
-    to: 'https://status.wheretheystand.nz'
   }]
 }, {
   label: 'Support',
   children: [{
     label: 'Buy Me A Coffee',
-    to: 'https://links.wheretheystand.nz/buy-me-a-coffee'
+    to: 'https://links.wheretheystand.nz/buy-me-a-coffee',
+  }, {
+    label: 'System status',
+    to: 'https://status.wheretheystand.nz'
   }]
 }]
-
-const toast = useToast()
-
-const email = ref('')
-const loading = ref(false)
-
-function onSubmit() {
-  loading.value = true
-
-  toast.add({
-    title: 'Subscribed!',
-    description: 'You\'ve been subscribed to our newsletter.'
-  })
-}
 </script>
 
 <template>
@@ -45,38 +31,12 @@ function onSubmit() {
   <UFooter :ui="{ top: 'border-b border-default' }">
     <template #top>
       <UContainer>
-        <UFooterColumns :columns="columns">
-          <template #right>
-            <form @submit.prevent="onSubmit">
-              <UFormField
-                name="email"
-                label="Subscribe to our newsletter"
-                size="lg"
-              >
-                <UInput
-                  v-model="email"
-                  type="email"
-                  class="w-full"
-                  placeholder="Enter your email"
-                >
-                  <template #trailing>
-                    <UButton
-                      type="submit"
-                      size="xs"
-                      color="neutral"
-                      label="Subscribe"
-                    />
-                  </template>
-                </UInput>
-              </UFormField>
-            </form>
-          </template>
-        </UFooterColumns>
+        <UFooterColumns :columns="columns" />
       </UContainer>
     </template>
 
     <template #left>
-      <p class="text-muted text-sm">
+      <p class="text-muted text-sm font-brand">
         wheretheystand.nz
       </p>
     </template>
@@ -89,6 +49,14 @@ function onSubmit() {
         target="_blank"
         icon="i-simple-icons-x"
         aria-label="WhereTheyStand on X"
+        color="neutral"
+        variant="ghost"
+      />
+      <UButton
+        to="https://links.wheretheystand.nz/bluesky"
+        target="_blank"
+        icon="i-simple-icons-bluesky"
+        aria-label="WhereTheyStand on Bluesky"
         color="neutral"
         variant="ghost"
       />

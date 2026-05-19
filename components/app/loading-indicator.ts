@@ -25,7 +25,7 @@ export default defineComponent({
     },
     color: {
       type: [String, Boolean],
-      default: 'repeating-linear-gradient(to right,#00dc82 0%,#34cdfe 50%,#0047e1 100%)',
+      default: 'repeating-linear-gradient(to right,#349494 0%,#58787f 100%)',
     },
     errorColor: {
       type: String,

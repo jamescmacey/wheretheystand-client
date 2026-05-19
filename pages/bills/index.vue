@@ -2,26 +2,27 @@
     <div>
         <PageHeader page-title="Bills" page-subtitle="Proposed changes to the law before Parliament" />
         <UContainer class="my-8">
-            <div class="prose prose-neutral dark:prose-invert max-w-none mb-8 space-y-4 text-default">
-                <h2 class="text-xl font-semibold text-highlighted not-prose">About bills</h2>
-                <p class="text-sm leading-relaxed">
+            <h2 class="text-2xl font-bold mb-4">About bills</h2>
+            <div class="space-y-4 mb-4">
+                
+                <p>
                     Bills are proposed changes to the law, and must each pass through several stages in Parliament
                     before becoming law.
                 </p>
-                <p class="text-sm leading-relaxed">
+                <p>
                     Before any bill becomes law, there are three main votes it must pass: the first, second and third
                     readings. For most bills, there is a chance for members of the public to make submissions at the
                     select committee stage, which happens between the first and second readings.
                 </p>
-                <p class="text-sm leading-relaxed">
+                <p>
                     After a bill passes its third reading vote, it is granted Royal Assent by the Governor-General and
                     becomes law, subject to any commencement provisions contained within the bill.
                 </p>
-                <p class="text-sm leading-relaxed">
+                <p>
                     WhereTheyStand contains bills from the 51st Parliament and later (2014—present), imported from
                     Parliament’s website and linked with voting records and MPs’ profiles.
                 </p>
-                <p class="text-sm text-muted not-prose">
+                <p>
                     For less strict text search across the site, use
                     <ULink to="/search">search</ULink>.
                 </p>

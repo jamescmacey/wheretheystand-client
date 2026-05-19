@@ -1,12 +1,13 @@
 <script setup>
 const search = ref('')
 const config = useRuntimeConfig()
+const apiBase = config.public.apiBase
 
-const liveElection = ref(true)
+const liveElection = ref(false)
 const electionFeaturesEnabled = String(config.public.electionsEnabled).toLowerCase() === 'true'
 
 
-const { data: homepageData } = await useAsyncData('homepageData', () => $fetch(`${config.public.apiBaseLegacy}client/homepage/`))
+const { data: homepageData, status, error } = await useAsyncData('homepageData', () => $fetch(`${apiBase}client/homepage/`), { lazy: true })
 
 import { formatDistanceToNow, format } from 'date-fns'
 
@@ -18,6 +19,30 @@ const formattedDateFull = (date) => {
   return format(new Date(date), 'dd MMMM yyyy')
 }
 
+const resetSearch = () => {
+  search.value = ''
+}
+
+onMounted(resetSearch)
+onActivated(resetSearch)
+
+const submitSearch = async () => {
+  const term = search.value.trim()
+  if (!term) {
+    return
+  }
+
+  await navigateTo({
+    path: '/search',
+    query: {
+      query: term,
+      'refinementList[type][0]': 'Person',
+      'refinementList[type][1]': 'Electorate',
+      'refinementList[type][2]': 'Party',
+    },
+  })
+}
+
 const loadingRandomPage = ref(false)
 const toast = useToast()
 const randomPage = async () => {
@@ -26,30 +51,22 @@ const randomPage = async () => {
   }
 
   loadingRandomPage.value = true
-  var url = config.public.apiBaseLegacy + "client/random/"
-  const { data, status } = await useAsyncData('randomPage', () => $fetch(url))
-  if (status.value === 'success') {
-    try {
-      await navigateTo(data.value.to)
-    } catch (error) {
-      console.error(error)
-      toast.add({
-        title: 'Unexpected error navigating to random page',
-        description: error.message,
-        color: 'error'
-      })
-    }
-  } else {
+  try {
+    const data = await $fetch(`${apiBase}client/random/`, {
+      cache: 'no-store',
+      query: { _: Date.now() },
+    })
+    await navigateTo(data.to)
+  } catch (error) {
+    console.error(error)
     toast.add({
       title: 'Error loading random page',
       description: 'Please try again.',
       color: 'error'
     })
+  } finally {
+    loadingRandomPage.value = false
   }
-
-  loadingRandomPage.value = false
-
-  return
 }
 </script>
 
@@ -60,7 +77,7 @@ const randomPage = async () => {
       <div class="absolute inset-0 bg-white/60 dark:bg-black/70"></div> <!-- Optional overlay -->
       <UPageHero class="relative z-10" title="Wondering where they stand?"
         description="WhereTheyStand aggregates voting data, financial information, biographical information, and more."
-        orientation="horizontal">
+        orientation="horizontal" :ui="{description: '-text-muted dark:-text-muted light:font-semibold text-highlighted'}">
         <div>
           <UPageCard v-if="liveElection && electionFeaturesEnabled" variant="soft" spotlight spotlightColor="error"
             to="/elections/2026-general-election">
@@ -81,17 +98,19 @@ const randomPage = async () => {
             <template #description>
               <p>All MPs who've been in Parliament since 2014 have profiles.</p>
 
-              <UFormField class="mt-4">
-                <UInput v-model="search" placeholder="MP, party or electorate name" class="w-full" />
-                <template #trailing>
-                  <UButton variant="link">
-                    <UIcon name="i-heroicons-magnifying-glass" />
-                  </UButton>
-                </template>
-                <template #help>
-                  <span class="text-muted text-xs">Search provided by Algolia.</span>
-                </template>
-              </UFormField>
+              <form class="mt-4" @submit.prevent="submitSearch">
+                <UFormField>
+                  <UInput v-model="search" placeholder="MP, party or electorate name" class="w-full" />
+                  <template #trailing>
+                    <UButton type="submit" variant="link" aria-label="Search">
+                      <UIcon name="i-heroicons-magnifying-glass" />
+                    </UButton>
+                  </template>
+                  <template #help>
+                    <span class="text-muted text-xs">Search provided by Algolia.</span>
+                  </template>
+                </UFormField>
+              </form>
 
               <UButton variant="link" @click="randomPage()" class="mt-4 pl-0 text-md" icon="i-heroicons-arrow-right" trailing :loading="loadingRandomPage" >
                 Or, go to a random page
@@ -103,21 +122,36 @@ const randomPage = async () => {
     </div>
     <UContainer class="my-8">
       <UPageGrid>
-        <div>
-          <h3 class="text-2xl font-bold mb-4">Recent votes</h3>
-          <UCard v-if="homepageData && homepageData.votes">
+        <div :class="{'col-span-2': status === 'error'}">
+          <h3 class="text-2xl font-bold mb-4">Recent <span v-if="status === 'error'">bills and </span>votes</h3>
+          <UCard v-if="status === 'success' && homepageData && homepageData.votes">
             <div class="flex flex-col gap-4">
               <UPageCard v-for="vote in homepageData.votes" :key="vote.id" variant="soft" :title="vote.name"
                 :description="formattedDateFull(vote.date)" :to="'/votes/' + vote.id"></UPageCard>
             </div>
           </UCard>
+          <UCard v-else-if="status === 'pending'">
+            <div class="flex flex-col gap-4">
+              <div v-for="i in 5" :key="i">
+                <USkeleton class="w-full h-16" />
+              </div>
+            </div>
+          </UCard>
+          <UEmpty v-else-if="status === 'error'" title="Error loading recent bills and votes." description="Please try again." icon="i-heroicons-exclamation-triangle"></UEmpty>
         </div>
-        <div>
+        <div v-if="status != 'error'">
           <h3 class="text-2xl font-bold mb-4">Recently updated bills</h3>
-          <UCard v-if="homepageData && homepageData.bills">
+          <UCard v-if="status === 'success' && homepageData && homepageData.bills">
             <div class="flex flex-col gap-4">
               <UPageCard v-for="bill in homepageData.bills" :key="bill.id" variant="soft" :title="bill.name"
                 :to="'/bills/' + bill.id"></UPageCard>
+            </div>
+          </UCard>
+          <UCard v-else-if="status === 'pending'">
+            <div class="flex flex-col gap-4">
+              <div v-for="i in 5" :key="i">
+                <USkeleton class="w-full h-16" />
+              </div>
             </div>
           </UCard>
         </div>

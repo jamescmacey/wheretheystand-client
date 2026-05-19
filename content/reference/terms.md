@@ -30,7 +30,7 @@ When you use WhereTheyStand, some personal information about you is collected.
 
 Some parts of WhereTheyStand have options which can be set to your preferences.  These options are stored in your web browser's local storage.  They are not sent to WhereTheyStand or any third party.
 
-Google Analytics and Google Recaptcha are in use on WhereTheyStand. You may wish to familiarise yourself with Google's privacy policies.
+Cloudflare Turnstile, which is a product similar to Google reCAPTCHA, protects the contact form on the contact page.  Refer to the the [Turnstile Privacy Addendum](https://links.wheretheystand.nz/turnstile) for more information.
 
 ### For members of Parliament
 Information about members of Parliament is collected from a wide variety of sources. 
@@ -46,7 +46,7 @@ Numerous safeguards are in place to ensure the accuracy of this matching. First,
 If you find that you are listed as voting in a way contrary to the way you actually voted, first check that the original Hansard accurately records your position. If it does, and it is still wrong on WhereTheyStand, please get in touch to correct this.
 
 ### For political parties
-WhereTheyStand operates a party communication archive, called Venus, which stores all subscriber emails your party sends to it. In the future this archive will be public.
+WhereTheyStand operates a party communication archive which stores all subscriber emails your party sends to it. In the future this archive will be public.  Any email your party sends to an email address ending in `@venus.wheretheystand.nz` may be stored and made public.
 
 In the event that an email containing personal information is inadvertently sent, that email may show on WhereTheyStand — if this is the case, please get in touch and this will be manually edited out.
 
