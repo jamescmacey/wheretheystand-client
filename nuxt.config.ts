@@ -41,7 +41,10 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiBase: 'http://127.0.0.1:8000/v2/',
+      apiBase: process.env.NUXT_PUBLIC_API_BASE ?? 'http://localhost:8000/v2/',
+      apiOrigin: process.env.NUXT_PUBLIC_API_ORIGIN ?? 'http://localhost:8000',
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
+      adminEnabled: true,
       electionsEnabled: process.env.NUXT_PUBLIC_ELECTIONS_ENABLED ?? 'false',
       valueKeys: {
         startReasons: {

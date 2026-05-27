@@ -28,124 +28,147 @@
                 </p>
             </div>
 
-            <UCard class="mb-8">
-                <template #header>
-                    <h2 class="text-lg font-semibold">Filter bills</h2>
-                </template>
-                <div class="space-y-8">
-                    <UFormField label="Title must contain" description="Case-insensitive match on the bill title.">
-                        <UInput
-                            v-model="titleInput"
-                            placeholder="e.g. electoral"
-                            icon="i-lucide-search"
-                            class="w-full max-w-md"
-                            @blur="commitTitle"
-                            @keydown.enter.prevent="commitTitle"
-                        />
-                    </UFormField>
-
-                    <div>
-                        <h3 class="text-sm font-semibold text-highlighted mb-2">Bill types</h3>
-                        <p class="text-muted text-xs mb-3">
-                            Bills may be any of the selected types (leave all unchecked to include every type).
+            <div class="flex flex-col md:flex-row md:items-stretch gap-4">
+                <div class="md:w-1/3 shrink-0">
+                    <UCard variant="soft" class="h-fit w-full">
+                        <h3 class="text-lg font-semibold">Find a bill</h3>
+                        <p class="text-sm leading-relaxed mb-4">
+                            For less strict text search across the site, use
+                            <ULink to="/search" class="text-primary hover:underline">search</ULink>.
                         </p>
-                        <div class="flex flex-wrap gap-x-6 gap-y-2">
-                            <UCheckbox
-                                v-for="opt in billTypeOptions"
-                                :key="opt.value"
-                                :model-value="selectedTypes.includes(opt.value)"
-                                :label="opt.label"
-                                @update:model-value="(v) => typeof v === 'boolean' && toggleType(opt.value, v)"
+                        <USeparator class="my-4" />
+                        <UForm class="space-y-4">
+                            <UFormField label="Title must contain" description="Case-insensitive match on the bill title.">
+                                <UInput
+                                    v-model="titleInput"
+                                    placeholder="e.g. electoral"
+                                    icon="i-lucide-search"
+                                    size="sm"
+                                    class="w-full"
+                                    variant="subtle"
+                                />
+                            </UFormField>
+
+                            <div>
+                                <p class="text-sm font-medium text-highlighted mb-1">Bill types</p>
+                                <p class="text-muted text-xs mb-2">
+                                    Leave all unchecked to include every type.
+                                </p>
+                                <div class="flex flex-col gap-2">
+                                    <UCheckbox
+                                        v-for="opt in billTypeOptions"
+                                        :key="opt.value"
+                                        :model-value="selectedTypes.includes(opt.value)"
+                                        :label="opt.label"
+                                        @update:model-value="(v) => typeof v === 'boolean' && toggleType(opt.value, v)"
+                                    />
+                                </div>
+                            </div>
+
+                            <UFormField label="Parliamentary term of introduction">
+                                <USelect
+                                    v-model="parliamentModel"
+                                    :items="parliamentSelectItems"
+                                    size="sm"
+                                    class="w-full"
+                                    variant="subtle"
+                                />
+                            </UFormField>
+                            <UFormField label="Voting method">
+                                <USelect
+                                    v-model="votingModel"
+                                    :items="votingSelectItems"
+                                    size="sm"
+                                    class="w-full"
+                                    variant="subtle"
+                                />
+                            </UFormField>
+
+                            <div>
+                                <p class="text-sm font-medium text-highlighted mb-1">Procedural characteristics</p>
+                                <p class="text-muted text-xs mb-2">
+                                    When several are selected, a bill must match all of them.
+                                </p>
+                                <div class="flex flex-col gap-2">
+                                    <UCheckbox v-model="urgencyModel" label="Urgency used" />
+                                    <UCheckbox v-model="extendedModel" label="Extended sittings used" />
+                                    <UCheckbox v-model="submissionsModel" label="Open for submissions" />
+                                </div>
+                            </div>
+
+                            <UCheckbox v-model="showDescriptions" label="Show bill descriptions" />
+                        </UForm>
+                    </UCard>
+                </div>
+
+                <div class="md:flex-1 min-w-0 flex flex-col">
+                    <UCard variant="soft" class="w-full flex-1 flex flex-col md:min-h-full">
+                        <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                            <h3 class="text-lg font-semibold">{{ resultsHeading }}</h3>
+                            <div class="flex flex-col gap-2 sm:flex-row sm:items-center md:shrink-0">
+                                <USelect
+                                    v-model="pageSizeModel"
+                                    :items="pageSizeOptions"
+                                    size="sm"
+                                    class="w-full sm:w-48"
+                                    variant="subtle"
+                                />
+                                <USelect
+                                    v-model="orderingModel"
+                                    :items="orderingSelectItems"
+                                    size="sm"
+                                    class="w-full sm:w-48"
+                                    variant="subtle"
+                                />
+                            </div>
+                        </div>
+                        <USeparator class="my-4" />
+
+                        <div v-if="status === 'pending'" class="py-12 flex flex-col items-center justify-center text-center">
+                            <h4 class="mb-2 text-muted">Loading bills…</h4>
+                            <UProgress animation="swing" class="w-48" />
+                        </div>
+                        <UEmpty
+                            v-else-if="status === 'error'"
+                            title="Error loading bills"
+                            description="An error occurred while loading bills. Please try again."
+                        >
+                            <template #actions>
+                                <UButton
+                                    variant="subtle"
+                                    color="neutral"
+                                    class="mt-4"
+                                    icon="i-lucide-refresh-cw"
+                                    trailing
+                                    @click="refresh()"
+                                >
+                                    Refresh
+                                </UButton>
+                            </template>
+                        </UEmpty>
+                        <template v-else-if="paginated">
+                            <p class="text-muted text-sm mb-4">
+                                {{ paginated.count }} result<span v-if="paginated.count !== 1">s</span>.
+                            </p>
+                            <UEmpty
+                                v-if="paginated.results.length === 0"
+                                class="text-muted py-8"
+                                variant="naked"
+                                title="No bills match your filters"
+                                icon="i-lucide-search"
                             />
-                        </div>
-                    </div>
-
-                    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        <UFormField label="Parliamentary term of introduction">
-                            <USelect v-model="parliamentModel" :items="parliamentSelectItems" class="w-full" />
-                        </UFormField>
-                        <UFormField label="Voting method">
-                            <USelect v-model="votingModel" :items="votingSelectItems" class="w-full" />
-                        </UFormField>
-                        <UFormField label="Order by">
-                            <USelect v-model="orderingModel" :items="orderingSelectItems" class="w-full" />
-                        </UFormField>
-                    </div>
-
-                    <div>
-                        <h3 class="text-sm font-semibold text-highlighted mb-2">Procedural characteristics</h3>
-                        <p class="text-muted text-xs mb-3">
-                            When several options are selected, a bill must match all of them.
-                        </p>
-                        <div class="flex flex-col sm:flex-row flex-wrap gap-x-8 gap-y-2">
-                            <UCheckbox v-model="urgencyModel" label="Urgency used" />
-                            <UCheckbox v-model="extendedModel" label="Extended sittings used" />
-                            <UCheckbox v-model="submissionsModel" label="Open for submissions" />
-                        </div>
-                    </div>
-
-                    <USeparator />
-
-                    <div class="flex flex-col sm:flex-row sm:items-end gap-4 flex-wrap">
-                        <UFormField label="Results per page" class="w-full sm:w-40">
-                            <USelect v-model="pageSizeModel" :items="pageSizeOptions" class="w-full" />
-                        </UFormField>
-                        <UCheckbox v-model="showDescriptions" label="Show bill descriptions" class="sm:mb-2" />
-                    </div>
-
-                    <div class="flex flex-wrap gap-2">
-                        <UButton color="primary" icon="i-lucide-check" @click="applyFilters">
-                            Refine selection
-                        </UButton>
-                        <UButton variant="outline" color="neutral" @click="clearFilters">
-                            Clear filters
-                        </UButton>
-                    </div>
-                </div>
-            </UCard>
-
-            <div v-if="status === 'pending'" class="w-full">
-                <div class="my-16 w-1/2 mx-auto flex flex-col items-center justify-center text-center">
-                    <h3 class="mb-2 text-muted">Loading bills…</h3>
-                    <UProgress animation="swing" />
-                </div>
-            </div>
-            <UEmpty
-                v-else-if="status === 'error'"
-                title="Error loading bills"
-                description="An error occurred while loading bills. Please try again."
-            >
-                <template #actions>
-                    <UButton variant="subtle" color="neutral" class="mt-4" icon="i-lucide-refresh-cw" trailing @click="refresh()">
-                        Refresh
-                    </UButton>
-                </template>
-            </UEmpty>
-            <div v-else-if="paginated">
-                <h2 class="text-lg font-semibold mb-2">Results</h2>
-                <p class="text-muted text-sm mb-6">
-                    {{ paginated.count }} result<span v-if="paginated.count !== 1">s</span>.
-                </p>
-
-                <div v-if="paginated.results.length === 0" class="text-muted py-8">
-                    No bills match your filters.
-                </div>
-                <UCard v-else variant="subtle" id="bills-results">
-                    <div class="space-y-2">
-                        <div v-for="(item, i) in paginated.results" :key="item.id">
-                            <UPageCard variant="ghost" :to="'/bills/' + item.id">
-                                <template #body>
-                                    <div class="flex justify-between items-center">
-                                        <div>
-                                            <h5>
-                                                {{ item.name }}
-                                            </h5>
-                                        </div>
-                                    </div>
-                                    <p v-if="showDescriptions && item.description" class="text-sm text-muted">
+                            <div v-else class="space-y-3">
+                                <UPageCard
+                                    v-for="item in paginated.results"
+                                    :key="item.id"
+                                    variant="outline"
+                                    :to="'/bills/' + item.id"
+                                >
+                                    <h4 class="font-semibold">{{ item.name }}</h4>
+                                    <p v-if="showDescriptions && item.description" class="text-sm text-muted mt-2">
                                         {{ item.description }}
                                     </p>
-                                    <div class="space-x-2 mt-2">
+                                    <div class="flex flex-wrap gap-2 mt-2">
                                         <UBadge v-if="item.last_activity_date" variant="outline">
                                             Last activity {{ formatRelative(item.last_activity_date) }}
                                         </UBadge>
@@ -160,74 +183,38 @@
                                             {{ billTypes[item.bill_type]?.description ?? item.bill_type }}
                                         </span>
                                     </div>
-                                </template>
-                            </UPageCard>
-                            <USeparator v-if="i < paginated.results.length - 1" class="my-4" />
-                        </div>
-                    </div>
-                </UCard>
-
-                <div v-if="totalPages > 1" class="mt-8 flex justify-center items-center gap-2 flex-wrap">
-                    <UButton
-                        :disabled="page <= 1"
-                        variant="outline"
-                        size="sm"
-                        icon="i-lucide-chevrons-left"
-                        aria-label="First page"
-                        @click="goPage(1)"
-                    />
-                    <UButton
-                        :disabled="page <= 1"
-                        variant="outline"
-                        size="sm"
-                        icon="i-lucide-chevron-left"
-                        aria-label="Previous page"
-                        @click="goPage(page - 1)"
-                    />
-                    <div class="flex items-center gap-1">
-                        <template v-for="p in visiblePages" :key="String(p)">
-                            <UButton
-                                v-if="typeof p === 'number'"
-                                :variant="p === page ? 'solid' : 'outline'"
-                                :color="p === page ? 'primary' : 'neutral'"
-                                size="sm"
-                                :aria-current="p === page ? 'page' : undefined"
-                                @click="goPage(p)"
-                            >
-                                {{ p }}
-                            </UButton>
-                            <span v-else class="px-2 text-muted">…</span>
+                                </UPageCard>
+                            </div>
+                            <div v-if="totalPages > 1" class="mt-6 flex justify-center items-center gap-2">
+                                <UButton
+                                    :disabled="page <= 1"
+                                    variant="outline"
+                                    size="sm"
+                                    icon="i-lucide-chevron-left"
+                                    aria-label="Previous page"
+                                    @click="goPage(page - 1)"
+                                />
+                                <span class="text-sm text-muted px-2">Page {{ page }} of {{ totalPages }}</span>
+                                <UButton
+                                    :disabled="page >= totalPages"
+                                    variant="outline"
+                                    size="sm"
+                                    icon="i-lucide-chevron-right"
+                                    aria-label="Next page"
+                                    @click="goPage(page + 1)"
+                                />
+                            </div>
                         </template>
-                    </div>
-                    <UButton
-                        :disabled="page >= totalPages"
-                        variant="outline"
-                        size="sm"
-                        icon="i-lucide-chevron-right"
-                        aria-label="Next page"
-                        @click="goPage(page + 1)"
-                    />
-                    <UButton
-                        :disabled="page >= totalPages"
-                        variant="outline"
-                        size="sm"
-                        icon="i-lucide-chevrons-right"
-                        aria-label="Last page"
-                        @click="goPage(totalPages)"
-                    />
+                    </UCard>
                 </div>
-                <p v-if="paginated.count > 0" class="text-muted text-sm mt-4 text-center">
-                    Showing {{ resultStart }} to {{ resultEnd }} of {{ paginated.count }} bills
-                </p>
             </div>
-            <p v-if="error && status === 'error'" class="text-muted text-xs text-center mt-4">
-                {{ error }}
-            </p>
         </UContainer>
     </div>
 </template>
 
 <script setup lang="ts">
+import { watchDebounced } from '@vueuse/core'
+
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
 const route = useRoute()
@@ -287,6 +274,9 @@ const pageSizeOptions = [
     { value: 50, label: '50' },
     { value: 100, label: '100' },
 ]
+
+const DEFAULT_PAGE_SIZE = 25
+const DEFAULT_ORDER = '-last_activity_date'
 
 function parseTypesParam(raw: unknown): BillTypeCode[] {
     if (raw === undefined || raw === null || raw === '') return []
@@ -383,56 +373,41 @@ function ordinal(n: number): string {
 
 // --- Form state (synced from route on navigation) ---
 const titleInput = ref('')
+const titleDebounced = ref('')
+watchDebounced(titleInput, (v) => { titleDebounced.value = v }, { debounce: 600 })
+
 const selectedTypes = ref<BillTypeCode[]>([])
 const parliamentModel = ref<string | null>(null)
 const votingModel = ref<string | null>(null)
-const orderingModel = ref('-last_activity_date')
+const orderingModel = ref(DEFAULT_ORDER)
 const urgencyModel = ref(false)
 const extendedModel = ref(false)
 const submissionsModel = ref(false)
-const pageSizeModel = ref(25)
+const pageSizeModel = ref(DEFAULT_PAGE_SIZE)
 const showDescriptions = ref(true)
 
-function syncFormFromRoute() {
-    const q = route.query
-    titleInput.value = typeof q.bills_search === 'string' ? q.bills_search : ''
-    selectedTypes.value = parseTypesParam(q.bills_types)
-    parliamentModel.value =
-        q.bills_parliament !== undefined && q.bills_parliament !== null && String(q.bills_parliament) !== ''
-            ? String(q.bills_parliament)
-            : null
-    const v = typeof q.bills_vote === 'string' ? q.bills_vote.trim() : ''
-    votingModel.value = v === 'personal' || v === 'party' ? v : null
-    orderingModel.value =
-        typeof q.bills_order === 'string' && q.bills_order ? q.bills_order : '-last_activity_date'
-    urgencyModel.value = parseBool(q.bills_urgency)
-    extendedModel.value = parseBool(q.bills_extended)
-    submissionsModel.value = parseBool(q.bills_submissions)
-    pageSizeModel.value = parseIntParam(q.bills_page_size, 25)
-    showDescriptions.value = !parseBool(q.bills_hide_desc)
+function normalizeBillsQuery(q: typeof route.query): Record<string, string> {
+    const out: Record<string, string> = {}
+    for (const [key, val] of Object.entries(q)) {
+        if (!key.startsWith('bills_') || val === undefined || val === null || val === '') continue
+        out[key] = Array.isArray(val) ? val.join(',') : String(val)
+    }
+    return out
 }
 
-watch(
-    () => route.query,
-    () => syncFormFromRoute(),
-    { immediate: true },
-)
-
-function commitTitle() {
-    /* title is applied via Refine or blur; route updated in applyFilters */
+function queriesMatch(a: Record<string, string>, b: Record<string, string>): boolean {
+    const keys = new Set([...Object.keys(a), ...Object.keys(b)])
+    for (const key of keys) {
+        if (a[key] !== b[key]) return false
+    }
+    return true
 }
 
-function toggleType(code: BillTypeCode, on: boolean) {
-    const set = new Set(selectedTypes.value)
-    if (on) set.add(code)
-    else set.delete(code)
-    selectedTypes.value = [...set]
-}
+function filtersToRouteQuery(resetPage = false): Record<string, string> {
+    const next: Record<string, string> = {}
 
-function applyFilters() {
-    const next: Record<string, string | string[]> = {}
-    const s = titleInput.value.trim()
-    if (s) next.bills_search = s
+    const search = titleDebounced.value.trim()
+    if (search) next.bills_search = search
 
     if (selectedTypes.value.length > 0) {
         next.bills_types = selectedTypes.value.join(',')
@@ -446,13 +421,15 @@ function applyFilters() {
     if (extendedModel.value) next.bills_extended = '1'
     if (submissionsModel.value) next.bills_submissions = '1'
 
-    if (votingModel.value === 'personal' || votingModel.value === 'party') next.bills_vote = votingModel.value
+    if (votingModel.value === 'personal' || votingModel.value === 'party') {
+        next.bills_vote = votingModel.value
+    }
 
-    if (orderingModel.value && orderingModel.value !== '-last_activity_date') {
+    if (orderingModel.value !== DEFAULT_ORDER) {
         next.bills_order = orderingModel.value
     }
 
-    if (pageSizeModel.value !== 25) {
+    if (pageSizeModel.value !== DEFAULT_PAGE_SIZE) {
         next.bills_page_size = String(pageSizeModel.value)
     }
 
@@ -460,79 +437,111 @@ function applyFilters() {
         next.bills_hide_desc = '1'
     }
 
+    if (!resetPage) {
+        const currentPage = parseIntParam(route.query.bills_page, 1)
+        if (currentPage > 1) next.bills_page = String(currentPage)
+    }
+
+    return next
+}
+
+function syncFormFromRoute() {
+    const q = route.query
+    const search = typeof q.bills_search === 'string' ? q.bills_search : ''
+    titleInput.value = search
+    titleDebounced.value = search
+    selectedTypes.value = parseTypesParam(q.bills_types)
+    parliamentModel.value =
+        q.bills_parliament !== undefined && q.bills_parliament !== null && String(q.bills_parliament) !== ''
+            ? String(q.bills_parliament)
+            : null
+    const v = typeof q.bills_vote === 'string' ? q.bills_vote.trim() : ''
+    votingModel.value = v === 'personal' || v === 'party' ? v : null
+    orderingModel.value =
+        typeof q.bills_order === 'string' && q.bills_order ? q.bills_order : DEFAULT_ORDER
+    urgencyModel.value = parseBool(q.bills_urgency)
+    extendedModel.value = parseBool(q.bills_extended)
+    submissionsModel.value = parseBool(q.bills_submissions)
+    pageSizeModel.value = parseIntParam(q.bills_page_size, DEFAULT_PAGE_SIZE)
+    showDescriptions.value = !parseBool(q.bills_hide_desc)
+}
+
+let syncingFromRoute = false
+
+function pushFiltersToRoute(resetPage = false) {
+    if (syncingFromRoute) return
+    const next = filtersToRouteQuery(resetPage)
+    const current = normalizeBillsQuery(route.query)
+    if (queriesMatch(next, current)) return
     router.replace({ query: next })
 }
 
-function clearFilters() {
-    titleInput.value = ''
-    selectedTypes.value = []
-    parliamentModel.value = null
-    votingModel.value = null
-    orderingModel.value = '-last_activity_date'
-    urgencyModel.value = false
-    extendedModel.value = false
-    submissionsModel.value = false
-    pageSizeModel.value = 25
-    showDescriptions.value = true
-    router.replace({ query: {} })
+function toggleType(code: BillTypeCode, on: boolean) {
+    const set = new Set(selectedTypes.value)
+    if (on) set.add(code)
+    else set.delete(code)
+    selectedTypes.value = [...set]
 }
 
-const page = computed(() => parseIntParam(route.query.bills_page, 1))
+function hasRefiningFiltersInQuery(q: typeof route.query): boolean {
+    const search = typeof q.bills_search === 'string' ? q.bills_search.trim() : ''
+    if (search) return true
+    if (parseTypesParam(q.bills_types).length > 0) return true
+    if (q.bills_parliament !== undefined && q.bills_parliament !== null && String(q.bills_parliament) !== '') {
+        return true
+    }
+    if (parseBool(q.bills_urgency)) return true
+    if (parseBool(q.bills_extended)) return true
+    if (parseBool(q.bills_submissions)) return true
+    const vote = typeof q.bills_vote === 'string' ? q.bills_vote.trim() : ''
+    if (vote === 'personal' || vote === 'party') return true
+    return false
+}
 
-const pageSize = computed(() => parseIntParam(route.query.bills_page_size, 25))
+const resultsHeading = computed(() =>
+    hasRefiningFiltersInQuery(route.query) ? 'Results' : 'All bills',
+)
+
+const page = computed(() => parseIntParam(route.query.bills_page, 1))
+const pageSize = computed(() => parseIntParam(route.query.bills_page_size, DEFAULT_PAGE_SIZE))
 
 const totalPages = computed(() => {
     const c = paginated.value?.count ?? 0
-    const ps = pageSize.value
-    return Math.max(1, Math.ceil(c / ps))
-})
-
-const resultStart = computed(() => {
-    const c = paginated.value?.count ?? 0
-    if (c === 0) return 0
-    return (page.value - 1) * pageSize.value + 1
-})
-
-const resultEnd = computed(() => {
-    const c = paginated.value?.count ?? 0
-    return Math.min(page.value * pageSize.value, c)
-})
-
-const visiblePages = computed(() => {
-    const total = totalPages.value
-    const current = page.value
-    const maxVisible = 7
-    const pages: (number | string)[] = []
-    if (total <= maxVisible) {
-        for (let i = 1; i <= total; i++) pages.push(i)
-        return pages
-    }
-    pages.push(1)
-    if (current <= 3) {
-        for (let i = 2; i <= 4; i++) pages.push(i)
-        pages.push('...')
-        pages.push(total)
-    } else if (current >= total - 2) {
-        pages.push('...')
-        for (let i = total - 3; i <= total; i++) pages.push(i)
-    } else {
-        pages.push('...')
-        for (let i = current - 1; i <= current + 1; i++) pages.push(i)
-        pages.push('...')
-        pages.push(total)
-    }
-    return pages
+    return Math.max(1, Math.ceil(c / pageSize.value))
 })
 
 function goPage(n: number) {
-    const q = { ...route.query }
-    if (n <= 1) {
-        delete q.bills_page
-    } else {
-        q.bills_page = String(n)
-    }
-    router.replace({ query: q })
+    const next = filtersToRouteQuery(false)
+    if (n <= 1) delete next.bills_page
+    else next.bills_page = String(n)
+    syncingFromRoute = true
+    router.replace({ query: next })
+    nextTick(() => {
+        syncingFromRoute = false
+    })
 }
+
+watch(
+    () => route.query,
+    () => {
+        syncingFromRoute = true
+        syncFormFromRoute()
+        nextTick(() => {
+            syncingFromRoute = false
+        })
+    },
+    { immediate: true },
+)
+
+watch(titleDebounced, () => pushFiltersToRoute(true))
+
+watch(
+    [selectedTypes, parliamentModel, votingModel, urgencyModel, extendedModel, submissionsModel, showDescriptions],
+    () => pushFiltersToRoute(true),
+    { deep: true },
+)
+
+watch([orderingModel, pageSizeModel], () => pushFiltersToRoute(true))
 
 /** Same relative wording as `pages/people/[id]/bills.vue`. */
 function formatRelative(dateString: string) {
