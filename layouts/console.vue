@@ -23,14 +23,14 @@ const items = computed<NavigationMenuItem[][]>(() => [
       icon: 'i-lucide-upload',
       children: [
         {
-          label: 'Create',
-          icon: 'i-lucide-plus',
-          to: '/console/imports'
+          label: 'Workbooks',
+          icon: 'i-lucide-book-open',
+          to: '/console/workbooks'
         },
         {
-          label: 'View',
-          icon: 'i-lucide-eye',
-          to: '/console/imports'
+          label: 'System events',
+          icon: 'i-lucide-radar',
+          to: '/console/system-events'
         }
       ]
     },
