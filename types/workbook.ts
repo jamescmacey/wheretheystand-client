@@ -11,6 +11,9 @@ export type WorkbookSummary = {
   id: string
   name: string
   user: WorkbookUser | null
+  recipe_key?: string | null
+  source?: string
+  status?: 'open' | 'closed'
   created_at: string
   updated_at: string
 }

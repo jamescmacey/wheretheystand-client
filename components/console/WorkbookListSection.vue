@@ -134,9 +134,25 @@ async function onClaim(workbook: WorkbookSummary, event: Event) {
           >
             <div class="flex items-start justify-between gap-3">
               <div class="min-w-0">
-                <h4 class="font-semibold">
-                  {{ workbook.name }}
-                </h4>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <h4 class="font-semibold">
+                    {{ workbook.name }}
+                  </h4>
+                  <UBadge
+                    v-if="workbook.status === 'closed'"
+                    label="Closed"
+                    color="neutral"
+                    variant="subtle"
+                    size="xs"
+                  />
+                  <UBadge
+                    v-if="workbook.source === 'system_event'"
+                    label="Auto"
+                    color="info"
+                    variant="subtle"
+                    size="xs"
+                  />
+                </div>
                 <p class="text-muted text-sm mt-1">
                   Updated {{ formatConsoleDateTime(workbook.updated_at) }}
                 </p>
