@@ -1,81 +1,195 @@
 <template>
-<div>
-    <PageHeader pageTitle="Parties"></PageHeader>
-    <div class="container">
-        <div class="row mt-3">
-      
-            <div class="col-12">
-                <h4>Most Members of Parliament belong to a political organisation, called a party.</h4>
-                <p>The number of seats a party has in Parliament is determined by the proportion of votes it receives under the party vote at each general election. If any electorate seats are won by a party's candidates, its seats first go to those candidates. Any leftover seats are then given to list candidates, who are elected according to a ranked list of candidates finalised before the election.</p>
-                <p>Political parties and their funding are regulated in New Zealand by the Electoral Commission in accordance with the Electoral Act 1993.</p>
-                <ExternalLinkButton link="https://elections.nz/democracy-in-nz/political-parties-in-new-zealand/">Learn more about the role of political parties in New Zealand's democracy</ExternalLinkButton>
-                <p>Outside of elections, parties play an important role in Parliament and in government. Many votes cast in Parliament on proposed laws are cast as party votes, where a party casts a vote on behalf of all its member MPs. Party membership and size also determines the allocation of Parliamentary resources, like Oral Questions and Select Committee membership. It's also a major factor in deciding which party or parties form the Government, and who becomes the Prime Minister or a Minister.</p>
-                
-                <h5 class="mt-3">Parties with seats in Parliament</h5>
-                <div class="row">
-                    <div v-for="(party, i) in parties" :key="party.id" class="col-12 col-md-6 col-lg-4 col-xl-3">
-                        <PartyCard :party="party">
+    <div>
+        <PageHeader page-title="Parties"></PageHeader>
+        <UContainer class="my-8">
+            <div v-if="loadOk">
+                <template v-if="false">
+                    <UFormField label="Search" class="mb-4 max-w-xl">
+                        <UInput v-model="search" placeholder="Search parties" size="md" icon="i-lucide-search"
+                            class="w-full" />
+                    </UFormField>
 
-                        </PartyCard>
+                    <p class="text-muted text-sm mb-6">
+                        Showing {{ filteredCurrent.length }} parties with sitting members of Parliament and {{ filteredOther.length }} others.
+                    </p>
+                </template>
+
+                <section class="mb-10">
+                    <h3 class="text-lg font-semibold mb-3 border-b border-default pb-1">
+                        Parties with sitting members of Parliament
+                    </h3>
+                    <p v-if="filteredCurrent.length === 0" class="text-muted py-4">
+                        No parties match your search in this group.
+                    </p>
+                    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <WContentItemCard
+                            v-for="party in filteredCurrent"
+                            :key="party.id"
+                            :item="party"
+                            :to="'/parties/' + party.slug"
+                        >
+                            <template #title>
+                                {{ party.display_name }}
+                            </template>
+                            <template #description>
+                                {{ seatLabel(party.seat_count) }}
+                            </template>
+                        </WContentItemCard>
                     </div>
-                </div>
+                </section>
 
-                <!--
-                <h5 class="mt-3">Registered parties without seats in Parliament</h5>
-                <p class="mt-0">These parties are registered with the Electoral Commission, but don't have any seats in Parliament.</p>
-                <div class="row">
-                    <div v-for="(party, i) in outsideParties" :key="party.id" class="col-12 col-md-6 col-lg-4 col-xl-3">
-                        <PartyCard :party="party">
-
-                        </PartyCard>
+                <section v-if="false">
+                    <h3 class="text-lg font-semibold mb-3 border-b border-default pb-1">
+                        Other parties
+                    </h3>
+                    <p v-if="filteredOther.length === 0" class="text-muted py-4">
+                        No parties match your search in this group.
+                    </p>
+                    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <WContentItemCard
+                            v-for="party in filteredOther"
+                            :key="party.id"
+                            :item="party"
+                            :to="'/parties/' + party.slug"
+                        >
+                            <template #title>
+                                {{ party.display_name }}
+                            </template>
+                            <template #description>
+                                {{ seatLabel(party.seat_count) }}
+                            </template>
+                        </WContentItemCard>
                     </div>
-                </div>
-
-                <h5 class="mt-3">Deregistered parties</h5>
-                <p class="mt-0">These parties are no longer registered with the Electoral Commission and don't have seats in Parliament.</p>
-                <div class="row">
-                </div>-->
-
-                <p class="text-muted">For registered parties, their registered name is shown on this page. Some parties may have adopted different names in a Parliamentary context or for marketing purposes.</p>
+                </section>
             </div>
-        </div>
+            <div v-else-if="pending" class="w-full">
+                <div class="my-16 w-1/2 mx-auto flex flex-col items-center justify-center text-center">
+                    <h3 class="mb-2 text-muted">Loading parties…</h3>
+                    <UProgress animation="swing" />
+                </div>
+            </div>
+            <UEmpty v-else :title="'Error loading parties'"
+                :description="'An error occurred while loading parties. Please try again.'">
+                <template #actions>
+                    <UButton variant="subtle" color="neutral" class="mt-4" icon="i-lucide-refresh-cw" trailing
+                        @click="refreshAll">
+                        Refresh
+                    </UButton>
+                </template>
+            </UEmpty>
+            <p v-if="hasError && !pending" class="text-muted text-xs text-center mt-4">
+                {{ combinedError }}
+            </p>
+        </UContainer>
     </div>
-</div>
 </template>
 
-<script>
-import PartyCard from '~~/components/PartyCard.vue'
-import { useGroupsStore } from '../../stores/groups'
+<script setup lang="ts">
 
+const config = useRuntimeConfig()
+const apiBase = config.public.apiBase
 
-export default {
-    name: "Parties",
-    setup() {
-        const groupsStore = useGroupsStore();
-        return { groupsStore };
-    },
-    created() {
-        this.groupsStore.fetchParties("allInParliament");
-        //this.groupsStore.fetchParties("allOutOfParliament");
-    },
-    computed: {
-        parties() {
-            return (this.groupsStore.byName("allInParliament", "parties") || []).sort((a, b) => {
-                if (a.seats > b.seats) {
-                    return -1;
-                }
-                return 1;
-            });
-        },
-        outsideParties() {
-            return (this.groupsStore.byName("allOutOfParliament", "parties") || []).sort((a, b) => {
-                if (a.slug.toLowerCase() < b.slug.toLowerCase()) {
-                    return -1;
-                }
-                return 1;
-            });
-        }
-    },
-    components: { PartyCard }
+type PartyRow = {
+    id: string
+    slug: string
+    display_name: string
+    short_name: string
+    abbreviation?: string
+    colour?: string | null
+    /** Sitting MPs affiliated with this party (parliamentary seats). */
+    seat_count: number
 }
+
+type PaginatedParties = {
+    count: number
+    next: string | null
+    previous: string | null
+    results: PartyRow[]
+}
+
+async function fetchAllPartyPages(group: 'current_mps' | 'other'): Promise<PartyRow[]> {
+    const collected: PartyRow[] = []
+    let url: string | null =
+        `${apiBase}parties/?group=${group}&page_size=1000`
+    while (url) {
+        const page = await $fetch<PaginatedParties>(url)
+        collected.push(...page.results)
+        url = page.next
+    }
+    return collected
+}
+
+const {
+    data: currentParties,
+    status: statusCurrent,
+    error: errorCurrent,
+    refresh: refreshCurrent,
+} = await useAsyncData('parties-group-current-mps', () => fetchAllPartyPages('current_mps'), { lazy: true })
+
+const {
+    data: otherParties,
+    status: statusOther,
+    error: errorOther,
+    refresh: refreshOther,
+} = await useAsyncData('parties-group-other', () => fetchAllPartyPages('other'), { lazy: true })
+
+const loadOk = computed(
+    () => statusCurrent.value === 'success' && statusOther.value === 'success',
+)
+const pending = computed(
+    () => statusCurrent.value === 'pending' || statusOther.value === 'pending',
+)
+const hasError = computed(
+    () => statusCurrent.value === 'error' || statusOther.value === 'error',
+)
+
+const combinedError = computed(() => {
+    const parts: string[] = []
+    if (errorCurrent.value) parts.push(String(errorCurrent.value))
+    if (errorOther.value) parts.push(String(errorOther.value))
+    return parts.join(' · ')
+})
+
+function refreshAll() {
+    refreshCurrent()
+    refreshOther()
+}
+
+function seatLabel(n: number): string {
+    if (n === 1) return '1 seat'
+    return `${n} seats`
+}
+
+const search = ref('')
+
+function normalizeSearchText(value: string): string {
+    return value
+        .normalize('NFD')
+        .replace(/\p{M}/gu, '')
+        .toLowerCase()
+}
+
+function matchesSearch(party: PartyRow, q: string): boolean {
+    if (!q) return true
+    const hay = [party.display_name, party.short_name, party.abbreviation]
+        .filter(Boolean)
+        .join(' ')
+    const normalizedHay = normalizeSearchText(hay)
+    return normalizedHay.includes(q)
+}
+
+const filteredCurrent = computed(() => {
+    const q = normalizeSearchText(search.value.trim())
+    const list = currentParties.value ?? []
+    if (!q) return list
+    return list.filter((p) => matchesSearch(p, q))
+})
+
+const filteredOther = computed(() => {
+    const q = normalizeSearchText(search.value.trim())
+    const list = otherParties.value ?? []
+    if (!q) return list
+    return list.filter((p) => matchesSearch(p, q))
+})
+
 </script>

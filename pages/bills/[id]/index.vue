@@ -1,271 +1,594 @@
 <template>
-  <div id="bill-view" v-if="bill">
-    <Head>
-    <Meta name="twitter:title" :content="bill.name + ' - WhereTheyStand'" />
-    <Meta name="twitter:description" :content="bill.description" />
-    <Meta name="description" :content="bill.description" />
-    <Meta property="og:title" :content="bill.name + ' - WhereTheyStand'" />
-    <Meta property="og:description" :content="bill.description" />
-
-    </Head>
-    <PageHeader :pageTitle="bill.name" :pageSubtitle="bill.type_desc"></PageHeader>
-    <div class="container mt-3">
-      <div class="row">
-        <div class="col-12 col-lg-8">
-          <h4>About this bill</h4>
-          <Card>
-            {{ bill.description }}
-
-            <h5 class="mt-3" v-if="bill.voting_method != 'unk'">Voting method</h5>
-            <span v-if="bill.voting_method == 'per'">
-              <FontAwesomeIcon :icon="['fas', 'person']" /> <strong>Personal voting: </strong> MPs voted individually on this bill.
-            </span>
-            <span v-if="bill.voting_method == 'par'">
-              <FontAwesomeIcon :icon="['fas', 'people-group']">
-              </FontAwesomeIcon> <strong>Party voting: </strong> Parties decided whether or not to support this bill and
-              cast votes on behalf of all their MPs.
-            </span>
-            <span v-if="bill.voting_method == 'mix'">
-              <FontAwesomeIcon :icon="['fas', 'people-group']">
-              </FontAwesomeIcon> / <FontAwesomeIcon :icon="['fas', 'person']"> </FontAwesomeIcon> <strong>Mixed voting:
-              </strong> Both personal and party voting were used at different stages of this bill's progression.
-            </span>
-
-            <h5 class="mt-3" v-if="bill.urgency_used || bill.extended_sittings_used">Procedural notes</h5>
-            <ul class="procedural-list pb-0 ps-0">
-              <li class="procedural-list" v-if="bill.urgency_used">
-                <FontAwesomeIcon class="me-2" :icon="['fas', 'forward-fast']"> </FontAwesomeIcon>
-                <strong>Urgency used: </strong> This bill was progressed through one or more stages using urgency. Urgency allows the Government to
-                fast-track the legislative process by extending the sitting hours of the House of Representatives and
-                skipping the select committee stage of a bill, and allows bills to pass through more than one stage per
-                sitting day.
-                <br><small>
-                  <ExternalLinkInline
-                    link="https://links.wheretheystand.nz/parliament-urgency">
-                    Learn more about urgency</ExternalLinkInline>
-                </small>
-              </li>
-            <li class="procedural-list" v-if="bill.extended_sittings_used">
-              <FontAwesomeIcon class="me-2" :icon="['fa', 'calendar']"> </FontAwesomeIcon>
-              <strong>Extended sittings used: </strong> This bill was progressed during one or more extended sittings of
-              the House of Representatives. This enables MPs to meet for longer than normal to consider legislation. It does not alter the stages that a bill must pass through to become law.
-              <br><small>
-                <ExternalLinkInline
-                  link="https://links.wheretheystand.nz/parliament-extended-sittings">
-                  Learn more about extended sittings</ExternalLinkInline>
-              </small>
-            </li>
-          </ul>
-
-            <h5 class="mt-3" v-if="bill.pco_url || actUrl">Read the bill</h5>
-            <span v-if="bill.pco_url">
-              <FontAwesomeIcon class="me-2" :icon="['fas', 'file-lines']" />Bill text:
-              <ExternalLinkInline :link="bill.pco_url">
-                {{ bill.name }} (legislation.govt.nz)</ExternalLinkInline>
-            </span>
-            <br v-if="bill.pco_url && actUrl">
-            <span v-if="actUrl">
-              <FontAwesomeIcon class="me-2" :icon="['fas', 'book']" />Act text:
-              <ExternalLinkInline :link="actUrl">
-                {{ bill.enactment.act }} (legislation.govt.nz)</ExternalLinkInline>
-            </span>
-            <hr>
-            <div class="row">
-              <div v-if="!bill.parliament_api_id" class="col-12 col-xl-6">
-                <ExternalLinkInline
-                  :link="'https://www.parliament.nz/en/pb/bills-and-laws/bills-proposed-laws/document/' + bill.legacy_document_id">
-                  View on Parliament website (legacy)</ExternalLinkInline>
-              </div>
-              <div v-else class="col-12 col-xl-6">
-                <ExternalLinkInline :link="'https://bills.parliament.nz/v/6/' + bill.parliament_api_id">
-                  View on Parliament website</ExternalLinkInline>
-              </div>
-              <div class="col-12 col-xl-6 text-xl-end">
-                <DownloadLink class="ms-xl-2 me-xl-0" resourceType="bill" fileType="json" :friendlyName="bill.name"
-                  :resourceId="bill.id"></DownloadLink>
-              </div>
+    <UContainer class="my-8 space-y-8">
+        <template v-if="status === 'pending'">
+            <div class="my-16 flex flex-col items-center justify-center text-center">
+                <h3 class="mb-2 text-muted">Loading bill…</h3>
+                <UProgress animation="swing" class="w-48" />
             </div>
-          </Card>
-          <h4 v-if="bill.people_responsible.length > 0">Member<span v-if="bill.people_responsible.length > 1">s</span>
-            responsible</h4>
-          <div class="row">
-            <div class="col-12 col-lg-6" v-for="person in bill.people_responsible" :key="person.id">
-              <PersonCard :person="person"></PersonCard>
+        </template>
+
+        <template v-else-if="status === 'error'">
+            <UCard variant="subtle" class="w-full">
+                <UEmpty
+                    title="Bill unavailable"
+                    description="We could not load this bill. It may have been removed, or there was a temporary problem."
+                >
+                    <template #actions>
+                        <UButton
+                            variant="subtle"
+                            color="neutral"
+                            class="mt-4"
+                            icon="i-lucide-refresh-cw"
+                            trailing
+                            @click="refresh?.()"
+                        >
+                            Retry
+                        </UButton>
+                    </template>
+                </UEmpty>
+                <p v-if="error" class="text-muted text-xs text-center mt-4">
+                    {{ error.statusCode }}: {{ error }}
+                </p>
+            </UCard>
+        </template>
+
+        <template v-else>
+            
+            <div class="my-4 flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                    <div class="space-x-2">
+                    <UButton v-if="originalBill.parliament_api_id"
+                        :href="`https://bills.parliament.nz/v/6/${originalBill.parliament_api_id}`"
+                        target="_blank"
+                        variant="outline"
+                        icon="i-lucide-external-link"
+                        class="mb-2 lg:mb-0"
+                    >
+                        View on Parliament website
+                    </UButton>
+                    <UButton v-if="originalBill.legislation_url"
+                        :href="originalBill.legislation_url"
+                        target="_blank"
+                        variant="outline"
+                        icon="i-lucide-book-open"
+                        class="mb-2 lg:mb-0"
+                    >
+                        Read bill text
+                    </UButton>
+                    </div>
+                    
+                    <div>
+                        <UBadge :color="statusMeta.colour" variant="soft" size="xl">
+                            {{ statusMeta.description }}
+                        </UBadge>
+                    </div>
+                </div>
+
+                <UPageCard variant="subtle" class="mt-4" v-if="originalBill.description">
+                    <p>
+                        {{ originalBill.description }}
+                    </p>
+                    <div v-if="originalBill.voting_methods != 'unknown'">
+                    <h5 class="text-muted">Voting method</h5>
+                        <p>
+                            <span class="font-semibold">{{ getVotingMethod(originalBill.voting_methods).label }}</span>: {{ getVotingMethod(originalBill.voting_methods).description }}
+                        </p>
+                    </div>
+                    <h4 class="text-lg font-semibold" v-if="originalBill.extended_sittings_used || originalBill.urgency_used">Procedural notes</h4>
+                    <div v-if="originalBill.extended_sittings_used">
+                    <h5 class="text-muted">Extended sittings used</h5>
+                        <p>
+                            Extended sittings were used to progress this bill.  <ULink href="https://links.wheretheystand.nz/parliament-extended-sittings" target="_blank">Learn more about extended sittings <UIcon name="i-lucide-external-link" /></ULink>
+                        </p>
+                    </div>
+                    <div v-if="originalBill.urgency_used">
+                    <h5 class="text-muted">Urgency used</h5>
+                        <p>
+                            Urgency was used to progress this bill.  This means some of the normal processes may have been skipped or abrogated.  <ULink href="https://links.wheretheystand.nz/parliament-urgency" target="_blank">Learn more about urgency <UIcon name="i-lucide-external-link" /></ULink>
+                        </p>
+                    </div>
+                    <USeparator class="my-4"/>
+                    <ul class="list-disc list-inside">
+                        <li>
+                            Introduced on <span class="font-semibold">{{ formatDate(originalBill.introduction_date) }}</span>
+                        </li>
+                        <li v-if="originalBill.first_reading_date">
+                            1st reading on <span class="font-semibold">{{ formatDate(originalBill.first_reading_date) }}</span>
+                        </li>
+                        <li v-if="originalBill.second_reading_date">
+                            2nd reading on <span class="font-semibold">{{ formatDate(originalBill.second_reading_date) }}</span>
+                        </li>
+                        <li v-if="originalBill.third_reading_date">
+                            3rd reading on <span class="font-semibold">{{ formatDate(originalBill.third_reading_date) }}</span>
+                        </li>
+                        <li v-if="originalBill.royal_assent_date">
+                            Royal assent on <span class="font-semibold">{{ formatDate(originalBill.royal_assent_date) }}</span>
+                        </li>
+                        <li v-if="originalBill.withdrawn_date">
+                            Withdrawn on <span class="font-semibold">{{ formatDate(originalBill.withdrawn_date) }}</span>
+                        </li>
+                        <li v-if="originalBill.defeated_date">
+                            Defeated on <span class="font-semibold">{{ formatDate(originalBill.defeated_date) }}</span>
+                        </li>
+                        <li v-if="originalBill.lapsed_date">
+                            Lapsed on <span class="font-semibold">{{ formatDate(originalBill.lapsed_date) }}</span>
+                        </li>
+                    </ul>
+                </UPageCard>
+
+            <div v-if="originalBill.people_responsible.length">
+                <h2 class="text-lg font-semibold mb-3">
+                    Member<span v-if="originalBill.people_responsible.length > 1">s</span> responsible
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <WContentPersonCard v-for="member in originalBill.people_responsible" :key="member.id" :person="member" />
+                </div>
             </div>
-          </div>
-        </div>
-        <div class="col-12 col-lg-4">
-          <h4>Progress</h4>
-          <Card :gradient="true">
-            <h3>{{ bill.progress_desc }}</h3>
-            <p>{{ progressExplanation }}</p>
-          </Card>
-        </div>
-      </div>
-      <h3>Votes</h3>
-      <div class="row">
-        <div class="col-12 col-lg-4">
-          <NuxtLink class='vote-link' v-if="firstReading" :to="'/votes/' + firstReading.id">
-            <VoteSummary :vote="firstReading"></VoteSummary>
-          </NuxtLink>
-          <VoteSummaryBare v-else-if="bill.dates.first_reading_date" :reading="1" :passed="true"
-            :date="bill.dates.first_reading_date"></VoteSummaryBare>
-          <VoteSummaryBare v-else-if="bill.dates.defeated_date && (bill.defeated_at_reading === 1)" :passed="false"
-            :reading="1" :date="bill.dates.defeated_date"></VoteSummaryBare>
-          <Card v-else-if="!bill.defeated_at_reading || bill.defeated_at_reading >= 1" :missing='true'>
-            <h6 class="text-uppercase text-muted"><strong>1st reading</strong></h6>
-            <h6 class="text-muted">This vote has not yet occurred, or is not yet recorded on WhereTheyStand.</h6>
-          </Card>
-        </div>
-        <div class="col-12 col-lg-4">
-          <NuxtLink class='vote-link' v-if="secondReading" :to="'/votes/' + secondReading.id">
-            <VoteSummary :vote="secondReading"></VoteSummary>
-          </NuxtLink>
-          <VoteSummaryBare v-else-if="bill.dates.second_reading_date" :reading="2" :passed="true"
-            :date="bill.dates.second_reading_date"></VoteSummaryBare>
-          <VoteSummaryBare v-else-if="bill.dates.defeated_date && (bill.defeated_at_reading === 2)" :passed="false"
-            :reading="2" :date="bill.dates.defeated_date"></VoteSummaryBare>
-          <Card v-else-if="!bill.defeated_at_reading || bill.defeated_at_reading >= 2" :missing='true'>
-            <h6 class="text-uppercase text-muted"><strong>2nd reading</strong></h6>
-            <h6 class="text-muted">This vote has not yet occurred, or is not yet recorded on WhereTheyStand.</h6>
-          </Card>
-        </div>
-        <div class="col-12 col-lg-4">
-          <NuxtLink class='vote-link' v-if="thirdReading" :to="'/votes/' + thirdReading.id">
-            <VoteSummary :vote="thirdReading"></VoteSummary>
-          </NuxtLink>
-          <VoteSummaryBare v-else-if="bill.dates.third_reading_date" :reading="3" :passed="true"
-            :date="bill.dates.third_reading_date"></VoteSummaryBare>
-          <VoteSummaryBare v-else-if="bill.dates.defeated_date && (bill.defeated_at_reading === 3)" :passed="false"
-            :reading="3" :date="bill.dates.defeated_date"></VoteSummaryBare>
-          <Card v-else-if="!bill.defeated_at_reading || bill.defeated_at_reading >= 3" :missing='true'>
-            <h6 class="text-uppercase text-muted"><strong>3rd reading</strong></h6>
-            <h6 class="text-muted">This vote has not yet occurred, or is not yet recorded on WhereTheyStand.</h6>
-          </Card>
-        </div>
-      </div>
-      <p class="text-muted">Only reading votes are shown here; these votes determine whether the Bill progresses through
-        Parliament. Other votes, such as votes on whether to amend parts of the Bill, can be seen in Hansard.</p>
-      <p class="text-muted">Bill details last synced with the Parliament website {{ relativeDate }}. <br><small>({{
-        formatDateTime(bill.last_retrieved) }})</small></p>
-    </div>
-  </div>
+
+            <div>
+                <h2 class="text-lg font-semibold mb-3">Votes</h2>
+
+                <p v-if="votesFetchError" class="text-sm text-error mb-4">
+                    Could not load vote details<span v-if="voteFetchErrorMessage"> ({{ voteFetchErrorMessage }})</span>.
+                    Showing reading dates only where available.
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-start">
+                    <WContentItemCard
+                        v-for="row in mergedReadingRows"
+                        :key="row.reading"
+                        :item="{}"
+                        :fill-height="false"
+                        :to="row.kind === 'vote' ? `/votes/${row.voteId}` : undefined"
+                    >
+                        <template #title>
+                            <div class="space-y-4 min-w-0 w-full">
+                                <div class="flex items-center justify-between gap-3">
+                                    <p class="font-medium text-highlighted">{{ row.stage }}</p>
+                                    <UBadge :color="mergedRowBadge(row).color" variant="soft">
+                                        {{ mergedRowBadge(row).label }}
+                                    </UBadge>
+                                </div>
+
+                                <template v-if="row.kind === 'vote'">
+                                    <p class="text-sm text-muted">
+                                        {{ formatDate(row.voteDate) }}
+                                    </p>
+                                    <p v-if="row.voteType" class="text-xs text-muted">
+                                        <span class="capitalize">{{ String(row.voteType).replace(/_/g, ' ') }}</span> vote
+                                    </p>
+                                    <div v-if="row.totals" class="grid grid-cols-4 gap-2 text-center pt-2">
+                                        <div class="flex flex-col items-center">
+                                            <span class="font-semibold">{{ row.totals.ayes }}</span>
+                                            <span class="text-muted text-xs pb-1 border-b-2 border-emerald-500">Aye</span>
+                                        </div>
+                                        <div class="flex flex-col items-center">
+                                            <span class="font-semibold">{{ row.totals.noes }}</span>
+                                            <span class="text-muted text-xs pb-1 border-b-2 border-rose-500">No</span>
+                                        </div>
+                                        <div class="flex flex-col items-center">
+                                            <span class="font-semibold">{{ row.totals.abstentions }}</span>
+                                            <span class="text-muted text-xs pb-1 border-b-2 border-amber-500">Abstain</span>
+                                        </div>
+                                        <div class="flex flex-col items-center">
+                                            <span class="font-semibold">{{ row.totals.absentees }}</span>
+                                            <span class="text-muted text-xs pb-1 border-b-2 border-sky-500">Absent</span>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <template v-else-if="row.kind === 'defeat'">
+                                    <p v-if="row.defeatedDate" class="text-sm text-muted">
+                                        Defeated on {{ formatDate(row.defeatedDate) }}
+                                    </p>
+                                    <p v-else class="text-sm text-muted">
+                                        Defeated at this stage (date not recorded).
+                                    </p>
+                                    <p class="text-sm text-muted">
+                                        {{ row.detailNote }}
+                                    </p>
+                                    <p v-if="row.hansardLink" class="mt-2">
+                                        <ULink
+                                            :href="row.hansardLink.url"
+                                            target="_blank"
+                                            class="inline-flex items-center gap-1.5 text-sm font-medium text-primary"
+                                        >
+                                            {{ row.hansardLink.label }}
+                                            <UIcon name="i-lucide-external-link" />
+                                        </ULink>
+                                    </p>
+                                </template>
+
+                                <template v-else-if="row.kind === 'reading_only'">
+                                    <p class="text-sm text-muted">
+                                        Reading date: {{ formatDate(row.readingDate) }}
+                                    </p>
+                                    <p class="text-sm text-muted">
+                                        {{ row.detailNote }}
+                                    </p>
+                                    <p v-if="row.hansardLink" class="mt-2">
+                                        <ULink
+                                            :href="row.hansardLink.url"
+                                            target="_blank"
+                                            class="inline-flex items-center gap-1.5 text-sm font-medium text-primary"
+                                        >
+                                            {{ row.hansardLink.label }}
+                                            <UIcon name="i-lucide-external-link" />
+                                        </ULink>
+                                    </p>
+                                </template>
+
+                                <template v-else>
+                                    <p class="text-sm text-muted">
+                                        This reading has not yet occurred, or no date is available.
+                                    </p>
+                                </template>
+                            </div>
+                        </template>
+                    </WContentItemCard>
+                </div>
+
+                <p v-if="bill.votesNote" class="mt-4 text-xs text-muted">{{ bill.votesNote }}</p>
+                <p v-if="bill.lastSynced" class="mt-2 text-xs text-muted">{{ bill.lastSynced }}</p>
+            </div>
+        </template>
+    </UContainer>
 </template>
 
-<style scoped>
-.vote-link,
-.vote-link:hover {
-  color: black;
-  text-decoration: none;
+<script setup lang="ts">
+import { format } from 'date-fns'
+
+const formatDate = (date?: string | null) => {
+    if (!date) return ''
+    const parsedDate =
+        date.length === 10 && /^\d{4}-\d{2}-\d{2}$/.test(date)
+            ? new Date(date + 'T00:00:00')
+            : new Date(date)
+    if (Number.isNaN(parsedDate.getTime())) return String(date)
+    return format(parsedDate, 'd MMMM yyyy')
 }
 
-.procedural-list {
-  list-style:none;
-}
+const props = defineProps({
+    bill: {
+        type: Object,
+        required: true,
+    },
+    originalBill: {
+        type: Object,
+        required: true,
+    },
+    status: {
+        type: String,
+        default: 'pending',
+    },
+    error: {
+        type: Object,
+        default: null,
+    },
+    refresh: {
+        type: Function,
+        default: null,
+    },
+})
 
-ul.procedural_list {
-  padding: 0;
-  list-style-type: none;
-}
+const config = useRuntimeConfig()
+const apiBase = config.public.apiBase
+const route = useRoute()
 
-li.procedural-list {
-  margin-bottom: 7px;
-}
-</style>
+const { bill, originalBill, status, error, refresh } = toRefs(props)
 
-<script>
-import { format, parse, formatDistanceToNow, parseISO, compareAsc } from 'date-fns'
+const resources = computed(() => (bill.value as Record<string, unknown>)?.resources ?? {})
+const members = computed(() =>
+    Array.isArray((bill.value as Record<string, unknown>)?.members)
+        ? (bill.value as Record<string, unknown>).members
+        : [],
+)
+const votingMethod = computed(() => (bill.value as Record<string, unknown>)?.votingMethod ?? null)
+const proceduralNotes = computed(() =>
+    Array.isArray((bill.value as Record<string, unknown>)?.proceduralNotes)
+        ? (bill.value as Record<string, unknown>).proceduralNotes
+        : [],
+)
 
-import { useBillsStore } from '../../../stores/bills'
+import type { TimelineItem } from '@nuxt/ui'
 
-export default {
-  name: 'Bill',
-  setup() {
-    const billsStore = useBillsStore()
-    return { billsStore }
+const timelineItems = ref<TimelineItem[]>([
+  {
+    date: formatDate(bill.value?.introduction_date),
+    title: 'Introduced',
+    icon: 'i-lucide-rocket'
   },
-  created() {
-    this.billsStore.fetch(this.$route.params.id)
+  {
+    date: formatDate(bill.value?.first_reading_date),
+    title: '1st reading',
+    icon: 'i-lucide-book-open'
   },
-  methods: {
-    formatDate(date) {
-      return format(parse(date, 'yyyy-MM-dd', new Date()), 'd MMMM yyyy')
-    },
-    formatDateTime(datetime) {
-      return format(parseISO(datetime), "d MMMM yyyy 'at' HH:mm OOOO")
-    }
+  {
+    date: formatDate(bill.value?.second_reading_date),
+    title: '2nd reading',
+    icon: 'i-lucide-book-open'
   },
-  computed: {
-    bill() {
-      return this.billsStore.byID(this.$route.params.id)
-    },
-    progressExplanation() {
-      if (!this.bill) {
-        return ''
-      } else if (this.bill.progress === 'inp') {
-        if (this.bill.dates.whole_house_date) {
-          return 'The Committee of the whole House concluded its consideration of this Bill on ' + this.formatDate(this.bill.dates.whole_house_date) + ' and the Bill is awaiting its third reading.'
-        } else if (this.bill.dates.second_reading_date) {
-          return 'This Bill passed its second reading on ' + this.formatDate(this.bill.dates.second_reading_date) + ' and is awaiting the Commitee of the whole House stage.'
-        } else if (this.bill.dates.first_reading_date) {
-          var msg = 'This Bill passed its first reading on ' + this.formatDate(this.bill.dates.first_reading_date) + '. '
-
-          if (this.bill.dates.report_back_date) {
-            if (compareAsc(parseISO(this.bill.dates.report_back_date), new Date()) > 0) {
-              msg = msg + 'The Select Committee is due to report back on ' + this.formatDate(this.bill.dates.report_back_date) + '. Following this, the Bill will be ready for its second reading. '
-            } else {
-              msg = msg + 'The Select Committee report was due back on ' + this.formatDate(this.bill.dates.report_back_date) + ' and the Bill is awaiting its second reading. '
-            }
-          }
-
-          if (this.bill.dates.submissions_due_date) {
-            if (compareAsc(parseISO(this.bill.dates.submissions_due_date), new Date()) > 0) {
-              msg = msg + 'Public submissions are due on ' + this.formatDate(this.bill.dates.submissions_due_date) + '. '
-            } else {
-              msg = msg + 'Public submissions were due on ' + this.formatDate(this.bill.dates.submissions_due_date) + '. '
-            }
-          }
-
-          return msg
-        } else if (this.bill.dates.introduction_date) {
-          return 'This Bill was introduced on ' + this.formatDate(this.bill.dates.introduction_date) + ' and is awaiting its first reading.'
-        }
-      }
-      const EXPLANATIONS = {
-        ena: 'This Bill has been passed by Parliament, and signed into law by the Governor-General in a step called Royal Assent. This doesn\'t mean that everything the Act implements has come into force yet, but it does mean that the Act is on the statute books.',
-        pas: 'This Bill has been passed by Parliament, but hasn\'t been given Royal Assent by the Governor-General. Once this happens, the Bill will become law.',
-        def: 'This Bill has been defeated in a vote of MPs, which means that it will not be progressing and will not become law.',
-        wit: 'This Bill has been withdrawn, which means that it will not be progressing and will not become law.',
-        lap: 'This Bill has lapsed. At the end of each Parliamentary term, bills which are still in progress lapse unless they are reinstated in the next term.',
-        unx: 'This Bill is classed as \'not current\' on Parliament\'s website, which means it is likely that the Bill was either defeated or withdrawn. Unfortunately, WhereTheyStand has not been able to ascertain this information based on the Bill\'s page on the Parliament website.',
-        div: 'This Bill has been divided into multiple bills.',
-        unk: 'WhereTheyStand isn\'t sure what\'s happening with this Bill.',
-        dis: 'This Bill has been discharged by Parliament, which means that it will not be progressing and will not become law.'
-      }
-
-      return EXPLANATIONS[this.bill.progress]
-    },
-    firstReading() {
-      return this.bill.votes.find(vote => vote.reading === 1)
-    },
-    secondReading() {
-      return this.bill.votes.find(vote => vote.reading === 2)
-    },
-    thirdReading() {
-      return this.bill.votes.find(vote => vote.reading === 3)
-    },
-    actUrl() {
-      if (!this.bill.enactment.act_number || !this.bill.enactment.act_year) {
-        return null
-      } else {
-        return "https://legislation.govt.nz/act/results.aspx?search=ad_act___" + this.bill.enactment.act_year + "_" + this.bill.enactment.act_number + "__25_ac@bn@rn@dn@apub@aloc@apri@apro@aimp@bgov@bloc@bpri@bmem@rpub@rimp_ac@ainf@anif@aaif@aase@arep@bcur@rinf@rnif_a_aw_se_&p=1"
-      }
-    },
-    relativeDate() {
-      return formatDistanceToNow(parseISO(this.bill.last_retrieved)) + " ago"
-    },
+  {
+    date: formatDate(bill.value?.third_reading_date),
+    title: '3rd reading',
+    icon: 'i-lucide-book-open'
+  },
+  {
+    date: formatDate(bill.value?.royal_assent_date),
+    title: 'Royal assent',
+    icon: 'i-lucide-book-open'
+  },
+  {
+    date: formatDate(bill.value?.withdrawn_date),
+    title: 'Withdrawn',
+    icon: 'i-lucide-book-open'
   }
-}
-</script>
+])
 
-<style scoped></style>
+type ApiVote = {
+    id: string
+    reading: number
+    date: string
+    ayes: number
+    noes: number
+    abstentions: number
+    absentees: number
+    motion_agreed: boolean
+    vote_type?: string | null
+}
+
+type PaginatedVotes = {
+    count: number
+    results: ApiVote[]
+    next: string | null
+    previous: string | null
+}
+
+type HansardSearchResult = {
+    result_id: string
+    result_sitting_date: string
+}
+
+type VoteStub = {
+    date: string
+    reading: number
+    hansard_search_result: HansardSearchResult | null
+}
+
+type HansardLink = {
+    url: string
+    label: string
+}
+
+const votingMethodLookup: Record<string, { label: string; description: string }> = {
+    party: {
+        label: 'Party voting',
+        description: 'Parties decided whether or not to support this bill and cast votes on behalf of all their MPs.',
+    },
+    personal: {
+        label: 'Personal voting',
+        description: 'Each MP cast their own vote on this bill.',
+    },
+    mixed: {
+        label: 'Mixed voting',
+        description: 'Both personal and party voting were used at different stages of this bill.',
+    },
+}
+
+function getVotingMethod(votingMethod: string): { label: string; description: string } {
+    return votingMethodLookup[votingMethod] ?? { label: 'Unknown', description: 'Unknown voting method' }
+}
+
+function hansardTranscriptLink(result: HansardSearchResult | null | undefined): HansardLink | null {
+    if (!result?.result_id || !result?.result_sitting_date) return null
+    const sId = result.result_id.replace(/-/g, '')
+    return {
+        url: `https://hansard.parliament.nz/hansard-transcript/${result.result_sitting_date}/?sId=${sId}`,
+        label: 'View in Hansard',
+    }
+}
+
+function voteStubsByReading(billData: Record<string, unknown>): Map<number, VoteStub> {
+    const stubs = billData.vote_stubs
+    const byReading = new Map<number, VoteStub>()
+    if (!Array.isArray(stubs)) return byReading
+    for (const stub of stubs) {
+        if (!stub || typeof stub !== 'object') continue
+        const reading = Number((stub as VoteStub).reading)
+        if (!Number.isNaN(reading)) {
+            byReading.set(reading, stub as VoteStub)
+        }
+    }
+    return byReading
+}
+
+const billId = computed(() => String(route.params.id ?? ''))
+
+const { data: votesData, error: votesFetchError } = await useAsyncData(
+    () => `bill-votes-${billId.value}`,
+    () =>
+        $fetch<PaginatedVotes>(
+            `${apiBase}votes/?bill=${encodeURIComponent(billId.value)}&page_size=100`,
+        ),
+    {
+        watch: [billId],
+        lazy: true,
+    },
+)
+
+const voteFetchErrorMessage = computed(() => {
+    const e = votesFetchError.value as { message?: string; statusMessage?: string } | null | undefined
+    if (!e) return ''
+    return e.message || e.statusMessage || ''
+})
+
+type MergedRow =
+    | {
+          reading: 1 | 2 | 3
+          stage: string
+          kind: 'vote'
+          voteId: string
+          voteDate: string
+          readingDate: string | null
+          motion_agreed: boolean
+          totals: { ayes: number; noes: number; abstentions: number; absentees: number }
+          voteType: string | null
+      }
+    | {
+          reading: 1 | 2 | 3
+          stage: string
+          kind: 'defeat'
+          defeatedDate: string | null
+          detailNote: string
+          hansardLink: HansardLink | null
+      }
+    | {
+          reading: 1 | 2 | 3
+          stage: string
+          kind: 'reading_only'
+          readingDate: string
+          detailNote: string
+          hansardLink: HansardLink | null
+      }
+    | {
+          reading: 1 | 2 | 3
+          stage: string
+          kind: 'pending'
+      }
+
+const mergedReadingRows = computed((): MergedRow[] => {
+    const b = bill.value as Record<string, unknown>
+    const apiVotes = votesData.value?.results ?? []
+    const byReading = new Map<number, ApiVote>()
+    for (const v of apiVotes) {
+        byReading.set(v.reading, v)
+    }
+    const stubsByReading = voteStubsByReading(b)
+
+    const defeatedReadingRaw = b.defeated_reading
+    const defeatedReading =
+        defeatedReadingRaw !== undefined && defeatedReadingRaw !== null && defeatedReadingRaw !== ''
+            ? Number(defeatedReadingRaw)
+            : null
+    const defeatedDate =
+        typeof b.defeated_date === 'string' && b.defeated_date.length > 0 ? b.defeated_date : null
+
+    /** Earliest reading where the bill was defeated (vote lost, or bill metadata). Later stages did not occur. */
+    let defeatAtReading: number | null = null
+    for (const r of [1, 2, 3] as const) {
+        const v = byReading.get(r)
+        if (v && !v.motion_agreed) {
+            defeatAtReading = r
+            break
+        }
+    }
+    if (
+        defeatAtReading === null &&
+        defeatedReading !== null &&
+        !Number.isNaN(defeatedReading) &&
+        defeatedReading >= 1 &&
+        defeatedReading <= 3
+    ) {
+        defeatAtReading = defeatedReading
+    }
+
+    const specs = [
+        { reading: 1 as const, stage: '1st reading', key: 'first_reading_date' },
+        { reading: 2 as const, stage: '2nd reading', key: 'second_reading_date' },
+        { reading: 3 as const, stage: '3rd reading', key: 'third_reading_date' },
+    ]
+
+    const rows: MergedRow[] = []
+    for (const spec of specs) {
+        if (defeatAtReading !== null && spec.reading > defeatAtReading) {
+            continue
+        }
+
+        const vote = byReading.get(spec.reading)
+        const readingDate = (typeof b[spec.key] === 'string' ? b[spec.key] : null) as string | null
+
+        if (vote) {
+            rows.push({
+                reading: spec.reading,
+                stage: spec.stage,
+                kind: 'vote',
+                voteId: vote.id,
+                voteDate: vote.date,
+                readingDate,
+                motion_agreed: vote.motion_agreed,
+                totals: {
+                    ayes: vote.ayes,
+                    noes: vote.noes,
+                    abstentions: vote.abstentions,
+                    absentees: vote.absentees,
+                },
+                voteType: vote.vote_type ?? null,
+            })
+        } else if (
+            defeatedReading !== null &&
+            !Number.isNaN(defeatedReading) &&
+            defeatedReading === spec.reading
+        ) {
+            const hansardLink = hansardTranscriptLink(
+                stubsByReading.get(spec.reading)?.hansard_search_result,
+            )
+            rows.push({
+                reading: spec.reading,
+                stage: spec.stage,
+                kind: 'defeat',
+                defeatedDate,
+                hansardLink,
+                detailNote: hansardLink
+                    ? 'The bill was defeated at this stage. Vote totals are not recorded on WhereTheyStand.'
+                    : 'The bill was defeated at this stage. Vote totals are not recorded on WhereTheyStand; see Hansard for detail.',
+            })
+        } else if (readingDate) {
+            const hansardLink = hansardTranscriptLink(
+                stubsByReading.get(spec.reading)?.hansard_search_result,
+            )
+            rows.push({
+                reading: spec.reading,
+                stage: spec.stage,
+                kind: 'reading_only',
+                readingDate,
+                hansardLink,
+                detailNote: hansardLink
+                    ? 'This vote is recorded in Hansard but hasn\'t been processed in WhereTheyStand.'
+                    : 'No vote breakdown is recorded on WhereTheyStand for this reading. Other votes may appear in Hansard.',
+            })
+        } else {
+            rows.push({
+                reading: spec.reading,
+                stage: spec.stage,
+                kind: 'pending',
+            })
+        }
+    }
+    return rows
+})
+
+const statusMeta = computed(() => {
+    const statuses = config.public.valueKeys?.billStatuses ?? {}
+    const key = (bill.value as Record<string, unknown>)?.status ?? 'unknown'
+    return (
+        (statuses as Record<string, { description?: string; colour?: string }>)[String(key)] ?? {
+            description: 'Unknown',
+            colour: 'neutral',
+        }
+    )
+})
+
+function mergedRowBadge(row: MergedRow): { label: string; color: string } {
+    if (row.kind === 'vote') {
+        return row.motion_agreed
+            ? { label: 'Passed', color: 'success' }
+            : { label: 'Defeated', color: 'error' }
+    }
+    if (row.kind === 'defeat') {
+        return { label: 'Defeated', color: 'error' }
+    }
+    if (row.kind === 'reading_only') {
+        return { label: 'Passed', color: 'success' }
+    }
+    return { label: 'Pending', color: 'neutral' }
+}
+
+</script>

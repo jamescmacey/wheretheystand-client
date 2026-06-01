@@ -1,40 +1,39 @@
 {
-  "name": "nuxt-app",
+  "name": "wheretheystand-client",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "nuxt build",
+    "build": "NODE_OPTIONS=--max-old-space-size=4096 nuxt build",
     "dev": "nuxt dev",
+    "clean": "nuxi cleanup",
+    "dev:reset": "nuxi cleanup && nuxt prepare && nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.6.0",
-    "@fortawesome/free-brands-svg-icons": "^6.6.0",
-    "@fortawesome/free-regular-svg-icons": "^6.6.0",
-    "@fortawesome/free-solid-svg-icons": "^6.6.0",
-    "@fortawesome/vue-fontawesome": "^3.0.8",
+    "@nuxt/content": "^3.13.0",
+    "@nuxt/image": "^2.0.0",
+    "@nuxt/ui": "^4.5.1",
     "@nuxtjs/algolia": "^1.10.2",
-    "@passageidentity/passage-elements": "^1.22.0",
+    "@nuxtjs/mdc": "^0.18.0",
+    "@nuxtjs/robots": "^5.5.6",
+    "@nuxtjs/turnstile": "^1.1.2",
     "@pinia/nuxt": "^0.5.4",
-    "bootstrap": "^5.2.3",
+    "better-sqlite3": "^12.9.0",
     "color-harmony": "^0.3.0",
     "date-fns": "^3.6.0",
     "humps": "^2.0.1",
     "instantsearch.css": "^8.5.0",
-    "nuxt": "^3.13.0",
+    "nuxt": "^4.2.0",
     "nuxt-gtag": "^3.0.0",
     "pinia": "^2.2.2",
-    "sass": "^1.32.13",
-    "sass-loader": "^13.2.2",
     "vue": "latest",
-    "vue-chartjs": "^5.3.1",
-    "vue-instantsearch": "^4.19.3",
-    "vue-recaptcha": "^3.0.0-alpha.2"
+    "vue-instantsearch": "^4.19.3"
   },
   "devDependencies": {
-    "wrangler": "^4.51.0"
+    "nuxt-mapbox": "^1.6.0",
+    "wrangler": "^4.45.1"
   }
 }

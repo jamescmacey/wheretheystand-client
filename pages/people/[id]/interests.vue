@@ -1,61 +1,138 @@
 <template>
-  <div class="container">
-    <div class="row mt-3">
-      <div class="col-12">
-        <h4>Financial interests</h4>
-        <p>Each year, Members of Parliament are required to declare their financial interests, along with other specified interests.</p>
-        <p>This page shows all the interests that {{ person.display_name }} declared when the register was last compiled. From time to time, amendments are also made and are incorporated into the list you see here.</p>
-        <ExternalLinkButton link="https://links.wheretheystand.nz/parliament-financial-interests" text="Learn more on the Parliament website"></ExternalLinkButton>
-        <Card v-if="interests && (Object.keys(interests).length !== 0)">
-          <h5>Interests for {{ person.display_name }} as at {{ formattedReportDate }}</h5>
-          <div v-for="i in 14" :key="i">
-            <div v-if="interestsForType(i).length">
-            <h6><span class="text-muted">{{ i }} </span> {{ interestTypeDescription(i) }}</h6>
-            <ul>
-              <li v-for="(interest, j) in interestsForType(i)" :key="j">
-                {{ interest.description }}
-                <span v-if="interest.nzbn_match.nzbn"><br v-if="interest.nzbn_match.entity_classifications_descs">
-                  <span class="text-muted" v-if="interest.nzbn_match.entity_classifications_descs" v-for="(classification, k) in interest.nzbn_match.entity_classifications_descs" :key="k">{{ classification }}</span>
-                  <br><small><ExternalLinkInline :link="'https://www.nzbn.govt.nz/mynzbn/nzbndetails/' + interest.nzbn_match.nzbn">View on NZBN Registry</ExternalLinkInline></small>
-                </span>
-              </li>
-            </ul>
-            </div>
-          </div>
-        </Card>
-        <Card :missing="true" class="text-center" v-else>
-          <p><strong>No interests were found for {{ person.display_name }}</strong></p>
-          <p>WhereTheyStand doesn't have interests for recently elected MPs or MPs who left Parliament before the 52nd Parliament opened.</p>
-          <ExternalLinkButton link="https://links.wheretheystand.nz/parliament-financial-interests" text="View historic or new registers of financial interests on the Parliament website"></ExternalLinkButton>
-        </Card>
-        <p v-if="hasChangedDebt" class="text-muted">An asterisk (*) denotes that the interest rate payable in relation to the debt is less than the normal market interest rate that applied at the time the debt was incurred, or, if the terms of the debt have been amended, at the time of that amendment.</p>
-        <p v-if="interests && interests != {}" class="text-muted">Due to the original formatting of this material, some interests might exist on the same line.</p>
-      </div>
-    </div>
-  </div>
+        <UContainer class="my-8">
+            <UPageGrid class="grid-cols-1 sm:grid-cols-1 lg:grid-cols-3">
+                <div class="col-span-3 md:col-span-1 md:col-span-1 lg:col-span-1 w-full">
+                    <UCard variant="subtle">
+                        <div v-if="status === 'success' && interests.interests" class="w-full">
+                            <h3 class="text-lg font-bold">Select report</h3>
+                            <USelect :items="availableReports" v-model="selectedReport" class="w-full my-2" />
+                            <DocumentModal v-if="interests.document" :document="interests.document" />
+                        </div>
+                        <p class="text-sm text-muted py-2">Each year, members of Parliament are required to declare their financial interests, along with other specified interests.</p>
+                        <p class="text-sm text-muted py-2">
+                             This page shows all the interests declared when the register was last compiled. From time to time, amendments are also made and are incorporated into the list you see here.</p>
+                        <p class="text-sm text-muted py-2">Learn more on the <NuxtLink class="text-primary" href="https://links.wheretheystand.nz/parliament-financial-interests" target="_blank">Parliament website</NuxtLink>.</p>
+                    </UCard>
+                </div>
+                <div class="col-span-3 md:col-span-2 sm:col-span-2 lg:col-span-2 w-full">
+                    <UCard variant="subtle" v-if="status === 'success' && interests.interests">
+                        <h3 class="text-xl font-bold">Interests for {{ person.display_name }} as at {{
+                            formattedDate(interests.as_at) }}</h3>
+                        <div v-for="i in 14" :key="i">
+                            <div v-if="interestsForType(i).length">
+                                <h6 class="mb-2 mt-4 font-bold text-lg"><span class="text-muted">{{ i }} </span> {{ interestTypeDescription(i) }}</h6>
+                                <div class="space-y-2">
+
+                                
+                                <UPageCard v-for="(interest, j) in interestsForType(i)" :key="j" :title="interest.description">
+                                    <template #title>
+                                        {{ interest.description }}
+                                    </template>
+                                    <template #description v-if="interest.nzbn">
+                                        <span class="text-muted">NZBN: {{ interest.nzbn }}</span>
+                                    </template>
+                                </UPageCard>
+                            </div>
+                            </div>
+                        </div>
+                    </UCard>
+                    <UCard variant="subtle" v-else-if="status === 'success' || (status === 'error' && error.statusCode === 404)">
+                        <UEmpty title="No interests found" description="No interests found for this person.  WhereTheyStand doesn't have interests for recently elected MPs or MPs who left Parliament before the 52nd Parliament opened. " />
+                    </UCard>
+                    <UCard variant="subtle" v-else-if="status === 'pending'" class="w-full">
+                        <div class="my-16 w-1/2 mx-auto flex flex-col items-center justify-center text-center">
+                            <h3 class="mb-2 text-muted">Loading interests...</h3>
+                            <UProgress animation="swing" />
+                        </div>
+                    </UCard>
+                    <UCard variant="subtle" v-else="status === 'error'" class="w-full">
+                        <UEmpty title="Error loading interests" description="An error occurred while loading interests. Please try again.">
+                            <template #actions>
+                                <UButton variant="subtle" color="neutral" @click="refresh()" class="mt-4" icon="i-lucide-refresh-cw" trailing >
+                                    Refresh
+                                </UButton>
+                            </template>
+                        </UEmpty>
+                    </UCard>
+                </div>
+            </UPageGrid>
+        </UContainer>
 </template>
 
-<script>
-import { format, parse } from 'date-fns'
-import { usePeopleStore } from '../../../stores/people'
+<script setup>
 
-export default {
-  name: 'PersonInterests',
-  setup() {
-    const peopleStore = usePeopleStore()
+const config = useRuntimeConfig()
+const apiBase = config.public.apiBase
+const route = useRoute()
+const selectedReport = ref('latest')
 
-    return { peopleStore }
-  },
-  methods: {
-    interestsForType (type) {
-      if (this.interests && (Object.keys(this.interests).length !== 0)) {
-        return this.interests.interests.filter((element) => {
-          return (element.type === type.toString())
+const onMounted = () => {
+    selectedReport.value = 'latest'
+}
+
+const interestsKey = computed(() => `person-interests-${route.params.id}-${selectedReport.value}`)
+const { data: interests, status, error, refresh, clear } = await useAsyncData(interestsKey, () => $fetch(apiBase + 'people/' + route.params.id + '/financial-interests/' + (selectedReport.value === 'latest' ? 'latest' : selectedReport.value + '/')), { lazy: true })
+
+const availableReportsKey = computed(() => `person-interests-${route.params.id}`)
+const { data: availableInterests, availableReportsStatus, availableReportsError, availableReportsRefresh, availableReportsClear } = await useAsyncData(availableReportsKey, () => $fetch(apiBase + 'people/' + route.params.id + '/financial-interests/'), { lazy: true })
+
+
+const props = defineProps({
+    person: {
+        type: Object,
+        required: true
+    }
+})
+
+const availableReports = computed(() => {
+    if (availableInterests.value && Array.isArray(availableInterests.value) && availableInterests.value.length > 0) {
+        // sort by as_at date descending (latest first)
+        const sorted = [...availableInterests.value].sort((a, b) => new Date(b.as_at) - new Date(a.as_at));
+        return sorted.map((report, idx) => ({
+            label: idx === 0
+                ? `Latest available (${formattedDate(report.as_at)})`
+                : formattedDate(report.as_at),
+            value: idx === 0 ? 'latest' : report.id
+        }));
+    } else if (interests.value && interests.value.as_at) {
+        return [
+            {
+                label: 'Latest (' + formattedDate(interests.value.as_at) + ')',
+                value: 'latest'
+            }
+        ]
+    } else {
+        return []
+    }
+});
+
+
+import { format } from 'date-fns'
+
+const formattedDate = (date) => {
+    return format(new Date(date), 'dd MMMM yyyy')
+}
+
+const hasChangedDebt = computed(() => {
+    if (interests.value && (Object.keys(interests.value).length !== 0)) {
+        return interests.value.interests.filter((element) => {
+            return (element.description.endsWith('*'))
         })
-      } else { return []}
-    },
-    interestTypeDescription (type) {
-      return {
+    } else {
+        return false
+    }
+})
+
+const interestsForType = (type) => {
+    if (interests.value && (Object.keys(interests.value).length !== 0)) {
+        return interests.value.interests.filter((element) => {
+            return (element.interest_type === type.toString())
+        })
+    } else { return [] }
+}
+
+const interestTypeDescription = (type) => {
+    return {
         1: 'Company directorships and controlling interests',
         2: 'Other companies and business entities',
         3: 'Employment',
@@ -64,44 +141,12 @@ export default {
         6: 'Real property',
         7: 'Retirement (superannuation) schemes',
         8: 'Investment schemes',
-        9: 'Debtors (those who owe ' + this.person.display_name + ' money)',
-        10: 'Creditors (those who ' + this.person.display_name + ' owes money to)',
+        9: 'Debtors (those who owe ' + props.person.display_name + ' money)',
+        10: 'Creditors (those who ' + props.person.display_name + ' owes money to)',
         11: 'Overseas travel costs',
         12: 'Gifts',
         13: 'Discharged debts',
         14: 'Payments for activities'
-      }[type]
-    }
-  },
-  created () {
-    this.peopleStore.fetchInterests(this.$route.params.id)
-  },
-  computed: {
-    person () {
-      return this.peopleStore.byIdentifier(this.$route.params.id)
-    },
-    interests () {
-      return this.peopleStore.interestsByIdentifier(this.$route.params.id)
-    },
-    formattedReportDate () {
-      if (this.interests && (Object.keys(this.interests).length !== 0)) { 
-        console.log(this.interests)
-        return format(parse(this.interests.filing_date, 'yyyy-MM-dd', new Date()), 'd MMMM yyyy')
-      } else { return "" }
-    },
-    hasChangedDebt () {
-      if (this.interests && (Object.keys(this.interests).length !== 0)) {
-        return this.interests.interests.filter((element) => {
-          return (element.description.endsWith('*'))
-        })
-      } else {
-        return false
-      }
-    }
-  }
+    }[type]
 }
 </script>
-
-<style scoped>
-
-</style>
