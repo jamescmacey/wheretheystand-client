@@ -219,7 +219,10 @@ const routing = {
 }
 
 definePageMeta({
-    robots: false
+    // InstantSearch + routing are client-only; SSR on Cloudflare Workers throws
+    // "Code generation from strings disallowed for this context".
+    ssr: false,
+    robots: false,
 })
 
 </script>
