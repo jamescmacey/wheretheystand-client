@@ -16,6 +16,7 @@ export default defineNuxtConfig({
   },
   routeRules: {
     '/search': { ssr: false },
+    '/contact': { ssr: false },
   },
   modules: [
     '@nuxtjs/algolia',
