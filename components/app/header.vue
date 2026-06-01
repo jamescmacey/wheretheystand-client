@@ -3,44 +3,47 @@ const route = useRoute()
 const config = useRuntimeConfig()
 const electionsEnabled = String(config.public.electionsEnabled).toLowerCase() === 'true'
 
-const items = computed(() => [{
+const headerLinkClass = 'text-inverted dark:text-default hover:underline hover:text-inverted dark:hover:text-default'
+
+const navItems = computed(() => [{
   label: 'People',
   to: '/people',
-  class: 'text-inverted dark:text-default hover:underline hover:text-inverted dark:hover:text-default'
 }, {
   label: 'Parties',
   to: '/parties',
-  class: 'text-inverted dark:text-default hover:underline hover:text-inverted dark:hover:text-default'
 }, {
   label: 'Electorates',
   to: '/electorates',
-  class: 'text-inverted dark:text-default hover:underline hover:text-inverted dark:hover:text-default'
 }, {
   label: 'Bills',
   to: '/bills',
-  class: 'text-inverted dark:text-default hover:underline hover:text-inverted dark:hover:text-default'
 }, {
   label: 'Votes',
   to: '/votes',
-  class: 'text-inverted dark:text-default hover:underline hover:text-inverted dark:hover:text-default'
 },
 ...(electionsEnabled ? [{
   label: 'Elections',
   to: '/elections',
-  class: 'text-inverted dark:text-default hover:underline hover:text-inverted dark:hover:text-default'
 }] : []),
 {
   label: 'Search',
   to: '/search',
-  class: 'text-inverted dark:text-default hover:underline hover:text-inverted dark:hover:text-default'
 },
 ])
+
+const headerItems = computed(() =>
+  navItems.value.map(item => ({ ...item, class: headerLinkClass }))
+)
 </script>
 
 <template>
-  <UHeader :ui="{
-    root: 'bg-theme1/100 border-b border-theme1/0 h-(--ui-header-height) sticky top-0 z-50',
-  }" mode="drawer">
+  <UHeader
+    :ui="{
+      root: 'bg-theme1/100 border-b border-theme1/0 h-(--ui-header-height) sticky top-0 z-50',
+      toggle: 'text-inverted dark:text-default hover:text-inverted dark:hover:text-default hover:bg-white/10',
+    }"
+    mode="drawer"
+  >
     <template #left>
       <NuxtLink to="/">
         <AppLogo class="w-auto h-6 shrink-0 text-inverted dark:text-default" />
@@ -48,14 +51,16 @@ const items = computed(() => [{
     </template>
 
     <UNavigationMenu
-      :items="items"
+      :items="headerItems"
       variant="link"
     />
 
     <template #body>
       <UNavigationMenu
-        :items="items"
+        :items="navItems"
         orientation="vertical"
+        variant="link"
+        color="neutral"
         class="-mx-2.5"
       />
     </template>

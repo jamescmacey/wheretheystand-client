@@ -33,140 +33,94 @@
         </template>
 
         <template v-else>
-            <div class="grid gap-6 lg:grid-cols-3">
-                <UCard class="lg:col-span-2">
-                    <template #header>
-                        <div class="flex items-center justify-between gap-4">
-                            <h2 class="text-lg font-semibold">About this bill</h2>
-                        </div>
-                    </template>
+            
+            <div class="my-4 flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                    <div class="space-x-2">
+                    <UButton v-if="originalBill.parliament_api_id"
+                        :href="`https://bills.parliament.nz/v/6/${originalBill.parliament_api_id}`"
+                        target="_blank"
+                        variant="outline"
+                        icon="i-lucide-external-link"
+                        class="mb-2 lg:mb-0"
+                    >
+                        View on Parliament website
+                    </UButton>
+                    <UButton v-if="originalBill.legislation_url"
+                        :href="originalBill.legislation_url"
+                        target="_blank"
+                        variant="outline"
+                        icon="i-lucide-book-open"
+                        class="mb-2 lg:mb-0"
+                    >
+                        Read bill text
+                    </UButton>
+                    </div>
+                    
+                    <div>
+                        <UBadge :color="statusMeta.colour" variant="soft" size="xl">
+                            {{ statusMeta.description }}
+                        </UBadge>
+                    </div>
+                </div>
 
-                    <p class="text-sm text-muted leading-relaxed">
-                        {{ bill.summary }}
+                <UPageCard variant="subtle" class="mt-4" v-if="originalBill.description">
+                    <p>
+                        {{ originalBill.description }}
                     </p>
-
-                    <div class="mt-5 space-y-5">
-                        <div v-if="resources.billText || resources.actText">
-                            <h3 class="text-sm font-semibold">Read the bill</h3>
-                            <div class="mt-2 flex flex-col gap-2 text-sm">
-                                <ULink
-                                    v-if="resources.billText"
-                                    :href="resources.billText.url"
-                                    target="_blank"
-                                    class="inline-flex items-center gap-2"
-                                >
-                                    <UIcon name="i-lucide-file-text" class="text-muted" />
-                                    <span>{{ resources.billText.label }}</span>
-                                    <UIcon name="i-lucide-external-link" class="text-muted" />
-                                </ULink>
-                                <ULink
-                                    v-if="resources.actText"
-                                    :href="resources.actText.url"
-                                    target="_blank"
-                                    class="inline-flex items-center gap-2"
-                                >
-                                    <UIcon name="i-lucide-book-open" class="text-muted" />
-                                    <span>{{ resources.actText.label }}</span>
-                                    <UIcon name="i-lucide-external-link" class="text-muted" />
-                                </ULink>
-                            </div>
-                        </div>
-
-                        <div v-if="votingMethod && votingMethod.label !== 'unknown'">
-                            <h3 class="text-sm font-semibold">Voting method</h3>
-                            <p class="mt-1 text-sm text-muted">
-                                <span class="font-semibold text-default">{{ votingMethod.label }}:</span>
-                                {{ votingMethod.description }}
-                            </p>
-                        </div>
-
-                        <div v-if="proceduralNotes.length">
-                            <h3 class="text-sm font-semibold">Procedural notes</h3>
-                            <ul class="mt-2 space-y-2 text-sm text-muted">
-                                <li v-for="note in proceduralNotes" :key="note.title">
-                                    <span class="font-semibold text-default">{{ note.title }}:</span>
-                                    {{ note.description }}
-                                    <ULink
-                                        v-if="note.link"
-                                        :href="note.link.url"
-                                        target="_blank"
-                                        class="inline-flex items-center gap-1"
-                                    >
-                                        {{ note.link.label }}
-                                        <UIcon name="i-lucide-external-link" class="text-muted" />
-                                    </ULink>
-                                </li>
-                            </ul>
-                        </div>
+                    <div v-if="originalBill.voting_methods != 'unknown'">
+                    <h5 class="text-muted">Voting method</h5>
+                        <p>
+                            <span class="font-semibold">{{ getVotingMethod(originalBill.voting_methods).label }}</span>: {{ getVotingMethod(originalBill.voting_methods).description }}
+                        </p>
                     </div>
-
-                    <template #footer>
-                        <div class="flex flex-wrap items-center justify-between gap-2 text-sm">
-                            <ULink
-                                v-if="resources.parliament"
-                                :href="resources.parliament.url"
-                                target="_blank"
-                                class="inline-flex items-center gap-2"
-                            >
-                                {{ resources.parliament.label }}
-                                <UIcon name="i-lucide-external-link" class="text-muted" />
-                            </ULink>
-                            <ULink
-                                v-if="resources.json"
-                                :href="resources.json.url"
-                                target="_blank"
-                                class="inline-flex items-center gap-2 text-muted"
-                            >
-                                <UIcon name="i-lucide-code" />
-                                {{ resources.json.label }}
-                            </ULink>
-                        </div>
-                    </template>
-                </UCard>
-
-                <UCard>
-                    <template #header>
-                        <div class="flex items-center justify-between gap-4">
-                            <h2 class="text-lg font-semibold">Progress</h2>
-                            <UBadge :color="statusMeta.colour" variant="soft">
-                                {{ statusMeta.description }}
-                            </UBadge>
-                        </div>
-                    </template>
-                    <div class="space-y-3">
-                        <UTimeline size="xs" :default-value="2" :items="timelineItems" />
+                    <h4 class="text-lg font-semibold" v-if="originalBill.extended_sittings_used || originalBill.urgency_used">Procedural notes</h4>
+                    <div v-if="originalBill.extended_sittings_used">
+                    <h5 class="text-muted">Extended sittings used</h5>
+                        <p>
+                            Extended sittings were used to progress this bill.  <ULink href="https://links.wheretheystand.nz/parliament-extended-sittings" target="_blank">Learn more about extended sittings <UIcon name="i-lucide-external-link" /></ULink>
+                        </p>
                     </div>
-                </UCard>
-            </div>
+                    <div v-if="originalBill.urgency_used">
+                    <h5 class="text-muted">Urgency used</h5>
+                        <p>
+                            Urgency was used to progress this bill.  This means some of the normal processes may have been skipped or abrogated.  <ULink href="https://links.wheretheystand.nz/parliament-urgency" target="_blank">Learn more about urgency <UIcon name="i-lucide-external-link" /></ULink>
+                        </p>
+                    </div>
+                    <USeparator class="my-4"/>
+                    <ul class="list-disc list-inside">
+                        <li>
+                            Introduced on <span class="font-semibold">{{ formatDate(originalBill.introduction_date) }}</span>
+                        </li>
+                        <li v-if="originalBill.first_reading_date">
+                            1st reading on <span class="font-semibold">{{ formatDate(originalBill.first_reading_date) }}</span>
+                        </li>
+                        <li v-if="originalBill.second_reading_date">
+                            2nd reading on <span class="font-semibold">{{ formatDate(originalBill.second_reading_date) }}</span>
+                        </li>
+                        <li v-if="originalBill.third_reading_date">
+                            3rd reading on <span class="font-semibold">{{ formatDate(originalBill.third_reading_date) }}</span>
+                        </li>
+                        <li v-if="originalBill.royal_assent_date">
+                            Royal assent on <span class="font-semibold">{{ formatDate(originalBill.royal_assent_date) }}</span>
+                        </li>
+                        <li v-if="originalBill.withdrawn_date">
+                            Withdrawn on <span class="font-semibold">{{ formatDate(originalBill.withdrawn_date) }}</span>
+                        </li>
+                        <li v-if="originalBill.defeated_date">
+                            Defeated on <span class="font-semibold">{{ formatDate(originalBill.defeated_date) }}</span>
+                        </li>
+                        <li v-if="originalBill.lapsed_date">
+                            Lapsed on <span class="font-semibold">{{ formatDate(originalBill.lapsed_date) }}</span>
+                        </li>
+                    </ul>
+                </UPageCard>
 
-            <div v-if="members.length">
+            <div v-if="originalBill.people_responsible.length">
                 <h2 class="text-lg font-semibold mb-3">
-                    Member<span v-if="members.length > 1">s</span> responsible
+                    Member<span v-if="originalBill.people_responsible.length > 1">s</span> responsible
                 </h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <WContentItemCard
-                        v-for="memberItem in members"
-                        :key="memberItem.id"
-                        :item="{ colour: memberItem.colour }"
-                        :to="memberItem.link || undefined"
-                    >
-                        <template #title>
-                            <div class="flex items-center gap-3">
-                                <img
-                                    :src="memberItem.avatarUrl"
-                                    :alt="memberItem.name"
-                                    class="w-10 h-10 rounded-full object-cover shrink-0 ring ring-default"
-                                >
-                                <div class="min-w-0">
-                                    <p class="font-medium text-highlighted truncate">{{ memberItem.name }}</p>
-                                    <p v-if="memberItem.role" class="text-sm text-muted truncate">
-                                        {{ memberItem.role }}
-                                    </p>
-                                    <p v-else class="text-sm text-muted">Member of Parliament</p>
-                                </div>
-                            </div>
-                        </template>
-                    </WContentItemCard>
+                    <WContentPersonCard v-for="member in originalBill.people_responsible" :key="member.id" :person="member" />
                 </div>
             </div>
 
@@ -201,17 +155,22 @@
                                     <p v-if="row.voteType" class="text-xs text-muted">
                                         <span class="capitalize">{{ String(row.voteType).replace(/_/g, ' ') }}</span> vote
                                     </p>
-                                    <div v-if="row.totals" class="grid grid-cols-4 gap-2 text-center text-xs pt-2">
-                                        <div
-                                            v-for="total in totalsForMergedRow(row)"
-                                            :key="total.label"
-                                            class="flex flex-col items-center gap-1"
-                                        >
-                                            <span class="text-lg font-semibold text-default">{{ total.value }}</span>
-                                            <span class="inline-flex items-center gap-1 text-[10px] uppercase text-muted">
-                                                <span :class="['h-2 w-2 rounded-full', total.color]" />
-                                                {{ total.label }}
-                                            </span>
+                                    <div v-if="row.totals" class="grid grid-cols-4 gap-2 text-center pt-2">
+                                        <div class="flex flex-col items-center">
+                                            <span class="font-semibold">{{ row.totals.ayes }}</span>
+                                            <span class="text-muted text-xs pb-1 border-b-2 border-emerald-500">Aye</span>
+                                        </div>
+                                        <div class="flex flex-col items-center">
+                                            <span class="font-semibold">{{ row.totals.noes }}</span>
+                                            <span class="text-muted text-xs pb-1 border-b-2 border-rose-500">No</span>
+                                        </div>
+                                        <div class="flex flex-col items-center">
+                                            <span class="font-semibold">{{ row.totals.abstentions }}</span>
+                                            <span class="text-muted text-xs pb-1 border-b-2 border-amber-500">Abstain</span>
+                                        </div>
+                                        <div class="flex flex-col items-center">
+                                            <span class="font-semibold">{{ row.totals.absentees }}</span>
+                                            <span class="text-muted text-xs pb-1 border-b-2 border-sky-500">Absent</span>
                                         </div>
                                     </div>
                                 </template>
@@ -226,6 +185,16 @@
                                     <p class="text-sm text-muted">
                                         {{ row.detailNote }}
                                     </p>
+                                    <p v-if="row.hansardLink" class="mt-2">
+                                        <ULink
+                                            :href="row.hansardLink.url"
+                                            target="_blank"
+                                            class="inline-flex items-center gap-1.5 text-sm font-medium text-primary"
+                                        >
+                                            {{ row.hansardLink.label }}
+                                            <UIcon name="i-lucide-external-link" />
+                                        </ULink>
+                                    </p>
                                 </template>
 
                                 <template v-else-if="row.kind === 'reading_only'">
@@ -234,6 +203,16 @@
                                     </p>
                                     <p class="text-sm text-muted">
                                         {{ row.detailNote }}
+                                    </p>
+                                    <p v-if="row.hansardLink" class="mt-2">
+                                        <ULink
+                                            :href="row.hansardLink.url"
+                                            target="_blank"
+                                            class="inline-flex items-center gap-1.5 text-sm font-medium text-primary"
+                                        >
+                                            {{ row.hansardLink.label }}
+                                            <UIcon name="i-lucide-external-link" />
+                                        </ULink>
                                     </p>
                                 </template>
 
@@ -272,6 +251,10 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    originalBill: {
+        type: Object,
+        required: true,
+    },
     status: {
         type: String,
         default: 'pending',
@@ -290,7 +273,7 @@ const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
 const route = useRoute()
 
-const { bill, status, error, refresh } = toRefs(props)
+const { bill, originalBill, status, error, refresh } = toRefs(props)
 
 const resources = computed(() => (bill.value as Record<string, unknown>)?.resources ?? {})
 const members = computed(() =>
@@ -359,6 +342,64 @@ type PaginatedVotes = {
     previous: string | null
 }
 
+type HansardSearchResult = {
+    result_id: string
+    result_sitting_date: string
+}
+
+type VoteStub = {
+    date: string
+    reading: number
+    hansard_search_result: HansardSearchResult | null
+}
+
+type HansardLink = {
+    url: string
+    label: string
+}
+
+const votingMethodLookup: Record<string, { label: string; description: string }> = {
+    party: {
+        label: 'Party voting',
+        description: 'Parties decided whether or not to support this bill and cast votes on behalf of all their MPs.',
+    },
+    personal: {
+        label: 'Personal voting',
+        description: 'Each MP cast their own vote on this bill.',
+    },
+    mixed: {
+        label: 'Mixed voting',
+        description: 'Both personal and party voting were used at different stages of this bill.',
+    },
+}
+
+function getVotingMethod(votingMethod: string): { label: string; description: string } {
+    return votingMethodLookup[votingMethod] ?? { label: 'Unknown', description: 'Unknown voting method' }
+}
+
+function hansardTranscriptLink(result: HansardSearchResult | null | undefined): HansardLink | null {
+    if (!result?.result_id || !result?.result_sitting_date) return null
+    const sId = result.result_id.replace(/-/g, '')
+    return {
+        url: `https://hansard.parliament.nz/hansard-transcript/${result.result_sitting_date}/?sId=${sId}`,
+        label: 'View in Hansard',
+    }
+}
+
+function voteStubsByReading(billData: Record<string, unknown>): Map<number, VoteStub> {
+    const stubs = billData.vote_stubs
+    const byReading = new Map<number, VoteStub>()
+    if (!Array.isArray(stubs)) return byReading
+    for (const stub of stubs) {
+        if (!stub || typeof stub !== 'object') continue
+        const reading = Number((stub as VoteStub).reading)
+        if (!Number.isNaN(reading)) {
+            byReading.set(reading, stub as VoteStub)
+        }
+    }
+    return byReading
+}
+
 const billId = computed(() => String(route.params.id ?? ''))
 
 const { data: votesData, error: votesFetchError } = await useAsyncData(
@@ -397,6 +438,7 @@ type MergedRow =
           kind: 'defeat'
           defeatedDate: string | null
           detailNote: string
+          hansardLink: HansardLink | null
       }
     | {
           reading: 1 | 2 | 3
@@ -404,6 +446,7 @@ type MergedRow =
           kind: 'reading_only'
           readingDate: string
           detailNote: string
+          hansardLink: HansardLink | null
       }
     | {
           reading: 1 | 2 | 3
@@ -418,6 +461,7 @@ const mergedReadingRows = computed((): MergedRow[] => {
     for (const v of apiVotes) {
         byReading.set(v.reading, v)
     }
+    const stubsByReading = voteStubsByReading(b)
 
     const defeatedReadingRaw = b.defeated_reading
     const defeatedReading =
@@ -483,22 +527,32 @@ const mergedReadingRows = computed((): MergedRow[] => {
             !Number.isNaN(defeatedReading) &&
             defeatedReading === spec.reading
         ) {
+            const hansardLink = hansardTranscriptLink(
+                stubsByReading.get(spec.reading)?.hansard_search_result,
+            )
             rows.push({
                 reading: spec.reading,
                 stage: spec.stage,
                 kind: 'defeat',
                 defeatedDate,
-                detailNote:
-                    'The bill was defeated at this stage. Vote totals are not recorded on WhereTheyStand; see Hansard for detail.',
+                hansardLink,
+                detailNote: hansardLink
+                    ? 'The bill was defeated at this stage. Vote totals are not recorded on WhereTheyStand.'
+                    : 'The bill was defeated at this stage. Vote totals are not recorded on WhereTheyStand; see Hansard for detail.',
             })
         } else if (readingDate) {
+            const hansardLink = hansardTranscriptLink(
+                stubsByReading.get(spec.reading)?.hansard_search_result,
+            )
             rows.push({
                 reading: spec.reading,
                 stage: spec.stage,
                 kind: 'reading_only',
                 readingDate,
-                detailNote:
-                    'No vote breakdown is recorded on WhereTheyStand for this reading. Other votes may appear in Hansard.',
+                hansardLink,
+                detailNote: hansardLink
+                    ? 'This vote is recorded in Hansard but hasn\'t been processed in WhereTheyStand.'
+                    : 'No vote breakdown is recorded on WhereTheyStand for this reading. Other votes may appear in Hansard.',
             })
         } else {
             rows.push({
@@ -536,15 +590,5 @@ function mergedRowBadge(row: MergedRow): { label: string; color: string } {
     }
     return { label: 'Pending', color: 'neutral' }
 }
-
-function totalsForMergedRow(row: Extract<MergedRow, { kind: 'vote' }>) {
-    return [
-        { label: 'Ayes', value: row.totals.ayes, color: 'bg-emerald-500' },
-        { label: 'Noes', value: row.totals.noes, color: 'bg-rose-500' },
-        { label: 'Abst.', value: row.totals.abstentions, color: 'bg-amber-500' },
-        { label: 'Abse.', value: row.totals.absentees, color: 'bg-sky-500' },
-    ]
-}
-
 
 </script>

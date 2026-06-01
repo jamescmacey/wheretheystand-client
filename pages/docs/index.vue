@@ -37,4 +37,8 @@ const { data: documents } = await useAsyncData(
 const githubEditUrl = (document: any) => {
     return `https://github.com/jamescmacey/wheretheystand-django/edit/main/${document.path}.md`
 }
+
+definePageMeta({
+  robots: false
+})
 </script>

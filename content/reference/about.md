@@ -14,7 +14,7 @@ Information on WhereTheyStand goes back as far as the 51st Parliament (2014-2017
 ## Site development
 WhereTheyStand is a personal side project.  I started it when I was in my first year of university in 2020, and have been slowly working on it in my free time ever since.  I aim to keep it completly apolitical; editorial annotations to substantive content will be made rarely and with substantial disclosure.
 
-If you would like to support the development of WhereTheyStand, please consider supporing me on [Buy Me A Coffee](https://www.buymeacoffee.com/jamescmacey).
+If you would like to support the development of WhereTheyStand, please consider supporting me on [Buy Me A Coffee](https://www.buymeacoffee.com/jamescmacey).
 
 ## Acknowledgements and inspiration
 First, great Parliamentary monitoring sites overseas have given me a lot of ideas and inspiration for WhereTheyStand. [TheyWorkForYou](https://www.theyworkforyou.com/) is a great site built by the mySociety charity in the UK. It sets a gold standard for sites like these and I can only hope to get there with WhereTheyStand one day.

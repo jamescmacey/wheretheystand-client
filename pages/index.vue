@@ -76,7 +76,7 @@ const randomPage = async () => {
       class="relative bg-[url('/images/beehive-day.jpg')] dark:bg-[url('/images/beehive-night.jpg')] bg-cover bg-center bg-no-repeat">
       <div class="absolute inset-0 bg-white/60 dark:bg-black/70"></div> <!-- Optional overlay -->
       <UPageHero class="relative z-10" title="Wondering where they stand?"
-        description="WhereTheyStand aggregates voting data, financial information, biographical information, and more."
+        description="WhereTheyStand aggregates information about New Zealand's members of Parliament."
         orientation="horizontal" :ui="{description: '-text-muted dark:-text-muted light:font-semibold text-highlighted'}">
         <div>
           <UPageCard v-if="liveElection && electionFeaturesEnabled" variant="soft" spotlight spotlightColor="error"
@@ -163,9 +163,8 @@ const randomPage = async () => {
             </template>
             <template #description>
               <div class="space-y-4">
-                <p>Over 2025, many things on WhereTheyStand stopped updating.  I have now introduced a new look for the site and rewritten the backend.</p> 
-                <p>In the coming months I'll be making further improvements to get the site in good shape in advance of the 2026 general election.</p>
-                <UButton to="/blog/updates" variant="link" icon="i-heroicons-arrow-right" class="pl-0" trailing>Learn more</UButton>
+                <p>I've made some changes to WhereTheyStand to ensure that data can keep updating and is presented accurately.</p> 
+                <UButton to="/changes" variant="link" icon="i-heroicons-arrow-right" class="pl-0" trailing>Learn more</UButton>
               </div>
             </template>
           </UPageCard>

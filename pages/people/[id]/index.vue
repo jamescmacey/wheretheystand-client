@@ -11,7 +11,7 @@
         </div>
         <UCard variant="subtle" v-else-if="status === 'success' || (status === 'error' && error?.statusCode === 404)">
             <UEmpty title="No timeline found"
-                description="No timeline found for this person. " />
+                description="No timeline found for this person." />
         </UCard>
         <UCard variant="subtle" v-else-if="status === 'pending'" class="w-full">
             <div class="my-16 w-1/2 mx-auto flex flex-col items-center justify-center text-center">
@@ -112,7 +112,7 @@ const cardForType = (type: CardType, data: object) => {
         case "parliamentary_affiliation_start": {
             return {
                 title: formatDate(data.date),
-                description: 'Elected as a ' + (data.item.electorate ? ' ' : 'list ') + 'member of the ' + ordinal_suffix_of(data.item.parliament.number) + ' Parliament' + (data.item.electorate ? ' for ' + data.item.electorate.name : '') + '.',
+                description: 'Elected as a ' + (data.item.electorate ? '' : 'list ') + 'member of the ' + ordinal_suffix_of(data.item.parliament.number) + ' Parliament' + (data.item.electorate ? ' for ' + data.item.electorate.name : '') + '.',
                 icon: 'i-lucide-armchair',
                 to: '/people/' + route.params.id + '/details#parliamentary',
                 variant: 'soft' as const,

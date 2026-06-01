@@ -30,7 +30,7 @@ When you use WhereTheyStand, some personal information about you is collected.
 
 Some parts of WhereTheyStand have options which can be set to your preferences.  These options are stored in your web browser's local storage.  They are not sent to WhereTheyStand or any third party.
 
-Cloudflare Turnstile, which is a product similar to Google reCAPTCHA, protects the contact form on the contact page.  Refer to the the [Turnstile Privacy Addendum](https://links.wheretheystand.nz/turnstile) for more information.
+Cloudflare Turnstile, which is a product similar to Google reCAPTCHA, protects the contact form on the contact page.  Refer to the [Turnstile Privacy Addendum](https://links.wheretheystand.nz/turnstile) for more information.
 
 ### For members of Parliament
 Information about members of Parliament is collected from a wide variety of sources. 

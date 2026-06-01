@@ -20,6 +20,10 @@ useSeoMeta({
     robots: 'noindex, nofollow'
 })
 
+definePageMeta({
+    robots: false
+})
+
 // GitHub edit link (docs are in wheretheystand-django/docs/ by convention)
 const githubEditUrl = computed(() => {
     const slug = route.params.contentSlug as string

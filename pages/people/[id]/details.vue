@@ -76,7 +76,7 @@
                                     </span>
                                     <div v-if="affiliation.gazette_notice_election?.file" class="my-1">
                                         <FileModal :file="affiliation.gazette_notice_election.file"
-                                            buttonText="View gazette notice"
+                                            buttonText="View Gazette notice"
                                             :title="'Gazette notice for election on ' + formatDate(affiliation.elected_date || affiliation.sworn_date)" />
                                     </div>
                                 </div>

@@ -198,6 +198,5 @@ export default defineNuxtConfig({
       }
     },
   },
-  site: { indexable: false },
   ssr: true
 })
