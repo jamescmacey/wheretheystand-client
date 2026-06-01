@@ -16,14 +16,14 @@ By using WhereTheyStand you agree to these terms, and you accept that your oblig
 Original content on WhereTheyStand is licensed under a [Creative Commons Attribution 4.0 International Licence](https://creativecommons.org/licenses/by/4.0/).  This excludes the source code and user interface, for which full copyright is retained.
 
 ### Third-party content
-Much of the content on WhereTheyStand is not original. As a rule, you should assume that full copyright is retained in all non-original content (either by me or the original copyright holder) and ask before reuse or make enquiries which the original provider of the information.
+Much of the content on WhereTheyStand is not original. As a rule, you should assume that full copyright is retained in all non-original content (either by me or the original copyright holder) and ask before reuse or make enquiries with the original provider of the information.
 
 Some content on WhereTheyStand is not original but is not subject to copyright.  This includes the actual text of bills, acts, parliamentary debates and select committee reports.
 
 ## Privacy
 ### For users of WhereTheyStand
 When you use WhereTheyStand, some personal information about you is collected.
-* When you contact WhereTheyStand using the contact form, your name and contact information is collected.  This is so that WhereTheyStand can contact you regarding your query.
+* When you contact WhereTheyStand using the contact form, your name and contact information are collected.  This is so that WhereTheyStand can contact you regarding your query.
 * When you access any resource on WhereTheyStand, basic details about your browser and network are collected.  This is so that limited system resources can be protected from abuse and misuse, and to produce aggregated insights into how users access WhereTheyStand.
 * When you interact with WhereTheyStand, your activity on WhereTheyStand is collected.  This is so that the user experience can be understood and improved.
 * When you search for something on WhereTheyStand, your searches are collected.  This is so that search trends can be understood, and to optimise search functionality.

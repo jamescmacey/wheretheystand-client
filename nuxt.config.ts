@@ -2,11 +2,17 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-10-29',
   devtools: {
-    enabled: true,
+    enabled: import.meta.dev,
 
     timeline: {
-      enabled: true
+      enabled: import.meta.dev
     }
+  },
+  nitro: {
+    prerender: {
+      crawlLinks: false,
+      concurrency: 1,
+    },
   },
   modules: [
     '@nuxtjs/algolia',
