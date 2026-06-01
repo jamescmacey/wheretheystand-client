@@ -1,9 +1,4 @@
 <template>
-    <UBanner icon="i-lucide-alert-circle" close color="warning" id="development-banner">
-        <template #title>
-            <span class="font-bold">This site is under development and is for testing only.  Some information may be missing or incorrect.</span>
-        </template>
-    </UBanner>
     <UBanner :id="banner.id" v-if="banners && banners.length > 0" v-for="banner in banners" :icon="banner.url_tyle == 'external' ? 'i-lucide-external-link' : null" :key="banner.id" :close="banner.is_persistent ? false : true" :to="banner.url ? banner.url : null" :target="banner.url_behaviour == 'new' ? '_blank' : null">
         <template #title>
             <span class="font-bold dark:text-inverted">{{ banner.title }}</span><span v-if="banner.message">: {{ banner.message }}</span>

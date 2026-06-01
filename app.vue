@@ -1,5 +1,5 @@
 <template>
-    <UApp>
+    <UApp :locale="en_gb">
       <Head>
       <Meta name="twitter:card" content="summary" />
       <Meta name="twitter:site" content="@wheretheystand_" />
@@ -15,11 +15,8 @@
         href="/favicons/favicon-32x32.png" />
       <Link rel="icon" type="image/png" sizes="16x16"
         href="/favicons/favicon-16x16.png" />
-      <Link rel="manifest" href="/favicons/site.webmanifest" />
      <Link rel="shortcut icon" href="/favicons/favicon.ico" />
       <Meta name="msapplication-TileColor" content="#58787f" />
-      <Meta name="msapplication-config"
-        content="/favicons/browserconfig.xml" />
       <Meta name="theme-color" content="#58787f" />
     </Head>
     
@@ -36,6 +33,8 @@
 </template>
 
 <script setup>
+import { en_gb } from "@nuxt/ui/locale"
+
 const route = useRoute()
 useHead({
   titleTemplate: (titleChunk) => {

@@ -1,8 +1,10 @@
 <template>
     <div
-        class="flex flex-col rounded-lg overflow-hidden bg-elevated/50 transition-colors duration-150 hover:bg-elevated"
+        class="flex flex-col rounded-lg overflow-hidden transition-colors duration-150"
         :class="[
             fillHeight ? 'h-full' : 'h-auto w-full min-w-0',
+            variant === 'soft' ? 'bg-elevated/50 hover:bg-elevated/100' : '',
+            variant === 'outline' ? 'bg-default ring ring-default hover:bg-elevated/50' : '',
         ]"
     >
         <div
@@ -57,9 +59,14 @@ const props = withDefaults(
          * Set false so the card is only as tall as its content (e.g. vote breakdown cards).
          */
         fillHeight?: boolean
+        /**
+         * The variant of the card.
+         */
+        variant?: 'outline' | 'soft'
     }>(),
-    { fillHeight: true },
+    { fillHeight: true, variant: 'soft' },
 )
+
 
 const attrs = useAttrs()
 

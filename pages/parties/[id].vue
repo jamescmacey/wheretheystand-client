@@ -268,10 +268,6 @@ const links = computed(() => [
         to: '/parties/' + route.params.id,
         name: 'Overview',
     },
-    {
-        to: '/parties/' + route.params.id + '/votes',
-        name: 'Votes',
-    },
     ...(electionsEnabled ? [{
         to: '/parties/' + route.params.id + '/elections',
         name: 'Electoral history',

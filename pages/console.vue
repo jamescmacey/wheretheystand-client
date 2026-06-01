@@ -2,6 +2,7 @@
 definePageMeta({
   layout: 'console',
   middleware: 'auth-console',
+  robots: false
 })
 </script>
 

@@ -10,6 +10,10 @@ const columns = [{
   }, {
     label: 'Copyright and privacy',
     to: '/terms'
+  },
+  {
+    label: 'Changelog',
+    to: '/changes'
   }]
 }, {
   label: 'Support',

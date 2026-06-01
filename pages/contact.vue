@@ -2,43 +2,33 @@
   <div>
     <PageHeader pageTitle="Contact"></PageHeader>
     <UContainer class="mt-8">
-      <UPageCard class="!p-0" variant="soft" :ui="{ body: { padding: 'p-0 sm:p-0' }, header: { padding: 'p-6 pb-0' } }">
-        <template #header>
-          <h2 class="text-2xl font-bold mb-2">Get in touch</h2>
+
+      <h2 class="text-2xl font-bold mb-2">Get in touch</h2>
           <p class="text-muted mb-2">
             Please use this form for feedback, corrections, or questions.
           </p>
           <span class="text-sm">
             WhereTheyStand’s <ULink to="/terms#privacy" target="_blank">privacy terms</ULink> apply to submissions.
           </span>
-        </template>
+          
+      <UPageCard class="!p-0 mt-4" variant="soft" :ui="{ body: { padding: 'p-0 sm:p-0' }, header: { padding: 'p-6 pb-0' } }">
+
         <div class="p-6 pt-0">
-          <UForm :state="form" @submit="onSubmit" class="flex flex-col gap-6">
-            <UFormGroup
+          <form class="flex flex-col gap-6" novalidate @submit.prevent="onSubmit">
+            <UFormField
               label="Type"
-              name="category"
-              required
-              :error="errors.category"
+              :error="fieldError('category')"
             >
               <URadioGroup
                 v-model="form.category"
                 :items="types"
                 class="grid grid-cols-1 sm:grid-cols-3 gap-2"
-                :ui="{
-                  radio: {
-                    base: 'rounded-full border border-gray-300 dark:border-gray-700 shadow-none transition-all',
-                    selected: 'bg-primary text-white border-primary',
-                    label: 'ml-2 text-base font-medium',
-                  },
-                  container: 'flex flex-wrap gap-2',
-                }"
+                variant="card"
               />
-            </UFormGroup>
-            <UFormGroup
+            </UFormField>
+            <UFormField
               label="Name"
-              name="name"
-              required
-              :error="errors.name"
+              :error="fieldError('name')"
             >
               <UInput
                 v-model="form.name"
@@ -48,12 +38,10 @@
                 class="w-full"
                 autocomplete="name"
               />
-            </UFormGroup>
-            <UFormGroup
+            </UFormField>
+            <UFormField
               label="Email"
-              name="email"
-              required
-              :error="errors.email"
+              :error="fieldError('email')"
             >
               <UInput
                 v-model="form.email"
@@ -64,14 +52,11 @@
                 class="w-full"
                 autocomplete="email"
               />
-            </UFormGroup>
-            <UFormGroup
+            </UFormField>
+            <UFormField
               label="Message"
-              name="message"
-              required
-              :error="errors.message"
+              :error="fieldError('message')"
             >
-              <!-- Remove icon from UTextarea to prevent icon rendering above the textarea -->
               <UTextarea
                 v-model="form.message"
                 placeholder="Type your message here..."
@@ -80,12 +65,13 @@
                 class="w-full min-h-[100px]"
                 :maxrows="8"
               />
-            </UFormGroup>
-            <UFormGroup label="Prove you're not a robot" name="turnstile" :error="errors.turnstile">
-                    <ClientOnly>
-                <NuxtTurnstile v-model="token" @success="onTurnstileSuccess" />
-            </ClientOnly>
-            </UFormGroup>
+            </UFormField>
+            <UFormField
+              label="Prove you're not a robot"
+              :error="fieldError('turnstile')"
+            >
+              <NuxtTurnstile ref="turnstileRef" v-model="token" />
+            </UFormField>
             <div class="flex items-center justify-end pt-2">
               <UButton
                 :loading="loading"
@@ -101,7 +87,7 @@
             
             <div v-if="successMsg" class="text-green-600 text-sm mt-2">{{ successMsg }}</div>
             <div v-if="errorMsg" class="text-red-600 text-sm mt-2">{{ errorMsg }}</div>
-          </UForm>
+          </form>
         </div>
       </UPageCard>
     </UContainer>
@@ -110,7 +96,6 @@
 
 <script setup>
 import { ref, reactive } from 'vue'
-import { useRuntimeConfig } from '#imports'
 
 const types = [
   { label: "General enquiry", value: "general" },
@@ -126,6 +111,7 @@ const form = reactive({
 })
 
 const token = ref('')
+const turnstileRef = ref(null)
 const loading = ref(false)
 const errors = reactive({
   category: '',
@@ -138,8 +124,12 @@ const errors = reactive({
 const successMsg = ref('')
 const errorMsg = ref('')
 
+function fieldError(key) {
+  const message = errors[key]
+  return message || undefined
+}
+
 function validateEmail(email) {
-  // Very basic email regex
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 
@@ -177,8 +167,12 @@ function validateForm() {
 }
 
 const config = useRuntimeConfig()
-const apiUrl = (config.public?.apiBase || 'https://api.wheretheystand.nz/v2/').replace(/\/?$/, '/')
-const feedbackUrl = `${apiUrl}feedback/`
+const feedbackUrl = `${config.public.apiBase}feedback/`
+
+function resetTurnstile() {
+  token.value = ''
+  turnstileRef.value?.reset?.()
+}
 
 function applyServerErrors(data) {
   clearErrors()
@@ -207,8 +201,7 @@ function applyServerErrors(data) {
   }
 }
 
-async function onSubmit(event) {
-  event.preventDefault()
+async function onSubmit() {
   successMsg.value = ''
   errorMsg.value = ''
   clearErrors()
@@ -236,10 +229,13 @@ async function onSubmit(event) {
       }),
     })
 
+    const data = await response.json().catch(() => ({}))
+
     if (!response.ok) {
-      const data = await response.json().catch(() => ({}))
       applyServerErrors(data)
-      loading.value = false
+      if (data.turnstile) {
+        resetTurnstile()
+      }
       return
     }
 
@@ -248,15 +244,11 @@ async function onSubmit(event) {
     form.name = ''
     form.email = ''
     form.message = ''
-    token.value = ''
-    loading.value = false
-  } catch (err) {
+    resetTurnstile()
+  } catch {
     errorMsg.value = 'A network error occurred. Please try again later.'
+  } finally {
     loading.value = false
   }
-}
-
-function onTurnstileSuccess(t) {
-  token.value = t
 }
 </script>

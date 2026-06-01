@@ -25,6 +25,15 @@ export default defineContentConfig({
         title: z.string(),
         description: z.string()
       })
+    }),
+    changes: defineCollection({
+      type: 'page',
+      source: 'changes/*.md',
+      schema: z.object({
+        title: z.string(),
+        description: z.string().optional(),
+        date: z.date()
+      })
     })
   }
 })

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="pb-8">
         <ais-instant-search :index-name="indexName" :search-client="algolia" :routing="routing">
             <PageHeader pageTitle="Search" pageSubtitle="Find bills, people, parties and electorates.">
                 <template #search>
@@ -38,7 +38,7 @@
                                         <UCheckbox v-for="item in items" :key="item.value" :model-value="item.isRefined"
                                             @update:model-value="refine(item.value)" :id="'refine' + item.value">
                                             <template #label>
-                                                <ais-highlight attribute="item" :hit="item" />
+                                                {{ item.label.charAt(0).toUpperCase() + item.label.slice(1) }}
                                             </template>
                                             <template #description>
                                                 ({{ item.count.toLocaleString() }} results)
@@ -56,12 +56,18 @@
                                     <template v-slot="{ items }">
                                         <UCard variant="subtle" v-if="items.length > 0">
                                             <div class="space-y-4">
-                                                <UPageCard v-for="item in items" :key="item.objectID"
-                                                    variant="soft" :title="item.primaryName" :description="item.byline" :to="item.absoluteURL" />
+                                                <template v-for="item in items" :key="item.objectID">
+                                                    <SearchPersonCard v-if="item.type === 'person'" :person="item.data" />
+                                                    <SearchPartyCard v-else-if="item.type === 'party'" :party="item.data" />
+                                                    <SearchElectorateCard v-else-if="item.type === 'electorate'" :electorate="item.data" />
+                                                    <SearchBillCard v-else-if="item.type === 'bill'" :bill="item.data" />
+                                                    <UPageCard v-else variant="soft" :title="item.name"
+                                                        :description="item.description" :to="'#'" />
+                                                </template>
                                             </div>
                                         </UCard>
                                         <UEmpty v-if="items.length === 0" icon="i-lucide-folder"
-                                            title="No results found" variant="subtle" description="Try using broader terms, and remember that this search function can't
+                                            title="No results found" variant="soft" description="Try using broader terms, and remember that this search function can't
                                                 search the internal text of bills, votes or other documents." />
                                     </template>
                                 </ais-hits>
@@ -84,7 +90,7 @@
 import { AisInstantSearch, AisSearchBox, AisHits, AisRefinementList, AisStateResults, AisStats, AisHighlight } from 'vue-instantsearch/vue3/es'
 import { singleIndex } from 'instantsearch.js/es/lib/stateMappings'
 
-const indexName = 'wts_SearchObject_prod'
+const indexName = 'wts_v2_SiteSearch_prod'
 const algolia = useAlgoliaRef()
 const vueRouter = useRouter()
 
@@ -211,5 +217,9 @@ const routing = {
     router: createInstantSearchRouter(),
     stateMapping: singleIndex(indexName),
 }
+
+definePageMeta({
+    robots: false
+})
 
 </script>

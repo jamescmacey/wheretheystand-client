@@ -3,18 +3,16 @@
         <PageHeader page-title="Parties"></PageHeader>
         <UContainer class="my-8">
             <div v-if="loadOk">
-                <p class="mb-6">
-                    This page shows parties with current members of Parliament, and some other parties which have had members of Parliament before.
-                </p>
+                <template v-if="false">
+                    <UFormField label="Search" class="mb-4 max-w-xl">
+                        <UInput v-model="search" placeholder="Search parties" size="md" icon="i-lucide-search"
+                            class="w-full" />
+                    </UFormField>
 
-                <UFormField label="Search" class="mb-4 max-w-xl">
-                    <UInput v-model="search" placeholder="Search parties" size="md" icon="i-lucide-search"
-                        class="w-full" />
-                </UFormField>
-
-                <p class="text-muted text-sm mb-6">
-                    Showing {{ filteredCurrent.length }} parties with sitting members of Parliament and {{ filteredOther.length }} others.
-                </p>
+                    <p class="text-muted text-sm mb-6">
+                        Showing {{ filteredCurrent.length }} parties with sitting members of Parliament and {{ filteredOther.length }} others.
+                    </p>
+                </template>
 
                 <section class="mb-10">
                     <h3 class="text-lg font-semibold mb-3 border-b border-default pb-1">
@@ -40,7 +38,7 @@
                     </div>
                 </section>
 
-                <section>
+                <section v-if="false">
                     <h3 class="text-lg font-semibold mb-3 border-b border-default pb-1">
                         Other parties
                     </h3>

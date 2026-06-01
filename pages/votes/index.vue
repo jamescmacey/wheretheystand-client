@@ -7,6 +7,12 @@
             <h2 class="text-2xl font-bold mb-4">Parliament must vote on a bill at least
                 three times before it becomes law.</h2>
             <div class="space-y-4 mb-4">
+                <UAlert color="warning" icon="i-lucide-alert-circle">
+                    <template #title>Updates paused</template>
+                    <template #description>
+                        New votes are currently not being added to WhereTheyStand because the underlying data source has changed.  Work is underway to fix this.
+                    </template>
+                </UAlert>
                 <p>
                     A <ULink to="/bills">bill</ULink> must have three "readings" in the House of Representatives
                     before enactment. These are called the first reading, second reading, and third reading. Each
@@ -17,7 +23,7 @@
                     <p>There are four types of vote:</p>
                     <ul class="list-disc ml-4 mt-2">
                         <li><span class="font-semibold">Voice votes</span> are the simplest type of vote. Members of
-                            Parliament shout "aye" or "no" and the Speaker makes an assesssment based on how loud each
+                            Parliament shout "aye" or "no" and the Speaker makes an assessment based on how loud each
                             side
                             is. Any member can then call for a more formal vote.</li>
                         <li><span class="font-semibold">Party votes</span> are the most common type of recorded vote.
