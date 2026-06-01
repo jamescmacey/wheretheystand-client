@@ -1,6 +1,6 @@
 <template>
     <UBanner
-        class="light"
+        class="light bg-theme1 dark:bg-theme1 hover:bg-theme2"
         :id="banner.id"
         v-if="banners && banners.length > 0"
         v-for="banner in banners"
