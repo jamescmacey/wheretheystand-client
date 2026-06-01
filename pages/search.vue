@@ -87,12 +87,11 @@
 
 
 <script setup>
-import { useAlgoliaRef } from '#imports'
-import { AisInstantSearch, AisSearchBox, AisHits, AisRefinementList, AisStateResults, AisStats, AisHighlight } from 'vue-instantsearch/vue3/es'
+import { AisInstantSearch, AisSearchBox, AisHits, AisRefinementList, AisStateResults, AisStats } from 'vue-instantsearch/vue3/es'
 import { singleIndex } from 'instantsearch.js/es/lib/stateMappings'
 
 const indexName = 'wts_v2_SiteSearch_prod'
-const algolia = useAlgoliaRef()
+const algolia = useNuxtApp().$algolia
 const vueRouter = useRouter()
 
 /** Convert Vue Router query to InstantSearch route state (Algolia bracket notation). */
