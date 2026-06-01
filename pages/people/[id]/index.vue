@@ -1,133 +1,207 @@
 <template>
-  <div class="container">
-      <div class="row mt-3">
-        <div class="col-12 col-lg-8">
-          <h4>Personal voting history</h4>
-          <p v-if="votes && votes.length === 0"><FontAwesomeIcon :icon="['fas', 'info-circle']"></FontAwesomeIcon> WhereTheyStand doesn't have any votes to show you.</p>
-          <p v-else-if="!votes"><Spinner></Spinner> Loading...</p>
-          <div v-if="votes" class="row">
-            <div v-for="(value, key) in votesByBill.slice(0, voteCount)" :key="key" class="col-12 col-lg-6">
-                <PersonPersonalVote :record="value"></PersonPersonalVote>
-            </div>
-          </div>
-          <div v-if="votesByBill.length > voteCount">
-              <DisplayControlButton v-on:click="voteCount = votesByBill.length">
-                  <FontAwesomeIcon :icon="['fas', 'chevron-down']"></FontAwesomeIcon> Show all votes
-              </DisplayControlButton>
-          </div>
-          <div v-else-if="(voteCount === votesByBill.length) && (voteCount > 4)">
-            <DisplayControlButton v-on:click="voteCount = 4">
-                  <FontAwesomeIcon :icon="['fas', 'chevron-up']"></FontAwesomeIcon> Show fewer votes
-              </DisplayControlButton>
-          </div>
+    <UContainer class="my-8">
+        <div class="mb-8">
+            <h3 class="text-xl font-bold mb-2">Recent updates</h3>
         </div>
-        <div v-if="votingSimilarity && votingSimilarity != {}" class="col-12 col-lg-4">
-          <h4>Voting similarity</h4>
-          <div class="row">
-            <div class="col-12">
-              <VotingSimilarityDisplay v-if="votingSimilarity.status == 'complete'" :person="person" :similarityReport="votingSimilarity">
-
-              </VotingSimilarityDisplay>
-              <Card :gradient="true" v-else-if="votingSimilarity.status == 'insufficient'">
-                <p><strong>There isn't enough data to show who {{ person.display_name }} votes similarly to.</strong></p>
-                <p>Once {{ person.display_name }} has participated in enough personal votes, you will be able to see a list of MPs who tend to vote the same way. Personal votes don't happen often in New Zealand, so it may be some time.</p>
-              </Card>
-              <Card :gradient="true" v-else>
-                <p><strong>WhereTheyStand hasn't checked who {{ person.display_name }} votes similarly to.</strong></p>
-                <p>This feature is coming soon, so please check back at a later date.</p>
-                <p>In the meantime, click on any voting record to see more information about that bill and its votes.</p>
-              </Card>
-            </div>
-          </div>
+        <div v-if="status === 'success' && data && data.timeline && data.timeline.length > 0">
+            <UPageGrid>
+                <UPageCard v-for="(card, index) in cards" :key="index" v-bind="card">
+                </UPageCard>
+            </UPageGrid>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <h4>Bills responsible for</h4>
-          <p v-if="bills && bills.length === 0" class="col-12 col-lg-8"><FontAwesomeIcon :icon="['fas', 'info-circle']"></FontAwesomeIcon> {{ person.display_name }} hasn't sponsored any bills. This doesn't include any member's bills that they might have sitting in the 'biscuit tin' which haven't been drawn yet.</p>
-          <p v-else-if="!bills"><Spinner></Spinner> Loading...</p>
-          <div v-if="bills" class="row">
-            <div v-for="bill in bills.slice(0, billCount)" class="col-12 col-md-6" :key="bill.id">
-              <SmallBill :bill="bill"></SmallBill>
+        <UCard variant="subtle" v-else-if="status === 'success' || (status === 'error' && error?.statusCode === 404)">
+            <UEmpty title="No timeline found"
+                description="No timeline found for this person." />
+        </UCard>
+        <UCard variant="subtle" v-else-if="status === 'pending'" class="w-full">
+            <div class="my-16 w-1/2 mx-auto flex flex-col items-center justify-center text-center">
+                <h3 class="mb-2 text-muted">Loading timeline...</h3>
+                <UProgress animation="swing" />
             </div>
-          </div>
-          <div v-if="bills && (bills.length > billCount)">
-              <DisplayControlButton v-on:click="billCount = bills.length">
-                  <FontAwesomeIcon :icon="['fas', 'chevron-down']"></FontAwesomeIcon> Show all bills
-              </DisplayControlButton>
-          </div>
-          <div v-else-if="bills && (billCount === bills.length) && (billCount > 4)">
-            <DisplayControlButton v-on:click="billCount = 4">
-                  <FontAwesomeIcon :icon="['fas', 'chevron-up']"></FontAwesomeIcon> Show fewer bills
-              </DisplayControlButton>
-          </div>
-        </div>
-      </div>
-    </div>
+        </UCard>
+        <UCard variant="subtle" v-else="status === 'error'" class="w-full">
+            <UEmpty title="Error loading timeline"
+                description="An error occurred while loading the timeline. Please try again.">
+                <template #actions>
+                    <UButton variant="subtle" color="neutral" @click="refresh()" class="mt-4" icon="i-lucide-refresh-cw"
+                        trailing>
+                        Refresh
+                    </UButton>
+                </template>
+            </UEmpty>
+        </UCard>
+    </UContainer>
 </template>
 
-<script>
-import { usePeopleStore } from '../../../stores/people'
-
-export default {
-  name: 'PersonHome',
-  setup() {
-    const peopleStore = usePeopleStore()
-
-    return { peopleStore }
-  },
-  data () {
-    return {
-      voteCount: 4,
-      billCount: 4
+<script setup lang="ts">
+const config = useRuntimeConfig()
+const props = defineProps({
+    person: {
+        type: Object,
+        required: true
     }
-  },
-  created () {
-    this.peopleStore.fetchVotes(this.$route.params.id)
-    this.peopleStore.fetchBills(this.$route.params.id)
-    this.peopleStore.fetchVotingSimilarity(this.$route.params.id)
-  },
-  computed: {
-    votes () {
-      return this.peopleStore.votesByIdentifier(this.$route.params.id)
-    },
-    bills () {
-      return this.peopleStore.billsByIdentifier(this.$route.params.id)
-    },
-    person () {
-      return this.peopleStore.byIdentifier(this.$route.params.id)
-    },
-    votingSimilarity () {
-      return this.peopleStore.votingSimilarityByIdentifier(this.$route.params.id)
-    },
-    votesByBill () {
-      var votes = {}
+})
 
-      if (!this.votes || this.votes.length === 0) { return [] }
+const apiBase = config.public.apiBase
+const route = useRoute()
 
-      this.votes.forEach((vote) => {
-        if (!(vote.vote.bill.id in votes)) {
-          votes[vote.vote.bill.id] = {
-            bill: vote.vote.bill,
-            votes: {
-              1: {},
-              2: {},
-              3: {}
-            }
-          }
-        }
-
-        votes[vote.vote.bill.id].votes[vote.vote.reading] = {
-          position: vote.position,
-          date: vote.date
-        }
-      })
-      return Object.values(votes)
-    }
-  }
+type TimelineData = {
+    timeline?: unknown[]
 }
+
+const timelineKey = computed(() => `person-timeline-${route.params.id}`)
+const { data, status, error, refresh, clear } = await useAsyncData<TimelineData>(timelineKey, () => $fetch<TimelineData>(apiBase + 'people/' + route.params.id + '/timeline/'), { lazy: true })
+
+
+import { format } from 'date-fns'
+
+const ordinal_suffix_of = (i) => {
+    var j = i % 10,
+        k = i % 100;
+    if (j == 1 && k != 11) {
+        return i + "st";
+    }
+    if (j == 2 && k != 12) {
+        return i + "nd";
+    }
+    if (j == 3 && k != 13) {
+        return i + "rd";
+    }
+    return i + "th";
+}
+
+const formatDate = (date: string) => {
+    if (!date) return '';
+    // Handles YYYY-MM-DD, ISO datetime, and fallback to invalid
+    const parsedDate = date.length === 10 && /^\d{4}-\d{2}-\d{2}$/.test(date)
+        ? new Date(date + 'T00:00:00')
+        : new Date(date);
+    if (isNaN(parsedDate.getTime())) return date;
+    return format(parsedDate, 'd MMMM yyyy');
+}
+
+type CardType = "bill_introduction" | "vote" | "parliamentary_affiliation_start" | "parliamentary_affiliation_end" | "ministerial_credit_card_reconciliation" | "party_affiliation_start" | "party_affiliation_end";
+
+const cardForType = (type: CardType, data: object) => {
+    const d = data as object;
+    switch (type) {
+        case "bill_introduction": {
+            return {
+                title: formatDate(data.date),
+                description: 'Introduced the ' + data.item.name + '.',
+                icon: 'i-lucide-book-open-text',
+                to: '/bills/' + data.item.id,
+                variant: 'soft' as const,
+            };
+        }
+        case "vote": {
+            return {
+                title: formatDate(data.date),
+                description: (
+                    (data.item.position === "aye" ? "Voted in favour of" :
+                        data.item.position === "no" ? "Voted against" :
+                        data.item.position === "abstention" ? "Abstained on" :
+                        data.item.position === "absent" ? "Was absent for the vote on" :
+                        "Voted on") + ' the ' + data.item.bill.name + '.'
+                ),
+                icon: 'i-lucide-vote',
+                to: '/votes/' + data.item.id,
+                variant: 'soft' as const,
+            };
+        }
+        case "parliamentary_affiliation_start": {
+            return {
+                title: formatDate(data.date),
+                description: 'Elected as a ' + (data.item.electorate ? '' : 'list ') + 'member of the ' + ordinal_suffix_of(data.item.parliament.number) + ' Parliament' + (data.item.electorate ? ' for ' + data.item.electorate.name : '') + '.',
+                icon: 'i-lucide-armchair',
+                to: '/people/' + route.params.id + '/details#parliamentary',
+                variant: 'soft' as const,
+            };
+        }
+        case "parliamentary_affiliation_end": {
+            return {
+                title: formatDate(data.date),
+                description: 'Vacated parliamentary seat.',
+                icon: 'i-lucide-armchair',
+                to: '/people/' + route.params.id + '/details#parliamentary',
+                variant: 'soft' as const,
+            };
+        }
+        case "ministerial_credit_card_reconciliation": {
+            return {
+                title: formatDate(data.date),
+                description: 'Credit card reconciliations for the period ' + formatDate(data.item.start_date) + ' to ' + formatDate(data.item.end_date) + ' uploaded to WhereTheyStand.',
+                icon: 'i-lucide-credit-card',
+                to: '/people/' + route.params.id + '/expenses#reconciliations',
+                variant: 'soft' as const,
+            };
+        }
+        case "party_affiliation_start": {
+            return {
+                title: formatDate(data.date),
+                description: 'Joined ' + data.item.party.display_name + '.',
+                icon: 'i-lucide-users-round',
+                to: '/people/' + route.params.id + '/details#party',
+                variant: 'soft' as const,
+            };
+        }
+        case "party_affiliation_end": {
+            return {
+                title: formatDate(data.date),
+                description: 'Left ' + data.item.party.display_name + '.',
+                icon: 'i-lucide-users-round',
+                to: '/people/' + route.params.id + '/details#party',
+                variant: 'soft' as const,
+            };
+        }
+    }
+};
+    
+const cards = computed(() => {
+    return (data.value?.timeline || []).map(item => cardForType(item.type as CardType, item as object))
+})
+
+// const cards = ref([
+//     {
+//         title: 'Theme',
+//         description: 'Learn how to customize Nuxt UI components using Tailwind CSS.',
+//         icon: 'i-lucide-swatch-book',
+//         to: '/docs/getting-started/theme/design-system',
+//         class: 'lg:col-span-2',
+//         image: {
+//             path: 'https://ui2.nuxt.com/illustrations/color-palette',
+//             width: 363,
+//             height: 152
+//         },
+//         orientation: 'horizontal' as const
+//     },
+//     {
+//         title: 'Fonts',
+//         description: 'Nuxt UI integrates with Nuxt Fonts to provide plug-and-play font optimization.',
+//         icon: 'i-lucide-a-large-small',
+//         to: '/docs/getting-started/integrations/fonts',
+//         variant: 'soft' as const
+//     },
+//     {
+//         title: 'Color Mode',
+//         description: 'Nuxt UI integrates with Nuxt Color Mode to switch between light and dark.',
+//         icon: 'i-lucide-sun-moon',
+//         to: '/docs/getting-started/integrations/color-mode',
+//         variant: 'soft' as const
+//     },
+//     {
+//         title: 'Icons',
+//         description: 'Nuxt UI integrates with Nuxt Icon to access over 200,000+ icons from Iconify.',
+//         icon: 'i-lucide-smile',
+//         to: '/docs/getting-started/integrations/icons',
+//         image: {
+//             path: 'https://ui2.nuxt.com/illustrations/icon-library',
+//             width: 362,
+//             height: 184
+//         },
+//         class: 'lg:col-span-2',
+//         orientation: 'horizontal' as const,
+//         reverse: true
+//     }
+// ])
 </script>
-
-<style scoped>
-
-</style>

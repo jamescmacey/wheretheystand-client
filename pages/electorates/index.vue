@@ -1,79 +1,120 @@
 <template>
-<div>
-    <PageHeader pageTitle="Electorates"></PageHeader>
-    <div class="container">
-        <div class="row mt-3">
-      
-            <div class="col-12">
-                <h4>New Zealand has 72 electoral districts, commonly known as electorates.</h4>
-                <p>There are 65 general electorates and 7 Māori electorates. The number, sizes, shapes, and names of these electorates are determined by the Representation Commission after each Census in accordance with requirements set out in the Electoral Act 1993. Generally, this means that the electorate boundaries are reviewed every five years, or after every second general election.</p>
-                <p>At an election, voters cast a vote for a candidate who is contesting the electorate they live in. Whichever candidate receives the most votes (a plurality) becomes that electorate's Member of Parliament. In a general election, voters also cast a vote for their preferred political party; this vote determines how the remaining seats in Parliament (usually another 48 seats) are filled.</p>
-                <ExternalLinkButton link="https://links.wheretheystand.nz/ec-electorate-map" text="Find your electorate on a map"></ExternalLinkButton>
-                <ExternalLinkButton link="https://links.wheretheystand.nz/ec-boundary-review" text="Learn about the 2019-2020 Electorate Boundary Review"></ExternalLinkButton>
-                <p>By-elections are special, one-off elections that take place in an electorate outside the normal election cycle. These happen when an electorate MP leaves Parliament early, usually by resigning, and a new electorate MP needs to be elected to replace them. In 2022, there were two by-elections: one in Tauranga, and one in Hamilton West. In 2023, there was a by-election in Port Waikato.</p>
-                <ExternalLinkButton link="https://tauranga.election.wheretheystand.nz/" text="View Tauranga by-election results (June 2022)"></ExternalLinkButton>
-                <ExternalLinkButton link="https://hamilton-west.election.wheretheystand.nz/" text="View Hamilton West by-election results (December 2022)"></ExternalLinkButton>
-                <ExternalLinkButton link="https://port-waikato.election.wheretheystand.nz/" text="View Port Waikato by-election results (November 2023)"></ExternalLinkButton>
-                <h5 class="mt-3">Current electorates</h5>
-                <div class="row">
-                    <div v-for="(electorate, i) in electorates" :key="electorate.id" class="col-12 col-md-6 col-lg-4 col-xl-3">
-                        <ElectorateCard :electorate="electorate">
+    <div>
+        <PageHeader pageTitle="Electorates"></PageHeader>
+        <UContainer class="my-8">
+            <div v-if="status === 'success'">
+                <h2 class="text-2xl font-bold mb-4">New Zealand has {{ sortedElectorates.length }} electoral districts,
+                    commonly known as electorates.</h2>
+                <div class="space-y-4 mb-4">
+                    <p>There are {{ generalElectorates.length }} general electorates and {{ maoriElectorates.length }}
+                        Māori electorates. The number, sizes, shapes, and names of these electorates are determined by
+                        the Representation Commission after each Census in accordance with requirements set out in the
+                        Electoral Act 1993. Generally, this means that the electorate boundaries are reviewed every five
+                        years, or after every second general election.</p>
 
-                        </ElectorateCard>
-                    </div>
+                    <p>At an election, voters cast a vote for a candidate who is contesting the electorate they live in.
+                        Whichever candidate receives the most votes (a plurality) becomes that electorate's member of
+                        Parliament. In a general election, voters also cast a vote for their preferred political party;
+                        this vote determines how the remaining seats in Parliament (usually another 48 seats) are
+                        filled.</p>
+
+                    <ULink to="https://links.wheretheystand.nz/ec-electorate-map" target="_blank">Find your electorate
+                        on a map
+                        <UIcon name="i-lucide-external-link" />
+                    </ULink>
                 </div>
 
-                <h5 class="mt-3">Former electorates</h5>
-                <p class="mt-0">Only electorates that have existed since 2014 have profiles on WhereTheyStand.</p> 
-                <div class="row">
-                    <div v-for="(electorate, i) in historicElectorates" :key="electorate.id" class="col-12 col-md-6 col-lg-4 col-xl-3">
-                        <ElectorateCard :electorate="electorate">
-
-                        </ElectorateCard>
-                    </div>
+                <div class="mb-2 flex justify-end">
+                    <UFormField class="flex-1">
+                        <UInput v-model="search" placeholder="Search electorates" size="md" icon="i-lucide-search"
+                            class="w-full" />
+                    </UFormField>
+                    <UTooltip text="Filter by type" class="ml-2">
+                        <UTabs v-model="typeFilter" :content="false" :items="types" class="mb-2" size="sm" />
+                    </UTooltip>
                 </div>
-                
+                <p class="text-muted text-sm mb-2">Showing {{ filteredElectorates.length }} of {{ sortedElectorates.length }} electorates.</p>
+
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <WContentItemCard
+                            v-for="electorate in filteredElectorates"
+                            :key="electorate.id"
+                        :item="electorate"
+                        :to="'/electorates/' + electorate.slug"
+                    >
+                        <template #title>
+                            {{ electorate.name }}
+                        </template>
+                        <template #description>
+                            {{ electorate.electorate_type === 'general' ? 'General electorate' : 'Māori electorate' }}
+                        </template>
+                    </WContentItemCard>
+                </div>
             </div>
-        </div>
+            <div v-else-if="status === 'pending'" class="w-full">
+                <div class="my-16 w-1/2 mx-auto flex flex-col items-center justify-center text-center">
+                    <h3 class="mb-2 text-muted">Loading electorates...</h3>
+                    <UProgress animation="swing" />
+                </div>
+            </div>
+            <UEmpty v-else :title="'Error loading electorates'"
+                :description="'An error occurred while loading this person. Please try again.'">
+                <template #actions>
+                    <UButton variant="subtle" color="neutral" @click="refresh()" class="mt-4" icon="i-lucide-refresh-cw"
+                        trailing>
+                        Refresh
+                    </UButton>
+                </template>
+            </UEmpty>
+            <p v-if="error && status === 'error'" class="text-muted text-xs text-center mt-4">
+                {{ error.statusCode }}: {{ error }}
+            </p>
+        </UContainer>
     </div>
-</div>
 </template>
 
-<script>
-import ElectorateCard from '~~/components/ElectorateCard.vue'
-import { useGroupsStore } from '../../stores/groups'
+<script setup>
+const config = useRuntimeConfig()
+const apiBase = config.public.apiBase
+const route = useRoute()
 
+const { data: electorates, status, error, refresh, clear } = await useAsyncData("electorates", () => $fetch(apiBase + 'electorates/'), { lazy: true })
 
+const sortedElectorates = computed(() => electorates.value.filter(electorate => electorate.status === 'current').sort((a, b) => a.name.localeCompare(b.name)))
+const generalElectorates = computed(() => sortedElectorates.value.filter(electorate => electorate.electorate_type === 'general'))
+const maoriElectorates = computed(() => sortedElectorates.value.filter(electorate => electorate.electorate_type === 'maori'))
 
-
-export default {
-    name: "Electorates",
-    setup() {
-        const groupsStore = useGroupsStore();
-        return { groupsStore };
+const typeFilter = ref('all')
+const types = ref([
+    {
+        label: 'All',
+        value: 'all'
     },
-    created() {
-        this.groupsStore.fetchElectorates("allCurrent");
-        this.groupsStore.fetchElectorates("allHistoric");
+    {
+        label: 'General',
+        value: 'general'
     },
-    computed: {
-        electorates() {
-            return (this.groupsStore.byName("allCurrent", "electorates") || []).sort((a, b) => {
-                if (a.slug.toLowerCase() < b.slug.toLowerCase()) {
-                    return -1;
-                }
-                return 1;
-            });
-        },
-        historicElectorates() {
-            return (this.groupsStore.byName("allHistoric", "electorates") || []).sort((a, b) => {
-                if (a.slug.toLowerCase() < b.slug.toLowerCase()) {
-                    return -1;
-                }
-                return 1;
-            });
-        },
-    },
-    components: { ElectorateCard }
-}
+    {
+        label: 'Māori',
+        value: 'maori'
+    }
+])
+
+const search = ref('')
+
+const filteredElectorates = computed(() => {
+    if (typeFilter.value === 'all' && !search.value) {
+        return sortedElectorates.value
+    }
+
+    if (search.value) {
+        return sortedElectorates.value.filter(electorate => {
+            return (electorate.name.toLowerCase().includes(search.value.toLowerCase()) && (typeFilter.value === 'all' || electorate.type === typeFilter.value))
+        })
+    } else {
+        return sortedElectorates.value.filter(electorate => electorate.electorate_type === typeFilter.value)
+    }
+})
+
 </script>

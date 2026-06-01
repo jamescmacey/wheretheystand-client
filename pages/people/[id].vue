@@ -1,69 +1,95 @@
 <template>
-  <div id="person-view" v-if="person">
-    <Head>
-        <Meta name="twitter:card" content="summary" />
-        <Meta name="twitter:image" :content="person.image" />
-        <Meta name="twitter:image:alt" :content="person.display_name" />
+    <div id="person-view" v-if="status === 'success'">
 
-        <Meta property="og:image:alt" :content="person.display_name" />
-        <Meta property="og:image" :content="person.image" />
-        <Meta name="twitter:card" content="summary" />
+        <Head>
+            <Meta name="twitter:card" content="summary" />
+            <Meta name="twitter:image" :content="person.photo?.file" />
+            <Meta name="twitter:image:alt" :content="person.display_name" />
 
-    <Meta name="twitter:site" content="@wheretheystand_" />
-    <Meta name="twitter:title" :content="person.display_name + ' - WhereTheyStand'" />
-    <Meta name="twitter:description" :content="person.description" />
+            <Meta property="og:image:alt" :content="person.display_name" />
+            <Meta property="og:image" :content="person.photo?.file" />
+            <Meta name="twitter:card" content="summary" />
 
-    <Meta property="og:site_name" content="WhereTheyStand"/>
-    <Meta property="og:locale" content="en_NZ" />
+            <Meta name="twitter:site" content="@wheretheystand_" />
+            <Meta name="twitter:title" :content="person.display_name + ' - WhereTheyStand'" />
+            <Meta name="twitter:description" :content="person.cached_description" />
 
-    <Meta property="og:description" :content="person.description" />
-    <Meta property="og:title" :content="person.display_name + ' - WhereTheyStand'" />
-    </Head>
-    <PageHeader :pageTitle="person.display_name" :pageSubtitle="person.description" :image="person.image"
-      :colour="person.colour" :pageLinks="links"></PageHeader>
-    <NuxtPage :person="person"></NuxtPage>
-  </div>
+            <Meta property="og:site_name" content="WhereTheyStand" />
+            <Meta property="og:locale" content="en_NZ" />
+
+            <Meta property="og:description" :content="person.cached_description" />
+            <Meta property="og:title" :content="person.display_name + ' - WhereTheyStand'" />
+        </Head>
+        <PageHeader :pageTitle="person.display_name" :pageSubtitle="person.cached_description" :image="person.photo?.file"
+            :colour="person.cached_colour" :pageLinks="links"></PageHeader>
+        <NuxtPage :person="person"></NuxtPage>
+    </div>
+    <div v-else>
+        <UContainer class="my-8">
+            <UCard v-if="status === 'pending'" class="w-full">
+            <div class="my-16 w-1/2 mx-auto flex flex-col items-center justify-center text-center">
+                <h3 class="mb-2 text-muted">Loading {{ route.params.id}}...</h3>
+                <UProgress animation="swing" />
+            </div>
+        </UCard>
+            <UEmpty v-else :title="'Error loading ' + route.params.id"
+                :description="'An error occurred while loading this person. Please try again.'">
+                <template #actions>
+                    <UButton variant="subtle" color="neutral" @click="refresh()" class="mt-4" icon="i-lucide-refresh-cw"
+                        trailing>
+                        Refresh
+                    </UButton>
+                </template>
+            </UEmpty>
+            <p v-if="error && status === 'error'" class="text-muted text-xs text-center mt-4">
+                {{ error.statusCode }}: {{ error }}
+            </p>
+        </UContainer>
+    </div>
 </template>
 
-<script>
-import { usePeopleStore } from '../../stores/people'
+<script setup>
 
-export default {
-  name: 'Person',
-  setup() {
-    const peopleStore = usePeopleStore()
-    return { peopleStore }
-    
-  },
-  created() {
-    this.peopleStore.fetch(this.$route.params.id, true)
-  },
-  computed: {
-    links() {
-      return [
+const config = useRuntimeConfig()
+const apiBase = config.public.apiBase
+const electionsEnabled = String(config.public.electionsEnabled).toLowerCase() === 'true'
+const route = useRoute()
+
+const personKey = computed(() => `person-${route.params.id}`)
+const { data: person, status, error, refresh, clear } = await useAsyncData(personKey, () => $fetch(apiBase + 'people/' + route.params.id + '/'))
+
+const links = computed(() => {
+    return [
         {
-          to: '/people/' + this.$route.params.id,
-          name: 'Overview'
+            to: '/people/' + route.params.id,
+            name: 'Overview'
         },
         {
-          to: '/people/' + this.$route.params.id + '/details',
-          name: 'Details'
+            to: '/people/' + route.params.id + '/details',
+            name: 'Details'
         },
         {
-          to: '/people/' + this.$route.params.id + '/interests',
-          name: 'Interests'
+            to: '/people/' + route.params.id + '/bills',
+            name: 'Bills'
         },
         {
-          to: '/people/' + this.$route.params.id + '/expenses',
-          name: 'Expenses'
-        }
-      ]
-    },
-    person() {
-      return this.peopleStore.byIdentifier(this.$route.params.id)
-    },
-  }
-}
+            to: '/people/' + route.params.id + '/votes',
+            name: 'Votes'
+        },
+        {
+            to: '/people/' + route.params.id + '/interests',
+            name: 'Interests',
+        },
+        {
+            to: '/people/' + route.params.id + '/expenses',
+            name: 'Expenses',
+        },
+        ...(electionsEnabled ? [{
+            to: '/people/' + route.params.id + '/elections',
+            name: 'Electoral history'
+        }] : [])
+    ]
+})
 </script>
 
 <style scoped></style>

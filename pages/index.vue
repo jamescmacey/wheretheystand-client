@@ -1,158 +1,183 @@
-<template>
-  <div>
-    <div id="cover-image" class="container-fluid text-start py-5">
-      <div class="container">
-        <div class="row">
-          <div class="col-12 col-xl-8 py-xl-5 py-2">
-            <h1 class="display-4">Wondering where they stand?</h1>
-            <hr />
-            <h3>
-              WhereTheyStand aggregates voting data, financial information,
-              biographical information, and more.
-            </h3>
-          </div>
-          <div id="onboarding" class="col-12 col-xl-4 py-xl-5 py-2">
-            <Card :frosted="true">
-              <h4 class="mt-2">Find your MP, electorate or party</h4>
-              All MPs who've been in Parliament since 2014 have profiles.
-              <SearchBar class="mt-2"></SearchBar>
-              <RandomResource></RandomResource>
-            </Card>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="container mt-3">
-      <div class="row">
-        <div class="col-12 col-xl-4">
-          <h4>Recent votes</h4>
-          <Card>
-            <div v-if="homepageData">
-              <ul class="homepage-resource-list">
-                <li v-for="(vote, i) in homepageData.votes" :key="vote.id" class="mb-3 vote-list">
-                  <h6 class="mb-0">{{ vote.name }}</h6>
-                  <small class="me-1">
-                    <span v-if="vote.type_desc" class="badge bg-primary text-uppercase">{{ vote.type_desc }}</span>
-                  </small>
-                  <small class="text-muted text-uppercase">{{ formattedDateFull(vote.date) }}</small><br>
-                  <div class="text-start">
-                    <NuxtLink :to="'/votes/' + vote.id" class="vote-link mt-1">View vote <FontAwesomeIcon :icon="['fas','arrow-right']"></FontAwesomeIcon></NuxtLink>
-                  </div>
-                  <hr v-if="i < 4" class="mt-1">
-                </li>
-              </ul>
-            </div>
-          </Card>
-        </div>
-        <div class="col-12 col-xl-4">
-          <h4>Recently updated bills</h4>
-          <Card>
-            <div v-if="homepageData">
-              <ul class="homepage-resource-list">
-                <li v-for="(bill, i) in homepageData.bills" :key="bill.id" class="mb-3 bill-list">
-                  <h6 class="mb-0">{{ bill.name }}</h6>
-                  <small class="me-1">
-                    <span v-if="bill.progress == 'inp'" class="badge bg-primary text-uppercase"> {{ bill.progress_desc }}</span>
-                    <span v-else-if="bill.progress == 'pas'" class="badge bg-success text-uppercase"> {{ bill.progress_desc }}</span>
-                    <span v-else-if="bill.progress == 'ena'" class="badge bg-success text-uppercase"> {{ bill.progress_desc }}</span>
-                    <span v-else-if="bill.progress == 'dis'" class="badge bg-warning text-dark text-uppercase"> {{ bill.progress_desc }}</span>
-                    <span v-else-if="bill.progress == 'def'" class="badge bg-danger text-uppercase"> {{ bill.progress_desc }}</span>
-                    <span v-else-if="bill.progress == 'lap'" class="badge bg-danger text-uppercase"> {{ bill.progress_desc }}</span>
-                    <span v-else-if="bill.progress == 'unx'" class="badge bg-danger text-uppercase"> {{ bill.progress_desc }}</span>
-                    <span v-else-if="bill.progress == 'div'" class="badge bg-info text-uppercase"> {{ bill.progress_desc }}</span>
-                    <span v-else-if="bill.progress == 'wit'" class="badge bg-warning text-dark text-uppercase"> {{ bill.progress_desc }}</span>
-                    <span v-else class="badge bg-secondary text-uppercase"> {{ bill.progress_desc }}</span>
-                </small>
-                <small class="text-muted text-uppercase">{{ bill.type_desc }}</small>
-                  <div class="text-start">
-                    <NuxtLink :to="'/bills/' + bill.id" class="bill-link mt-1">View bill <FontAwesomeIcon :icon="['fas','arrow-right']"></FontAwesomeIcon></NuxtLink>
-                  </div>
-                  <hr v-if="i < 4" class="mt-1">
-                </li>
-              </ul>
-            </div>
-          </Card>
-        </div>
-        <div class="col-12 col-xl-4">
-          <h4>Elections</h4>
-          <Card>
-            <div class="election">
-              <h5>2023 Port Waikato by-election</h5>
-              <span>25 November 2023</span><br>
-              <ExternalLinkInline link="https://port-waikato.election.wheretheystand.nz">Interactive results
-              </ExternalLinkInline>
-            </div>
-            <hr>
-            <div class="election">
-              <h5>2023 General Election</h5>
-              <span>14 October 2023</span><br>
-              <ExternalLinkInline link="https://elections.wheretheystand.nz">Interactive results
-              </ExternalLinkInline>
-            </div>
-            <hr>
-            <div class="election">
-              <h5>2022 Hamilton West by-election</h5>
-              <span>10 December 2022</span><br>
-              <ExternalLinkInline link="https://hamilton-west.election.wheretheystand.nz">Interactive results</ExternalLinkInline>
-            </div>
-            <hr>
-            <div class="election">
-              <h5>2022 Tauranga by-election</h5>
-              <span>18 June 2022</span><br>
-              <ExternalLinkInline link="https://tauranga.election.wheretheystand.nz">Interactive results
-              </ExternalLinkInline>
-            </div>
-
-          </Card>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup>
-import { API_BASE } from '~~/stores/config';
-const { data: homepageData } = await useFetch(
-  API_BASE + 'client/homepage/'
-)
-</script>
+const search = ref('')
+const config = useRuntimeConfig()
+const apiBase = config.public.apiBase
 
-<script>
-import { parse, format, formatDistanceToNow } from 'date-fns'
+const liveElection = ref(false)
+const electionFeaturesEnabled = String(config.public.electionsEnabled).toLowerCase() === 'true'
 
-export default {
-  name: 'Home',
-  components: {},
-  methods: {
-    relativeDate(date) {
-      return formatDistanceToNow(parse(date, 'yyyy-MM-dd', new Date())) + " ago"
+
+const { data: homepageData, status, error } = await useAsyncData('homepageData', () => $fetch(`${apiBase}client/homepage/`), { lazy: true })
+
+import { formatDistanceToNow, format } from 'date-fns'
+
+const relativeDate = (date) => {
+  return formatDistanceToNow(new Date(date), { addSuffix: true })
+}
+
+const formattedDateFull = (date) => {
+  return format(new Date(date), 'dd MMMM yyyy')
+}
+
+const resetSearch = () => {
+  search.value = ''
+}
+
+onMounted(resetSearch)
+onActivated(resetSearch)
+
+const submitSearch = async () => {
+  const term = search.value.trim()
+  if (!term) {
+    return
+  }
+
+  await navigateTo({
+    path: '/search',
+    query: {
+      query: term,
+      'refinementList[type][0]': 'Person',
+      'refinementList[type][1]': 'Electorate',
+      'refinementList[type][2]': 'Party',
     },
-    formattedDate(date) {
-      return format(parse(date, 'yyyy-MM-dd', new Date()), 'd.M.yyyy')
-    },
-    formattedDateFull(date) {
-      return format(parse(date, 'yyyy-MM-dd', new Date()), 'd MMMM yyyy')
-    }
+  })
+}
+
+const loadingRandomPage = ref(false)
+const toast = useToast()
+const randomPage = async () => {
+  if (loadingRandomPage.value) {
+    return
+  }
+
+  loadingRandomPage.value = true
+  try {
+    const data = await $fetch(`${apiBase}client/random/`, {
+      cache: 'no-store',
+      query: { _: Date.now() },
+    })
+    await navigateTo(data.to)
+  } catch (error) {
+    console.error(error)
+    toast.add({
+      title: 'Error loading random page',
+      description: 'Please try again.',
+      color: 'error'
+    })
+  } finally {
+    loadingRandomPage.value = false
   }
 }
 </script>
 
-<style scoped>
-#cover-image {
-  background: linear-gradient(0deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('https://storage.googleapis.com/wheretheystand-nz/nzpm_app/beehive.jpg');
-  background-size: cover;
-}
+<template>
+  <div>
+    <div
+      class="relative bg-[url('/images/beehive-day.jpg')] dark:bg-[url('/images/beehive-night.jpg')] bg-cover bg-center bg-no-repeat">
+      <div class="absolute inset-0 bg-white/60 dark:bg-black/70"></div> <!-- Optional overlay -->
+      <UPageHero class="relative z-10" title="Wondering where they stand?"
+        description="WhereTheyStand aggregates information about New Zealand's members of Parliament."
+        orientation="horizontal" :ui="{description: '-text-muted dark:-text-muted light:font-semibold text-highlighted'}">
+        <div>
+          <UPageCard v-if="liveElection && electionFeaturesEnabled" variant="soft" spotlight spotlightColor="error"
+            to="/elections/2026-general-election">
+            <template #title>
+              <h2 class="text-2xl font-bold"><span
+                  class="w-4 h-4 rounded-full bg-red-500 animate-pulse inline-block mr-2"> </span>Live election results
+              </h2>
+            </template>
+            <template #description>
+              <p>Election results for the 2026 general election will be available as they come in.</p>
+            </template>
+          </UPageCard>
+          <USeparator v-if="liveElection && electionFeaturesEnabled" class="my-4" label="or" />
+          <UPageCard variant="soft" spotlight spotlightColor="primary">
+            <template #title>
+              <h2 class="text-2xl font-bold">Find an MP, electorate or party</h2>
+            </template>
+            <template #description>
+              <p>All MPs who've been in Parliament since 2014 have profiles.</p>
 
-.vote-link, .bill-link {
-  text-decoration: none
-}
+              <form class="mt-4" @submit.prevent="submitSearch">
+                <UFormField>
+                  <UInput v-model="search" placeholder="MP, party or electorate name" class="w-full" />
+                  <template #trailing>
+                    <UButton type="submit" variant="link" aria-label="Search">
+                      <UIcon name="i-heroicons-magnifying-glass" />
+                    </UButton>
+                  </template>
+                  <template #help>
+                    <span class="text-muted text-xs">Search provided by Algolia.</span>
+                  </template>
+                </UFormField>
+              </form>
 
-.vote-link:hover, .bill-link:hover {
-  text-decoration: underline
-}
-
-.homepage-resource-list {
-  padding: 0;
-  list-style-type: none;
-}
-</style>
+              <UButton variant="link" @click="randomPage()" class="mt-4 pl-0 text-md" icon="i-heroicons-arrow-right" trailing :loading="loadingRandomPage" >
+                Or, go to a random page
+              </UButton>
+            </template>
+          </UPageCard>
+        </div>
+      </UPageHero>
+    </div>
+    <UContainer class="my-8">
+      <UPageGrid>
+        <div :class="{'col-span-2': status === 'error'}">
+          <h3 class="text-2xl font-bold mb-4">Recent <span v-if="status === 'error'">bills and </span>votes</h3>
+          <UCard v-if="status === 'success' && homepageData && homepageData.votes">
+            <div class="flex flex-col gap-4">
+              <UPageCard v-for="vote in homepageData.votes" :key="vote.id" variant="soft" :title="vote.name"
+                :description="formattedDateFull(vote.date)" :to="'/votes/' + vote.id"></UPageCard>
+            </div>
+          </UCard>
+          <UCard v-else-if="status === 'pending'">
+            <div class="flex flex-col gap-4">
+              <div v-for="i in 5" :key="i">
+                <USkeleton class="w-full h-16" />
+              </div>
+            </div>
+          </UCard>
+          <UEmpty v-else-if="status === 'error'" title="Error loading recent bills and votes." description="Please try again." icon="i-heroicons-exclamation-triangle"></UEmpty>
+        </div>
+        <div v-if="status != 'error'">
+          <h3 class="text-2xl font-bold mb-4">Recently updated bills</h3>
+          <UCard v-if="status === 'success' && homepageData && homepageData.bills">
+            <div class="flex flex-col gap-4">
+              <UPageCard v-for="bill in homepageData.bills" :key="bill.id" variant="soft" :title="bill.name"
+                :to="'/bills/' + bill.id"></UPageCard>
+            </div>
+          </UCard>
+          <UCard v-else-if="status === 'pending'">
+            <div class="flex flex-col gap-4">
+              <div v-for="i in 5" :key="i">
+                <USkeleton class="w-full h-16" />
+              </div>
+            </div>
+          </UCard>
+        </div>
+        <div>
+          <h3 class="text-2xl font-bold mb-4">Update</h3>
+          <UPageCard>
+            <template #title>
+              Feature improvements to WhereTheyStand
+            </template>
+            <template #description>
+              <div class="space-y-4">
+                <p>I've made some changes to WhereTheyStand to ensure that data can keep updating and is presented accurately.</p> 
+                <UButton to="/changes" variant="link" icon="i-heroicons-arrow-right" class="pl-0" trailing>Learn more</UButton>
+              </div>
+            </template>
+          </UPageCard>
+        </div>
+      </UPageGrid>
+    </UContainer>
+    <div class="dark:hidden">
+      <USeparator />
+      <UFooter>
+        <span class="text-muted text-xs">
+          Header image by Wikimedia user "Melonblob", used under licence (CC BY-SA 4.0). Cropped and resized.
+        </span>
+      </UFooter>
+    </div>
+  </div>
+</template>

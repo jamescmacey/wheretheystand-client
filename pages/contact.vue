@@ -1,147 +1,254 @@
 <template>
   <div>
-  <PageHeader pageTitle="Contact"></PageHeader>
-  <div class="container">
-    <div class="row mt-3">
-      <div class="col-12">
-        <h4>How to get in touch</h4>
-          <p>If you have feedback, a corrrection or want to ask a question, please use the form below.  WhereTheyStand's <NuxtLink to="/terms">Privacy and Use Terms</NuxtLink> set out the basis on which the information you provide will be used.</p>
-        <Card v-if="!sentItem && error">
-          <h4>Sorry, something went wrong.</h4>
-          <p>Your feedback was not sent.</p>
-        </Card>
-        <Card v-if="!sentItem">
-          <form @submit.prevent="onSubmit" >
-            <label for="feedbackType" class="form-label" required>Feedback type</label>
-            <div class="mb-3">
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="feedbackType" id="inlineRadio1" v-model="feedbackType" value="feedback">
-                <label class="form-check-label" for="inlineRadio1">Feedback</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="feedbackType" id="inlineRadio2" v-model="feedbackType" value="correction">
-                <label class="form-check-label" for="inlineRadio2">Correction</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="feedbackType" id="inlineRadio3" v-model="feedbackType" value="general">
-                <label class="form-check-label" for="inlineRadio3">General enquiry</label>
-              </div>
+    <PageHeader pageTitle="Contact"></PageHeader>
+    <UContainer class="mt-8">
+
+      <h2 class="text-2xl font-bold mb-2">Get in touch</h2>
+          <p class="text-muted mb-2">
+            Please use this form for feedback, corrections, or questions.
+          </p>
+          <span class="text-sm">
+            WhereTheyStand’s <ULink to="/terms#privacy" target="_blank">privacy terms</ULink> apply to submissions.
+          </span>
+          
+      <UPageCard class="!p-0 mt-4" variant="soft" :ui="{ body: { padding: 'p-0 sm:p-0' }, header: { padding: 'p-6 pb-0' } }">
+
+        <div class="p-6 pt-0">
+          <form class="flex flex-col gap-6" novalidate @submit.prevent="onSubmit">
+            <UFormField
+              label="Type"
+              :error="fieldError('category')"
+            >
+              <URadioGroup
+                v-model="form.category"
+                :items="types"
+                class="grid grid-cols-1 sm:grid-cols-3 gap-2"
+                variant="card"
+              />
+            </UFormField>
+            <UFormField
+              label="Name"
+              :error="fieldError('name')"
+            >
+              <UInput
+                v-model="form.name"
+                placeholder="Your name"
+                icon="i-heroicons-user"
+                size="lg"
+                class="w-full"
+                autocomplete="name"
+              />
+            </UFormField>
+            <UFormField
+              label="Email"
+              :error="fieldError('email')"
+            >
+              <UInput
+                v-model="form.email"
+                placeholder="you@email.com"
+                icon="i-heroicons-envelope"
+                size="lg"
+                type="email"
+                class="w-full"
+                autocomplete="email"
+              />
+            </UFormField>
+            <UFormField
+              label="Message"
+              :error="fieldError('message')"
+            >
+              <UTextarea
+                v-model="form.message"
+                placeholder="Type your message here..."
+                autoresize
+                size="lg"
+                class="w-full min-h-[100px]"
+                :maxrows="8"
+              />
+            </UFormField>
+            <UFormField
+              label="Prove you're not a robot"
+              :error="fieldError('turnstile')"
+            >
+              <NuxtTurnstile ref="turnstileRef" v-model="token" />
+            </UFormField>
+            <div class="flex items-center justify-end pt-2">
+              <UButton
+                :loading="loading"
+                type="submit"
+                icon="i-heroicons-paper-airplane"
+                label="Send message"
+                size="lg"
+                trailing
+                color="primary"
+                class="w-full sm:w-auto"
+              />
             </div>
-            <div class="mb-3">
-              <label for="emailInput" class="form-label" required>Email address</label>
-              <input type="email" class="form-control" id="emailInput" aria-describedby="emailHelp" v-model="email" :class='{"is-invalid": !emailValid}'>
-              <div id="emailHelp" class="form-text">This will only be used to contact you in relation to your feedback.</div>
-            </div>
-            <div class="mb-3">
-              <label for="linkInput" class="form-label">Page link <span class="text-muted">(optional)</span></label>
-              <input type="text" class="form-control" id="linkInput" aria-describedby="linkHelp" v-model="link">
-              <div id="linkHelp" class="form-text">If you're submitting a correction, please provide a link to the relevant page.</div>
-            </div>
-            <div class="mb-3">
-              <label for="textField" class="form-label">Comments</label>
-              <textarea class="form-control" id="textField" rows="5" required v-model="comments"></textarea>
-            </div>
-            <div class="mb-3">
-              <label for="recaptcha-checkbox" class="form-label">{{ response ? 'Verified!' : 'Please confirm you aren\'t a robot.' }}</label>
-              <RecaptchaCheckbox v-model="response" theme="light" id="recaptcha-checkbox " aria-describedby="recaptchaHelpBlock"/>
-              <div id="recaptchaHelpBlock" class="form-text">
-                The reCAPTCHA tick-box protects this form from spam and abuse. Its inclusion means that the Google
-                <ExternalLinkInline link="https://links.wheretheystand.nz/google-recaptcha-privacy">Privacy Policy</ExternalLinkInline> and
-                <ExternalLinkInline link="https://links.wheretheystand.nz/google-recaptcha-terms">Terms of Service</ExternalLinkInline> apply.
-              </div>
-            </div>
-            <button :disabled="!valid" type="submit" class="btn btn-primary">Submit</button>
+            
+            <div v-if="successMsg" class="text-green-600 text-sm mt-2">{{ successMsg }}</div>
+            <div v-if="errorMsg" class="text-red-600 text-sm mt-2">{{ errorMsg }}</div>
           </form>
-        </Card>
-        <Card v-else="sentItem">
-          <h4>Thank you for your feedback!</h4>
-          <p>Your feedback has been sent.</p>
-        </Card>
-      </div>
-    </div>
+        </div>
+      </UPageCard>
+    </UContainer>
   </div>
-</div>
 </template>
-<style scoped>
-textarea,
-input,
-button,
-select {
-    border-radius: var(--wts-card-border-radius);
+
+<script setup>
+import { ref, reactive } from 'vue'
+
+const types = [
+  { label: "General enquiry", value: "general" },
+  { label: "Feedback", value: "feedback" },
+  { label: "Correction", value: "correction" },
+]
+
+const form = reactive({
+  category: 'feedback',
+  name: '',
+  email: '',
+  message: ''
+})
+
+const token = ref('')
+const turnstileRef = ref(null)
+const loading = ref(false)
+const errors = reactive({
+  category: '',
+  name: '',
+  email: '',
+  message: '',
+  turnstile: '',
+})
+
+const successMsg = ref('')
+const errorMsg = ref('')
+
+function fieldError(key) {
+  const message = errors[key]
+  return message || undefined
 }
-</style>
 
-<script>
+function validateEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+}
 
-import { useRecaptchaProvider } from 'vue-recaptcha'
-import { API_BASE } from '~~/stores/config';
-import ExternalLinkInline from '~/components/ExternalLinkInline.vue'
+function clearErrors() {
+  errors.category = ''
+  errors.name = ''
+  errors.email = ''
+  errors.message = ''
+  errors.turnstile = ''
+}
 
-export default {
-  setup () {
-    const recaptcha = useRecaptchaProvider()
-  },
-  name: 'Contact',
-  data() {
-    return {
-      response: "",
-      feedbackType: "feedback",
-      email: "",
-      link: "",
-      comments: "",
-      sentItem: null,
-      error: false
+function validateForm() {
+  clearErrors()
+  let valid = true
+  if (!form.category) {
+    errors.category = 'Please select a feedback type.'
+    valid = false
+  }
+  if (!form.name.trim()) {
+    errors.name = 'Name is required.'
+    valid = false
+  }
+  if (!form.email.trim()) {
+    errors.email = 'Email is required.'
+    valid = false
+  } else if (!validateEmail(form.email.trim())) {
+    errors.email = 'Please enter a valid email address.'
+    valid = false
+  }
+  if (!form.message.trim()) {
+    errors.message = 'Message is required.'
+    valid = false
+  }
+  return valid
+}
+
+const config = useRuntimeConfig()
+const feedbackUrl = `${config.public.apiBase}feedback/`
+
+function resetTurnstile() {
+  token.value = ''
+  turnstileRef.value?.reset?.()
+}
+
+function applyServerErrors(data) {
+  clearErrors()
+  if (!data || typeof data !== 'object') {
+    errorMsg.value = 'Failed to send your feedback. Try again later.'
+    return
+  }
+  if (typeof data.detail === 'string') {
+    errorMsg.value = data.detail
+    return
+  }
+  if (Array.isArray(data.detail)) {
+    errorMsg.value = data.detail.map((d) => (typeof d === 'string' ? d : d?.message || JSON.stringify(d))).join(' ')
+    return
+  }
+  const fieldKeys = ['category', 'name', 'email', 'message', 'turnstile']
+  let any = false
+  for (const key of fieldKeys) {
+    if (data[key] != null && data[key] !== '') {
+      errors[key] = Array.isArray(data[key]) ? data[key].join(' ') : String(data[key])
+      any = true
     }
-  },
-  computed: {
-    valid() {
-      if (["feedback","correction","general"].includes(this.feedbackType) && this.email && this.emailValid && this.comments && this.response) {
-        return true
-      } else {
-        return false
+  }
+  if (!any) {
+    errorMsg.value = 'Failed to send your feedback. Try again later.'
+  }
+}
+
+async function onSubmit() {
+  successMsg.value = ''
+  errorMsg.value = ''
+  clearErrors()
+  if (!validateForm()) {
+    return
+  }
+  if (!token.value) {
+    errors.turnstile = 'Complete the security check before submitting.'
+    return
+  }
+
+  loading.value = true
+  try {
+    const response = await fetch(feedbackUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        category: form.category,
+        name: form.name.trim(),
+        email: form.email.trim(),
+        message: form.message.trim(),
+        turnstile: token.value,
+      }),
+    })
+
+    const data = await response.json().catch(() => ({}))
+
+    if (!response.ok) {
+      applyServerErrors(data)
+      if (data.turnstile) {
+        resetTurnstile()
       }
-    },
-    emailValid() {
-      if (this.email) {
-        if (/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(this.email)) {
-            return true
-        } else {
-            return false
-        } 
-      } else {
-        return true
-      }
+      return
     }
-  },
-  methods : {
-    async onSubmit() {
-      const { item } = await $fetch(API_BASE + 'feedback/', {
-        method: 'POST',
-        body: {
-          feedbackType: this.feedbackType,
-          email: this.email,
-          link: this.link,
-          comments: this.comments,
-        },
-        headers: {
-          'Content-Type': 'application/json',
-          'g-recaptcha-response': this.response
-        }
-      }).then((res) => {
-        console.log(res)
-        return { item: res }}
-      ).catch((err) => {
-        console.log(err)
-        return { item: null }
-      })
-      this.response = ""
-      if (item) {
-        this.sentItem = item
-        this.error = false
-      } else {
-        this.error = true
-      }
-    }
+
+    successMsg.value = 'Thank you for your message! We appreciate your feedback.'
+    form.category = 'feedback'
+    form.name = ''
+    form.email = ''
+    form.message = ''
+    resetTurnstile()
+  } catch {
+    errorMsg.value = 'A network error occurred. Please try again later.'
+  } finally {
+    loading.value = false
   }
 }
 </script>
