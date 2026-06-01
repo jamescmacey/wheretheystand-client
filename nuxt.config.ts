@@ -39,15 +39,15 @@ export default defineNuxtConfig({
     siteKey: process.env.TURNSTILE_SITE_KEY ?? '0x4AAAAAAAiJrZnhd-1a4stY'
   },
   algolia: {
-    apiKey: process.env.ALGOLIA_SEARCH_API_KEY,
-    applicationId: process.env.ALGOLIA_APPLICATION_ID,
+    apiKey: process.env.ALGOLIA_SEARCH_API_KEY ?? "0ba096387d4ce562803bec690404e72b",
+    applicationId: process.env.ALGOLIA_APPLICATION_ID ?? "CRQORWX9YD",
     useFetch: true,
     instantSearch: {
       theme: 'reset'
     }
   },
   mapbox: {
-    accessToken: process.env.MAPBOX_ACCESS_TOKEN
+    accessToken: process.env.MAPBOX_ACCESS_TOKEN ?? "pk.eyJ1IjoiamFtZXNjbWFjZXkiLCJhIjoiY21vZHFvdWt6MDFxZzJ3cHRrOXcyOWsxZSJ9.sCqtDjyFf3hUs5IWrokBAg"
   },
   runtimeConfig: {
     public: {
