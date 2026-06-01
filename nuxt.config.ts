@@ -14,6 +14,9 @@ export default defineNuxtConfig({
       concurrency: 1,
     },
   },
+  routeRules: {
+    '/search': { ssr: false },
+  },
   modules: [
     '@nuxtjs/algolia',
     '@pinia/nuxt',
@@ -33,11 +36,12 @@ export default defineNuxtConfig({
     id: 'G-WBR7239726'
   },
   turnstile: {
-    siteKey: process.env.TURNSTILE_SITE_KEY
+    siteKey: process.env.TURNSTILE_SITE_KEY ?? '0x4AAAAAAAiJrZnhd-1a4stY'
   },
   algolia: {
     apiKey: process.env.ALGOLIA_SEARCH_API_KEY,
     applicationId: process.env.ALGOLIA_APPLICATION_ID,
+    useFetch: true,
     instantSearch: {
       theme: 'reset'
     }

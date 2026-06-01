@@ -87,6 +87,7 @@
 
 
 <script setup>
+import { useAlgoliaRef } from '#imports'
 import { AisInstantSearch, AisSearchBox, AisHits, AisRefinementList, AisStateResults, AisStats, AisHighlight } from 'vue-instantsearch/vue3/es'
 import { singleIndex } from 'instantsearch.js/es/lib/stateMappings'
 
