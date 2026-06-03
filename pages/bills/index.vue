@@ -186,22 +186,23 @@
                                 </UPageCard>
                             </div>
                             <div v-if="totalPages > 1" class="mt-6 flex justify-center items-center gap-2">
-                                <UButton
+                                <WContentPaginationButton
+                                    :to="billsPageHref(page - 1)"
                                     :disabled="page <= 1"
-                                    variant="outline"
-                                    size="sm"
                                     icon="i-lucide-chevron-left"
                                     aria-label="Previous page"
-                                    @click="goPage(page - 1)"
+                                    rel="prev"
+                                    @navigate="goPage(page - 1)"
                                 />
                                 <span class="text-sm text-muted px-2">Page {{ page }} of {{ totalPages }}</span>
-                                <UButton
+                                <WContentPaginationButton
+                                    :to="billsPageHref(page + 1)"
                                     :disabled="page >= totalPages"
-                                    variant="outline"
-                                    size="sm"
                                     icon="i-lucide-chevron-right"
+                                    trailing
                                     aria-label="Next page"
-                                    @click="goPage(page + 1)"
+                                    rel="next"
+                                    @navigate="goPage(page + 1)"
                                 />
                             </div>
                         </template>
@@ -514,10 +515,17 @@ const totalPages = computed(() => {
     return Math.max(1, Math.ceil(c / pageSize.value))
 })
 
-function goPage(n: number) {
+function billsPageQuery(n: number): Record<string, string> {
     const next = filtersToRouteQuery(false)
     if (n <= 1) delete next.bills_page
     else next.bills_page = String(n)
+    return next
+}
+
+const { pageHref: billsPageHref } = usePaginationPageHref('bills_page', (n) => billsPageQuery(n))
+
+function goPage(n: number) {
+    const next = billsPageQuery(n)
     syncingFromRoute = true
     router.replace({ query: next })
     nextTick(() => {

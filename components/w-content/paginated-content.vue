@@ -38,57 +38,55 @@
 
             <!-- Pagination -->
             <div v-if="totalPages > 1" class="mt-6 flex justify-center items-center gap-2">
-                <UButton 
+                <WContentPaginationButton
+                    :to="pageHref(1)"
                     :disabled="currentPage === 1"
-                    @click="currentPage = 1"
-                    variant="outline"
-                    size="sm"
                     icon="i-lucide-chevrons-left"
-                    :aria-label="'First page'"
+                    aria-label="First page"
+                    @navigate="currentPage = 1"
                 />
-                <UButton 
+                <WContentPaginationButton
+                    :to="pageHref(currentPage - 1)"
                     :disabled="currentPage === 1"
-                    @click="currentPage--"
-                    variant="outline"
-                    size="sm"
                     icon="i-lucide-chevron-left"
-                    :aria-label="'Previous page'"
+                    aria-label="Previous page"
+                    rel="prev"
+                    @navigate="currentPage--"
                 />
-                
+
                 <div class="flex items-center gap-1">
                     <template v-for="page in visiblePages" :key="page">
-                        <UButton
+                        <WContentPaginationButton
                             v-if="typeof page === 'number'"
+                            :to="pageHref(page)"
                             :variant="page === currentPage ? 'solid' : 'outline'"
                             :color="page === currentPage ? 'primary' : 'neutral'"
-                            size="sm"
-                            @click="currentPage = page"
                             :aria-label="`Page ${page}`"
-                            :aria-current="page === currentPage ? 'page' : undefined"
+                            :aria-current="page === currentPage ? 'page' : false"
+                            @navigate="currentPage = page"
                         >
                             {{ page }}
-                        </UButton>
+                        </WContentPaginationButton>
                         <span v-else class="px-2 text-muted">...</span>
                     </template>
                 </div>
-                
-                <UButton 
+
+                <WContentPaginationButton
+                    :to="pageHref(currentPage + 1)"
                     :disabled="currentPage === totalPages"
-                    @click="currentPage++"
-                    variant="outline"
-                    size="sm"
                     icon="i-lucide-chevron-right"
                     trailing
-                    :aria-label="'Next page'"
+                    aria-label="Next page"
+                    rel="next"
+                    @navigate="currentPage++"
                 />
-                <UButton 
+                <WContentPaginationButton
+                    :to="pageHref(totalPages)"
                     :disabled="currentPage === totalPages"
-                    @click="currentPage = totalPages"
-                    variant="outline"
-                    size="sm"
                     icon="i-lucide-chevrons-right"
                     trailing
-                    :aria-label="'Last page'"
+                    aria-label="Last page"
+                    @navigate="currentPage = totalPages"
                 />
             </div>
 
@@ -154,6 +152,8 @@ const router = useRouter()
 // Helper functions to get prefixed URL parameter names
 const getPageParam = () => props.urlPrefix ? `${props.urlPrefix}_page` : 'page'
 const getPageSizeParam = () => props.urlPrefix ? `${props.urlPrefix}_page_size` : 'page_size'
+
+const { pageHref } = usePaginationPageHref(getPageParam())
 const getFilterParam = (key: string) => props.urlPrefix ? `${props.urlPrefix}_${key}` : key
 
 // Helper function to normalize query param value (handle arrays and strings)
