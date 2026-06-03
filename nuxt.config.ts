@@ -8,6 +8,9 @@ export default defineNuxtConfig({
       enabled: import.meta.dev
     }
   },
+  build: {
+    transpile: ['color-harmony'],
+  },
   nitro: {
     prerender: {
       crawlLinks: false,

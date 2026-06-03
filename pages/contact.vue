@@ -214,12 +214,15 @@ async function onSubmit() {
   }
 
   loading.value = true
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 30_000)
   try {
     const response = await fetch(feedbackUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      signal: controller.signal,
       body: JSON.stringify({
         category: form.category,
         name: form.name.trim(),
@@ -245,9 +248,14 @@ async function onSubmit() {
     form.email = ''
     form.message = ''
     resetTurnstile()
-  } catch {
-    errorMsg.value = 'A network error occurred. Please try again later.'
+  } catch (err) {
+    if (err?.name === 'AbortError') {
+      errorMsg.value = 'The request timed out. Please try again in a moment.'
+    } else {
+      errorMsg.value = 'A network error occurred. Please try again later.'
+    }
   } finally {
+    clearTimeout(timeoutId)
     loading.value = false
   }
 }
