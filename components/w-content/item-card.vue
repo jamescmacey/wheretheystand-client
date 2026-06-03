@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { Harmonizer } from 'color-harmony'
+import { colourGradientCss } from '~/utils/colourHarmony'
 
 type ItemWithOptionalColour = {
     colour?: string | null
@@ -88,10 +88,4 @@ const pageCardUi = computed(() => {
     }
     return base
 })
-const harmonizer = new Harmonizer()
-
-function colourGradientCss(colour: string): string {
-    const pair = harmonizer.harmonize(colour, 'neutral')
-    return `linear-gradient(230deg, ${pair[1]} 0%, ${pair[0]} 50%)`
-}
 </script>

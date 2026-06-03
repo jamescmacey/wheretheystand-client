@@ -27,7 +27,7 @@
   </template>
   
   <script>
-  import { Harmonizer } from 'color-harmony'
+  import { harmonizeColourPair } from '~/utils/colourHarmony'
   import { format, parse } from 'date-fns'
   
   export default {
@@ -71,17 +71,7 @@
         }
       },
       harmony: function () {
-        var harmonizer = new Harmonizer()
-  
-        if (!this.colour) {
-          return ['#58787f', 'rgb(52, 148, 148)']
-        }
-  
-        if (this.secondaryColour) {
-          return [this.colour, this.secondaryColour]
-        }
-  
-        return harmonizer.harmonize(this.colour, 'neutral')
+        return harmonizeColourPair(this.colour, this.secondaryColour)
       },
       gradient: function () {
         return `linear-gradient(230deg, ${this.harmony[1]} 0%, ${this.harmony[0]} 50%)`

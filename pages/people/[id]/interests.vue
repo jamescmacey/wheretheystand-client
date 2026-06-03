@@ -66,15 +66,11 @@ const apiBase = config.public.apiBase
 const route = useRoute()
 const selectedReport = ref('latest')
 
-const onMounted = () => {
-    selectedReport.value = 'latest'
-}
-
 const interestsKey = computed(() => `person-interests-${route.params.id}-${selectedReport.value}`)
-const { data: interests, status, error, refresh, clear } = await useAsyncData(interestsKey, () => $fetch(apiBase + 'people/' + route.params.id + '/financial-interests/' + (selectedReport.value === 'latest' ? 'latest' : selectedReport.value + '/')), { lazy: true })
+const { data: interests, status, error, refresh, clear } = await useAsyncData(interestsKey, () => $fetch(apiBase + 'people/' + route.params.id + '/financial-interests/' + (selectedReport.value === 'latest' ? 'latest' : selectedReport.value + '/')))
 
-const availableReportsKey = computed(() => `person-interests-${route.params.id}`)
-const { data: availableInterests, availableReportsStatus, availableReportsError, availableReportsRefresh, availableReportsClear } = await useAsyncData(availableReportsKey, () => $fetch(apiBase + 'people/' + route.params.id + '/financial-interests/'), { lazy: true })
+const availableReportsKey = computed(() => `person-interests-reports-${route.params.id}`)
+const { data: availableInterests } = await useAsyncData(availableReportsKey, () => $fetch(apiBase + 'people/' + route.params.id + '/financial-interests/'))
 
 
 const props = defineProps({
