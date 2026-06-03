@@ -1,0 +1,20 @@
+{
+    "name": "wheretheystand-client",
+    "main": ".output/server/index.mjs",
+    "compatibility_date": "2026-06-02",
+    "workers_dev": false,
+    "route": {
+      "pattern": "wheretheystand.nz/*",
+      "zone_name": "wheretheystand.nz",
+    },
+    "build": {
+      "command": "npm run build"
+    },
+    "d1_databases": [
+      {
+        "binding": "DB",
+        "database_name": "wheretheystand-client",
+        "database_id": "bf34562c-3d80-4550-8e83-904a56936609"
+      }
+    ]
+}
