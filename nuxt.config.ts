@@ -8,6 +8,12 @@ export default defineNuxtConfig({
       enabled: import.meta.dev
     }
   },
+  content: {
+    database: {
+      type: 'd1',
+      bindingName: 'DB'
+    }
+  },
   nitro: {
     preset: 'cloudflare_module',
     prerender: {
