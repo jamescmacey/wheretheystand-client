@@ -50,7 +50,12 @@ const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
 const route = useRoute()
 
-const { data: elections, status, error, refresh, clear } = await useAsyncData("elections", () => $fetch(apiBase + 'elections/'), { lazy: true })
+const { data: elections, status, error, refresh, clear } = await useAsyncData("elections", () => $fetch(apiBase + 'elections/'))
+
+usePageSeo({
+    title: 'Elections',
+    description: 'Election results hosted on WhereTheyStand.',
+})
 
 const sortedElections = computed(() => elections.value.sort((a, b) => new Date(b.polling_date).getTime() - new Date(a.polling_date).getTime()).filter(election => election.results_versions.length > 0))
 

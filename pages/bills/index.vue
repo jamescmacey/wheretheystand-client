@@ -330,6 +330,11 @@ function queryToApiSearchParams(q: typeof route.query): URLSearchParams {
     return p
 }
 
+usePageSeo({
+    title: 'Bills',
+    description: 'Proposed changes to the law before Parliament.',
+})
+
 const fetchKey = computed(() => `bills-list-${JSON.stringify(route.query)}`)
 
 const { data: paginated, status, error, refresh } = await useAsyncData<Paginated>(
@@ -338,7 +343,7 @@ const { data: paginated, status, error, refresh } = await useAsyncData<Paginated
         const qs = queryToApiSearchParams(route.query).toString()
         return $fetch<Paginated>(`${apiBase}bills/?${qs}`)
     },
-    { watch: [() => route.query], lazy: true },
+    { watch: [() => route.query] },
 )
 
 type ParliamentRow = { id: string; number: number }
@@ -346,7 +351,6 @@ type ParliamentRow = { id: string; number: number }
 const { data: parliaments } = await useAsyncData<ParliamentRow[]>(
     'bills-parliaments',
     () => $fetch<ParliamentRow[]>(`${apiBase}parliaments/?number_gte=50`),
-    { lazy: true },
 )
 
 const parliamentSelectItems = computed(() => {

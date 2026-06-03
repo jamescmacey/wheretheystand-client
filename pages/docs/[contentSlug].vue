@@ -14,11 +14,12 @@ if (!page.value) {
     })
 }
 
-useSeoMeta({
-    title: page.value?.title,
-    description: page.value?.description,
-    robots: 'noindex, nofollow'
+usePageSeo({
+    title: () => page.value?.title,
+    description: () => page.value?.description,
 })
+
+useSeoMeta({ robots: 'noindex, nofollow' })
 
 definePageMeta({
     robots: false

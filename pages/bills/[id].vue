@@ -43,7 +43,6 @@ const billKey = computed(() => `bill-${route.params.id}`)
 const { data: bill, status, error, refresh } = await useAsyncData(
     billKey,
     () => $fetch(`${apiBase}bills/${route.params.id}/`),
-    { lazy: true },
 )
 
 const apiJsonUrl = computed(() => `${apiBase}bills/${route.params.id}/`)
@@ -290,5 +289,17 @@ const billTypeLabel = computed(() => {
     const typeKey = displayBill.value.type
     if (!typeKey) return ''
     return (types as Record<string, { description?: string }>)[typeKey]?.description ?? String(typeKey)
+})
+
+usePageSeo({
+    title: () => displayBill.value.title,
+    description: () => {
+        const summary = displayBill.value.summary?.trim()
+        if (summary) return summary
+        const statusSummary = displayBill.value.statusSummary?.trim()
+        if (statusSummary) return statusSummary
+        const type = billTypeLabel.value
+        return type ? `${type} before Parliament.` : undefined
+    },
 })
 </script>

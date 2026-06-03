@@ -1,8 +1,5 @@
 <template>
     <div>
-      <Head>
-        <Title>{{ metaTitle }}</Title>
-      </Head>
       <div :style="{ backgroundImage: gradient }">
         <UContainer class="py-12 text-inverted dark:text-default">
             <h1 class="text-4xl font-semibold">{{ pageTitle }}</h1>
@@ -39,10 +36,6 @@
       image: String,
       colour: String,
       secondaryColour: String,
-      metaPageTitle: {
-        type: String,
-        default: null
-      },
       pageLinks: {
         type: Array,
         default: () => { return [] }
@@ -61,15 +54,6 @@
       }
     },
     computed: {
-      metaTitle() {
-        if (this.metaPageTitle) {
-          return this.metaPageTitle
-        } else if (this.pageTitle) {
-          return this.pageTitle
-        } else {
-          return ""
-        }
-      },
       harmony: function () {
         return harmonizeColourPair(this.colour, this.secondaryColour)
       },

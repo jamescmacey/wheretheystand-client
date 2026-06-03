@@ -408,10 +408,7 @@ const { data: votesData, error: votesFetchError } = await useAsyncData(
         $fetch<PaginatedVotes>(
             `${apiBase}votes/?bill=${encodeURIComponent(billId.value)}&page_size=100`,
         ),
-    {
-        watch: [billId],
-        lazy: true,
-    },
+    { watch: [billId] },
 )
 
 const voteFetchErrorMessage = computed(() => {

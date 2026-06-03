@@ -14,9 +14,9 @@ if (!page.value) {
     })
 }
 
-useSeoMeta({
-    title: page.value?.title,
-    description: page.value?.description
+usePageSeo({
+    title: () => page.value?.title,
+    description: () => page.value?.description,
 })
 
 </script>

@@ -7,7 +7,12 @@ const liveElection = ref(false)
 const electionFeaturesEnabled = String(config.public.electionsEnabled).toLowerCase() === 'true'
 
 
-const { data: homepageData, status, error } = await useAsyncData('homepageData', () => $fetch(`${apiBase}client/homepage/`), { lazy: true })
+const { data: homepageData, status, error } = await useAsyncData('homepageData', () => $fetch(`${apiBase}client/homepage/`))
+
+usePageSeo({
+    title: 'Wondering where they stand?',
+    description: "WhereTheyStand aggregates information about New Zealand's members of Parliament.",
+})
 
 import { formatDistanceToNow, format } from 'date-fns'
 

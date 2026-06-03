@@ -3,8 +3,9 @@ const { data: versions } = await useAsyncData('changelog', async () =>
     await queryCollection('changes').order('date', 'DESC').all()
 )
 
-useSeoMeta({
-    title: 'Changelog'
+usePageSeo({
+    title: 'Changelog',
+    description: 'When features are added, removed or changed, they are listed here.',
 })
 </script>
 

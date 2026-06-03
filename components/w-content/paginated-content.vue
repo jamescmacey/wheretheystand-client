@@ -285,10 +285,7 @@ const fetchData = async (): Promise<PaginatedResponse> => {
 const { data, status, error, refresh } = await useAsyncData<PaginatedResponse>(
     dataKey,
     fetchData,
-    {
-        watch: [currentPage, currentPageSize, filters],
-        lazy: true
-    }
+    { watch: [currentPage, currentPageSize, filters] }
 )
 
 // Computed values

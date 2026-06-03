@@ -248,6 +248,11 @@ const pageSubtitle = computed(() =>
     asAtLabel.value ? `Members of Parliament as at ${asAtLabel.value}` : 'Members of Parliament',
 )
 
+usePageSeo({
+    title: 'People',
+    description: pageSubtitle,
+})
+
 const asAtCalendar = shallowRef<CalendarDate>(parseDate(effectiveAsAt.value))
 
 watch(
@@ -302,7 +307,7 @@ const { data: paginatedResponse, status, error, refresh } = await useAsyncData<P
         $fetch<PaginatedResponse>(
             `${apiBase}members-of-parliament/?page_size=200&as_at=${encodeURIComponent(effectiveAsAt.value)}`,
         ),
-    { watch: [effectiveAsAt], lazy: true },
+    { watch: [effectiveAsAt] },
 )
 
 const mps = computed(() => paginatedResponse.value?.results ?? [])

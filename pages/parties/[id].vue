@@ -180,7 +180,6 @@ const mpKey = computed(() => `party-mps-${route.params.id}`)
 const { data: mps, status: statusMps, error: errorMps, refresh: refreshMps } = await useAsyncData<MpRow[]>(
     mpKey,
     fetchAllMps,
-    { lazy: true },
 )
 
 const search = ref('')
@@ -273,4 +272,15 @@ const links = computed(() => [
         name: 'Electoral history',
     }] : []),
 ])
+
+usePageSeo({
+    title: () => party.value?.display_name,
+    description: () => {
+        const name = party.value?.display_name
+        if (!name) return undefined
+        const count = partyMps.value.length
+        if (count === 0) return `Members of Parliament for ${name}.`
+        return `${count} current member${count === 1 ? '' : 's'} of Parliament for ${name}.`
+    },
+})
 </script>

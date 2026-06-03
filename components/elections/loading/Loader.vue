@@ -55,7 +55,6 @@ const {
 } = await useAsyncData(
     persistentDataKey,
     () => $fetch(apiBase + 'elections/persistent-data/'),
-    { lazy: true }
 )
 
 // Fetch reference data
@@ -68,10 +67,7 @@ const {
 } = await useAsyncData(
     referenceDataKey,
     () => $fetch(apiBase + `elections/${electionSlug.value}/${resultsVersionSlug.value}/reference-data/`),
-    {
-        lazy: true,
-        watch: [electionSlug, resultsVersionSlug]
-    }
+    { watch: [electionSlug, resultsVersionSlug] }
 )
 
 // Fetch results data
@@ -81,7 +77,7 @@ const {
     status: resultsDataStatus,
     error: resultsDataError,
     refresh: refreshResultsData
-} = await useAsyncData(resultsDataKey, () => $fetch(apiBase + `elections/${electionSlug.value}/${resultsVersionSlug.value}/results/`), { lazy: true, watch: [electionSlug, resultsVersionSlug] })
+} = await useAsyncData(resultsDataKey, () => $fetch(apiBase + `elections/${electionSlug.value}/${resultsVersionSlug.value}/results/`), { watch: [electionSlug, resultsVersionSlug] })
 
 // Update store when persistent data is successfully loaded
 watch(persistentData, (newData) => {
