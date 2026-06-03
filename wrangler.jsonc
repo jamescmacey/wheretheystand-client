@@ -2,11 +2,17 @@
     "name": "wheretheystand-client",
     "main": ".output/server/index.mjs",
     "compatibility_date": "2026-06-02",
-    "workers_dev": false,
-    "route": {
-      "pattern": "wheretheystand.nz/*",
-      "zone_name": "wheretheystand.nz",
+    "compatibility_flags": ["nodejs_compat"],
+    "assets": {
+      "directory": ".output/public"
     },
+    "workers_dev": false,
+    "routes": [
+      {
+        "pattern": "wheretheystand.nz",
+        "custom_domain": true
+      }
+    ],
     "build": {
       "command": "npm run build"
     },

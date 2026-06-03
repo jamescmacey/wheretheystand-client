@@ -8,10 +8,8 @@ export default defineNuxtConfig({
       enabled: import.meta.dev
     }
   },
-  build: {
-    transpile: ['color-harmony'],
-  },
   nitro: {
+    preset: 'cloudflare_module',
     prerender: {
       crawlLinks: false,
       concurrency: 1,
