@@ -39,6 +39,8 @@ const route = useRoute()
 const personKey = computed(() => `person-${route.params.id}`)
 const { data: person, status, error, refresh, clear } = await useAsyncData(personKey, () => $fetch(apiBase + 'people/' + route.params.id + '/'))
 
+throwIfEntityNotFound(error, `/people/${route.params.id}`)
+
 const links = computed(() => {
     return [
         {

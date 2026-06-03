@@ -483,6 +483,8 @@ const incumbencyDateLabel = (entry) => {
 const electorateKey = computed(() => `electorate-${route.params.id}`)
 const { data: electorate, status, error, refresh, clear } = await useAsyncData(electorateKey, () => $fetch(apiBase + 'electorates/' + route.params.id + '/'))
 
+throwIfEntityNotFound(error, `/electorates/${route.params.id}`)
+
 usePageSeo({
     title: () => electorate.value?.name,
     description: () => {
