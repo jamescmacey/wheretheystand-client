@@ -218,6 +218,11 @@ const routing = {
     stateMapping: singleIndex(indexName),
 }
 
+usePageSeo({
+    title: 'Search',
+    description: 'Find bills, people, parties and electorates on WhereTheyStand.',
+})
+
 definePageMeta({
     // InstantSearch + routing are client-only; SSR on Cloudflare Workers throws
     // "Code generation from strings disallowed for this context".

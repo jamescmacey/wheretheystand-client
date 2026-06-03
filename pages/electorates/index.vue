@@ -79,7 +79,12 @@ const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
 const route = useRoute()
 
-const { data: electorates, status, error, refresh, clear } = await useAsyncData("electorates", () => $fetch(apiBase + 'electorates/'), { lazy: true })
+const { data: electorates, status, error, refresh, clear } = await useAsyncData("electorates", () => $fetch(apiBase + 'electorates/'))
+
+usePageSeo({
+    title: 'Electorates',
+    description: 'Browse current general and Māori electorates in the New Zealand Parliament.',
+})
 
 const sortedElectorates = computed(() => electorates.value.filter(electorate => electorate.status === 'current').sort((a, b) => a.name.localeCompare(b.name)))
 const generalElectorates = computed(() => sortedElectorates.value.filter(electorate => electorate.electorate_type === 'general'))

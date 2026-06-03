@@ -1,7 +1,6 @@
 <template>
     <div>
-        <PageHeader :pageTitle="pageTitle" :pageSubtitle="pageSubtitle" :pageDate="vote?.date ?? undefined"
-            :metaPageTitle="metaPageTitle" />
+        <PageHeader :pageTitle="pageTitle" :pageSubtitle="pageSubtitle" :pageDate="vote?.date ?? undefined" />
         <UContainer class="mb-8">
             <div v-if="status === 'pending'" class="my-16 flex flex-col items-center justify-center text-center">
                 <h3 class="mb-2 text-muted">Loading vote…</h3>
@@ -199,7 +198,6 @@ function methodTextForMethod(method: "parse" | "api" | "manual" | "ai"): string 
 const { data: vote, status, error, refresh } = await useAsyncData(
     voteKey,
     () => $fetch<VoteDetail>(`${apiBase}votes/${route.params.id}/`),
-    { lazy: true },
 )
 
 const pageTitle = computed(() => {
@@ -214,14 +212,6 @@ const pageSubtitle = computed(() => {
     if (!v) return ''
     return `${ordinalReading(v.reading)} reading`
 })
-
-const metaPageTitle = computed(() => {
-    const v = vote.value
-    if (!v) return 'Vote'
-    const name = v.bill?.name
-    return name ? `${name} — Vote` : 'Vote'
-})
-
 
 function ordinalReading(n: number): string {
     if (n === 1) return '1st'
@@ -238,6 +228,25 @@ function voteTypeLabel(vote: VoteDetail): string | null {
     if (vote.vote_type === 'personal') return 'Personal vote'
     return null
 }
+
+usePageSeo({
+    title: () => {
+        const v = vote.value
+        if (!v) return 'Vote'
+        const name = v.bill?.name
+        return name ? `${name} — Vote` : 'Vote'
+    },
+    description: () => {
+        const v = vote.value
+        if (!v) return undefined
+        const parts: string[] = []
+        if (v.bill?.name) parts.push(`Parliamentary vote on ${v.bill.name}.`)
+        const label = voteTypeLabel(v)
+        if (label) parts.push(`${label}.`)
+        if (v.date) parts.push(format(new Date(v.date), 'd MMMM yyyy') + '.')
+        return parts.join(' ')
+    },
+})
 
 function formatDateTime(date?: string | null): string {
     if (!date) return ''

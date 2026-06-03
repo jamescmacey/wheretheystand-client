@@ -50,7 +50,7 @@ type TimelineData = {
 }
 
 const timelineKey = computed(() => `person-timeline-${route.params.id}`)
-const { data, status, error, refresh, clear } = await useAsyncData<TimelineData>(timelineKey, () => $fetch<TimelineData>(apiBase + 'people/' + route.params.id + '/timeline/'), { lazy: true })
+const { data, status, error, refresh, clear } = await useAsyncData<TimelineData>(timelineKey, () => $fetch<TimelineData>(apiBase + 'people/' + route.params.id + '/timeline/'))
 
 
 import { format } from 'date-fns'

@@ -34,6 +34,11 @@ const { data: documents } = await useAsyncData(
   async () => await queryCollection('docs').order('title', 'ASC').all()
 )
 
+usePageSeo({
+    title: 'Documentation',
+    description: 'Internal documentation for WhereTheyStand.',
+})
+
 const githubEditUrl = (document: any) => {
     return `https://github.com/jamescmacey/wheretheystand-django/edit/main/${document.path}.md`
 }

@@ -1,25 +1,6 @@
 <template>
     <div id="person-view" v-if="status === 'success'">
 
-        <Head>
-            <Meta name="twitter:card" content="summary" />
-            <Meta name="twitter:image" :content="person.photo?.file" />
-            <Meta name="twitter:image:alt" :content="person.display_name" />
-
-            <Meta property="og:image:alt" :content="person.display_name" />
-            <Meta property="og:image" :content="person.photo?.file" />
-            <Meta name="twitter:card" content="summary" />
-
-            <Meta name="twitter:site" content="@wheretheystand_" />
-            <Meta name="twitter:title" :content="person.display_name + ' - WhereTheyStand'" />
-            <Meta name="twitter:description" :content="person.cached_description" />
-
-            <Meta property="og:site_name" content="WhereTheyStand" />
-            <Meta property="og:locale" content="en_NZ" />
-
-            <Meta property="og:description" :content="person.cached_description" />
-            <Meta property="og:title" :content="person.display_name + ' - WhereTheyStand'" />
-        </Head>
         <PageHeader :pageTitle="person.display_name" :pageSubtitle="person.cached_description" :image="person.photo?.file"
             :colour="person.cached_colour" :pageLinks="links"></PageHeader>
         <NuxtPage :person="person"></NuxtPage>
@@ -89,6 +70,20 @@ const links = computed(() => {
             name: 'Electoral history'
         }] : [])
     ]
+})
+
+const personSlug = computed(() => String(route.params.id ?? ''))
+
+usePageSeo({
+    title: () => {
+        const name = person.value?.display_name
+        if (!name) return undefined
+        const tab = personTabSeoTitle(route.path, personSlug.value)
+        return tab ? `${tab} — ${name}` : name
+    },
+    description: () => person.value?.cached_description ?? undefined,
+    image: () => person.value?.photo?.file ?? undefined,
+    imageAlt: () => person.value?.display_name ?? undefined,
 })
 </script>
 

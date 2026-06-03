@@ -74,6 +74,11 @@ const { data, status, error, refresh } = await useAsyncData("parliaments-list", 
     $fetch<Parliament[]>(`${apiBase}parliaments/?number_gte=51`),
 )
 
+usePageSeo({
+    title: 'Parliaments',
+    description: 'Parliaments of New Zealand since the 51st Parliament.',
+})
+
 function formatDate(value: string | null): string {
     if (!value) return "Present"
     const date = new Date(value)

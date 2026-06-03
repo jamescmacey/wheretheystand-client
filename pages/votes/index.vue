@@ -508,6 +508,11 @@ function pushFiltersToRoute(resetPage = false) {
     router.replace({ query: next })
 }
 
+usePageSeo({
+    title: 'Votes',
+    description: 'Parliamentary votes on bills at first, second and third reading.',
+})
+
 const fetchKey = computed(() => `votes-list-${JSON.stringify(route.query)}`)
 
 const { data: paginated, status, refresh } = await useAsyncData<PaginatedVotes>(
@@ -516,7 +521,7 @@ const { data: paginated, status, refresh } = await useAsyncData<PaginatedVotes>(
         const qs = queryToApiSearchParams(route.query).toString()
         return $fetch<PaginatedVotes>(`${apiBase}votes/?${qs}`)
     },
-    { watch: [() => route.query], lazy: true },
+    { watch: [() => route.query] },
 )
 
 function hasRefiningFiltersInQuery(q: typeof route.query): boolean {

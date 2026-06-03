@@ -41,7 +41,7 @@ useHead({
     return titleChunk ? `${titleChunk} — WhereTheyStand` : 'WhereTheyStand';
   },
   meta: [
-    { name: 'description', content: 'WhereTheyStand aggregates and links information about Members of Parliament and political parties, allowing you to find relevant information easily.' }
+    { name: 'description', content: DEFAULT_SITE_DESCRIPTION }
   ],
 })
 </script>

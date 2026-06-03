@@ -97,6 +97,11 @@
 <script setup>
 import { ref, reactive } from 'vue'
 
+usePageSeo({
+    title: 'Contact',
+    description: 'Get in touch with WhereTheyStand for feedback, corrections, or questions.',
+})
+
 const types = [
   { label: "General enquiry", value: "general" },
   { label: "Feedback", value: "feedback" },

@@ -124,14 +124,19 @@ const {
     status: statusCurrent,
     error: errorCurrent,
     refresh: refreshCurrent,
-} = await useAsyncData('parties-group-current-mps', () => fetchAllPartyPages('current_mps'), { lazy: true })
+} = await useAsyncData('parties-group-current-mps', () => fetchAllPartyPages('current_mps'))
 
 const {
     data: otherParties,
     status: statusOther,
     error: errorOther,
     refresh: refreshOther,
-} = await useAsyncData('parties-group-other', () => fetchAllPartyPages('other'), { lazy: true })
+} = await useAsyncData('parties-group-other', () => fetchAllPartyPages('other'))
+
+usePageSeo({
+    title: 'Parties',
+    description: 'Political parties with current members of Parliament.',
+})
 
 const loadOk = computed(
     () => statusCurrent.value === 'success' && statusOther.value === 'success',

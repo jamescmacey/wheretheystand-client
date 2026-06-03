@@ -80,6 +80,17 @@ const { data: parliament, status, error, refresh } = await useAsyncData(parliame
     $fetch<Parliament>(`${apiBase}parliaments/${route.params.number}/`),
 )
 
+usePageSeo({
+    title: () => (parliament.value ? `${ordinal(parliament.value.number)} Parliament` : undefined),
+    description: () => {
+        const p = parliament.value
+        if (!p) return undefined
+        const start = formatDate(p.start_date)
+        const end = formatDate(p.end_date)
+        return `New Zealand's ${ordinal(p.number)} Parliament (${start} to ${end}).`
+    },
+})
+
 function formatDate(value: string | null): string {
     if (!value) return "Present"
     const date = new Date(value)
