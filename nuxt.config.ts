@@ -14,6 +14,17 @@ export default defineNuxtConfig({
       crawlLinks: false,
       concurrency: 1,
     },
+    cloudflare: {
+      wrangler: {
+        d1_databases: [
+          {
+            binding: 'DB',
+            database_name: 'wheretheystand-client',
+            database_id: 'bf34562c-3d80-4550-8e83-904a56936609'
+          }
+        ]
+      }
+    }
   },
   routeRules: {
     '/search': { ssr: false },
