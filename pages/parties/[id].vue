@@ -164,6 +164,8 @@ const { data: party, status: statusParty, error: errorParty, refresh: refreshPar
     () => $fetch(`${apiBase}parties/${route.params.id}/`),
 )
 
+throwIfEntityNotFound(errorParty, `/parties/${route.params.id}`)
+
 async function fetchAllMps(): Promise<MpRow[]> {
     const collected: MpRow[] = []
     const partySlug = encodeURIComponent(String(route.params.id || ''))

@@ -80,6 +80,8 @@ const { data: parliament, status, error, refresh } = await useAsyncData(parliame
     $fetch<Parliament>(`${apiBase}parliaments/${route.params.number}/`),
 )
 
+throwIfEntityNotFound(error, `/parliaments/${route.params.number}`)
+
 usePageSeo({
     title: () => (parliament.value ? `${ordinal(parliament.value.number)} Parliament` : undefined),
     description: () => {

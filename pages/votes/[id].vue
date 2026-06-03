@@ -200,6 +200,8 @@ const { data: vote, status, error, refresh } = await useAsyncData(
     () => $fetch<VoteDetail>(`${apiBase}votes/${route.params.id}/`),
 )
 
+throwIfEntityNotFound(error, `/votes/${route.params.id}`)
+
 const pageTitle = computed(() => {
     const b = vote.value?.bill
     const name = b?.name

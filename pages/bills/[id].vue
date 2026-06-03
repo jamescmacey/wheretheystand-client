@@ -45,6 +45,8 @@ const { data: bill, status, error, refresh } = await useAsyncData(
     () => $fetch(`${apiBase}bills/${route.params.id}/`),
 )
 
+throwIfEntityNotFound(error, `/bills/${route.params.id}`)
+
 const apiJsonUrl = computed(() => `${apiBase}bills/${route.params.id}/`)
 
 const formatDateLabel = (value?: string) => {
