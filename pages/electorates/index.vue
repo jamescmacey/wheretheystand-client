@@ -83,7 +83,7 @@ const { data: electorates, status, error, refresh, clear } = await useAsyncData(
 
 usePageSeo({
     title: 'Electorates',
-    description: 'Browse current general and Māori electorates in the New Zealand Parliament.',
+    description: 'New Zealand has ' + electorates.value.length + ' electoral districts, commonly known as electorates.',
 })
 
 const sortedElectorates = computed(() => electorates.value.filter(electorate => electorate.status === 'current').sort((a, b) => a.name.localeCompare(b.name)))

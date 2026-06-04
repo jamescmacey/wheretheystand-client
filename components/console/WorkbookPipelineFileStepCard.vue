@@ -2,6 +2,7 @@
 import type {
   MinisterialLinkDraft,
   MinisterialPublishDraft,
+  ProfilePictureLinkDraft,
   WorkbookStepRecord,
 } from '~/types/workbookPipeline'
 import { MINISTERIAL_CATEGORY_OPTIONS } from '~/types/workbookPipeline'
@@ -31,8 +32,11 @@ const props = defineProps<{
   linkDraft?: LinkDraft
   ministerialLinkDraft?: MinisterialLinkDraft
   ministerialPublishDraft?: MinisterialPublishDraft
+  profilePictureLinkDraft?: ProfilePictureLinkDraft
   personItems: { id: string; label: string }[]
   portfolioItems: { id: string; label: string }[]
+  licenceItems: { id: string; label: string }[]
+  copyrightPartyItems: { id: string; label: string }[]
   pickersLoading: boolean
   compact?: boolean
 }>()
@@ -41,15 +45,18 @@ const emit = defineEmits<{
   saveLink: []
   saveMinisterialLink: []
   saveMinisterialPublish: []
+  saveProfilePictureLink: []
   commit: []
   reject: []
   startGemini: []
   linkDraftEdited: []
   ministerialDraftEdited: []
+  profilePictureDraftEdited: []
 }>()
 
 const isMinisterialList = computed(() => props.recipeKey === 'ministerial_list')
 const isCreditCard = computed(() => props.recipeKey === 'credit_card_reconciliation')
+const isProfilePictures = computed(() => props.recipeKey === 'user_profile_pictures')
 
 const { apiOrigin } = useAdminApi()
 
@@ -130,6 +137,13 @@ const canPublishMinisterial = computed(() => {
   )
 })
 
+const canPublishProfilePicture = computed(
+  () =>
+    props.linkStep?.status === 'committed' &&
+    props.step.step_key === 'publish_profile_picture' &&
+    props.step.status !== 'committed',
+)
+
 function addPosition(entryIndex: number) {
   if (!props.ministerialLinkDraft) return
   props.ministerialLinkDraft.entries[entryIndex].positions.push({
@@ -207,6 +221,57 @@ function addPosition(entryIndex: number) {
       </div>
       <div class="flex flex-wrap gap-2">
         <UButton label="Save draft" size="sm" @click="emit('saveLink')" />
+        <UButton
+          label="Commit"
+          size="sm"
+          color="primary"
+          :disabled="step.status === 'committed'"
+          @click="emit('commit')"
+        />
+      </div>
+    </div>
+
+    <div
+      v-else-if="step.step_key === 'link_entities' && isProfilePictures && profilePictureLinkDraft"
+      class="space-y-4"
+    >
+      <UFormField label="Person">
+        <USelectMenu
+          v-model="profilePictureLinkDraft.person_id"
+          :items="personItems"
+          value-key="id"
+          label-key="label"
+          placeholder="Select person for this photo"
+          :loading="pickersLoading"
+          class="w-full"
+          @update:model-value="emit('profilePictureDraftEdited')"
+        />
+      </UFormField>
+      <UFormField label="Original URL">
+        <UInput
+          v-model="profilePictureLinkDraft.original_url"
+          type="url"
+          placeholder="https://…"
+          @update:model-value="emit('profilePictureDraftEdited')"
+        />
+      </UFormField>
+      <UFormField label="Attribution text (optional)">
+        <UTextarea
+          v-model="profilePictureLinkDraft.attribution_text"
+          :rows="2"
+          placeholder="Credit line shown with the file"
+          @update:model-value="emit('profilePictureDraftEdited')"
+        />
+      </UFormField>
+      <ConsoleCopyrightMetadataForm
+        v-model="profilePictureLinkDraft.file_metadata"
+        :licence-items="licenceItems"
+        :copyright-party-items="copyrightPartyItems"
+        :pickers-loading="pickersLoading"
+        @update:model-value="emit('profilePictureDraftEdited')"
+      />
+      <div class="flex flex-wrap gap-2">
+        <UButton label="Save draft" size="sm" @click="emit('saveProfilePictureLink')" />
         <UButton
           label="Commit"
           size="sm"
@@ -348,6 +413,19 @@ function addPosition(entryIndex: number) {
         size="sm"
         color="primary"
         :disabled="!canPublishCreditCard"
+        @click="emit('commit')"
+      />
+    </div>
+
+    <div v-else-if="step.step_key === 'publish_profile_picture'" class="flex flex-col gap-2">
+      <p class="text-muted text-xs">
+        Copies the image to public storage and sets it as the person's profile photo.
+      </p>
+      <UButton
+        label="Publish"
+        size="sm"
+        color="primary"
+        :disabled="!canPublishProfilePicture"
         @click="emit('commit')"
       />
     </div>
