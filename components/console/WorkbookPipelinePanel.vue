@@ -2,11 +2,16 @@
 import type {
   MinisterialLinkDraft,
   MinisterialPublishDraft,
+  ProfilePictureLinkDraft,
   WorkbookStepRecord,
 } from '~/types/workbookPipeline'
 import { PIPELINE_STEP_ORDER, RECIPE_OPTIONS } from '~/types/workbookPipeline'
 import type { WorkbookBatchDefaults } from '~/types/consoleIngestion'
 import type { LinkDraft } from '~/components/console/WorkbookPipelineFileStepCard.vue'
+import {
+  copyrightMetadataFromPayload,
+  copyrightMetadataToPayload,
+} from '~/types/copyrightMetadata'
 
 type ViewMode = 'file' | 'step'
 
@@ -55,8 +60,10 @@ const {
 const linkDraftsByFile = reactive<Record<string, LinkDraft>>({})
 const ministerialLinkDraftsByFile = reactive<Record<string, MinisterialLinkDraft>>({})
 const ministerialPublishDraftsByFile = reactive<Record<string, MinisterialPublishDraft>>({})
+const profilePictureLinkDraftsByFile = reactive<Record<string, ProfilePictureLinkDraft>>({})
 const linkDraftDirtyFiles = ref(new Set<string>())
 const ministerialDraftDirtyFiles = ref(new Set<string>())
+const profilePictureDraftDirtyFiles = ref(new Set<string>())
 
 const batchForm = ref<WorkbookBatchDefaults>({ ...props.batchDefaults })
 const savingBatch = ref(false)
@@ -152,6 +159,22 @@ function syncMinisterialPublishDraftForFile(fileId: string, options?: { force?: 
   }
 }
 
+function syncProfilePictureLinkDraftForFile(fileId: string, options?: { force?: boolean }) {
+  if (!options?.force && profilePictureDraftDirtyFiles.value.has(fileId)) {
+    return
+  }
+  const step = stepForFileAndKey(fileId, 'link_entities')
+  const payload = step?.payload ?? {}
+  profilePictureLinkDraftsByFile[fileId] = {
+    person_id: (payload.person_id as string) ?? '',
+    original_url: (payload.original_url as string) ?? '',
+    attribution_text: (payload.attribution_text as string) ?? '',
+    file_metadata: copyrightMetadataFromPayload(
+      (payload.file_metadata as Record<string, unknown>) ?? undefined,
+    ),
+  }
+}
+
 function syncDraftsForFile(fileId: string, options?: { force?: boolean }) {
   if (isCreditCard.value) {
     syncLinkDraftForFile(fileId, options)
@@ -159,6 +182,9 @@ function syncDraftsForFile(fileId: string, options?: { force?: boolean }) {
   if (isMinisterialList.value) {
     syncMinisterialLinkDraftForFile(fileId, options)
     syncMinisterialPublishDraftForFile(fileId, options)
+  }
+  if (isProfilePictures.value) {
+    syncProfilePictureLinkDraftForFile(fileId, options)
   }
 }
 
@@ -171,6 +197,7 @@ function syncAllDrafts(options?: { force?: boolean }) {
 function stopDraftDirty() {
   linkDraftDirtyFiles.value = new Set()
   ministerialDraftDirtyFiles.value = new Set()
+  profilePictureDraftDirtyFiles.value = new Set()
 }
 
 function markLinkDraftDirty(fileId: string) {
@@ -179,6 +206,13 @@ function markLinkDraftDirty(fileId: string) {
 
 function markMinisterialDraftDirty(fileId: string) {
   ministerialDraftDirtyFiles.value = new Set([...ministerialDraftDirtyFiles.value, fileId])
+}
+
+function markProfilePictureDraftDirty(fileId: string) {
+  profilePictureDraftDirtyFiles.value = new Set([
+    ...profilePictureDraftDirtyFiles.value,
+    fileId,
+  ])
 }
 
 function linkDraftFor(fileId: string): LinkDraft {
@@ -200,6 +234,24 @@ function ministerialPublishDraftFor(fileId: string): MinisterialPublishDraft {
     syncMinisterialPublishDraftForFile(fileId)
   }
   return ministerialPublishDraftsByFile[fileId]
+}
+
+function profilePictureLinkDraftFor(fileId: string): ProfilePictureLinkDraft {
+  if (!profilePictureLinkDraftsByFile[fileId]) {
+    syncProfilePictureLinkDraftForFile(fileId)
+  }
+  return profilePictureLinkDraftsByFile[fileId]
+}
+
+function profilePictureLinkPayload(fileId: string) {
+  const draft = profilePictureLinkDraftFor(fileId)
+  return {
+    person_id: draft.person_id,
+    original_url: draft.original_url,
+    attribution_text: draft.attribution_text,
+    file_metadata: copyrightMetadataToPayload(draft.file_metadata),
+    workbook_file_id: fileId,
+  }
 }
 
 async function setViewMode(mode: ViewMode) {
@@ -297,6 +349,12 @@ function isStepCommittable(step: WorkbookStepRecord, stepKey: string): boolean {
       step.status !== 'committed'
     )
   }
+  if (stepKey === 'publish_profile_picture') {
+    return (
+      stepForFileAndKey(fileId, 'link_entities')?.status === 'committed' &&
+      step.status !== 'committed'
+    )
+  }
   return false
 }
 
@@ -308,6 +366,10 @@ const committableStepsForView = computed(() =>
 
 async function commitStep(fileId: string, stepKey: string) {
   if (props.isClosed) return
+  if (stepKey === 'link_entities' && isProfilePictures.value) {
+    await saveDraft('link_entities', profilePictureLinkPayload(fileId), fileId)
+    profilePictureDraftDirtyFiles.value.delete(fileId)
+  }
   if (stepKey === 'publish_ministerial_list') {
     const publishDraft = ministerialPublishDraftFor(fileId)
     await saveDraft(
@@ -325,6 +387,10 @@ async function commitStep(fileId: string, stepKey: string) {
   if (stepKey === 'link_entities' && isMinisterialList.value) {
     ministerialDraftDirtyFiles.value.delete(fileId)
     syncMinisterialLinkDraftForFile(fileId, { force: true })
+  }
+  if (stepKey === 'link_entities' && isProfilePictures.value) {
+    profilePictureDraftDirtyFiles.value.delete(fileId)
+    syncProfilePictureLinkDraftForFile(fileId, { force: true })
   }
   toast.add({ title: 'Committed', color: 'success' })
   await fetchSteps()
@@ -387,6 +453,13 @@ async function saveMinisterialPublishForFile(fileId: string) {
   toast.add({ title: 'Publish settings saved', color: 'success' })
 }
 
+async function saveProfilePictureLinkForFile(fileId: string) {
+  await saveDraft('link_entities', profilePictureLinkPayload(fileId), fileId)
+  profilePictureDraftDirtyFiles.value.delete(fileId)
+  syncProfilePictureLinkDraftForFile(fileId, { force: true })
+  toast.add({ title: 'Link saved', color: 'success' })
+}
+
 async function commitAllForCurrentStep() {
   const stepKey = selectedStepKey.value
   const targets = committableStepsForView.value
@@ -422,6 +495,10 @@ async function commitAllForCurrentStep() {
           fileId,
         )
         ministerialDraftDirtyFiles.value.delete(fileId)
+      }
+      if (stepKey === 'link_entities' && isProfilePictures.value) {
+        await saveDraft('link_entities', profilePictureLinkPayload(fileId), fileId)
+        profilePictureDraftDirtyFiles.value.delete(fileId)
       }
       await stepAction(stepKey, 'commit', { workbookFileId: fileId })
     }
@@ -526,14 +603,18 @@ const fileSelectItems = computed(() =>
 
 const isCreditCard = computed(() => props.recipeKey === 'credit_card_reconciliation')
 const isMinisterialList = computed(() => props.recipeKey === 'ministerial_list')
+const isProfilePictures = computed(() => props.recipeKey === 'user_profile_pictures')
 
 const showBatchDefaults = computed(
-  () => isCreditCard.value || isMinisterialList.value,
+  () => isCreditCard.value || isMinisterialList.value || isProfilePictures.value,
 )
 
 const batchDefaultsDescription = computed(() => {
   if (isCreditCard.value) {
     return 'Set dates and copyright once. Files stay on private storage until you publish; copyright is applied when copying to the public bucket.'
+  }
+  if (isProfilePictures.value) {
+    return 'Set shared copyright defaults for all photos. Each file can still override licence, owner, and grantor when linking.'
   }
   return 'Set copyright once. It is applied when the ministerial list is promoted to public storage.'
 })
@@ -544,6 +625,9 @@ const batchCommitStepKeys = computed(() => {
   }
   if (isMinisterialList.value) {
     return ['link_entities', 'gemini_extract', 'publish_ministerial_list']
+  }
+  if (isProfilePictures.value) {
+    return ['link_entities', 'publish_profile_picture']
   }
   return []
 })
@@ -717,14 +801,21 @@ const showBatchStartGemini = computed(
           :ministerial-publish-draft="
             isMinisterialList ? ministerialPublishDraftFor(selectedFileId) : undefined
           "
+          :profile-picture-link-draft="
+            isProfilePictures ? profilePictureLinkDraftFor(selectedFileId) : undefined
+          "
           :person-items="personItems"
           :portfolio-items="portfolioItems"
+          :licence-items="licenceItems"
+          :copyright-party-items="copyrightPartyItems"
           :pickers-loading="pickersLoading"
           @link-draft-edited="markLinkDraftDirty(selectedFileId!)"
           @ministerial-draft-edited="markMinisterialDraftDirty(selectedFileId!)"
+          @profile-picture-draft-edited="markProfilePictureDraftDirty(selectedFileId!)"
           @save-link="saveLinkForFile(selectedFileId!)"
           @save-ministerial-link="saveMinisterialLinkForFile(selectedFileId!)"
           @save-ministerial-publish="saveMinisterialPublishForFile(selectedFileId!)"
+          @save-profile-picture-link="saveProfilePictureLinkForFile(selectedFileId!)"
           @commit="commitStep(selectedFileId!, step.step_key)"
           @reject="rejectStep(selectedFileId!, step.step_key)"
           @start-gemini="startGeminiForFile(selectedFileId!)"
@@ -782,14 +873,21 @@ const showBatchStartGemini = computed(
             :ministerial-publish-draft="
               isMinisterialList ? ministerialPublishDraftFor(file.id) : undefined
             "
+            :profile-picture-link-draft="
+              isProfilePictures ? profilePictureLinkDraftFor(file.id) : undefined
+            "
             :person-items="personItems"
             :portfolio-items="portfolioItems"
+            :licence-items="licenceItems"
+            :copyright-party-items="copyrightPartyItems"
             :pickers-loading="pickersLoading"
             @link-draft-edited="markLinkDraftDirty(file.id)"
             @ministerial-draft-edited="markMinisterialDraftDirty(file.id)"
+            @profile-picture-draft-edited="markProfilePictureDraftDirty(file.id)"
             @save-link="saveLinkForFile(file.id)"
             @save-ministerial-link="saveMinisterialLinkForFile(file.id)"
             @save-ministerial-publish="saveMinisterialPublishForFile(file.id)"
+            @save-profile-picture-link="saveProfilePictureLinkForFile(file.id)"
             @commit="commitStep(file.id, step.step_key)"
             @reject="rejectStep(file.id, step.step_key)"
             @start-gemini="startGeminiForFile(file.id)"

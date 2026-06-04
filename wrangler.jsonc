@@ -6,7 +6,8 @@
         "nodejs_compat"
     ],
     "assets": {
-        "directory": ".output/public"
+        "directory": ".output/public",
+        "binding": "ASSETS"
     },
     "workers_dev": false,
     "routes": [

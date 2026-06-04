@@ -1,3 +1,5 @@
+import type { CopyrightMetadataDraft } from '~/types/copyrightMetadata'
+
 export type StepStatus =
   | 'pending'
   | 'running'
@@ -42,6 +44,7 @@ export type WorkbookStepsResponse = {
 export const RECIPE_OPTIONS = [
   { value: 'credit_card_reconciliation', label: 'Credit card reconciliation' },
   { value: 'ministerial_list', label: 'Ministerial list' },
+  { value: 'user_profile_pictures', label: 'User profile pictures' },
   { value: 'gazette_notice', label: 'Gazette notice' },
 ] as const
 
@@ -58,6 +61,14 @@ export const PIPELINE_STEP_ORDER: Record<string, readonly string[]> = {
     'link_entities',
     'publish_ministerial_list',
   ],
+  user_profile_pictures: ['upload', 'link_entities', 'publish_profile_picture'],
+}
+
+export type ProfilePictureLinkDraft = {
+  person_id: string
+  original_url: string
+  attribution_text: string
+  file_metadata: CopyrightMetadataDraft
 }
 
 export type MinisterialPositionLink = {
