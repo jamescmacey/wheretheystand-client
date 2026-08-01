@@ -278,7 +278,7 @@ const fetchData = async (): Promise<PaginatedResponse> => {
     const separator = baseUrl.includes('?') ? '&' : '?'
     const url = `${baseUrl}${separator}${queryParams.toString()}`
     
-    return await $fetch<PaginatedResponse>(url)
+    return await $fetch<PaginatedResponse>(url, apiFetchOptions())
 }
 
 // Fetch data using useAsyncData

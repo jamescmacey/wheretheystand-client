@@ -23,7 +23,7 @@ const apiBase = config.public.apiBase
 const route = useRoute()
 
 const electionKey = computed(() => `election-${route.params.electionSlug}`)
-const { data: election, status, error, refresh, clear } = await useAsyncData(electionKey, () => $fetch(apiBase + 'elections/' + route.params.electionSlug + '/'))
+const { data: election, status, error, refresh, clear } = await useAsyncData(electionKey, () => $fetch(apiBase + 'elections/' + route.params.electionSlug + '/', apiFetchOptions()))
 
 usePageSeo({
     title: () => election.value?.name,

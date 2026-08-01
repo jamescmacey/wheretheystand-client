@@ -306,6 +306,8 @@ const { data: paginatedResponse, status, error, refresh } = await useAsyncData<P
     () =>
         $fetch<PaginatedResponse>(
             `${apiBase}members-of-parliament/?page_size=200&as_at=${encodeURIComponent(effectiveAsAt.value)}`,
+            // members-of-parliament/ can legitimately take up to ~12s to compute; give it more headroom than the default.
+            apiFetchOptions({ timeout: MEMBERS_OF_PARLIAMENT_TIMEOUT_MS }),
         ),
     { watch: [effectiveAsAt] },
 )

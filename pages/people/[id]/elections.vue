@@ -69,7 +69,7 @@ const apiBase = config.public.apiBase
 const route = useRoute()
 
 const votesKey = computed(() => `person-elections-${route.params.id}`)
-const { data: results, status, error, refresh, clear } = await useAsyncData(votesKey, () => $fetch(apiBase + 'people/' + route.params.id + '/election-results/'))
+const { data: results, status, error, refresh, clear } = await useAsyncData(votesKey, () => $fetch(apiBase + 'people/' + route.params.id + '/election-results/', apiFetchOptions()))
 
 const props = defineProps({
     person: {

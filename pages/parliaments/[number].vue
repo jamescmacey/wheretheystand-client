@@ -77,7 +77,7 @@ type Parliament = {
 
 const parliamentKey = computed(() => `parliament-${route.params.number}`)
 const { data: parliament, status, error, refresh } = await useAsyncData(parliamentKey, () =>
-    $fetch<Parliament>(`${apiBase}parliaments/${route.params.number}/`),
+    $fetch<Parliament>(`${apiBase}parliaments/${route.params.number}/`, apiFetchOptions()),
 )
 
 throwIfEntityNotFound(error, `/parliaments/${route.params.number}`)

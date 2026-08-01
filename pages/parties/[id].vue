@@ -161,7 +161,7 @@ type PaginatedMpResponse = {
 const partyKey = computed(() => `party-${route.params.id}`)
 const { data: party, status: statusParty, error: errorParty, refresh: refreshParty } = await useAsyncData<Party>(
     partyKey,
-    () => $fetch(`${apiBase}parties/${route.params.id}/`),
+    () => $fetch(`${apiBase}parties/${route.params.id}/`, apiFetchOptions()),
 )
 
 throwIfEntityNotFound(errorParty, `/parties/${route.params.id}`)
@@ -171,7 +171,8 @@ async function fetchAllMps(): Promise<MpRow[]> {
     const partySlug = encodeURIComponent(String(route.params.id || ''))
     let url: string | null = `${apiBase}members-of-parliament/?page_size=200&party_slug=${partySlug}`
     while (url) {
-        const page = await $fetch<PaginatedMpResponse>(url)
+        // members-of-parliament/ can legitimately take up to ~12s to compute; give it more headroom than the default.
+        const page = await $fetch<PaginatedMpResponse>(url, apiFetchOptions({ timeout: MEMBERS_OF_PARLIAMENT_TIMEOUT_MS }))
         collected.push(...page.results)
         url = page.next
     }
