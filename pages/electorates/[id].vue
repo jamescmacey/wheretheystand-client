@@ -199,11 +199,11 @@ const incumbentPartyName = (historyItem) => {
 }
 
 const electorateHistoryKey = computed(() => `electorate-history-${route.params.id}`)
-const { data: electorateHistory, status: electorateHistoryStatus, error: electorateHistoryError, refresh: electorateHistoryRefresh, clear: electorateHistoryClear } = await useAsyncData(electorateHistoryKey, () => $fetch(apiBase + 'electorates/' + route.params.id + '/history/'))
+const { data: electorateHistory, status: electorateHistoryStatus, error: electorateHistoryError, refresh: electorateHistoryRefresh, clear: electorateHistoryClear } = await useAsyncData(electorateHistoryKey, () => $fetch(apiBase + 'electorates/' + route.params.id + '/history/', apiFetchOptions()))
 const electorateBoundaryKey = computed(() => `electorate-boundaries-${route.params.id}`)
 const { data: electorateBoundaries } = await useAsyncData(
     electorateBoundaryKey,
-    () => $fetch(apiBase + 'electorates/' + route.params.id + '/boundaries/')
+    () => $fetch(apiBase + 'electorates/' + route.params.id + '/boundaries/', apiFetchOptions())
 )
 
 const hasElectorateHistoryLinks = computed(() => Boolean(electorate.value?.replaced || electorate.value?.replacement))
@@ -373,7 +373,7 @@ watch(
         mapLoadStatus.value = 'loading'
         mapError.value = ''
         try {
-            const responseData = await $fetch(url, { responseType: 'json' })
+            const responseData = await $fetch(url, apiFetchOptions({ responseType: 'json' }))
             const geoJson = normalizeGeoJson(responseData)
             if (!geoJson) {
                 throw new Error('Invalid GeoJSON payload.')
@@ -481,7 +481,7 @@ const incumbencyDateLabel = (entry) => {
 }
 
 const electorateKey = computed(() => `electorate-${route.params.id}`)
-const { data: electorate, status, error, refresh, clear } = await useAsyncData(electorateKey, () => $fetch(apiBase + 'electorates/' + route.params.id + '/'))
+const { data: electorate, status, error, refresh, clear } = await useAsyncData(electorateKey, () => $fetch(apiBase + 'electorates/' + route.params.id + '/', apiFetchOptions()))
 
 throwIfEntityNotFound(error, `/electorates/${route.params.id}`)
 

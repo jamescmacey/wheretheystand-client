@@ -520,7 +520,7 @@ const { data: paginated, status, refresh } = await useAsyncData<PaginatedVotes>(
     fetchKey,
     () => {
         const qs = queryToApiSearchParams(route.query).toString()
-        return $fetch<PaginatedVotes>(`${apiBase}votes/?${qs}`)
+        return $fetch<PaginatedVotes>(`${apiBase}votes/?${qs}`, apiFetchOptions())
     },
     { watch: [() => route.query] },
 )

@@ -67,10 +67,10 @@ const route = useRoute()
 const selectedReport = ref('latest')
 
 const interestsKey = computed(() => `person-interests-${route.params.id}-${selectedReport.value}`)
-const { data: interests, status, error, refresh, clear } = await useAsyncData(interestsKey, () => $fetch(apiBase + 'people/' + route.params.id + '/financial-interests/' + (selectedReport.value === 'latest' ? 'latest' : selectedReport.value + '/')))
+const { data: interests, status, error, refresh, clear } = await useAsyncData(interestsKey, () => $fetch(apiBase + 'people/' + route.params.id + '/financial-interests/' + (selectedReport.value === 'latest' ? 'latest' : selectedReport.value + '/'), apiFetchOptions()))
 
 const availableReportsKey = computed(() => `person-interests-reports-${route.params.id}`)
-const { data: availableInterests } = await useAsyncData(availableReportsKey, () => $fetch(apiBase + 'people/' + route.params.id + '/financial-interests/'))
+const { data: availableInterests } = await useAsyncData(availableReportsKey, () => $fetch(apiBase + 'people/' + route.params.id + '/financial-interests/', apiFetchOptions()))
 
 
 const props = defineProps({

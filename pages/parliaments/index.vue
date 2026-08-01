@@ -71,7 +71,7 @@ type Parliament = {
 }
 
 const { data, status, error, refresh } = await useAsyncData("parliaments-list", () =>
-    $fetch<Parliament[]>(`${apiBase}parliaments/?number_gte=51`),
+    $fetch<Parliament[]>(`${apiBase}parliaments/?number_gte=51`, apiFetchOptions()),
 )
 
 usePageSeo({

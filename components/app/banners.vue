@@ -18,5 +18,5 @@
 
 <script setup>
 const config = useRuntimeConfig();
-const { data: banners } = await useAsyncData('banners', () => $fetch(`${config.public.apiBase}banners/`))
+const { data: banners } = await useAsyncData('banners', () => $fetch(`${config.public.apiBase}banners/`, apiFetchOptions()))
 </script>

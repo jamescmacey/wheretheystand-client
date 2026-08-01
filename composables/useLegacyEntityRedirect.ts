@@ -21,6 +21,7 @@ export async function resolveLegacyEntityRedirectPath(
     try {
         const res = await $fetch<{ id: string }>(
             `${apiBase}migration/${entity}/${routeId}/`,
+            apiFetchOptions(),
         )
         if (!res?.id) return null
 

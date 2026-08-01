@@ -42,7 +42,7 @@ const PROCEDURAL_EXTENDED_SITTINGS = {
 const billKey = computed(() => `bill-${route.params.id}`)
 const { data: bill, status, error, refresh } = await useAsyncData(
     billKey,
-    () => $fetch(`${apiBase}bills/${route.params.id}/`),
+    () => $fetch(`${apiBase}bills/${route.params.id}/`, apiFetchOptions()),
 )
 
 throwIfEntityNotFound(error, `/bills/${route.params.id}`)

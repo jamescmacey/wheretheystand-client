@@ -342,7 +342,7 @@ const { data: paginated, status, error, refresh } = await useAsyncData<Paginated
     fetchKey,
     () => {
         const qs = queryToApiSearchParams(route.query).toString()
-        return $fetch<Paginated>(`${apiBase}bills/?${qs}`)
+        return $fetch<Paginated>(`${apiBase}bills/?${qs}`, apiFetchOptions())
     },
     { watch: [() => route.query] },
 )
@@ -351,7 +351,7 @@ type ParliamentRow = { id: string; number: number }
 
 const { data: parliaments } = await useAsyncData<ParliamentRow[]>(
     'bills-parliaments',
-    () => $fetch<ParliamentRow[]>(`${apiBase}parliaments/?number_gte=50`),
+    () => $fetch<ParliamentRow[]>(`${apiBase}parliaments/?number_gte=50`, apiFetchOptions()),
 )
 
 const parliamentSelectItems = computed(() => {

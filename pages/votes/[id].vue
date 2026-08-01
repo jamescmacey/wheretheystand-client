@@ -197,7 +197,7 @@ function methodTextForMethod(method: "parse" | "api" | "manual" | "ai"): string 
 
 const { data: vote, status, error, refresh } = await useAsyncData(
     voteKey,
-    () => $fetch<VoteDetail>(`${apiBase}votes/${route.params.id}/`),
+    () => $fetch<VoteDetail>(`${apiBase}votes/${route.params.id}/`, apiFetchOptions()),
 )
 
 throwIfEntityNotFound(error, `/votes/${route.params.id}`)

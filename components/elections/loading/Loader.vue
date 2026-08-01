@@ -54,7 +54,7 @@ const {
     refresh: refreshPersistentData
 } = await useAsyncData(
     persistentDataKey,
-    () => $fetch(apiBase + 'elections/persistent-data/'),
+    () => $fetch(apiBase + 'elections/persistent-data/', apiFetchOptions()),
 )
 
 // Fetch reference data
@@ -66,7 +66,7 @@ const {
     refresh: refreshReferenceData
 } = await useAsyncData(
     referenceDataKey,
-    () => $fetch(apiBase + `elections/${electionSlug.value}/${resultsVersionSlug.value}/reference-data/`),
+    () => $fetch(apiBase + `elections/${electionSlug.value}/${resultsVersionSlug.value}/reference-data/`, apiFetchOptions()),
     { watch: [electionSlug, resultsVersionSlug] }
 )
 
@@ -77,7 +77,7 @@ const {
     status: resultsDataStatus,
     error: resultsDataError,
     refresh: refreshResultsData
-} = await useAsyncData(resultsDataKey, () => $fetch(apiBase + `elections/${electionSlug.value}/${resultsVersionSlug.value}/results/`), { watch: [electionSlug, resultsVersionSlug] })
+} = await useAsyncData(resultsDataKey, () => $fetch(apiBase + `elections/${electionSlug.value}/${resultsVersionSlug.value}/results/`, apiFetchOptions()), { watch: [electionSlug, resultsVersionSlug] })
 
 // Update store when persistent data is successfully loaded
 watch(persistentData, (newData) => {

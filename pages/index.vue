@@ -7,7 +7,7 @@ const liveElection = ref(false)
 const electionFeaturesEnabled = String(config.public.electionsEnabled).toLowerCase() === 'true'
 
 
-const { data: homepageData, status, error } = await useAsyncData('homepageData', () => $fetch(`${apiBase}client/homepage/`))
+const { data: homepageData, status, error } = await useAsyncData('homepageData', () => $fetch(`${apiBase}client/homepage/`, apiFetchOptions()))
 
 usePageSeo({
     title: 'Wondering where they stand?',
@@ -57,10 +57,10 @@ const randomPage = async () => {
 
   loadingRandomPage.value = true
   try {
-    const data = await $fetch(`${apiBase}client/random/`, {
+    const data = await $fetch(`${apiBase}client/random/`, apiFetchOptions({
       cache: 'no-store',
       query: { _: Date.now() },
-    })
+    }))
     await navigateTo(data.to)
   } catch (error) {
     console.error(error)

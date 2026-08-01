@@ -50,7 +50,7 @@ const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
 const route = useRoute()
 
-const { data: elections, status, error, refresh, clear } = await useAsyncData("elections", () => $fetch(apiBase + 'elections/'))
+const { data: elections, status, error, refresh, clear } = await useAsyncData("elections", () => $fetch(apiBase + 'elections/', apiFetchOptions()))
 
 usePageSeo({
     title: 'Elections',

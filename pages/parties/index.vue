@@ -112,7 +112,7 @@ async function fetchAllPartyPages(group: 'current_mps' | 'other'): Promise<Party
     let url: string | null =
         `${apiBase}parties/?group=${group}&page_size=1000`
     while (url) {
-        const page = await $fetch<PaginatedParties>(url)
+        const page = await $fetch<PaginatedParties>(url, apiFetchOptions())
         collected.push(...page.results)
         url = page.next
     }
