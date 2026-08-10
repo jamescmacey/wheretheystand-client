@@ -72,9 +72,35 @@ export default defineNuxtConfig({
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE ?? 'https://api.wheretheystand.nz/v2/',
       apiOrigin: process.env.NUXT_PUBLIC_API_ORIGIN ?? 'https://api.wheretheystand.nz',
+      // Banners are read from a Cloudflare Worker that polls the API and caches
+      // the last-good response, so they keep showing even if Django is down -
+      // this matters most during election night. See wheretheystand-banners.
+      bannersApiBase: process.env.NUXT_PUBLIC_BANNERS_API_BASE ?? 'https://banners.wheretheystand.nz/',
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL ?? 'https://wheretheystand.nz',
       adminEnabled: true,
       electionsEnabled: process.env.NUXT_PUBLIC_ELECTIONS_ENABLED ?? 'false',
+      // Election results are read as static JSON from R2, not from the API, so
+      // that election night traffic never reaches Django. Point this at a
+      // directory built by `manage.py publish_election_snapshots --local` to
+      // develop without R2.
+      electionsSnapshotBase: process.env.NUXT_PUBLIC_ELECTIONS_SNAPSHOT_BASE
+        ?? 'https://elections-r2.wheretheystand.nz/',
+      // Live results during an event. These are public identifiers rather than
+      // secrets: access is controlled by Firestore security rules, which allow
+      // reads and deny every write.
+      firebase: {
+        apiKey: process.env.NUXT_PUBLIC_FIREBASE_API_KEY
+          ?? 'AIzaSyBa0-MizvI5365_ln6C7ciSeQmsJhgwCjM',
+        authDomain: process.env.NUXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+          ?? 'wheretheystand-elections.firebaseapp.com',
+        projectId: process.env.NUXT_PUBLIC_FIREBASE_PROJECT_ID
+          ?? 'wheretheystand-elections',
+        appId: process.env.NUXT_PUBLIC_FIREBASE_APP_ID
+          ?? '1:307102324889:web:5072b2e79d2740da3e4008',
+      },
+      // Set to a host:port to talk to the Firestore emulator instead. The only
+      // way to exercise live updates without a live election.
+      firebaseEmulatorHost: process.env.NUXT_PUBLIC_FIREBASE_EMULATOR_HOST ?? '',
       valueKeys: {
         startReasons: {
           e93_137: {
