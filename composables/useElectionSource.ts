@@ -110,6 +110,7 @@ export async function useElectionSource(options: {
     persistent: { origin: null, url: null, loadedAt: null, error: null },
     reference: { origin: null, url: null, loadedAt: null, error: null },
     results: { origin: null, url: null, loadedAt: null, error: null },
+    summary: { origin: null, url: null, loadedAt: null, error: null },
   })
 
   // In `useState`, not a plain ref, because an archived version is fetched on
@@ -232,6 +233,28 @@ export async function useElectionSource(options: {
     scope: () => ({ kind: 'national' as const }),
     enabled: () => mode.value === 'live',
     onResults: applyResults,
+  })
+
+  /**
+   * Every electorate's leader and margin, in one document.
+   *
+   * Always on during a live count, like the national tally, and for the same
+   * reason: it is one document, and it is what lets the overview and the
+   * electorates list show every margin without subscribing to every
+   * electorate. 145 documents became two.
+   *
+   * It populates derived electorate outcomes only. Tallies still come from the
+   * results listeners, so a page that needs every candidate's count -- the
+   * candidates list -- still asks for the scope it needs.
+   */
+  useFirestoreSummary({
+    eventId: () => (mode.value === 'live' ? resultsVersion.value?.firebase_id ?? null : null),
+    enabled: () => mode.value === 'live',
+    onSummary: (summary) => {
+      if (!slugs.value.election) return
+      store.applySummary(slugs.value.election, slugs.value.version, summary)
+      noteLoaded('summary', 'firestore')
+    },
   })
 
   // Whatever the open page additionally asked for. Null means no second

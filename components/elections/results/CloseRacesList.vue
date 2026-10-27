@@ -120,7 +120,14 @@ function nameFor(electorate: EntityNumber): string {
     return store.electorate(slugs.value.e, slugs.value.v, electorate)?.name ?? 'Unknown electorate'
 }
 
-/** The newest electorate tally behind this list, which is what it is "as at". */
+/**
+ * The newest electorate tally behind this list, which is what it is "as at".
+ *
+ * Two sources, because the list has two. Archived results arrive as a document
+ * per electorate and each one dates itself. During a live count the margins
+ * come from the summary instead, and this page holds no electorate tallies at
+ * all, so the summary's own timestamp is the only thing that can date them.
+ */
 const asAt = computed(() => {
     let newest: number | null = null
     let anyProvisional = false
@@ -130,6 +137,16 @@ const asAt = computed(() => {
         if (!set.is_final) anyProvisional = true
         if (set.updated_timestamp === null) continue
         if (newest === null || set.updated_timestamp > newest) newest = set.updated_timestamp
+    }
+
+    if (newest === null) {
+        const fromSummary = store.summaryUpdatedTimestamp(slugs.value.e, slugs.value.v)
+        if (fromSummary === null) return null
+        // A settled count has nothing to be out of date about, and a time stamp
+        // on one reads as a fault.
+        const national = store.nationalResults(slugs.value.e, slugs.value.v, 'party_votes')
+        if (national?.is_final) return null
+        return formatTime(fromEpochSeconds(fromSummary))
     }
 
     if (!anyProvisional) return null

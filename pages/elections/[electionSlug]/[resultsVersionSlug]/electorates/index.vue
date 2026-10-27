@@ -45,17 +45,16 @@ import type {
     ElectionSummary, EntityNumber, ReferenceElectorate, ResultsVersion,
 } from '~/types/elections'
 import { useElectionDataStore } from '~/stores/electionData'
-import { useResultsScope } from '~/composables/useElectionSource'
 
 const props = defineProps<{
     election: ElectionSummary
     resultsVersion: ResultsVersion
 }>()
 
-// Every electorate's leader and margin, which needs every electorate's results
-// document. Released as soon as the page closes.
-useResultsScope({ kind: 'all-electorates' })
-
+// No subscription of its own. Every electorate's leader and margin used to
+// mean every electorate's results document -- 144 of them, re-billed on every
+// change -- and now comes from the summary document the source layer already
+// watches throughout a live count.
 const store = useElectionDataStore()
 const slugs = computed(() => ({ e: props.election.slug, v: props.resultsVersion.slug }))
 

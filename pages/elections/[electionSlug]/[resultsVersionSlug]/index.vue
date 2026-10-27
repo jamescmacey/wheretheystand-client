@@ -28,14 +28,7 @@
             <ElectionsResultsNationalPartyResults :election="election" :resultsVersion="resultsVersion" />
 
             <ElectionsResultsCloseRacesList :election="election" :resultsVersion="resultsVersion"
-                :empty-message="closeRacesEmptyMessage">
-                <template #empty-action>
-                    <UButton v-if="!loadElectorates" color="neutral" variant="subtle"
-                        icon="i-lucide-download" @click="loadAllElectorates">
-                        Load electorate results
-                    </UButton>
-                </template>
-            </ElectionsResultsCloseRacesList>
+                :empty-message="closeRacesEmptyMessage" />
         </template>
     </ElectionsLayoutDashboardPage>
 </template>
@@ -55,42 +48,31 @@ const store = useElectionDataStore()
 const { hasPartyVote, soleElectorate } = useElectionShape()
 
 /**
- * Whether to hold every electorate's results open.
+ * This page asks for no results beyond the national tally.
  *
- * Off by default, and that is the whole point. This is the page people leave
- * open all evening, and during a live count every electorate is a separate
- * Firestore document billed on every change -- 144 of them, against the one
- * this page otherwise needs. Archived results arrive in a single file that
- * already contains them all, so there the closest-races list fills itself and
- * this is never offered.
- *
- * Once the worker publishes `results_summary` this goes away entirely: one
- * document carries every margin.
+ * It used to offer to load every electorate, because the closest-races list
+ * needs every margin and that meant 144 Firestore documents, each re-billed on
+ * every change, on the page people leave open all evening. The summary
+ * document carries every margin in one, and the source layer subscribes to it
+ * throughout a live count, so the list now fills itself and there is nothing
+ * to opt in to.
  */
-const loadElectorates = ref(false)
-
-// A function rather than an inline assignment: the expression form returns the
-// assigned value, which is not a valid click handler.
-function loadAllElectorates() {
-    loadElectorates.value = true
-}
-
-const hasElectorateResults = computed(() =>
-    store.computedElectorateResults(props.election.slug, props.resultsVersion.slug).size > 0)
-
 useResultsScope(() => {
+    // A by-election has no national tally, so its one electorate is the
+    // subscription and the only thing this page watches.
     if (!hasPartyVote.value) {
-        // A by-election has no national tally, so its one electorate is the
-        // subscription and the only thing this page watches.
         return soleElectorate.value
             ? { kind: 'electorate' as const, electorate: soleElectorate.value.number }
             : null
     }
-    return loadElectorates.value ? { kind: 'all-electorates' as const } : null
+    return null
 })
+
+const hasElectorateResults = computed(() =>
+    store.computedElectorateResults(props.election.slug, props.resultsVersion.slug).size > 0)
 
 const closeRacesEmptyMessage = computed(() =>
     (hasElectorateResults.value
         ? 'No electorate has a margin to compare yet.'
-        : 'Electorate results are not loaded on this page while counting is live.'))
+        : 'No electorate has reported a result yet.'))
 </script>

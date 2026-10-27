@@ -289,45 +289,60 @@ export interface ComputedElectorateResult {
  * A compact view of an event, for surfaces that need every electorate's state
  * at once without reading every electorate's results.
  *
- * The obvious case is highlighting close races on the home page: that needs a
- * margin per electorate, and the home page carries far more traffic than the
- * results dashboard, so reading 144 documents per visitor is not viable.
+ * The home page and the site's electorates list both highlight close races.
+ * Doing that from the results documents themselves is one Firestore document
+ * per electorate -- 72 of them, per visitor -- so `election-summary-worker`
+ * spends those reads once a minute on everybody's behalf and writes this.
+ * Reading it is one document.
+ *
+ * It carries results and nothing else: no electorate names, no candidate
+ * names, no parties, no colours. Those are reference data, and a consumer that
+ * renders a row holds reference data already. Entity numbers are the Electoral
+ * Commission's own and mean nothing outside one results version, which is why
+ * the document is scoped to an event.
+ *
+ * Two consequences worth knowing before rendering it:
+ *
+ *   - An electorate with nothing reported is absent, not present and empty.
+ *     The worker learns which electorates exist from the results documents.
+ *   - A margin is not stored, because it is `leader.count - runner_up.count`.
  */
-export interface SummaryLeader {
-  candidate: EntityNumber | null
-  party: EntityNumber | null
-  count: number | null
+export interface SummaryCandidate {
+  candidate: EntityNumber
+  count: number
+  /** Share of the candidate votes counted in that electorate. Computed upstream. */
   per_cent: number | null
 }
 
 export interface SummaryElectorate {
   electorate: EntityNumber
-  updated_timestamp: number | null
   is_final: boolean
-  total_voting_places_counted: number | null
-  total_voting_places: number | null
+  /** How much of the electorate is counted, from the feed's own statistics. */
   percent_votes_cast: number | null
-  informals: number | null
-  leader: SummaryLeader | null
-  runner_up: SummaryLeader | null
   /**
-   * Two or more candidates are level on the lead, so `leader` is null and the
-   * seat is undecided. Absent or false with a null leader means nothing has
-   * been counted, which is a different thing.
+   * Candidate votes counted here, and the denominator of both `per_cent`
+   * values. Informals are not in it.
    */
-  tie?: boolean
-  margin: number | null
-  margin_per_cent: number | null
+  total_votes_cast: number
+  /**
+   * The top two by count. Both null until something is counted, which is the
+   * distinction `total_votes_cast` is here to make: two candidates level on a
+   * real tally is a tie, two candidates level on nothing is a count that has
+   * not started, and at the moment polls close every candidate is on zero.
+   */
+  leader: SummaryCandidate | null
+  runner_up: SummaryCandidate | null
 }
 
 export interface ResultsSummary {
   event_id: string
+  /** Mirrored from the event document, so one read covers "is it still live". */
+  is_live: boolean
+  is_final: boolean
   /** Monotonic; the store rejects a summary that is not newer than the one held. */
   sequence: number | null
   updated: string | null
   updated_timestamp: number | null
-  is_final: boolean
-  national: ResultsSet | null
   electorates: SummaryElectorate[]
 }
 
@@ -419,4 +434,6 @@ export interface SourceProvenance {
   persistent: PayloadProvenance
   reference: PayloadProvenance
   results: PayloadProvenance
+  /** The per-electorate summary, which exists only during a live count. */
+  summary: PayloadProvenance
 }

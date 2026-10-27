@@ -70,17 +70,21 @@ const groups = computed(() => [{
 
 <template>
   <UDashboardGroup unit="rem">
+    <!-- Icons only, always. Without `collapsible` the collapsed state is fixed:
+         nothing can expand it, and no width is persisted between visits. The
+         slideover on phones still opens with labels, where there is room. -->
     <UDashboardSidebar
       id="default"
       v-model:open="open"
-      collapsible
+      :collapsed="true"
       class="bg-elevated/25"
       :ui="{ footer: 'lg:border-t lg:border-default' }"
     >
       <template #header="{ collapsed }">
-        <div v-if="!collapsed">
-          <span class="font-brand text-xl tracking-wide"><span class="font-extrabold text-theme1">WhereTheyStand</span></span>
-        </div>
+        <!-- The rail is too narrow for the wordmark, so it carries the arch
+             mark alone; the slideover on phones has room for the name. -->
+        <AppLogomark v-if="collapsed" class="mx-auto size-7" />
+        <span v-else class="font-brand text-xl tracking-wide"><span class="font-extrabold text-theme1">WhereTheyStand</span></span>
       </template>
 
       <template #default="{ collapsed }">

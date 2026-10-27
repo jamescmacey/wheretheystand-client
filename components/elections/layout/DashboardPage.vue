@@ -3,7 +3,10 @@
         <template #header>
             <UDashboardNavbar>
                 <template #leading>
-                    <UDashboardSidebarCollapse />
+                    <!-- Only where it will not squeeze the election name: a
+                         phone shows the mark in the slideover instead. -->
+                    <span class="hidden md:block font-brand text-base font-extrabold tracking-wide text-theme1 shrink-0">WhereTheyStand</span>
+                    <span class="hidden md:block h-5 w-px bg-accented shrink-0" aria-hidden="true" />
                 </template>
                 <template #title>
                     <UBreadcrumb v-if="breadcrumb?.length" :items="breadcrumb" />
@@ -39,7 +42,7 @@ import type { BreadcrumbItem } from '@nuxt/ui'
 /**
  * The frame every dashboard page sits in.
  *
- * Panel, navbar, collapse control, heading and the status bar were repeated
+ * Panel, navbar, heading and the status bar were repeated
  * verbatim across eight pages, which is how the spacing above the heading came
  * to differ between three of them. Everything a page varies is a prop or a
  * slot; everything it does not is here.

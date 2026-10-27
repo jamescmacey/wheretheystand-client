@@ -73,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ElectionSummary, PayloadProvenance, ResultsVersion } from '~/types/elections'
+import type { ElectionSummary, PayloadProvenance, ResultsVersion, SourceProvenance } from '~/types/elections'
 import { useInjectedElectionSource } from '~/composables/useElectionSource'
 import { useElectionSnapshotBase } from '~/composables/useElectionManifest'
 import { useElectionsDebugEnabled } from '~/composables/useElectionsDebug'
@@ -143,13 +143,24 @@ const empty: PayloadProvenance = { origin: null, url: null, loadedAt: null, erro
 
 // Only null where the page is somehow rendered outside the results version
 // page that provides the source, which would itself be worth seeing here.
-const provenance = computed(() => source?.provenance.value ?? {
-    persistent: empty, reference: empty, results: empty,
+const provenance = computed<SourceProvenance>(() => source?.provenance.value ?? {
+    persistent: empty, reference: empty, results: empty, summary: empty,
 })
 
 const eventDocument = computed(() => source?.liveEvent.value ?? null)
 
 const count = (items: unknown[] | undefined | null) => items?.length ?? 0
+
+/** How many electorates the applied summary could name a leader for. */
+const summaryRows = computed(() => {
+    const results = store.computedElectorateResults(props.election.slug, props.resultsVersion.slug)
+    if (!results.size) return null
+    let withLeader = 0
+    for (const result of results.values()) {
+        if (result.firstPlace?.length) withLeader += 1
+    }
+    return withLeader
+})
 
 const payloads = computed(() => {
     const held = provenance.value
@@ -185,6 +196,18 @@ const payloads = computed(() => {
                     : 'Nothing has been read yet.'),
             loadedAt: timestamp(held.persistent.loadedAt),
             error: held.persistent.error,
+        },
+        {
+            label: 'Summary',
+            records: summaryRows.value === null
+                ? 'not loaded'
+                : `${summaryRows.value} electorates with a leader`,
+            badge: held.summary.origin ? badges[held.summary.origin] : badges.none,
+            detail: held.summary.origin
+                ? `results_summary/${firebaseId}, one document, maintained by election-summary-worker. It is what lets this page hold every margin without a document per electorate.`
+                : 'Only written during a live count.',
+            loadedAt: timestamp(held.summary.loadedAt),
+            error: held.summary.error,
         },
         {
             label: 'Reference data',
