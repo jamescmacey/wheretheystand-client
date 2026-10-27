@@ -1,222 +1,199 @@
 <template>
-    <UDashboardPanel>
-        <template #header>
-            <UDashboardNavbar>
-                <template #leading>
-                    <UDashboardSidebarCollapse />
-                </template>
-                <template #title>
-                    Candidates
-                </template>
-            </UDashboardNavbar>
-        </template>
-        <template #body>
-            <div class="h-[calc(100vh-8rem)] max-h-[calc(100vh-8rem)] overflow-y-auto pt-0">
-                <div class="flex flex-col gap-4 px-4">
-                    <div>
-                        <h2 class="text-2xl font-bold">{{ candidates.length }} candidates</h2>
-                    </div>
-                    <WContentPaginatedItems :items="candidates" :item-key="item => item.number" item-label="candidates"
-                        :items-per-page="10" url-prefix="candidates" :query-params="defaultQueryParams" :sync-url="true"
-                        :custom-filter="customFilter" :custom-sort="customSort">
-                        <template #filters="{ filters, updateFilter }">
-                            <UCard variant="subtle" class="mb-4">
-                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                                    <UFormField label="Search by name" name="search">
-                                        <UInput :model-value="filters.search || ''"
-                                            @update:model-value="(value) => updateFilter('search', value)"
-                                            placeholder="Search candidates..." class="w-full" />
-                                    </UFormField>
-                                    <UFormField label="Sort by" name="ordering">
-                                        <USelect :items="sortOptions" :model-value="filters.ordering || 'name'"
-                                            @update:model-value="(value) => updateFilter('ordering', value)"
-                                            placeholder="Sort by..." class="w-full" />
-                                    </UFormField>
-                                    <UFormField label="Candidate type" name="candidateType">
-                                        <USelect :items="candidateTypeOptions"
-                                            :model-value="filters.candidateType || 'all'"
-                                            @update:model-value="(value) => updateFilter('candidateType', value)"
-                                            placeholder="All candidates" class="w-full" />
-                                    </UFormField>
-                                    <UFormField label="Party" name="partyId">
-                                        <USelect :items="partyOptions" :model-value="filters.partyId || 'all'"
-                                            @update:model-value="(value) => updateFilter('partyId', value)"
-                                            placeholder="All parties" class="w-full" />
-                                    </UFormField>
-                                </div>
-                            </UCard>
-                        </template>
-                        <template #content="{ items }">
-                            <UPageCard variant="subtle">
-                                <div v-for="(item, index) in items" :key="item.number">
-                                    <UPageCard variant="naked"
-                                        :to="'/elections/' + election.slug + '/' + resultsVersion.slug + '/candidates/' + item.number">
-                                        <template #body>
-                                            <div class="flex items-center space-x-2">
-                                                <div class="flex-shrink-0 w-2 self-stretch flex items-center justify-center rounded-md"
-                                                    :style="{ backgroundColor: electionDataStore.getPersistentPartyForCandidate(election.slug, resultsVersion.slug, item)?.colour || '#000000' }">
-                                                </div>
-                                                <div class="flex flex-col">
-                                                    {{ item.name }}
-                                                    <p class="text-muted">{{ electionDataStore.getPartyForCandidate(election.slug, resultsVersion.slug,
-                                            item)?.name || 'Independent' }}
-                                            | {{ electionDataStore.getElectorateForCandidate(election.slug,
-                                                resultsVersion.slug, item)?.name || 'List only' }}
-                                            {{ item.list_pos ? '| ' + item.list_pos + ' on list' : '' }}</p>
-                                                </div>
-                                            </div>
-
-
-                                            
-                                        </template>
-                                    </UPageCard>
-                                    <USeparator v-if="index < items.length - 1" class="my-4" />
-                                </div>
-                            </UPageCard>
-                        </template>
-                    </WContentPaginatedItems>
-                </div>
-            </div>
-        </template>
-    </UDashboardPanel>
+    <ElectionsLayoutDashboardPage title="Candidates" :heading="`${candidates.length} candidates`">
+                <WContentPaginatedItems :items="candidates" :item-key="item => item.number" item-label="candidates"
+                    :items-per-page="25" url-prefix="candidates" :query-params="defaultQueryParams" :sync-url="true"
+                    :custom-filter="customFilter" :custom-sort="customSort">
+                    <template #filters="{ filters, updateFilter }">
+                        <UCard variant="subtle" class="mb-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                <UFormField label="Search by name" name="search">
+                                    <UInput :model-value="filters.search || ''" placeholder="Search candidates…"
+                                        class="w-full"
+                                        @update:model-value="(value) => updateFilter('search', value)" />
+                                </UFormField>
+                                <UFormField label="Sort by" name="ordering">
+                                    <USelect :items="sortOptions" :model-value="filters.ordering || 'name'"
+                                        class="w-full"
+                                        @update:model-value="(value) => updateFilter('ordering', value)" />
+                                </UFormField>
+                                <UFormField label="Candidate type" name="candidateType">
+                                    <USelect :items="candidateTypeOptions"
+                                        :model-value="filters.candidateType || 'all'" class="w-full"
+                                        @update:model-value="(value) => updateFilter('candidateType', value)" />
+                                </UFormField>
+                                <UFormField label="Party" name="partyId">
+                                    <USelect :items="partyOptions" :model-value="filters.partyId || 'all'"
+                                        class="w-full"
+                                        @update:model-value="(value) => updateFilter('partyId', value)" />
+                                </UFormField>
+                            </div>
+                        </UCard>
+                    </template>
+                    <template #content="{ items }">
+                        <UCard variant="subtle">
+                            <ElectionsResultsTable :columns="columns" :rows="rowsFor(items)"
+                                lead-width="minmax(10rem, 20rem)" :bar-max="100" />
+                        </UCard>
+                    </template>
+                </WContentPaginatedItems>
+    </ElectionsLayoutDashboardPage>
 </template>
 
-<script setup>
-const props = defineProps({
-    election: {
-        type: Object,
-        required: true
-    },
-    resultsVersion: {
-        type: Object,
-        required: true
-    }
-})
+<script setup lang="ts">
+import type {
+    ElectionSummary, ReferenceCandidate, ResultsVersion,
+} from '~/types/elections'
+import type { ResultsColumn, ResultsRow } from '~/types/electionResults'
+import { useElectionDataStore } from '~/stores/electionData'
+import { useResultsScope } from '~/composables/useElectionSource'
+import { formatCount, formatPercent } from '~/utils/elections/format'
 
-const electionDataStore = useElectionDataStore()
-const candidates = computed(() =>
-    electionDataStore.getReferenceData(props.election.slug, props.resultsVersion.slug)?.candidates ?? []
-)
+const props = defineProps<{
+    election: ElectionSummary
+    resultsVersion: ResultsVersion
+}>()
 
-// Get parties from reference data
-const parties = computed(() =>
-    electionDataStore.getReferenceData(props.election.slug, props.resultsVersion.slug)?.parties ?? []
-)
-const uniqueParties = computed(() => {
-    const partyMap = new Map()
+// Every candidate's tally, which means every electorate's results document.
+// The most expensive view in the dashboard, and released as soon as it closes.
+useResultsScope({ kind: 'all-electorates' })
 
-    // First, add parties from the parties list
-    parties.value.forEach(party => {
-        if (party.id && !partyMap.has(party.id)) {
-            partyMap.set(party.id, party)
-        }
-    })
+const store = useElectionDataStore()
+const slugs = computed(() => ({ e: props.election.slug, v: props.resultsVersion.slug }))
 
-    return Array.from(partyMap.values()).sort((a, b) => {
-        const nameA = a.name || a.abbreviation || ''
-        const nameB = b.name || b.abbreviation || ''
-        return nameA.localeCompare(nameB)
-    })
-})
+const reference = computed(() => store.referenceData(slugs.value.e, slugs.value.v))
+const candidates = computed(() => reference.value?.candidates ?? [])
+const parties = computed(() => [...(reference.value?.parties ?? [])]
+    .sort((a, b) => (a.name || '').localeCompare(b.name || '')))
 
-// Default query params
 const defaultQueryParams = {
     search: '',
     ordering: 'name',
     candidateType: 'all',
-    partyId: 'all'
+    partyId: 'all',
 }
 
-// Sort options
 const sortOptions = [
-    { label: 'Name (A-Z)', value: 'name' },
-    { label: 'Name (Z-A)', value: '-name' },
-    { label: 'List ranking (lowest first)', value: 'list_pos' },
-    { label: 'List ranking (highest first)', value: '-list_pos' }
+    { label: 'Name (A–Z)', value: 'name' },
+    { label: 'Name (Z–A)', value: '-name' },
+    { label: 'List ranking (highest first)', value: 'list_pos' },
+    { label: 'List ranking (lowest first)', value: '-list_pos' },
 ]
 
-// Candidate type options
 const candidateTypeOptions = [
     { label: 'All candidates', value: 'all' },
     { label: 'Electorate candidates', value: 'electorate' },
-    { label: 'List candidates', value: 'list' }
+    { label: 'List candidates', value: 'list' },
 ]
 
-// Party options (only include parties that have at least one candidate)
-const partyOptions = computed(() => {
-    const options = [{ label: 'All parties', value: 'all' }]
-    // Get a Set of party IDs that have candidates
-    const candidatePartyIds = new Set(candidates.value.map(candidate => candidate.party).filter(Boolean))
-    uniqueParties.value.forEach(party => {
-        if (candidatePartyIds.has(party.id)) {
-            const name = party.name || party.abbreviation || `Party ${party.id}`
-            options.push({ label: name, value: party.id })
-        }
-    })
-    return options
-})
+const partyOptions = computed(() => [
+    { label: 'All parties', value: 'all' },
+    ...parties.value.map(party => ({
+        label: party.name || party.abbreviation || `Party ${party.number}`,
+        // Parties are identified by their Electoral Commission number, which is
+        // what a candidate's `party` refers to.
+        value: String(party.number),
+    })),
+])
 
-// Custom filter function for candidates
-const customFilter = (items, filters) => {
+type Filters = Record<string, string | undefined>
+
+const customFilter = (items: ReferenceCandidate[], filters: Filters) => {
     let filtered = [...items]
 
-    // Apply name search filter (case-insensitive)
-    const search = filters.search
-    if (search && search.trim() !== '') {
-        const searchLower = search.toLowerCase().trim()
-        filtered = filtered.filter(c => {
-            const name = c.name || ''
-            return name.toLowerCase().includes(searchLower)
-        })
+    const search = filters.search?.trim().toLowerCase()
+    if (search) {
+        filtered = filtered.filter(c => (c.name ?? '').toLowerCase().includes(search))
     }
 
-    // Apply candidate type filter
-    const candidateType = filters.candidateType
-    if (candidateType === 'electorate') {
-        filtered = filtered.filter(c => c.electorate !== null && c.electorate !== undefined)
-    } else if (candidateType === 'list') {
-        filtered = filtered.filter(c => c.list_pos !== null && c.list_pos !== undefined)
+    if (filters.candidateType === 'electorate') {
+        filtered = filtered.filter(c => c.electorate !== null)
+    } else if (filters.candidateType === 'list') {
+        filtered = filtered.filter(c => c.list_pos !== null)
     }
-    // If candidateType is 'all', empty string, or undefined, don't filter
 
-    // Apply party filter
     const partyId = filters.partyId
-    if (partyId && partyId !== 'all' && partyId !== '') {
-        filtered = filtered.filter(c => {
-            if (typeof c.party === 'string' && c.party !== null) {
-                return c.party === partyId
-            }
-            return false
-        })
+    if (partyId && partyId !== 'all') {
+        filtered = filtered.filter(c => c.party === Number(partyId))
     }
 
     return filtered
 }
 
-// Custom sort function for candidates
-const customSort = (items, filters) => {
-    const sorted = [...items]
+const customSort = (items: ReferenceCandidate[], filters: Filters) => {
     const ordering = filters.ordering || 'name'
+    const sorted = [...items]
 
     sorted.sort((a, b) => {
-        if (ordering === 'name') {
-            return a.name.localeCompare(b.name)
-        } else if (ordering === '-name') {
-            return b.name.localeCompare(a.name)
-        } else if (ordering === 'list_pos') {
-            // Sort by list_pos, with nulls at the end
-            if (a.list_pos === null || a.list_pos === undefined) return 1
-            if (b.list_pos === null || b.list_pos === undefined) return -1
-            return b.list_pos - a.list_pos // Highest first
-        } else if (ordering === '-list_pos') {
-            // Sort by list_pos, with nulls at the end
-            if (a.list_pos === null || a.list_pos === undefined) return 1
-            if (b.list_pos === null || b.list_pos === undefined) return -1
-            return a.list_pos - b.list_pos // Lowest first
-        }
-        return 0
+        if (ordering === 'name') return a.name.localeCompare(b.name)
+        if (ordering === '-name') return b.name.localeCompare(a.name)
+
+        // Candidates without a list ranking sort last either way.
+        if (a.list_pos === null) return 1
+        if (b.list_pos === null) return -1
+        // A "highest" list ranking is the top of the list, which is number one.
+        return ordering === 'list_pos' ? a.list_pos - b.list_pos : b.list_pos - a.list_pos
     })
 
     return sorted
+}
+
+const columns: ResultsColumn[] = [
+    { key: 'electorate', label: 'Electorate', width: '10rem', secondary: true },
+    { key: 'list_pos', label: 'List', width: '4rem', secondary: true },
+    { key: 'count', label: 'Votes', width: '6rem' },
+    { key: 'share', label: 'Share', width: '5rem' },
+]
+
+/** Candidate vote totals, indexed by candidate number. */
+const candidateVotes = computed(() => {
+    const totals = new Map<number, { count: number | null, share: number | null }>()
+    for (const set of store.allResults(slugs.value.e, slugs.value.v)) {
+        if (set.results_level !== 'electorate' || set.results_category !== 'candidate_votes') continue
+        const cast = set.statistics.total_votes_cast
+            ?? set.results.reduce((sum, r) => sum + (r.count ?? 0), 0)
+        for (const result of set.results) {
+            if (result.candidate === null) continue
+            totals.set(result.candidate, {
+                count: result.count,
+                share: cast ? ((result.count ?? 0) / cast) * 100 : null,
+            })
+        }
+    }
+    return totals
+})
+
+function rowsFor(items: ReferenceCandidate[]): ResultsRow[] {
+    return items.map(candidate => {
+        const persistentParty = store.persistentPartyForCandidate(
+            slugs.value.e, slugs.value.v, candidate.number)
+        const persistentCandidate = store.persistentCandidateFor(
+            slugs.value.e, slugs.value.v, candidate.number)
+        const party = candidate.party === null
+            ? null
+            : store.party(slugs.value.e, slugs.value.v, candidate.party)
+        const electorate = candidate.electorate === null
+            ? null
+            : store.electorate(slugs.value.e, slugs.value.v, candidate.electorate)
+        const votes = candidateVotes.value.get(candidate.number)
+
+        return {
+            key: candidate.number,
+            label: candidate.name,
+            sublabel: party?.name ?? 'Independent',
+            colour: persistentParty?.colour ?? null,
+            // Where the candidate is a known person, link to their profile
+            // rather than to a results-only page.
+            to: persistentCandidate?.person
+                ? `/people/${persistentCandidate.person}`
+                : `/elections/${slugs.value.e}/${slugs.value.v}/candidates/${candidate.number}`,
+            bar: votes?.share ?? null,
+            cells: {
+                electorate: electorate?.name ?? 'List only',
+                list_pos: candidate.list_pos ?? '—',
+                count: formatCount(votes?.count ?? null),
+                share: formatPercent(votes?.share),
+            },
+        }
+    })
 }
 </script>

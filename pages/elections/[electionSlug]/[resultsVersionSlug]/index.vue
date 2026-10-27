@@ -1,166 +1,96 @@
 <template>
-    <UDashboardPanel>
-        <template #header>
-            <UDashboardNavbar>
-                <template #leading>
-                    <UDashboardSidebarCollapse />
-                </template>
-                <template #title>
-                    {{ election.name }}
-                </template>
-                <template #right>
-                    <ElectionsNavigationResultsVersionSwitch :election="election" :resultsVersion="resultsVersion" />
-                </template>
-            </UDashboardNavbar>
+    <ElectionsLayoutDashboardPage :title="election.name">
+        <template #actions>
+            <ElectionsNavigationResultsVersionSwitch class="min-w-0" :election="election"
+                :resultsVersion="resultsVersion" />
         </template>
-        <template #body>
-            <div class="h-[calc(100vh-8rem)] max-h-[calc(100vh-8rem)] overflow-y-auto pt-0">
-                <div class="flex flex-col gap-4 px-4">
-                    <div class="mb-1 mt-2 lg:mt-8 space-y-4">
-                        <h1 class="text-2xl lg:text-5xl font-bold">{{ election.name }}</h1>
-                        <p class="text-md lg:text-xl text-muted">{{ resultsVersion.name }}</p>
-                        <div class="flex items-center gap-2">
-
-
-                            <UBadge :avatar="{
-                                src: '/images/firebase-logomark.png',
-                                alt: 'Firebase',
-                                ui: { root: 'bg-transparent' }
-                            }" size="md" color="error" variant="outline">
-                                Connected to Firebase
-                            </UBadge>
-                            <UBadge icon="i-lucide-check-circle" variant="outline">
-                                {{ progress }} per cent counted (1,234 of 5,678)
-                            </UBadge>
-                        </div>
-                    </div>
-                    <UCard variant="soft">
-                        <!-- Table header -->
-                        <div class="flex items-center gap-4 font-medium mb-2">
-                            <div class="flex-shrink-0 w-60">
-                                <USwitch v-model="minSeats" size="sm" class="text-muted" label="Show all" />
-                            </div>
-                            <div class="flex-grow">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-1/2">
-
-                                    </div>
-                                    <div class="w-1/2 border-l border-gray-200 pl-2 text-sm uppercase text-muted">
-                                        {{ Math.floor(total_seats / 2) + 1 }} to govern
-                                    </div>
-                                </div>
-
-
-                            </div>
-                            <div
-                                class="flex-shrink-0 w-16 text-right border-b border-gray-200 text-sm uppercase text-muted">
-                                Elec.
-                            </div>
-                            <div
-                                class="flex-shrink-0 w-16 text-right border-b border-gray-200 text-sm uppercase text-muted">
-                                List
-                            </div>
-                            <div
-                                class="flex-shrink-0 w-16 text-right border-b border-gray-200 text-sm uppercase text-muted font-bold">
-                                Total
-                            </div>
-                            <div
-                                class="flex-shrink-0 w-24 text-right border-b border-gray-200 text-sm uppercase text-muted">
-                                Votes
-                            </div>
-                            <div
-                                class="flex-shrink-0 w-24 text-right border-b border-gray-200 text-sm uppercase text-muted">
-                                Share
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4 py-2" v-for="result in results.results.sort((a, b) => b.count - a.count).filter(result => result.total_seats >= !minSeats).sort((a, b) => b.total_seats - a.total_seats)" :key="result.id">
-                            <div class="flex-shrink-0 w-60">
-                                <div class="flex items-center space-x-2">
-                                    <div class="flex-shrink-0 w-2 self-stretch flex items-center justify-center rounded-md" :style="{ backgroundColor: electionDataStore.getPersistentPartyForParty(props.election.slug, props.resultsVersion.slug, {id: result.party, number: Number(result.party)})?.colour || 'blue' }">
-                                        
-                                    </div>
-                                    <div class="flex flex-col">
-                                        {{ electionDataStore.getPartyForParty(props.election.slug, props.resultsVersion.slug, {id: result.party, number: Number(result.party)})?.name || 'Unknown party' }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex-grow">
-                                <UProgress :model-value="result.per_cent" size="xl" :max="100"
-                                    :ui="{ base: 'relative overflow-hidden rounded-sm bg-accented', 
-                                    indicator: 'rounded-sm size-full transition-transform duration-200 ease-out' }" />
-                            </div>
-                            <div class="flex-shrink-0 w-16 text-right">
-                                {{ result.electorate_seats }}
-                            </div>
-                            <div class="flex-shrink-0 w-16 text-right">
-                                {{ result.list_seats }}
-                            </div>
-                            <div class="flex-shrink-0 w-16 text-right font-bold">
-                                {{ result.total_seats }}
-                            </div>
-                            <div class="flex-shrink-0 w-24 text-right">
-                                {{ result.count.toLocaleString() }}
-                            </div>
-                            <div class="flex-shrink-0 w-24 text-right">
-                                {{ result.per_cent }}%
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4 py-2 mt-2 bg-elevated rounded-full">
-                            <div class="flex-grow text-muted text-sm px-4">
-                                <span v-if="total_seats > 120">Includes an overhang of {{ total_seats - 120 }} seat<span v-if="total_seats - 120 > 1">s</span>.</span>
-                            </div>
-                            <div class="flex-shrink-0 w-16 text-right">
-                                {{ total_list_seats }}
-                            </div>
-                            <div class="flex-shrink-0 w-16 text-right">
-                                {{ total_electorate_seats }}
-                            </div>
-                            <div class="flex-shrink-0 w-16 text-right font-bold">
-                                {{ total_seats }}
-                            </div>
-                            <div class="flex-shrink-0 w-24 text-right">
-                                {{ results.total_votes_cast.toLocaleString() }}
-                            </div>
-                            <div class="flex-shrink-0 w-24 text-right">
-
-                            </div>
-                        </div>
-                    </UCard>
-                </div>
-            </div>
+        <template #heading>
+            <h1 class="text-2xl lg:text-5xl font-bold">{{ election.name }}</h1>
+            <p class="text-md lg:text-xl text-muted">{{ resultsVersion.name }}</p>
         </template>
-    </UDashboardPanel>
+
+        <ElectionsResultsKeyStatsGrid :election="election" :resultsVersion="resultsVersion" />
+
+        <!-- A by-election is one contest, and the overview is the natural place
+             to show it: there is no national picture to summarise and no second
+             page worth sending a reader to for the only result there is. -->
+        <template v-if="!hasPartyVote">
+            <ElectionsResultsElectorateResults v-if="soleElectorate" :election="election"
+                :resultsVersion="resultsVersion" :electorate="soleElectorate.number"
+                category="candidate_votes" />
+            <ElectionsResultsEmpty v-else title="No results yet"
+                description="Results for this by-election have not been reported yet." />
+        </template>
+
+        <template v-else>
+            <ElectionsResultsSeatAllocationSummary :election="election" :resultsVersion="resultsVersion" />
+
+            <ElectionsResultsNationalPartyResults :election="election" :resultsVersion="resultsVersion" />
+
+            <ElectionsResultsCloseRacesList :election="election" :resultsVersion="resultsVersion"
+                :empty-message="closeRacesEmptyMessage">
+                <template #empty-action>
+                    <UButton v-if="!loadElectorates" color="neutral" variant="subtle"
+                        icon="i-lucide-download" @click="loadAllElectorates">
+                        Load electorate results
+                    </UButton>
+                </template>
+            </ElectionsResultsCloseRacesList>
+        </template>
+    </ElectionsLayoutDashboardPage>
 </template>
 
-<script setup>
-const props = defineProps({
-    election: {
-        type: Object,
-        required: true
-    },
-    resultsVersion: {
-        type: Object,
-        required: true
+<script setup lang="ts">
+import type { ElectionSummary, ResultsVersion } from '~/types/elections'
+import { useElectionShape } from '~/composables/useElectionShape'
+import { useResultsScope } from '~/composables/useElectionSource'
+import { useElectionDataStore } from '~/stores/electionData'
+
+const props = defineProps<{
+    election: ElectionSummary
+    resultsVersion: ResultsVersion
+}>()
+
+const store = useElectionDataStore()
+const { hasPartyVote, soleElectorate } = useElectionShape()
+
+/**
+ * Whether to hold every electorate's results open.
+ *
+ * Off by default, and that is the whole point. This is the page people leave
+ * open all evening, and during a live count every electorate is a separate
+ * Firestore document billed on every change -- 144 of them, against the one
+ * this page otherwise needs. Archived results arrive in a single file that
+ * already contains them all, so there the closest-races list fills itself and
+ * this is never offered.
+ *
+ * Once the worker publishes `results_summary` this goes away entirely: one
+ * document carries every margin.
+ */
+const loadElectorates = ref(false)
+
+// A function rather than an inline assignment: the expression form returns the
+// assigned value, which is not a valid click handler.
+function loadAllElectorates() {
+    loadElectorates.value = true
+}
+
+const hasElectorateResults = computed(() =>
+    store.computedElectorateResults(props.election.slug, props.resultsVersion.slug).size > 0)
+
+useResultsScope(() => {
+    if (!hasPartyVote.value) {
+        // A by-election has no national tally, so its one electorate is the
+        // subscription and the only thing this page watches.
+        return soleElectorate.value
+            ? { kind: 'electorate' as const, electorate: soleElectorate.value.number }
+            : null
     }
+    return loadElectorates.value ? { kind: 'all-electorates' as const } : null
 })
 
-const electionDataStore = useElectionDataStore()
-const examplePartyColour = ref('#FFC0CB')
-
-const progress = ref(50)
-
-const resultsVersions = computed(() => props.election.results_versions.map(version => ({
-    label: version.name,
-    value: version.slug
-}))
-)
-const selectedResultsVersion = ref(props.resultsVersion.slug)
-const minSeats = ref(0)
-
-const results = computed(() => electionDataStore.getResultsData(props.election.slug, props.resultsVersion.slug, { results_level: 'national' })[0])
-
-const total_list_seats = computed(() => results.value.results.reduce((acc, result) => acc + result.list_seats, 0))
-const total_electorate_seats = computed(() => results.value.results.reduce((acc, result) => acc + result.electorate_seats, 0))
-const total_seats = computed(() => results.value.results.reduce((acc, result) => acc + result.total_seats, 0))
-
+const closeRacesEmptyMessage = computed(() =>
+    (hasElectorateResults.value
+        ? 'No electorate has a margin to compare yet.'
+        : 'Electorate results are not loaded on this page while counting is live.'))
 </script>

@@ -23,6 +23,7 @@ const props = defineProps({
 })
 
 const router = useRouter()
+const route = useRoute()
 
 const resultsVersions = computed(() =>
     props.election.results_versions.map(version => ({
@@ -38,9 +39,11 @@ function onVersionChange() {
     })
 }
 
-watch(router.currentRoute.value.params, (newParams) => {
+// A getter, not the params object itself: that is a plain snapshot, so the
+// watcher never fired and the switch stopped following the route.
+watch(() => route.params, (newParams) => {
     if (newParams.electionSlug && newParams.resultsVersionSlug) {
         selectedResultsVersion.value = newParams.resultsVersionSlug
     }
-})
+}, { deep: true })
 </script>
