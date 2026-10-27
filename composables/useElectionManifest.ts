@@ -23,11 +23,24 @@ export function snapshotUrl(path: string): string {
   return `${useElectionSnapshotBase()}${path.replace(/^\//, '')}`
 }
 
-export async function useElectionManifest() {
-  const { data, status, error, refresh } = await useAsyncData<ElectionManifest>(
+/**
+ * The manifest handle, without waiting for it.
+ *
+ * A composable that is not itself awaited needs this: a Nuxt composable called
+ * after an `await` inside another composable has lost the Nuxt instance, so
+ * anything that wants `useAsyncData` of its own has to get the manifest
+ * synchronously and read `data` as it arrives. One key, one handler, so both
+ * entry points share the same request.
+ */
+export function useElectionManifestData() {
+  return useAsyncData<ElectionManifest>(
     'elections-manifest',
     async () => normaliseManifest(await $fetch(snapshotUrl('manifest.json'), apiFetchOptions())),
   )
+}
+
+export async function useElectionManifest() {
+  const { data, status, error, refresh } = await useElectionManifestData()
 
   const elections = computed<ElectionSummary[]>(() => data.value?.elections ?? [])
 

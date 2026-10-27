@@ -26,6 +26,9 @@ import type {
   ReferenceParty,
   Result,
   ResultsSet,
+  ResultsSummary,
+  SummaryCandidate,
+  SummaryElectorate,
 } from '~/types/elections'
 import { resultsSetKey } from './keys'
 import { normaliseStatistics } from './normaliseSnapshot'
@@ -202,5 +205,60 @@ export function normaliseFirestoreReferenceData(
     candidates: documents.candidates.map(raw => normaliseFirestoreCandidate(raw, index)),
     // Voting places are loaded on demand and never come from this path.
     voting_places: [],
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * Summary
+ *
+ * Written by `election-summary-worker`, not by the results worker, so this is
+ * the one Firestore document whose shape this project controls. It is still
+ * normalised here, for the same two reasons as everything else: the ids are
+ * `*_id` on the wire and bare in the contract, and a document written by an
+ * older worker must still render.
+ * ---------------------------------------------------------------------- */
+
+function normaliseSummaryCandidate(raw: unknown): SummaryCandidate | null {
+  if (!raw || typeof raw !== 'object') return null
+  const row = raw as Raw
+
+  const candidate = toInt(row.candidate_id)
+  const count = toInt(row.count)
+  // Both are required for the row to mean anything. A leader with no count
+  // cannot be compared against a runner up, so treat it as absent.
+  if (candidate === null || count === null) return null
+
+  return { candidate, count, per_cent: toFloat(row.per_cent) }
+}
+
+function normaliseSummaryElectorate(raw: Raw): SummaryElectorate | null {
+  const electorate = toInt(raw.electorate_id)
+  if (electorate === null) return null
+
+  return {
+    electorate,
+    is_final: toBool(raw.is_final),
+    percent_votes_cast: toFloat(raw.percent_votes_cast),
+    total_votes_cast: toInt(raw.total_votes_cast) ?? 0,
+    leader: normaliseSummaryCandidate(raw.leader),
+    runner_up: normaliseSummaryCandidate(raw.runner_up),
+  }
+}
+
+export function normaliseFirestoreSummary(raw: Raw): ResultsSummary {
+  const updated = toIsoString(raw.updated)
+
+  return {
+    event_id: toStringOrNull(raw.event_id) ?? '',
+    is_live: toBool(raw.is_live),
+    is_final: toBool(raw.is_final),
+    sequence: toInt(raw.sequence),
+    updated,
+    updated_timestamp: toEpochSeconds(raw.updated_timestamp, updated),
+    electorates: Array.isArray(raw.electorates)
+      ? (raw.electorates as Raw[])
+          .map(normaliseSummaryElectorate)
+          .filter((entry): entry is SummaryElectorate => entry !== null)
+      : [],
   }
 }

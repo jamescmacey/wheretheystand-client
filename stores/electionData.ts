@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 
 import type {
   ComputedElectorateResult,
+  ElectorateResultStatus,
   EntityNumber,
   PersistentCandidate,
   PersistentData,
@@ -15,6 +16,7 @@ import type {
   ResultsCategory,
   ResultsSet,
   ResultsSummary,
+  SummaryElectorate,
 } from '~/types/elections'
 import { electionKey, indexBy, isNewerResultsSet } from '~/utils/elections/keys'
 
@@ -41,6 +43,14 @@ interface VersionState {
   votingPlacesLoaded: Set<EntityNumber>
   /** Sequence of the last summary applied, for rejecting stale ones. */
   summarySequence: number | null
+  /**
+   * How current the applied summary said it was.
+   *
+   * A summary populates derived electorate outcomes but no results sets, so a
+   * surface fed only by one cannot date itself from the tallies the way the
+   * dashboard does.
+   */
+  summaryUpdatedTimestamp: number | null
   electoratesByNumber: Map<EntityNumber, ReferenceElectorate>
   partiesByNumber: Map<EntityNumber, ReferenceParty>
   candidatesByNumber: Map<EntityNumber, ReferenceCandidate>
@@ -58,6 +68,27 @@ interface ElectionDataState {
 /** The colour shown for a party with none recorded. */
 export const DEFAULT_PARTY_COLOUR = '#9ca3af'
 
+/**
+ * The lead in points, preferring the shares the summary already carries.
+ *
+ * Those shares were computed from the same counts, so using them keeps the
+ * margin and the two percentages consistent on screen. The fallback is for a
+ * document written before `per_cent` was populated.
+ */
+function marginPercentage(entry: SummaryElectorate): number | null {
+  const leader = entry.leader
+  if (!leader) return null
+
+  const runnerUp = entry.runner_up
+  if (leader.per_cent !== null && runnerUp?.per_cent != null) {
+    return Math.round((leader.per_cent - runnerUp.per_cent) * 100) / 100
+  }
+
+  if (!entry.total_votes_cast) return null
+  const margin = leader.count - (runnerUp?.count ?? 0)
+  return Math.round(margin / entry.total_votes_cast * 10000) / 100
+}
+
 function emptyVersion(): VersionState {
   return {
     reference: null,
@@ -65,6 +96,7 @@ function emptyVersion(): VersionState {
     electorateResults: new Map(),
     votingPlacesLoaded: new Set(),
     summarySequence: null,
+    summaryUpdatedTimestamp: null,
     electoratesByNumber: new Map(),
     partiesByNumber: new Map(),
     candidatesByNumber: new Map(),
@@ -165,6 +197,10 @@ export const useElectionDataStore = defineStore('electionData', {
 
     hasReference: state => (election: string, version: string) =>
       Boolean(state.versions[electionKey(election, version)]?.reference),
+
+    /** How current an applied summary said it was, for an "as at" line. */
+    summaryUpdatedTimestamp: state => (election: string, version: string) =>
+      state.versions[electionKey(election, version)]?.summaryUpdatedTimestamp ?? null,
 
     hasResults: state => (election: string, version: string) =>
       (state.versions[electionKey(election, version)]?.results.size ?? 0) > 0,
@@ -362,29 +398,30 @@ export const useElectionDataStore = defineStore('electionData', {
       held.summarySequence = summary.sequence
 
       for (const entry of summary.electorates) {
-        const leader = entry.leader?.candidate ?? null
-        const runnerUp = entry.runner_up?.candidate ?? null
+        const leader = entry.leader
+        const runnerUp = entry.runner_up
 
-        // A summary distinguishes the three cases explicitly, so this does not
-        // have to infer them from a zero margin: no leader with a tie flag is
-        // a genuine tie, no leader without one is simply not counted.
-        const status = leader !== null
-          ? 'determined'
-          : (entry.tie ? 'indeterminate' : 'uncounted')
+        // The summary states the three cases rather than leaving them to be
+        // inferred from a zero margin: no leader at all means nothing counted,
+        // and two equal counts on a real tally mean an undecided seat.
+        const tied = leader !== null && runnerUp !== null && leader.count === runnerUp.count
+        const status: ElectorateResultStatus = leader === null
+          ? 'uncounted'
+          : (tied ? 'indeterminate' : 'determined')
 
         held.electorateResults.set(entry.electorate, {
           electorate: entry.electorate,
           resultStatus: status,
-          firstPlace: leader === null ? null : [leader],
-          secondPlace: runnerUp === null ? null : [runnerUp],
-          margin: entry.margin,
-          marginPercentage: entry.margin_per_cent,
+          firstPlace: leader === null || tied ? null : [leader.candidate],
+          secondPlace: runnerUp === null || tied ? null : [runnerUp.candidate],
+          margin: leader === null ? null : leader.count - (runnerUp?.count ?? 0),
+          // From the shares the summary carries, so the two agree. Falling back
+          // to the counts covers a document written before they were computed.
+          marginPercentage: marginPercentage(entry),
         })
       }
 
-      if (summary.national) {
-        this.applyResults(election, version, [summary.national])
-      }
+      held.summaryUpdatedTimestamp = summary.updated_timestamp
 
       return true
     },
