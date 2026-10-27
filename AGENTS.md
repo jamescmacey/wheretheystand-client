@@ -45,7 +45,7 @@ server/          No custom server routes — Nitro serves the built app only
 |------|-------------|-------|
 | Entity detail | `/people/:id`, `/bills/:id`, `/votes/:id`, `/parties/:id`, `/electorates/:id`, `/parliaments/:number` | Parent page fetches entity; child tabs via nested `NuxtPage` |
 | List pages | `/people`, `/bills`, `/votes`, `/parties`, `/electorates`, `/parliaments` | Often paginated via `w-content/paginated-content` |
-| Elections | `/elections/...` | Gated by `NUXT_PUBLIC_ELECTIONS_ENABLED`; uses `elections` layout |
+| Elections | `/elections/...` | Gated by `NUXT_PUBLIC_ELECTIONS_ENABLED`; uses `elections` layout. Reads static snapshots from R2, **not** the API — see "Election results" below |
 | Search | `/search` | Client-only (`ssr: false`) |
 | Content | `/docs`, `/blog`, `/reference`, `/changes` | Nuxt Content collections |
 | Admin console | `/console/...` | Staff-only; Django session auth |
@@ -70,6 +70,8 @@ Set in `.env` for local dev. Public runtime config is in `nuxt.config.ts` → `r
 | `NUXT_PUBLIC_API_ORIGIN` | Django origin for auth/admin, default `https://api.wheretheystand.nz` |
 | `NUXT_PUBLIC_SITE_URL` | Canonical site URL for return redirects |
 | `NUXT_PUBLIC_ELECTIONS_ENABLED` | `"true"` to expose `/elections` routes |
+| `NUXT_PUBLIC_ELECTIONS_SNAPSHOT_BASE` | Where election snapshots are read from, default `https://elections-r2.wheretheystand.nz/` |
+| `NUXT_PUBLIC_ELECTIONS_DEBUG` | `"true"` adds the dashboard's Debug page (`/elections/:election/:version/debug`): the manifest entry, the Firestore event document, and where each payload was read from. Developer diagnostics; turn it off in production |
 | `ALGOLIA_*`, `MAPBOX_ACCESS_TOKEN`, `TURNSTILE_SITE_KEY` | Third-party integrations |
 
 For console auth locally, Django must be running and configured to accept cookies from the Nuxt dev origin.
@@ -131,6 +133,32 @@ Query with `queryCollection('docs')` / `queryCollectionNavigation('docs')`. Docs
 ### Elections feature flag
 
 `middleware/elections-feature-flag.global.ts` redirects election routes to `/` when `NUXT_PUBLIC_ELECTIONS_ENABLED` is not `"true"`. When adding election-related nav links, gate them the same way (see `pages/people/[id].vue`).
+
+### Election results
+
+Full operational documentation — the data model, every management command, the
+election-night runbook and the kill switch — lives in `docs/elections.md` in the
+Django repo, and is published at `/docs/elections`. Read it before changing
+anything here.
+
+Election routes do **not** call the Django API. On election night the site expects far more traffic than the API should carry, so results are read as static JSON from R2, cached at the edge. Django remains the source of truth and generates those snapshots (`manage.py publish_election_snapshots` in the Django repo).
+
+- `composables/useElectionManifest.ts` fetches `manifest.json`, the only election URL the client hard-codes. It resolves a slug to the published payload paths, to the Firestore event id, and to whether that event is live.
+- `composables/useElectionSource.ts` loads a results version and is instantiated **once**, on `pages/elections/[electionSlug]/[resultsVersionSlug].vue`, then provided. Child pages read the Pinia store and inject the source only for status.
+- `stores/electionData.ts` holds everything, indexed by entity number. `types/elections.ts` is the canonical contract every source normalises into.
+
+Two rules that are easy to get wrong:
+
+- **Election-scoped entities are referenced by their Electoral Commission `number`, never by primary key.** Those integers are what live Firestore results carry. They are unique only *within* a results version, so every lookup is scoped to one. Persistent entities (party colours, candidate-to-person links) keep their Django UUID, because they exist to survive across elections.
+- **Results are merged, not replaced.** `store.applyResults` keeps whichever tally is newer by `updated_timestamp`, because a snapshot fetch can land after a live update.
+
+To work on this locally, publish a snapshot tree from the Django repo and point the client at it:
+
+```bash
+python manage.py publish_election_snapshots --local ./snapshots
+```
+
+Then set `NUXT_PUBLIC_ELECTIONS_SNAPSHOT_BASE` to wherever that directory is served from.
 
 ### Legacy URL redirects
 

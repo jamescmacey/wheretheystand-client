@@ -73,12 +73,20 @@ export default defineNuxtConfig({
       apiBase: process.env.NUXT_PUBLIC_API_BASE ?? 'https://api.wheretheystand.nz/v2/',
       apiOrigin: process.env.NUXT_PUBLIC_API_ORIGIN ?? 'https://api.wheretheystand.nz',
       // Banners are read from a Cloudflare Worker that polls the API and caches
-      // the last-good response, so they keep showing even if Django is down -
-      // this matters most during election night. See wheretheystand-banners.
+      // the last-good response, so they keep showing even if Django is down.
+      // See wheretheystand-banners.
       bannersApiBase: process.env.NUXT_PUBLIC_BANNERS_API_BASE ?? 'https://banners.wheretheystand.nz/',
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL ?? 'https://wheretheystand.nz',
       adminEnabled: true,
       electionsEnabled: process.env.NUXT_PUBLIC_ELECTIONS_ENABLED ?? 'false',
+      // Treat polls as already closed, whatever the election's closing time
+      // says, so the results dashboard can be developed and rehearsed before
+      // the night. Never 'true' in production.
+      electionsBypassCountdown: process.env.NUXT_PUBLIC_ELECTIONS_BYPASS_COUNTDOWN ?? 'false',
+      // Adds a Debug page to the results dashboard: the manifest's election
+      // entry, the Firestore event document, and where each payload was
+      // actually read from. Developer diagnostics, not a reader-facing page.
+      electionsDebug: process.env.NUXT_PUBLIC_ELECTIONS_DEBUG ?? 'true',
       // Election results are read as static JSON from R2, not from the API, so
       // that election night traffic never reaches Django. Point this at a
       // directory built by `manage.py publish_election_snapshots --local` to
