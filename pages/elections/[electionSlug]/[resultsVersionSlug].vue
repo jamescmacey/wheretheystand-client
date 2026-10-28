@@ -17,7 +17,20 @@
         </ClientOnly>
         <ElectionsLoadingLoader v-else-if="showLoader" :phase="phase" :mode="source.mode.value"
             @retry="source.refresh()" />
-        <NuxtPage v-else :election="election" :resultsVersion="resultsVersion" />
+        <!-- The feed sits beside the dashboard rather than inside any one page:
+             it is about the count, not about whichever page is open, and the
+             listener behind it is held at this level so that moving between
+             pages does not re-subscribe. Only once the dashboard itself is
+             ready -- the countdown and the loader are the whole screen. -->
+        <template v-else>
+            <div class="flex-1 min-h-0 flex">
+                <NuxtPage :election="election" :resultsVersion="resultsVersion" />
+                <ElectionsFeedPanel v-if="showFeed" :election="election"
+                    :resultsVersion="resultsVersion" />
+            </div>
+            <ElectionsFeedDrawer v-if="showFeed" :election="election"
+                :resultsVersion="resultsVersion" />
+        </template>
     </div>
 </template>
 
@@ -72,4 +85,18 @@ const showCountdown = computed(() => {
 })
 
 const showLoader = computed(() => !debugRoute.value && phase.value !== 'ready')
+
+/**
+ * Whether to show the feed at all.
+ *
+ * Only for a count that is live, or one that was live during this visit and
+ * has since been taken off -- the last entries are worth keeping on screen at
+ * the moment a result is declared. An event that was already archived when the
+ * page loaded has no feed: nothing publishes it to R2, so there is nothing to
+ * read and an empty panel would only take width from the results.
+ *
+ * The debug page is its own subject and renders without the feed beside it.
+ */
+const showFeed = computed(() =>
+    !debugRoute.value && (source.mode.value === 'live' || source.liveEnded.value))
 </script>

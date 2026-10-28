@@ -347,6 +347,118 @@ export interface ResultsSummary {
 }
 
 /* -------------------------------------------------------------------------
+ * Feed
+ * ---------------------------------------------------------------------- */
+
+/**
+ * The running commentary on a count, as the `feed` collection holds it.
+ *
+ * One document per message. Almost all of them are written by
+ * `election-feed-worker`, which watches the results documents and turns
+ * changes into entries; a service announcement is added by hand in the
+ * Firebase console. Nothing is written from this client, and nothing is
+ * written from Django -- the feed lives entirely in Firestore, so an archived
+ * event has no feed at all rather than a published copy of one.
+ *
+ * Readers listen to the latest 20 for their event. The listener is only ever
+ * opened in live mode, because that is the only time there is anything to
+ * read.
+ *
+ * Every message carries a title, a body and a timestamp, written upstream.
+ * Wording is the worker's business, not this client's: the worker holds the
+ * reference data that names an electorate or a candidate at the moment the
+ * entry is written, so an entry still reads correctly even where a later
+ * lookup here would not resolve. Metadata exists to link the entry to the
+ * entities it is about, not to rebuild its text.
+ *
+ * Entity numbers are the Electoral Commission's own and mean nothing outside
+ * one results version, which is why every message is scoped to an event.
+ */
+export type FeedMessageType =
+  | 'SERVICE_ANNOUNCEMENT'
+  | 'ELECTORATE_LEAD_CHANGE'
+  | 'VOTING_PLACE_ADDED'
+  | 'COMPOSITION_CHANGED'
+
+export interface FeedMessageBase {
+  /** The document id. Deterministic for a worker message, so a replay overwrites. */
+  id: string
+  event_id: string
+  title: string
+  body: string
+  /** ISO 8601, normalised from whatever the document carries. */
+  timestamp: string | null
+  /** Epoch seconds, which is what the list is ordered by. */
+  timestamp_seconds: number | null
+}
+
+/** A message posted by hand, which may point somewhere. */
+export interface ServiceAnnouncementMetadata {
+  url: string | null
+  /**
+   * True opens the URL in a new tab; false navigates within the app.
+   *
+   * Written alongside the URL rather than guessed from it, because an absolute
+   * URL on this site's own domain should still navigate internally.
+   */
+  external: boolean
+}
+
+/**
+ * The leader in an electorate has changed.
+ *
+ * Never emitted for the first leader -- there was nobody to overtake, and the
+ * Commission's first drop would otherwise put 72 entries into the feed at
+ * once. A tie is reported as an ordinary lead change with `margin` zero, which
+ * is the same convention `computeElectorateResult` uses in the store.
+ */
+export interface ElectorateLeadChangeMetadata {
+  electorate: EntityNumber | null
+  leader: EntityNumber | null
+  runner_up: EntityNumber | null
+  /** Who was displaced. Null only where an older worker wrote the message. */
+  previous_leader: EntityNumber | null
+  /** Votes between the leader and the runner up. Zero means they are level. */
+  margin: number | null
+  /** How much of the electorate was counted when the lead changed. */
+  percent_votes_cast: number | null
+}
+
+export interface VotingPlaceAddedMetadata {
+  voting_place: EntityNumber | null
+  /** Where the place physically sits, which need not be `electorate`. */
+  physical_electorate: EntityNumber | null
+  /** The electorate the votes were counted for. */
+  electorate: EntityNumber | null
+}
+
+/** One party's seat count before and after a change in the projection. */
+export interface CompositionChange {
+  party: EntityNumber | null
+  before: number
+  after: number
+}
+
+/**
+ * The projected composition of Parliament has changed.
+ *
+ * Only the parties that moved, so the entry can read "Labour 34 to 35" without
+ * the client diffing anything against a message it may never have seen. The
+ * projection uses the official settings, never a reader's own threshold or
+ * formula.
+ */
+export interface CompositionChangedMetadata {
+  house_size: number | null
+  changes: CompositionChange[]
+}
+
+export type FeedMessage =
+  | (FeedMessageBase & { type: 'SERVICE_ANNOUNCEMENT', metadata: ServiceAnnouncementMetadata })
+  | (FeedMessageBase & { type: 'ELECTORATE_LEAD_CHANGE', metadata: ElectorateLeadChangeMetadata })
+  | (FeedMessageBase & { type: 'VOTING_PLACE_ADDED', metadata: VotingPlaceAddedMetadata })
+  | (FeedMessageBase & { type: 'COMPOSITION_CHANGED', metadata: CompositionChangedMetadata })
+
+/* -------------------------------------------------------------------------
  * Source status
  * ---------------------------------------------------------------------- */
 
