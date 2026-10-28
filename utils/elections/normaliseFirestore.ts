@@ -18,6 +18,12 @@
  */
 
 import type {
+  CompositionChange,
+  CompositionChangedMetadata,
+  ElectorateLeadChangeMetadata,
+  FeedMessage,
+  FeedMessageBase,
+  FeedMessageType,
   PersistentData,
   PersistentId,
   ReferenceCandidate,
@@ -27,8 +33,10 @@ import type {
   Result,
   ResultsSet,
   ResultsSummary,
+  ServiceAnnouncementMetadata,
   SummaryCandidate,
   SummaryElectorate,
+  VotingPlaceAddedMetadata,
 } from '~/types/elections'
 import { resultsSetKey } from './keys'
 import { normaliseStatistics } from './normaliseSnapshot'
@@ -260,5 +268,124 @@ export function normaliseFirestoreSummary(raw: Raw): ResultsSummary {
           .map(normaliseSummaryElectorate)
           .filter((entry): entry is SummaryElectorate => entry !== null)
       : [],
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * Feed
+ *
+ * Written by `election-feed-worker`, and by hand in the Firebase console for a
+ * service announcement. The hand-written case is why this normaliser is more
+ * forgiving than the others: a document typed into a console will have fields
+ * missing, and an entry with a title and a body is still worth showing even if
+ * its metadata is empty.
+ * ---------------------------------------------------------------------- */
+
+function metadataOf(raw: Raw): Raw {
+  const metadata = raw.metadata
+  return metadata && typeof metadata === 'object' ? metadata as Raw : {}
+}
+
+function normaliseAnnouncement(meta: Raw): ServiceAnnouncementMetadata {
+  return {
+    url: toStringOrNull(meta.url),
+    // Defaults to navigating within the app, which is the safe way round: an
+    // internal path opened in a new tab still works, where an external URL
+    // handed to the router does not.
+    external: toBool(meta.external),
+  }
+}
+
+function normaliseLeadChange(meta: Raw): ElectorateLeadChangeMetadata {
+  return {
+    electorate: toInt(meta.electorate_id),
+    leader: toInt(meta.leader_candidate_id),
+    runner_up: toInt(meta.runner_up_candidate_id),
+    previous_leader: toInt(meta.previous_leader_candidate_id),
+    margin: toInt(meta.margin),
+    percent_votes_cast: toFloat(meta.percent_votes_cast),
+  }
+}
+
+function normaliseVotingPlaceAdded(meta: Raw): VotingPlaceAddedMetadata {
+  return {
+    voting_place: toInt(meta.voting_place_id),
+    physical_electorate: toInt(meta.physical_electorate_id),
+    electorate: toInt(meta.electorate_id),
+  }
+}
+
+function normaliseCompositionChange(raw: unknown): CompositionChange | null {
+  if (!raw || typeof raw !== 'object') return null
+  const row = raw as Raw
+
+  const before = toInt(row.before)
+  const after = toInt(row.after)
+  // A change with nothing on either side of it says nothing. Both are required
+  // even where one is zero, which is a party entering or leaving the House.
+  if (before === null || after === null) return null
+
+  return { party: toInt(row.party_id), before, after }
+}
+
+function normaliseComposition(meta: Raw): CompositionChangedMetadata {
+  return {
+    house_size: toInt(meta.house_size),
+    changes: Array.isArray(meta.changes)
+      ? meta.changes
+          .map(normaliseCompositionChange)
+          .filter((change): change is CompositionChange => change !== null)
+      : [],
+  }
+}
+
+const FEED_MESSAGE_TYPES: readonly FeedMessageType[] = [
+  'SERVICE_ANNOUNCEMENT',
+  'ELECTORATE_LEAD_CHANGE',
+  'VOTING_PLACE_ADDED',
+  'COMPOSITION_CHANGED',
+]
+
+/**
+ * One feed document.
+ *
+ * Returns null for anything this client cannot render: a message with no
+ * title, and a message of a type it does not know. The second is the one that
+ * matters -- a later worker introducing a fifth type must not put untyped
+ * metadata in front of a reader, and dropping it here means an older client
+ * stays correct rather than merely surviving.
+ */
+export function normaliseFirestoreFeedMessage(documentId: string, raw: Raw): FeedMessage | null {
+  const declared = toStringOrNull(raw.type)
+  if (!declared || !FEED_MESSAGE_TYPES.includes(declared as FeedMessageType)) return null
+  const type = declared as FeedMessageType
+
+  const title = toStringOrNull(raw.title)
+  if (!title) return null
+
+  const timestamp = toIsoString(raw.timestamp)
+
+  const base: FeedMessageBase = {
+    id: documentId,
+    event_id: toStringOrNull(raw.event_id) ?? '',
+    title,
+    // A title alone is a legitimate announcement, so an absent body is empty
+    // rather than a reason to drop the message.
+    body: toStringOrNull(raw.body) ?? '',
+    timestamp,
+    timestamp_seconds: toEpochSeconds(raw.timestamp_seconds, timestamp),
+  }
+
+  const meta = metadataOf(raw)
+
+  switch (type) {
+    case 'SERVICE_ANNOUNCEMENT':
+      return { ...base, type, metadata: normaliseAnnouncement(meta) }
+    case 'ELECTORATE_LEAD_CHANGE':
+      return { ...base, type, metadata: normaliseLeadChange(meta) }
+    case 'VOTING_PLACE_ADDED':
+      return { ...base, type, metadata: normaliseVotingPlaceAdded(meta) }
+    case 'COMPOSITION_CHANGED':
+      return { ...base, type, metadata: normaliseComposition(meta) }
   }
 }

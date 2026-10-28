@@ -146,6 +146,7 @@ Election routes do **not** call the Django API. On election night the site expec
 - `composables/useElectionManifest.ts` fetches `manifest.json`, the only election URL the client hard-codes. It resolves a slug to the published payload paths, to the Firestore event id, and to whether that event is live.
 - `composables/useElectionSource.ts` loads a results version and is instantiated **once**, on `pages/elections/[electionSlug]/[resultsVersionSlug].vue`, then provided. Child pages read the Pinia store and inject the source only for status.
 - `stores/electionData.ts` holds everything, indexed by entity number. `types/elections.ts` is the canonical contract every source normalises into.
+- `composables/useFirestoreFeed.ts` is the panel of updates beside the dashboard, written by `election-feed-worker`. Live mode only — nothing publishes the feed to R2, so an archived election has no feed rather than a stale one. The entry's wording comes from the worker; the client adds only the time and the links.
 
 Two rules that are easy to get wrong:
 

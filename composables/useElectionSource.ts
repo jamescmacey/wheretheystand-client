@@ -3,6 +3,7 @@ import type {
   DashboardPhase,
   ElectionSummary,
   EntityNumber,
+  FeedMessage,
   LiveEventDocument,
   PayloadOrigin,
   ReferenceData,
@@ -17,6 +18,7 @@ import {
   normaliseSnapshotVotingPlaces,
 } from '~/utils/elections/normaliseSnapshot'
 import { snapshotUrl } from './useElectionManifest'
+import { useFirestoreFeed } from './useFirestoreFeed'
 import { useFirestoreResults, type ResultsScope } from './useFirestoreResults'
 import { fetchFirestoreReference, watchLiveEvent } from './useFirestoreReference'
 import { useElectionDataStore } from '~/stores/electionData'
@@ -60,6 +62,23 @@ export interface ElectionSource {
    * page; nothing a reader sees should branch on it.
    */
   liveEvent: ComputedRef<LiveEventDocument | null>
+  /**
+   * The running commentary on the count, newest first.
+   *
+   * Empty outside live mode, and empty on a live event until the worker has
+   * written something. Nothing publishes the feed to R2, so an archived event
+   * has no feed rather than an old one.
+   */
+  feed: ComputedRef<FeedMessage[]>
+  /**
+   * Whether the feed is being read, and whether it can be.
+   *
+   * Separate from `connection`, which is the tallies. The feed is the one
+   * listener with a query that cannot run without a composite index, so it can
+   * fail on its own while everything else on the page is live -- and an empty
+   * feed and an unreadable one look identical unless this is rendered.
+   */
+  feedConnection: ComputedRef<ConnectionState>
   /**
    * Where each payload was actually read from on this visit.
    *
@@ -255,6 +274,25 @@ export async function useElectionSource(options: {
       store.applySummary(slugs.value.election, slugs.value.version, summary)
       noteLoaded('summary', 'firestore')
     },
+  })
+
+  /**
+   * The running commentary on the count.
+   *
+   * Held here rather than by the panel that renders it, so that it survives
+   * navigation between the dashboard's pages: the feed is beside all of them,
+   * and re-subscribing on every route change would pay the opening twenty
+   * reads again each time.
+   *
+   * The event id is passed whatever the mode, and only `enabled` follows it.
+   * That is what lets a count ending mid-visit leave the last entries on
+   * screen instead of blanking the panel at the moment the result is
+   * declared -- the listener stops, the entries stay, and switching results
+   * version clears them.
+   */
+  const feed = useFirestoreFeed({
+    eventId: () => resultsVersion.value?.firebase_id ?? null,
+    enabled: () => mode.value === 'live',
   })
 
   // Whatever the open page additionally asked for. Null means no second
@@ -569,6 +607,8 @@ export async function useElectionSource(options: {
     watchScope,
     activeScope: readonly(scope) as Readonly<Ref<ResultsScope | null>>,
     liveEvent: computed(() => liveEvent.value),
+    feed: computed(() => feed.messages.value),
+    feedConnection: computed(() => feed.connection.value),
     provenance: readonly(provenance) as Readonly<Ref<SourceProvenance>>,
   }
 
