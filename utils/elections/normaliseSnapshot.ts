@@ -9,8 +9,10 @@
  */
 
 import type {
+  BoundaryShape,
   ElectionManifest,
   ElectionSummary,
+  ElectorateBoundary,
   ElectorateIncumbency,
   Incumbency,
   PartyBlocs,
@@ -39,6 +41,31 @@ type Raw = Record<string, unknown>
 const asArray = (value: unknown): Raw[] => (Array.isArray(value) ? (value as Raw[]) : [])
 const asObject = (value: unknown): Raw =>
   value && typeof value === 'object' ? (value as Raw) : {}
+
+/** A shape with no URL is no use to a map, so it normalises to nothing. */
+function normaliseBoundaryShape(raw: unknown): BoundaryShape | null {
+  const source = asObject(raw)
+  const url = toStringOrNull(source.url)
+  if (!url) return null
+  return {
+    id: String(source.id ?? ''),
+    url,
+    copyright_owner: toStringOrNull(source.copyright_owner),
+    licence: toStringOrNull(source.licence),
+    licence_grantor: toStringOrNull(source.licence_grantor),
+  }
+}
+
+/** Order is the payload's: newest boundary set first. Preserved, not re-sorted. */
+function normaliseBoundary(raw: Raw): ElectorateBoundary {
+  return {
+    id: String(raw.id ?? ''),
+    boundary_set: String(raw.boundary_set ?? ''),
+    valid_from: toStringOrNull(raw.valid_from),
+    shape: normaliseBoundaryShape(raw.shape),
+    simplified_shape: normaliseBoundaryShape(raw.simplified_shape),
+  }
+}
 
 /** Every statistic, always present, so components never guard for the key. */
 export function normaliseStatistics(raw: unknown): ResultsStatistics {
@@ -202,6 +229,7 @@ export function normaliseSnapshotPersistentData(raw: unknown): PersistentData {
           PersistentElectorate['electorate_type'],
         status: String(item.status ?? ''),
         legacy_id: toInt(item.legacy_id),
+        boundaries: asArray(item.boundaries).map(normaliseBoundary),
       })),
     persistent_parties: asArray(source.persistent_parties).map(
       (item): PersistentParty => ({
