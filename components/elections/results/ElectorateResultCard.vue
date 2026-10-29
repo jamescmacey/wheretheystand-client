@@ -14,6 +14,11 @@
         <p v-else class="text-sm text-muted">{{ emptyMessage }}</p>
 
         <ElectionsResultsMarginPill class="mt-3 block" :result="result" />
+
+        <!-- Last, and below the margin: the result is what the reader came for,
+             and how the seat was held is what it means. -->
+        <ElectionsResultsIncumbencyNote class="mt-3" :election="election"
+            :resultsVersion="resultsVersion" :electorate="electorate.number" />
     </UPageCard>
 </template>
 

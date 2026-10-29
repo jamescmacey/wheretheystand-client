@@ -14,7 +14,9 @@
  *     it is not valid ISO 8601 and parsing it is not portable.
  *   - `per_cent` is null on electorate documents, so shares must be computed
  *     from counts.
- *   - There is no `result_number`; that field only exists in the API.
+ *   - `result_number` has never been seen on a document. It is read anyway, in
+ *     case the feed starts carrying it, and the document id discriminates
+ *     voting place sets until it does -- see `resultsSetKey`.
  */
 
 import type {
@@ -59,16 +61,29 @@ function normaliseResult(raw: Raw): Result {
 /**
  * One results document.
  *
- * `documentId` is kept only for diagnostics. It is a Mongo ObjectId inherited
- * from an earlier implementation and means nothing to this client -- results
- * are identified by what they are, via the canonical key.
+ * `documentId` is a Mongo ObjectId inherited from an earlier implementation.
+ * It is diagnostic for national and electorate tallies, which the canonical
+ * key identifies on its own, and load bearing for voting place ones, which it
+ * cannot: a place may report twice for the same electorate and category, and
+ * the document id is the only thing separating the two reports that the
+ * published snapshot also carries. See `resultsSetKey`.
  */
 export function normaliseFirestoreResultsSet(documentId: string, raw: Raw): ResultsSet {
   const updated = toIsoString(raw.updated)
   const level = String(raw.results_level) as ResultsSet['results_level']
   const category = String(raw.results_category) as ResultsSet['results_category']
   const electorate = toInt(raw.electorate_id)
-  // Voting place documents carry the id under either name.
+  // Voting place documents have been seen carrying the id under either name.
+  //
+  // Worth distrusting: `migration/example_results.json` has a document with
+  // `voting_place_id: 4206` *and* `voting_place_no: 1`, so on that document
+  // they are plainly different things, and the field the model now calls
+  // `result_number` was renamed from `voting_place_number`. If `voting_place_no`
+  // is the report's ordinal rather than a second spelling of the place, this
+  // fallback files a tally under voting place 1. It is kept only because the
+  // alternative has not been confirmed either, and the live listener queries
+  // `voting_place_id`, so a document carrying only the other name never
+  // reaches here in the first place.
   const votingPlace = toInt(raw.voting_place_id ?? raw.voting_place_no)
 
   return {
@@ -77,7 +92,8 @@ export function normaliseFirestoreResultsSet(documentId: string, raw: Raw): Resu
       results_category: category,
       electorate,
       voting_place: votingPlace,
-      result_number: null,
+      result_number: toInt(raw.result_number),
+      firestore_id: documentId,
     }),
     results_level: level,
     results_category: category,
@@ -85,7 +101,7 @@ export function normaliseFirestoreResultsSet(documentId: string, raw: Raw): Resu
     electorate,
     voting_place: votingPlace,
     voting_place_electorate: toInt(raw.voting_place_location_electorate_id),
-    result_number: null,
+    result_number: toInt(raw.result_number),
     informals: toInt(raw.informals),
     unknowns: toInt(raw.unknowns),
     refused: toInt(raw.refused),
@@ -99,6 +115,7 @@ export function normaliseFirestoreResultsSet(documentId: string, raw: Raw): Resu
     results: Array.isArray(raw.results) ? (raw.results as Raw[]).map(normaliseResult) : [],
     transport: 'firestore',
     source_id: documentId,
+    firestore_id: documentId,
   }
 }
 

@@ -21,7 +21,7 @@
         </template>
 
         <template #body>
-            <div class="flex flex-col gap-4 p-4">
+            <div :class="fill ? 'flex flex-col flex-1 min-h-0 gap-4 p-4' : 'flex flex-col gap-4 p-4'">
                 <div v-if="heading || $slots.heading || status" class="space-y-3">
                     <slot name="heading">
                         <h2 v-if="heading" class="text-2xl font-bold">{{ heading }}</h2>
@@ -59,5 +59,17 @@ withDefaults(defineProps<{
     heading?: string
     description?: string
     status?: boolean
-}>(), { status: true })
+    /**
+     * Let the page's content fill the panel rather than growing with its own
+     * height.
+     *
+     * The panel body is the scroll container, so by default a page is a column
+     * that gets as tall as it needs and scrolls. A page whose own content
+     * scrolls -- a map beside a list -- needs the opposite: a wrapper that
+     * stops at the panel's height and hands the overflow to its children.
+     * Without `min-h-0` a flex child refuses to shrink below its content and
+     * the whole panel grows instead.
+     */
+    fill?: boolean
+}>(), { status: true, fill: false })
 </script>

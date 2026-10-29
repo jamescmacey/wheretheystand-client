@@ -7,6 +7,7 @@ import type {
   PersistentCandidate,
   PersistentData,
   PersistentElectorate,
+  PersistentId,
   PersistentParty,
   ReferenceCandidate,
   ReferenceData,
@@ -41,6 +42,14 @@ interface VersionState {
   electorateResults: Map<EntityNumber, ComputedElectorateResult>
   /** Electorate numbers whose voting place results have been loaded. */
   votingPlacesLoaded: Set<EntityNumber>
+  /**
+   * Voting place numbers whose own file has been fetched.
+   *
+   * A different question from `votingPlacesLoaded`, which answers "has this
+   * electorate's shard landed". One place's file covers every electorate it
+   * served, so neither implies the other.
+   */
+  placeResultsLoaded: Set<EntityNumber>
   /** Sequence of the last summary applied, for rejecting stale ones. */
   summarySequence: number | null
   /**
@@ -95,6 +104,7 @@ function emptyVersion(): VersionState {
     results: new Map(),
     electorateResults: new Map(),
     votingPlacesLoaded: new Set(),
+    placeResultsLoaded: new Set(),
     summarySequence: null,
     summaryUpdatedTimestamp: null,
     electoratesByNumber: new Map(),
@@ -208,6 +218,9 @@ export const useElectionDataStore = defineStore('electionData', {
     hasVotingPlaceResults: state => (election: string, version: string, electorate: EntityNumber) =>
       Boolean(state.versions[electionKey(election, version)]?.votingPlacesLoaded.has(electorate)),
 
+    hasPlaceResults: state => (election: string, version: string, votingPlace: EntityNumber) =>
+      Boolean(state.versions[electionKey(election, version)]?.placeResultsLoaded.has(votingPlace)),
+
     referenceData: state => (election: string, version: string) =>
       state.versions[electionKey(election, version)]?.reference ?? null,
 
@@ -246,6 +259,23 @@ export const useElectionDataStore = defineStore('electionData', {
           && set.electorate === electorate)
       },
 
+    /**
+     * Every tally counted at one voting place, across every electorate it
+     * issued votes for.
+     *
+     * A list rather than one set per category, and not reducible to one: a
+     * place serves several electorates, and may report more than once for the
+     * same electorate and category. Callers aggregate.
+     */
+    resultsForVotingPlace: state =>
+      (election: string, version: string, votingPlace: EntityNumber): ResultsSet[] => {
+        const held = state.versions[electionKey(election, version)]?.results
+        if (!held) return []
+        return [...held.values()].filter(set =>
+          set.results_level === 'voting_place'
+          && set.voting_place === votingPlace)
+      },
+
     computedElectorateResults: state => (election: string, version: string) =>
       state.versions[electionKey(election, version)]?.electorateResults ?? new Map(),
 
@@ -264,6 +294,16 @@ export const useElectionDataStore = defineStore('electionData', {
 
     votingPlace: state => (election: string, version: string, number: EntityNumber) =>
       state.versions[electionKey(election, version)]?.votingPlacesByNumber.get(number) ?? null,
+
+    /**
+     * A party by its own persistent id.
+     *
+     * Incumbency and the bloc order are both curated against persistent ids
+     * rather than an election's party numbers, so naming one of them needs no
+     * election to look it up in.
+     */
+    persistentParty: state => (id: PersistentId) =>
+      state.persistentPartiesById.get(id) ?? null,
 
     /** The cross-election party record behind a party at one election. */
     persistentPartyForParty: state =>
@@ -374,6 +414,17 @@ export const useElectionDataStore = defineStore('electionData', {
 
     markVotingPlacesLoaded(election: string, version: string, electorate: EntityNumber) {
       this.ensureVersion(election, version).votingPlacesLoaded.add(electorate)
+    },
+
+    /**
+     * Record that a place's own file has been fetched, whether or not it held
+     * anything.
+     *
+     * A place with nothing counted has no file at all, and a 404 is an answer.
+     * Marking it keeps the page from refetching on every re-render.
+     */
+    markPlaceResultsLoaded(election: string, version: string, votingPlace: EntityNumber) {
+      this.ensureVersion(election, version).placeResultsLoaded.add(votingPlace)
     },
 
     /**

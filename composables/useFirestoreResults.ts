@@ -18,6 +18,7 @@ export type ResultsScope =
   | { kind: 'national' }
   | { kind: 'electorate', electorate: EntityNumber }
   | { kind: 'all-electorates' }
+  | { kind: 'voting-place', votingPlace: EntityNumber }
 
 export interface FirestoreSubscription {
   connection: Ref<ConnectionState>
@@ -30,6 +31,11 @@ export function scopeSize(scope: ResultsScope): number {
     case 'national': return 1
     case 'electorate': return 2
     case 'all-electorates': return 144
+    // Two per electorate the place issues for, which is usually its own
+    // general and Māori seats, and more at an advance voting place. An
+    // estimate, not a bound: it is for budgeting, and the real figure is not
+    // known until the documents arrive.
+    case 'voting-place': return 8
   }
 }
 
@@ -89,6 +95,19 @@ export function useFirestoreResults(options: {
       } else if (scope.kind === 'electorate') {
         constraints.push(where('results_level', '==', 'electorate'))
         constraints.push(where('electorate_id', '==', scope.electorate))
+      } else if (scope.kind === 'voting-place') {
+        // Deliberately not narrowed by electorate: the point of a voting place
+        // page is every electorate it issued votes for, and which those are is
+        // not known before the documents arrive. Needs its own composite index
+        // -- (event_id, results_level, voting_place_id) is not a prefix of the
+        // electorate-and-place one, because electorate_id sits in between.
+        //
+        // Filters `voting_place_id` rather than `voting_place_no`: a where
+        // clause can only name one field, and that is the one the Django
+        // importer treats as the place. A document carrying only the other
+        // name would not match.
+        constraints.push(where('results_level', '==', 'voting_place'))
+        constraints.push(where('voting_place_id', '==', scope.votingPlace))
       } else {
         constraints.push(where('results_level', '==', 'electorate'))
       }

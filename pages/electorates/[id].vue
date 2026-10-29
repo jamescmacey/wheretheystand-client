@@ -169,6 +169,13 @@
 </template>
 
 <script setup>
+import {
+    NZ_FALLBACK_CENTRE,
+    NZ_FALLBACK_ZOOM,
+    boundsFromGeoJson,
+    normaliseGeoJson,
+    paddedBounds,
+} from '~/utils/geo/geojson'
 
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
@@ -231,34 +238,9 @@ const mapSourceId = computed(() => `electorate-map-source-${route.params.id}`)
 const mapFillLayerId = computed(() => `electorate-map-fill-${route.params.id}`)
 const mapOutlineLayerId = computed(() => `electorate-map-outline-${route.params.id}`)
 const mapSource = computed(() => ({ type: 'geojson', data: mapGeoJson.value }))
-const mapCrossesAntimeridian = computed(() => {
-    const bounds = mapBounds.value
-    if (!bounds) return false
-    const [[minLng], [maxLng]] = bounds
-    return minLng < -180 || maxLng > 180 || (maxLng - minLng) > 180
-})
-const paddedMaxBounds = computed(() => {
-    const bounds = mapBounds.value
-    if (!bounds) return null
-
-    const [[minLng, minLat], [maxLng, maxLat]] = bounds
-    const lngPad = Math.max((maxLng - minLng) * 0.6, 0.8)
-    const latPad = Math.max((maxLat - minLat) * 0.6, 0.6)
-
-    if (mapCrossesAntimeridian.value) {
-        // maxBounds cannot express a tight antimeridian-crossing rectangle.
-        // Restrict latitude strongly and longitude to world limits.
-        return [
-            [-180, minLat - latPad],
-            [180, maxLat + latPad]
-        ]
-    }
-
-    return [
-        [minLng - lngPad, minLat - latPad],
-        [maxLng + lngPad, maxLat + latPad]
-    ]
-})
+const paddedMaxBounds = computed(() => (
+    mapBounds.value ? paddedBounds(mapBounds.value) : null
+))
 const selectedMapAttribution = computed(() => {
     const file = selectedMapFile.value
     if (!file) return ''
@@ -275,91 +257,6 @@ const mapBounds = ref(null)
 const mapLoadStatus = ref('idle')
 const mapError = ref('')
 
-const normalizeGeoJson = (input) => {
-    let geojson = input
-    if (typeof geojson === 'string') {
-        try {
-            geojson = JSON.parse(geojson)
-        } catch {
-            return null
-        }
-    }
-
-    if (!geojson || typeof geojson !== 'object' || !geojson.type) return null
-
-    if (geojson.type === 'FeatureCollection') return geojson
-    if (geojson.type === 'Feature') {
-        return { type: 'FeatureCollection', features: [geojson] }
-    }
-    if (geojson.type === 'GeometryCollection' && Array.isArray(geojson.geometries)) {
-        return {
-            type: 'FeatureCollection',
-            features: geojson.geometries.map((geometry) => ({
-                type: 'Feature',
-                properties: {},
-                geometry
-            }))
-        }
-    }
-    if (geojson.coordinates) {
-        return {
-            type: 'FeatureCollection',
-            features: [{
-                type: 'Feature',
-                properties: {},
-                geometry: geojson
-            }]
-        }
-    }
-    return null
-}
-
-const updateBoundsFromGeoJson = (geojson) => {
-    const coords = []
-    const collectCoordinates = (value) => {
-        if (!Array.isArray(value)) return
-        if (typeof value[0] === 'number' && typeof value[1] === 'number') {
-            coords.push(value)
-            return
-        }
-        value.forEach((nested) => collectCoordinates(nested))
-    }
-
-    if (geojson?.type === 'FeatureCollection') {
-        geojson.features.forEach((feature) => collectCoordinates(feature?.geometry?.coordinates))
-    } else if (geojson?.type === 'Feature') {
-        collectCoordinates(geojson?.geometry?.coordinates)
-    } else if (geojson?.type && geojson?.coordinates) {
-        collectCoordinates(geojson.coordinates)
-    }
-
-    if (!coords.length) return null
-
-    let minLng = coords[0][0]
-    let minLat = coords[0][1]
-    let maxLng = coords[0][0]
-    let maxLat = coords[0][1]
-
-    coords.forEach(([lng, lat]) => {
-        minLng = Math.min(minLng, lng)
-        minLat = Math.min(minLat, lat)
-        maxLng = Math.max(maxLng, lng)
-        maxLat = Math.max(maxLat, lat)
-    })
-
-    const directSpan = maxLng - minLng
-    const wrappedLongitudes = coords.map(([lng]) => (lng < 0 ? lng + 360 : lng))
-    const wrappedMin = Math.min(...wrappedLongitudes)
-    const wrappedMax = Math.max(...wrappedLongitudes)
-    const wrappedSpan = wrappedMax - wrappedMin
-
-    if (wrappedSpan < directSpan) {
-        return [[wrappedMin, minLat], [wrappedMax, maxLat]]
-    }
-
-    return [[minLng, minLat], [maxLng, maxLat]]
-}
-
 watch(
     selectedGeoJsonUrl,
     async (url) => {
@@ -374,12 +271,12 @@ watch(
         mapError.value = ''
         try {
             const responseData = await $fetch(url, apiFetchOptions({ responseType: 'json' }))
-            const geoJson = normalizeGeoJson(responseData)
+            const geoJson = normaliseGeoJson(responseData)
             if (!geoJson) {
                 throw new Error('Invalid GeoJSON payload.')
             }
             mapGeoJson.value = geoJson
-            mapBounds.value = updateBoundsFromGeoJson(geoJson)
+            mapBounds.value = boundsFromGeoJson(geoJson)
             mapLoadStatus.value = 'success'
         } catch {
             mapGeoJson.value = null
@@ -400,7 +297,7 @@ const mapOptions = computed(() => ({
             fitBoundsOptions: { padding: 32 },
             maxBounds: paddedMaxBounds.value
         }
-        : { center: [172.6, -41.2], zoom: 4.5 })
+        : { center: NZ_FALLBACK_CENTRE, zoom: NZ_FALLBACK_ZOOM })
 }))
 
 const todayYmd = (() => {

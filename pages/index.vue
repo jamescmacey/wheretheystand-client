@@ -3,7 +3,7 @@ const search = ref('')
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
 
-const liveElection = ref(false)
+const liveElection = ref(true)
 const electionFeaturesEnabled = String(config.public.electionsEnabled).toLowerCase() === 'true'
 
 

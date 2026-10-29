@@ -77,6 +77,12 @@ export default defineNuxtConfig({
       // See wheretheystand-banners.
       bannersApiBase: process.env.NUXT_PUBLIC_BANNERS_API_BASE ?? 'https://banners.wheretheystand.nz/',
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL ?? 'https://wheretheystand.nz',
+      // Algolia index names are built as <prefix>_<Base>_<suffix>, matching the
+      // scheme Django indexes under (ALGOLIA_INDEX_PREFIX / _SUFFIX in
+      // wts/settings.py). Set both to move every index to a staging
+      // application at once -- see composables/useAlgoliaIndexName.ts.
+      algoliaIndexPrefix: process.env.NUXT_PUBLIC_ALGOLIA_INDEX_PREFIX ?? 'wts_v2',
+      algoliaIndexSuffix: process.env.NUXT_PUBLIC_ALGOLIA_INDEX_SUFFIX ?? 'prod',
       adminEnabled: true,
       electionsEnabled: process.env.NUXT_PUBLIC_ELECTIONS_ENABLED ?? 'false',
       // Treat polls as already closed, whatever the election's closing time

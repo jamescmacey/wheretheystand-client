@@ -22,6 +22,7 @@
 import type { ElectionSummary, EntityNumber, ResultsVersion } from '~/types/elections'
 import type { SeatAllocation } from '~/utils/elections/mmp'
 import { useElectionDataStore, DEFAULT_PARTY_COLOUR } from '~/stores/electionData'
+import { useBlocOrder } from '~/composables/useBlocOrder'
 import { pluralise } from '~/utils/elections/format'
 
 /**
@@ -30,11 +31,18 @@ import { pluralise } from '~/utils/elections/format'
  * A seat per member rather than a bar per party, because the question people
  * actually ask of a result -- who can govern together -- is easier to see as a
  * shape than as a column of numbers. Seats are laid out in rows within a
- * semicircle, ordered left to right by party, so coalitions read as blocks.
+ * semicircle, ordered left to right by bloc, so the parties likely to work
+ * together read as one block.
+ *
+ * Where no blocs have been curated for the version the order falls back to
+ * size, which is how every archived election is drawn.
  *
  * Unfilled seats -- a party entitled to more list seats than it has candidates
  * left, or an electorate still tied -- are drawn hollow rather than omitted.
- * The seat exists; it just has nobody in it yet.
+ * The seat exists; it just has nobody in it yet. They sit in the middle with
+ * the cross-bench rather than at one end: a seat belonging to nobody would
+ * otherwise pad whichever bloc sits on that edge and make it read as larger
+ * than the count supports.
  */
 const props = defineProps<{
     election: ElectionSummary
@@ -44,6 +52,8 @@ const props = defineProps<{
 
 const store = useElectionDataStore()
 const slugs = computed(() => ({ e: props.election.slug, v: props.resultsVersion.slug }))
+const { order, unalignedIndex } = useBlocOrder(
+    () => props.election, () => props.resultsVersion)
 
 const INNER_RADIUS = 150
 const ROW_GAP = 40
@@ -59,19 +69,28 @@ interface Seat {
     title: string
 }
 
-/** Ordered so that parties sit together, largest first. */
+/** One entry per seat, from the far left of the chamber to the far right. */
 const ordered = computed(() => {
-    const entries = [...props.allocation.totalSeats.entries()]
-        .filter(([, seats]) => seats > 0)
-        .sort((a, b) => b[1] - a[1])
+    const entries = order([...props.allocation.totalSeats.entries()]
+        .filter(([, seats]) => seats > 0))
 
     const list: { party: EntityNumber | null, filled: boolean }[] = []
     for (const [party, seats] of entries) {
         for (let index = 0; index < seats; index += 1) list.push({ party, filled: true })
     }
-    // Seats that exist but have nobody in them, at the end.
+
+    // Seats that exist but have nobody in them. Spliced in where the right
+    // bloc begins, so they land in the middle rather than padding an edge; with
+    // no blocs curated that index is the end, as it always was.
     const empty = props.allocation.unfilled + props.allocation.undecidedElectorates.length
-    for (let index = 0; index < empty; index += 1) list.push({ party: null, filled: false })
+    if (!empty) return list
+
+    const hollow = Array.from({ length: empty },
+        () => ({ party: null as EntityNumber | null, filled: false }))
+    const seatsBefore = entries
+        .slice(0, unalignedIndex(entries))
+        .reduce((sum, [, seats]) => sum + seats, 0)
+    list.splice(seatsBefore, 0, ...hollow)
     return list
 })
 

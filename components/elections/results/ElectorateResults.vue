@@ -15,9 +15,13 @@
 import type {
     ElectionSummary, EntityNumber, ResultsCategory, ResultsVersion,
 } from '~/types/elections'
-import type { ResultsColumn, ResultsRow } from '~/types/electionResults'
+import type { ResultsRow } from '~/types/electionResults'
 import { useElectionDataStore } from '~/stores/electionData'
-import { formatCount, formatPercent } from '~/utils/elections/format'
+import { useIncumbency } from '~/composables/useIncumbency'
+import { formatCount } from '~/utils/elections/format'
+import {
+    RESULTS_COLUMNS, barMaxForRows, buildResultsRows,
+} from '~/utils/elections/rows'
 
 /**
  * Candidate or party results within one electorate.
@@ -33,6 +37,7 @@ const props = defineProps<{
 }>()
 
 const store = useElectionDataStore()
+const { incumbentFor } = useIncumbency(() => props.election, () => props.resultsVersion)
 
 const isCandidates = computed(() => props.category === 'candidate_votes')
 const noun = computed(() => (isCandidates.value ? 'candidate votes' : 'party votes'))
@@ -42,83 +47,45 @@ const heading = computed(() => headingNoun.value)
 const results = computed(() => store.electorateResults(
     props.election.slug, props.resultsVersion.slug, props.electorate, props.category))
 
-const columns: ResultsColumn[] = [
-    { key: 'count', label: 'Votes', width: '6rem' },
-    { key: 'share', label: 'Share', width: '5rem' },
-]
+const columns = RESULTS_COLUMNS
 
 const totalVotes = computed(() =>
     results.value?.statistics.total_votes_cast
     ?? (results.value?.results ?? []).reduce((sum, r) => sum + (r.count ?? 0), 0))
 
-const share = (count: number | null) =>
-    (!count || !totalVotes.value ? 0 : (count / totalVotes.value) * 100)
-
-// Copied before sorting: this array belongs to the store.
-const ordered = computed(() =>
-    [...(results.value?.results ?? [])].sort((a, b) => (b.count ?? 0) - (a.count ?? 0)))
-
-const barMax = computed(() =>
-    Math.max(10, ...ordered.value.map(result => share(result.count))))
-
+// Shared with the voting place card, so the two cannot drift on party colours,
+// the independent sublabel or the informals line.
 const rows = computed<ResultsRow[]>(() => {
-    const slugs = { election: props.election.slug, version: props.resultsVersion.slug }
-
-    const contested: ResultsRow[] = ordered.value.map(result => {
-        if (isCandidates.value) {
-            const candidate = result.candidate === null
-                ? null
-                : store.candidate(slugs.election, slugs.version, result.candidate)
-            const party = result.candidate === null
-                ? null
-                : store.persistentPartyForCandidate(slugs.election, slugs.version, result.candidate)
-            const electionParty = candidate?.party === null || candidate?.party === undefined
-                ? null
-                : store.party(slugs.election, slugs.version, candidate.party)
-            return {
-                key: result.candidate ?? `unknown-${result.count}`,
-                label: candidate?.name ?? 'Unknown candidate',
-                sublabel: electionParty?.name ?? 'Independent',
-                colour: party?.colour ?? null,
-                cells: {
-                    count: formatCount(result.count),
-                    share: formatPercent(share(result.count)),
-                },
-                bar: share(result.count),
-            }
-        }
-
-        const party = result.party === null
-            ? null
-            : store.party(slugs.election, slugs.version, result.party)
-        return {
-            key: result.party ?? `unknown-${result.count}`,
-            label: party?.name ?? 'Unknown party',
-            colour: store.partyColour(slugs.election, slugs.version, result.party),
-            cells: {
-                count: formatCount(result.count),
-                share: formatPercent(share(result.count)),
-            },
-            bar: share(result.count),
-        }
+    const built = buildResultsRows({
+        store,
+        election: props.election,
+        resultsVersion: props.resultsVersion,
+        category: props.category,
+        results: results.value?.results ?? [],
+        totalVotes: totalVotes.value,
+        informals: results.value?.informals ?? null,
     })
 
-    const informals = results.value?.informals ?? null
-    if (informals !== null) {
-        contested.push({
-            key: 'informals',
-            label: 'Informal votes',
-            muted: true,
-            bar: share(informals),
-            cells: {
-                count: formatCount(informals),
-                share: formatPercent(share(informals)),
-            },
-        })
-    }
+    // Which of these names is the one already holding the seat. Marked here
+    // rather than in the shared row builder, because it is true of a candidate
+    // in their own electorate and not of the same candidate's tally at one
+    // voting place within it.
+    const incumbent = isCandidates.value ? incumbentFor(props.electorate) : null
+    if (!incumbent?.candidate) return built
 
-    return contested
+    return built.map((row) => {
+        if (typeof row.key !== 'number') return row
+        const persistent = store.persistentCandidateFor(
+            props.election.slug, props.resultsVersion.slug, row.key)
+        if (persistent?.id !== incumbent.candidate) return row
+        return {
+            ...row,
+            sublabel: [row.sublabel, 'Sitting member'].filter(Boolean).join(' · '),
+        }
+    })
 })
+
+const barMax = computed(() => barMaxForRows(rows.value))
 
 const totals = computed(() => ({
     label: 'Total votes cast',

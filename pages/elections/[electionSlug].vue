@@ -31,7 +31,7 @@
 
 const route = useRoute()
 
-const { status: manifestStatus, findElection } = await useElectionManifest()
+const { status: manifestStatus, findElection, findResultsVersion } = await useElectionManifest()
 
 const election = computed(() => findElection(String(route.params.electionSlug)))
 
@@ -48,6 +48,15 @@ watch(election, found => {
     }
 }, { immediate: true })
 
+// The social card belongs to a results version, but the SEO for every page
+// under an election is set here, so the version has to be read off the route.
+// Missing on the election's own page, where "default" resolves to the primary
+// version -- its card is the one that should represent the election.
+const cardVersion = computed(() => findResultsVersion(
+    String(route.params.electionSlug),
+    String(route.params.resultsVersionSlug ?? 'default'),
+))
+
 usePageSeo({
     title: () => election.value?.name,
     description: () => {
@@ -55,6 +64,8 @@ usePageSeo({
         if (!e?.polling_date) return undefined
         return `Election results for ${e.name ?? 'this election'}.`
     },
+    // Null for most versions, and then no image meta is emitted at all.
+    image: () => cardVersion.value?.card_image_url,
 })
 
 </script>

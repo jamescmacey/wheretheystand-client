@@ -11,6 +11,10 @@
 import type {
   ElectionManifest,
   ElectionSummary,
+  ElectorateIncumbency,
+  Incumbency,
+  PartyBlocs,
+  PartyIncumbency,
   PersistentCandidate,
   PersistentData,
   PersistentElectorate,
@@ -77,6 +81,9 @@ export function normaliseSnapshotResultsSet(raw: Raw): ResultsSet {
   const electorate = toInt(raw.electorate)
   const votingPlace = toInt(raw.voting_place)
   const resultNumber = toInt(raw.result_number)
+  // Django's `firebase_id`, which is the Firestore document id. Part of a
+  // voting place set's identity; see resultsSetKey.
+  const firestoreId = toStringOrNull(raw.firebase_id)
 
   return {
     // Recomputed rather than trusted, so that a snapshot and a live document
@@ -87,6 +94,7 @@ export function normaliseSnapshotResultsSet(raw: Raw): ResultsSet {
       electorate,
       voting_place: votingPlace,
       result_number: resultNumber,
+      firestore_id: firestoreId,
     }),
     results_level: level,
     results_category: category,
@@ -108,6 +116,7 @@ export function normaliseSnapshotResultsSet(raw: Raw): ResultsSet {
     results: asArray(raw.results).map(normaliseResult),
     transport: 'snapshot',
     source_id: toStringOrNull(raw.source_id),
+    firestore_id: firestoreId,
   }
 }
 
@@ -245,9 +254,67 @@ export function normaliseVersionPaths(raw: unknown): ResultsVersionPaths {
             reference: String(votingPlaces.reference ?? ''),
             by_electorate_base: String(votingPlaces.by_electorate_base ?? ''),
             by_electorate_count: toInt(votingPlaces.by_electorate_count) ?? 0,
+            // Absent from manifests published before the per-place files
+            // existed, so read as optional rather than defaulted to ''. An
+            // empty base would build a URL that fetches the directory.
+            ...(votingPlaces.by_place_base
+              ? {
+                  by_place_base: String(votingPlaces.by_place_base),
+                  by_place_count: toInt(votingPlaces.by_place_count) ?? 0,
+                }
+              : {}),
           },
         }
       : {}),
+  }
+}
+
+const asIdList = (value: unknown): string[] =>
+  (Array.isArray(value) ? value : []).map(String).filter(Boolean)
+
+/**
+ * The curated bloc order, or null where Django omitted the key.
+ *
+ * Null rather than two empty arrays, because the two mean different things to a
+ * caller: nothing curated falls back to ordering by size, whereas an empty left
+ * bloc with a curated right one is a real answer.
+ */
+export function normaliseBlocs(raw: unknown): PartyBlocs | null {
+  if (!raw) return null
+  const blocs = asObject(raw)
+  return {
+    left: asIdList(blocs.left),
+    right: asIdList(blocs.right),
+  }
+}
+
+function normaliseElectorateIncumbency(raw: Raw): ElectorateIncumbency {
+  return {
+    electorate: String(raw.electorate),
+    // Django leaves these out rather than writing nulls, since the manifest is
+    // the one object every visitor fetches. Absent means no sitting member.
+    candidate: toStringOrNull(raw.candidate),
+    party: toStringOrNull(raw.party),
+    left_party: toBool(raw.left_party),
+    current_party: toStringOrNull(raw.current_party),
+  }
+}
+
+function normalisePartyIncumbency(raw: Raw): PartyIncumbency {
+  return {
+    party: String(raw.party),
+    electorate_seats: toInt(raw.electorate_seats) ?? 0,
+    list_seats: toInt(raw.list_seats) ?? 0,
+  }
+}
+
+/** Who held what going into the election, or null where nothing is curated. */
+export function normaliseIncumbency(raw: unknown): Incumbency | null {
+  if (!raw) return null
+  const incumbency = asObject(raw)
+  return {
+    electorates: asArray(incumbency.electorates).map(normaliseElectorateIncumbency),
+    parties: asArray(incumbency.parties).map(normalisePartyIncumbency),
   }
 }
 
@@ -263,7 +330,10 @@ function normaliseResultsVersion(raw: Raw): ResultsVersion {
     is_live: toBool(raw.is_live),
     is_final: toBool(raw.is_final),
     refdata_built: toBool(raw.refdata_built),
+    card_image_url: toStringOrNull(raw.card_image_url),
     paths: normaliseVersionPaths(raw.paths),
+    blocs: normaliseBlocs(raw.blocs),
+    incumbency: normaliseIncumbency(raw.incumbency),
   }
 }
 
