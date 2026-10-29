@@ -11,6 +11,7 @@
 <script setup lang="ts">
 import type { ElectionSummary, EntityNumber, ResultsVersion } from '~/types/elections'
 import { useElectionDataStore } from '~/stores/electionData'
+import { electorateTypeLabel } from '~/utils/elections/electorates'
 
 const props = withDefaults(defineProps<{
     election: ElectionSummary
@@ -40,13 +41,7 @@ const name = computed(() => electorate.value?.name ?? props.fallback)
 
 // Only stated where it is known. Guessing "General electorate" for an
 // unmatched one would be a claim about the seat, not a formatting default.
-const typeLabel = computed(() => {
-    switch (persistent.value?.electorate_type) {
-        case 'maori': return 'Māori electorate'
-        case 'general': return 'General electorate'
-        default: return null
-    }
-})
+const typeLabel = computed(() => electorateTypeLabel(persistent.value?.electorate_type))
 
 // Within the dashboard rather than to the site's own electorate page: the
 // reader is looking at one election's results and expects to stay in them.

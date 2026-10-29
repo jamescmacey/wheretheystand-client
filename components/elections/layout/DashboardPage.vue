@@ -27,7 +27,7 @@
                         <h2 v-if="heading" class="text-2xl font-bold">{{ heading }}</h2>
                     </slot>
                     <p v-if="description" class="text-muted">{{ description }}</p>
-                    <ElectionsStatusResultsStatusBar v-if="status" />
+                    <ElectionsStatusResultsStatusBar v-if="status" :electorate="statusElectorate" />
                 </div>
 
                 <slot />
@@ -38,6 +38,7 @@
 
 <script setup lang="ts">
 import type { BreadcrumbItem } from '@nuxt/ui'
+import type { EntityNumber } from '~/types/elections'
 
 /**
  * The frame every dashboard page sits in.
@@ -59,6 +60,13 @@ withDefaults(defineProps<{
     heading?: string
     description?: string
     status?: boolean
+    /**
+     * Narrow the status bar to one electorate, where the page is about one.
+     *
+     * The bar otherwise speaks for the whole election, which beside a single
+     * seat's figures reads as a statement about that seat.
+     */
+    statusElectorate?: EntityNumber
     /**
      * Let the page's content fill the panel rather than growing with its own
      * height.

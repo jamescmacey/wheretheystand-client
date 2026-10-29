@@ -8,8 +8,8 @@ import { useMmpSettings } from '~/composables/useMmpSettings'
  * The Parliament this results version produces, under the reader's rules.
  *
  * Everything that shows a seat number reads this, so the home page and the
- * House page cannot disagree. The Electoral Commission's own seat figures are
- * still carried on each result, but they are shown only in the House workings,
+ * Parliament page cannot disagree. The Electoral Commission's own seat figures are
+ * still carried on each result, but they are shown only in the Parliament workings,
  * as a comparison -- once the reader can change the threshold or the formula,
  * a page mixing the two would be stating two different Parliaments at once.
  *

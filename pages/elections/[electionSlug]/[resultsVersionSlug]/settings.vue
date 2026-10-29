@@ -71,7 +71,7 @@ defineProps<{
 }>()
 
 // One store for these, rather than a ref per control: they are read by the
-// House page and by anything else showing a seat number, and they outlive
+// Parliament page and by anything else showing a seat number, and they outlive
 // this page.
 const { settings, isOfficial, reset } = useMmpSettings()
 

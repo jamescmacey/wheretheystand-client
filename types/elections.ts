@@ -429,6 +429,12 @@ export type ElectorateResultStatus =
    */
   | 'uncounted'
 
+/** One of the two highest tallies in an electorate. */
+export interface ElectorateLeader {
+  candidate: EntityNumber
+  count: number
+}
+
 export interface ComputedElectorateResult {
   electorate: EntityNumber
   resultStatus: ElectorateResultStatus
@@ -437,6 +443,16 @@ export interface ComputedElectorateResult {
   secondPlace: EntityNumber[] | null
   margin: number | null
   marginPercentage: number | null
+  /**
+   * The two highest tallies, in order, with their counts.
+   *
+   * Separate from `firstPlace`, which names a winner and so is null on a tie.
+   * These only describe the count, which is why a tied seat still has two
+   * names and two figures to put on screen. Empty until something is counted,
+   * so a seat the count has not reached shows no candidates rather than two on
+   * nothing.
+   */
+  leaders: ElectorateLeader[]
 }
 
 /* -------------------------------------------------------------------------
@@ -475,7 +491,16 @@ export interface SummaryCandidate {
 export interface SummaryElectorate {
   electorate: EntityNumber
   is_final: boolean
-  /** How much of the electorate is counted, from the feed's own statistics. */
+  /**
+   * Turnout: votes cast as a share of those enrolled, from the feed's own
+   * statistics.
+   *
+   * Not how far the count has got, which is `percent_voting_places_counted`
+   * and is not in the summary at all. The two differ by more than rounding --
+   * Waitaki finished 2023 on 83.7 against 100.0 per cent of its voting places
+   * counted -- so reading this as progress would show a seat as unfinished
+   * for good.
+   */
   percent_votes_cast: number | null
   /**
    * Candidate votes counted here, and the denominator of both `per_cent`

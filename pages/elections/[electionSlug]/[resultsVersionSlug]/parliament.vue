@@ -1,5 +1,5 @@
 <template>
-    <ElectionsLayoutDashboardPage title="House" heading="The House">
+    <ElectionsLayoutDashboardPage title="Parliament" heading="Parliament">
         <template v-if="allocation">
             <UAlert v-if="!isOfficial" color="warning" variant="subtle" icon="i-lucide-flask-conical"
                 title="These are not the official rules"
@@ -22,16 +22,16 @@
                 icon="i-lucide-scale" title="An electorate is tied"
                 :description="`${pluralise(allocation.undecidedElectorates.length, 'electorate')} has no leading candidate, so the seat is not counted to any party.`" />
 
-            <ElectionsHouseHemicycle :election="election" :resultsVersion="resultsVersion"
+            <ElectionsParliamentSeatGrid :election="election" :resultsVersion="resultsVersion"
                 :allocation="allocation" />
 
-            <ElectionsHouseSeatAllocationTable :election="election" :resultsVersion="resultsVersion"
+            <ElectionsParliamentPartySeats :election="election" :resultsVersion="resultsVersion"
                 :allocation="allocation" />
 
-            <ElectionsHouseThresholdPanel :election="election" :resultsVersion="resultsVersion"
+            <ElectionsParliamentThresholdPanel :election="election" :resultsVersion="resultsVersion"
                 :allocation="allocation" />
 
-            <ElectionsHouseMemberList :election="election" :resultsVersion="resultsVersion"
+            <ElectionsParliamentMemberList :election="election" :resultsVersion="resultsVersion"
                 :allocation="allocation" />
 
             <!-- The workings, folded away. Most readers want the outcome; the
@@ -42,9 +42,9 @@
                     label="Show the arithmetic" class="self-start" />
                 <template #content>
                     <div class="pt-4 space-y-4">
-                        <ElectionsHouseQuotientTable :election="election" :resultsVersion="resultsVersion"
-                            :allocation="allocation" />
-                        <ElectionsHouseOfficialComparison :election="election"
+                        <ElectionsParliamentQuotientTable :election="election"
+                            :resultsVersion="resultsVersion" :allocation="allocation" />
+                        <ElectionsParliamentOfficialComparison :election="election"
                             :resultsVersion="resultsVersion" :allocation="allocation" />
                     </div>
                 </template>

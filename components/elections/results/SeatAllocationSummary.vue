@@ -3,9 +3,9 @@
         <template #header>
             <div class="flex items-center justify-between gap-2 flex-wrap">
                 <h3 class="font-bold">Seats</h3>
-                <UButton :to="houseHref" variant="link" color="neutral" size="sm"
+                <UButton :to="parliamentHref" variant="link" color="neutral" size="sm"
                     trailing-icon="i-lucide-arrow-right">
-                    The House
+                    Parliament
                 </UButton>
             </div>
         </template>
@@ -43,9 +43,9 @@ import { useIncumbency } from '~/composables/useIncumbency'
 /**
  * Where the seats fell, at a glance.
  *
- * Reads the same allocation the House page does, so the two can never disagree
+ * Reads the same allocation the Parliament page does, so the two can never disagree
  * about how many seats a party has -- which they would if this took the feed's
- * own figures while the House worked its own out.
+ * own figures while Parliament worked its own out.
  */
 const props = defineProps<{
     election: ElectionSummary
@@ -58,8 +58,8 @@ const { order } = useBlocOrder(() => props.election, () => props.resultsVersion)
 const { seatChangeNoteFor, withDefendingParties } = useIncumbency(
     () => props.election, () => props.resultsVersion)
 
-const houseHref = computed(() =>
-    `/elections/${props.election.slug}/${props.resultsVersion.slug}/house`)
+const parliamentHref = computed(() =>
+    `/elections/${props.election.slug}/${props.resultsVersion.slug}/parliament`)
 
 type Segment = SeatSegment & { split: string, change: SeatChangeNote | null }
 
@@ -74,7 +74,7 @@ const segments = computed<Segment[]>(() => {
         .filter(([, seats]) => seats > 0))
 
     // Ordered by bloc, so the bar reads left to right the way the chamber on
-    // the House page does. Falls back to size where none is curated.
+    // the Parliament page does. Falls back to size where none is curated.
     return order(entries)
         .map(([party, seats]) => ({
             key: party,

@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 
 import type {
   ComputedElectorateResult,
+  ElectorateLeader,
   ElectorateResultStatus,
   EntityNumber,
   PersistentCandidate,
@@ -14,9 +15,11 @@ import type {
   ReferenceElectorate,
   ReferenceParty,
   ReferenceVotingPlace,
+  Result,
   ResultsCategory,
   ResultsSet,
   ResultsSummary,
+  SummaryCandidate,
   SummaryElectorate,
 } from '~/types/elections'
 import { electionKey, indexBy, isNewerResultsSet } from '~/utils/elections/keys'
@@ -126,6 +129,12 @@ export function computeElectorateResult(set: ResultsSet): ComputedElectorateResu
 
   const results = [...set.results].sort((a, b) => (b.count ?? 0) - (a.count ?? 0))
 
+  /** The top of the sorted tally, for a caller that wants to print it. */
+  const topTwo = (): ElectorateLeader[] => results
+    .filter((result): result is Result & { candidate: EntityNumber } => result.candidate !== null)
+    .slice(0, 2)
+    .map(result => ({ candidate: result.candidate, count: result.count ?? 0 }))
+
   if (results.length === 0) {
     return {
       electorate: set.electorate,
@@ -134,6 +143,7 @@ export function computeElectorateResult(set: ResultsSet): ComputedElectorateResu
       secondPlace: null,
       margin: null,
       marginPercentage: null,
+      leaders: [],
     }
   }
 
@@ -146,6 +156,7 @@ export function computeElectorateResult(set: ResultsSet): ComputedElectorateResu
       secondPlace: null,
       margin: null,
       marginPercentage: null,
+      leaders: topTwo(),
     }
   }
 
@@ -164,6 +175,9 @@ export function computeElectorateResult(set: ResultsSet): ComputedElectorateResu
       secondPlace: null,
       margin: null,
       marginPercentage: null,
+      // Nothing counted is nothing to show: two names on nothing would read as
+      // a contest that has started.
+      leaders: [],
     }
   }
 
@@ -190,6 +204,7 @@ export function computeElectorateResult(set: ResultsSet): ComputedElectorateResu
     secondPlace: secondPlace && secondPlace.length ? secondPlace : null,
     margin: tied ? 0 : firstCount - (secondCount ?? 0),
     marginPercentage: tied ? 0 : share(firstCount) - share(secondCount ?? 0),
+    leaders: topTwo(),
   }
 }
 
@@ -466,6 +481,11 @@ export const useElectionDataStore = defineStore('electionData', {
           firstPlace: leader === null || tied ? null : [leader.candidate],
           secondPlace: runnerUp === null || tied ? null : [runnerUp.candidate],
           margin: leader === null ? null : leader.count - (runnerUp?.count ?? 0),
+          // The summary names both even where they are level, which is what
+          // lets a tied seat render as two candidates rather than as nothing.
+          leaders: [leader, runnerUp]
+            .filter((entry): entry is SummaryCandidate => entry !== null)
+            .map(entry => ({ candidate: entry.candidate, count: entry.count })),
           // From the shares the summary carries, so the two agree. Falling back
           // to the counts covers a document written before they were computed.
           marginPercentage: marginPercentage(entry),

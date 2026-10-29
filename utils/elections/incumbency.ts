@@ -112,6 +112,41 @@ export function seatOutcome(
   return `${leadingParty} gains the seat from ${heldBy}.`
 }
 
+/**
+ * A seat held or gained, in the shorthand election night uses: "NAT hold",
+ * "LAB gain".
+ *
+ * The party named is the one leading, which is the same party in both cases --
+ * a hold is the holder still ahead, a gain is somebody else ahead of them.
+ *
+ * Null wherever a word of it would be a guess: no incumbency curated for the
+ * seat, no party recorded as having held it, no sole leader yet, or a leading
+ * party that has not resolved. A seat with no badge says nothing about itself,
+ * which is the only honest alternative.
+ */
+export interface SeatChangeBadge {
+  /** "NAT hold" or "LAB gain", for a caller to case as it likes. */
+  label: string
+  flipped: boolean
+  /** Spelled out, because the shorthand is not obvious read aloud. */
+  description: string
+}
+
+export function seatChangeBadge(
+  flipped: boolean | null,
+  leadingParty: { abbreviation: string, name: string } | null,
+): SeatChangeBadge | null {
+  if (flipped === null || !leadingParty) return null
+
+  return {
+    label: `${leadingParty.abbreviation} ${flipped ? 'gain' : 'hold'}`,
+    flipped,
+    description: flipped
+      ? `${leadingParty.name} gains this seat.`
+      : `${leadingParty.name} holds this seat.`,
+  }
+}
+
 /** An icon and a sentence, or null where the status says nothing worth drawing. */
 export interface MemberNote {
   icon: string

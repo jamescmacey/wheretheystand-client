@@ -3,7 +3,7 @@ import type {
 } from '~/types/elections'
 import type { IncumbencyStatus, StandingCandidate } from '~/utils/elections/incumbency'
 import {
-  incumbencyStatus, memberNote, seatChange, seatChangeNote, seatOutcome,
+  incumbencyStatus, memberNote, seatChange, seatChangeBadge, seatChangeNote, seatOutcome,
 } from '~/utils/elections/incumbency'
 import { useElectionDataStore } from '~/stores/electionData'
 
@@ -144,6 +144,23 @@ export function useIncumbency(
   }
 
   /**
+   * The seat's result as a change, for a badge: "NAT hold", "LAB gain".
+   *
+   * The same judgement as `noteFor`'s outcome sentence, in the shorthand a
+   * results card has room for, and null in exactly the same cases.
+   */
+  const seatChangeBadgeFor = (electorate: EntityNumber) => {
+    const party = leadingParty(electorate)
+    const abbreviation = party?.abbreviation || party?.short_name || party?.display_name
+    return seatChangeBadge(
+      flippedFor(electorate),
+      party && abbreviation
+        ? { abbreviation, name: partyName(party.id) ?? abbreviation }
+        : null,
+    )
+  }
+
+  /**
    * How one seat reads against the way it was held, as two sentences at most.
    *
    * `outcome` is the hold or the gain; `member` is what became of the person
@@ -202,6 +219,7 @@ export function useIncumbency(
     seatChangeFor,
     seatsHeldFor,
     seatChangeNoteFor,
+    seatChangeBadgeFor,
     noteFor,
     withDefendingParties,
   }

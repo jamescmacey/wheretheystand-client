@@ -11,7 +11,7 @@ const open = ref(false)
 
 const linksAvailable = computed(() => Boolean(resultsVersionSlug.value && electionSlug.value))
 
-// A by-election returns one member and has no party vote, so the House and the
+// A by-election returns one member and has no party vote, so Parliament and the
 // list of electorates are pages about nothing. Hiding them beats rendering
 // them empty, and beats a reader finding out by opening one.
 const { hasPartyVote, isSingleElectorate } = useElectionShape()
@@ -24,7 +24,7 @@ interface Section { label: string, icon: string, path?: string, exact?: boolean,
 
 const sections: Section[] = [
   { label: 'Overview', icon: 'i-lucide-layout-dashboard', exact: true },
-  { label: 'House', icon: 'i-lucide-landmark', path: '/house', when: () => hasPartyVote.value },
+  { label: 'Parliament', icon: 'i-lucide-landmark', path: '/parliament', when: () => hasPartyVote.value },
   { label: 'Candidates', icon: 'i-lucide-users', path: '/candidates' },
   {
     label: 'Electorates',

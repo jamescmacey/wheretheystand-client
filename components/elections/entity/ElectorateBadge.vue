@@ -1,20 +1,21 @@
 <template>
     <component :is="to ? linkComponent : 'span'" :to="to ?? undefined"
-        class="inline-flex items-center rounded-md overflow-hidden text-sm font-medium ring-1"
-        :class="[theme.ring, to ? 'hover:opacity-90 transition-opacity' : '']"
+        class="inline-flex items-center rounded-md overflow-hidden font-medium ring-1"
+        :class="[sizing.text, theme.ring, to ? 'hover:opacity-90 transition-opacity' : '']"
         :aria-label="ariaLabel">
         <!-- The number is what a results sheet carries, so it is the half that
              stays put while the name truncates. -->
-        <span class="px-2 py-0.5 tabular-nums font-semibold" :class="theme.lead">
+        <span class="tabular-nums font-semibold" :class="[sizing.cell, theme.lead]">
             {{ electorate }}
         </span>
-        <span class="px-2 py-0.5 truncate" :class="theme.tail">{{ name }}</span>
+        <span class="truncate" :class="[sizing.cell, theme.tail]">{{ name }}</span>
     </component>
 </template>
 
 <script setup lang="ts">
 import type { ElectionSummary, EntityNumber, ResultsVersion } from '~/types/elections'
 import { useElectionDataStore } from '~/stores/electionData'
+import { electorateTypeLabel } from '~/utils/elections/electorates'
 
 /**
  * An electorate as a two-part badge: its number, then its name.
@@ -31,7 +32,9 @@ const props = withDefaults(defineProps<{
     resultsVersion: ResultsVersion
     electorate: EntityNumber
     link?: boolean
-}>(), { link: true })
+    /** `lg` stands in for a page heading; `sm` sits in a line of text. */
+    size?: 'sm' | 'lg'
+}>(), { link: true, size: 'sm' })
 
 const store = useElectionDataStore()
 
@@ -84,13 +87,14 @@ const theme = computed(() => {
     }
 })
 
-const typeLabel = computed(() => {
-    switch (persistent.value?.electorate_type) {
-        case 'maori': return 'Māori electorate'
-        case 'general': return 'General electorate'
-        default: return 'electorate'
-    }
-})
+// The large badge grows with the viewport rather than sitting at heading size on
+// a phone, where the longest electorate names would then wrap inside the fill.
+const sizing = computed(() => (props.size === 'lg'
+    ? { text: 'text-lg sm:text-xl', cell: 'px-3 py-1' }
+    : { text: 'text-sm', cell: 'px-2 py-0.5' }))
+
+const typeLabel = computed(() =>
+    electorateTypeLabel(persistent.value?.electorate_type) ?? 'electorate')
 
 // The badge reads as two separate text nodes, so the whole of it is spelled out
 // for a screen reader rather than left as "59 Wellington North".
