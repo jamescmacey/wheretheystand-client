@@ -86,7 +86,8 @@ usePageSeo({
     description: 'New Zealand has ' + electorates.value.length + ' electoral districts, commonly known as electorates.',
 })
 
-const sortedElectorates = computed(() => electorates.value.filter(electorate => electorate.status === 'current').sort((a, b) => a.name.localeCompare(b.name)))
+//const sortedElectorates = computed(() => electorates.value.filter(electorate => electorate.status === 'current').sort((a, b) => a.name.localeCompare(b.name)))
+const sortedElectorates = computed(() => electorates.value.filter(electorate => ['current', 'retiring'].includes(electorate.status)).sort((a, b) => a.name.localeCompare(b.name)))
 const generalElectorates = computed(() => sortedElectorates.value.filter(electorate => electorate.electorate_type === 'general'))
 const maoriElectorates = computed(() => sortedElectorates.value.filter(electorate => electorate.electorate_type === 'maori'))
 
