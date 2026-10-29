@@ -7,13 +7,13 @@
 
                 <div v-if="homeElectorates.length" class="flex flex-wrap items-center gap-2 pt-1">
                     <span class="text-sm text-muted">{{ homeLabel }}</span>
-                    <ElectionsVotingPlacesElectorateBadge v-for="number in homeElectorates" :key="number"
+                    <ElectionsEntityElectorateBadge v-for="number in homeElectorates" :key="number"
                         :election="election" :resultsVersion="resultsVersion" :electorate="number" />
                 </div>
 
                 <div v-if="otherElectorates.length" class="flex flex-wrap items-center gap-2">
                     <span class="text-sm text-muted">Also issuing votes for:</span>
-                    <ElectionsVotingPlacesElectorateBadge v-for="number in otherElectorates" :key="number"
+                    <ElectionsEntityElectorateBadge v-for="number in otherElectorates" :key="number"
                         :election="election" :resultsVersion="resultsVersion" :electorate="number" />
                 </div>
             </div>

@@ -99,7 +99,7 @@ const links = computed(() => {
     }
 
     if (message.type === 'COMPOSITION_CHANGED') {
-        found.push({ to: `${base.value}/house`, label: 'House' })
+        found.push({ to: `${base.value}/parliament`, label: 'Parliament' })
     }
 
     return found

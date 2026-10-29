@@ -31,7 +31,7 @@ const store = useElectionDataStore()
 // Seats come from our own allocation rather than the columns the feed carries.
 // The reader can change the threshold and the formula, and every seat number in
 // the dashboard has to move together when they do -- a table here disagreeing
-// with the House page would be worse than either being wrong on its own.
+// with the Parliament page would be worse than either being wrong on its own.
 const { allocation } = useSeatAllocation(() => props.election, () => props.resultsVersion)
 
 const seatsFor = (party: number | null) => {

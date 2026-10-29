@@ -12,9 +12,16 @@
 	"workers_dev": false,
 	"routes": [
 		{
-			"pattern": "beta.wheretheystand.nz",
-			"custom_domain": true
-		}
+			"pattern": "wheretheystand.nz",
+			"custom_domain": true,
+            "enabled":true
+		},
+        {
+            "pattern": "beta.wheretheystand.nz",
+            "custom_domain": true,
+            "previews_enabled": true,
+            "enabled": true
+        }
 	],
 	"build": {
 		"command": "npm run build"
@@ -54,5 +61,6 @@
 				"persist": true
 			}
 		}
-	}
+	},
+    "preview_urls": true
 }

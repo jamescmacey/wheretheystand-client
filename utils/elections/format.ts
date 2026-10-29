@@ -70,3 +70,13 @@ export function fromEpochSeconds(value: number | null | undefined): Date | null 
 export function pluralise(count: number, singular: string, plural = `${singular}s`): string {
   return `${formatCount(count) ?? count} ${count === 1 ? singular : plural}`
 }
+
+/** A date carried as `YYYY-MM-DD`, written the way the site writes dates. */
+export function formatIsoDate(value: string | null | undefined): string | null {
+  if (!value) return null
+  const [year, month, day] = value.split('-').map(Number)
+  if (!year || !month || !day) return null
+  return new Date(year, month - 1, day).toLocaleDateString(LOCALE, {
+    day: 'numeric', month: 'long', year: 'numeric',
+  })
+}
