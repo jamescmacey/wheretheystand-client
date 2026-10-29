@@ -1,5 +1,13 @@
 <template>
-    <ElectionsLayoutDashboardPage :breadcrumb="breadcrumbItems" :heading="electorate?.name">
+    <ElectionsLayoutDashboardPage :breadcrumb="breadcrumbItems">
+            <!-- The seat's history belongs with its name rather than below the
+                 tables, which are about this election alone. -->
+            <template #heading>
+                <h2 class="text-2xl font-bold">{{ electorate?.name }}</h2>
+                <ElectionsResultsIncumbencyNote v-if="electorate" :election="election"
+                    :resultsVersion="resultsVersion" :electorate="electorateNumber" />
+            </template>
+
             <template v-if="electorate">
                 <ElectionsResultsElectorateResults v-if="electorate.accepting_candidate_votes" :election="election"
                     :resultsVersion="resultsVersion" :electorate="electorateNumber" category="candidate_votes" />

@@ -20,7 +20,11 @@
                     <ElectionsResultsPartySwatch :colour="segment.colour" />
                     <p class="truncate text-sm">{{ segment.label }}</p>
                 </div>
-                <p class="font-bold tabular-nums">{{ segment.seats }}</p>
+                <p class="font-bold tabular-nums">
+                    {{ segment.seats }}
+                    <ElectionsResultsSeatChange v-if="segment.change" :note="segment.change"
+                        class="ml-1 align-middle text-xs font-normal text-muted" />
+                </p>
                 <p class="text-xs text-muted tabular-nums">{{ segment.split }}</p>
             </div>
         </div>
@@ -30,8 +34,11 @@
 <script setup lang="ts">
 import type { ElectionSummary, ResultsVersion } from '~/types/elections'
 import type { SeatSegment } from './SeatBar.vue'
+import type { SeatChangeNote } from '~/utils/elections/incumbency'
 import { useElectionDataStore } from '~/stores/electionData'
 import { useSeatAllocation } from '~/composables/useSeatAllocation'
+import { useBlocOrder } from '~/composables/useBlocOrder'
+import { useIncumbency } from '~/composables/useIncumbency'
 
 /**
  * Where the seats fell, at a glance.
@@ -47,17 +54,28 @@ const props = defineProps<{
 
 const store = useElectionDataStore()
 const { allocation } = useSeatAllocation(() => props.election, () => props.resultsVersion)
+const { order } = useBlocOrder(() => props.election, () => props.resultsVersion)
+const { seatChangeNoteFor, withDefendingParties } = useIncumbency(
+    () => props.election, () => props.resultsVersion)
 
 const houseHref = computed(() =>
     `/elections/${props.election.slug}/${props.resultsVersion.slug}/house`)
 
-const segments = computed<(SeatSegment & { split: string })[]>(() => {
+type Segment = SeatSegment & { split: string, change: SeatChangeNote | null }
+
+const segments = computed<Segment[]>(() => {
     if (!allocation.value) return []
     const slugs = { e: props.election.slug, v: props.resultsVersion.slug }
 
-    return [...allocation.value.totalSeats.entries()]
-        .filter(([, seats]) => seats > 0)
-        .sort((a, b) => b[1] - a[1])
+    // Parties that held seats and won none are carried here with a count of
+    // zero, so that losing every seat is stated rather than left to the
+    // reader's memory. The bar drops them of its own accord.
+    const entries = withDefendingParties([...allocation.value.totalSeats.entries()]
+        .filter(([, seats]) => seats > 0))
+
+    // Ordered by bloc, so the bar reads left to right the way the chamber on
+    // the House page does. Falls back to size where none is curated.
+    return order(entries)
         .map(([party, seats]) => ({
             key: party,
             label: store.party(slugs.e, slugs.v, party)?.name ?? 'Unknown party',
@@ -65,6 +83,7 @@ const segments = computed<(SeatSegment & { split: string })[]>(() => {
             colour: store.partyColour(slugs.e, slugs.v, party),
             split: `${allocation.value!.electorateSeats.get(party) ?? 0} electorate`
                 + ` · ${allocation.value!.listSeats.get(party) ?? 0} list`,
+            change: seatChangeNoteFor(party, seats),
         }))
 })
 </script>

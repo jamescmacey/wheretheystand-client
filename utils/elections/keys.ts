@@ -13,6 +13,22 @@ import type {
  * on what the tally *is* lets an incoming update replace the right entry
  * whichever transport delivered it.
  *
+ * The last component separates sets that are otherwise identical. A voting
+ * place can report more than once for the same electorate and category -- the
+ * Commission has published advance votes and polling-day votes separately
+ * before -- and `result_number` is the field that would say which report this
+ * is. Nothing populates it, because no field in the feed has been confirmed to
+ * carry the ordinal, so `firestore_id` stands in: it is the one discriminator
+ * both transports hold. Without it both reports land on one key, and the store
+ * keeps whichever is newer; the place then reads low by the dropped set, with
+ * nothing on screen to say so.
+ *
+ * The fallback applies at voting place level only. National and electorate
+ * tallies are already unique per level, category and electorate, and a
+ * published one may have no Firestore id at all -- keying on one would make a
+ * snapshot tally and its live twin two entries instead of one replacing the
+ * other.
+ *
  * Kept in step with ResultsSet.canonical_key in the Django models.
  */
 export function resultsSetKey(parts: {
@@ -21,13 +37,17 @@ export function resultsSetKey(parts: {
   electorate?: EntityNumber | null
   voting_place?: EntityNumber | null
   result_number?: number | null
+  firestore_id?: string | null
 }): string {
+  const discriminator = parts.result_number
+    ?? (parts.results_level === 'voting_place' ? parts.firestore_id : null)
+
   return [
     parts.results_level,
     parts.results_category,
     parts.electorate ?? '-',
     parts.voting_place ?? '-',
-    parts.result_number ?? '-',
+    discriminator ?? '-',
   ].join(':')
 }
 

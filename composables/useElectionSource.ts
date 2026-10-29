@@ -46,6 +46,25 @@ export interface ElectionSource {
   refresh: () => Promise<void>
   loadVotingPlaces: (electorate: EntityNumber) => Promise<void>
   /**
+   * Whether per-voting-place results exist to be loaded at all.
+   *
+   * `loadVotingPlaces` returns silently when this version was not published
+   * with `--voting-places`, which is the usual case. Without this a caller has
+   * no way to tell "not published" from "still loading", and shows a spinner
+   * that never resolves.
+   */
+  votingPlaceResultsAvailable: ComputedRef<boolean>
+  /** Load everything counted at one voting place, across every electorate. */
+  loadVotingPlaceResults: (votingPlace: EntityNumber) => Promise<void>
+  /**
+   * Whether this version publishes a file per voting place.
+   *
+   * Separate from `votingPlaceResultsAvailable`: a version published before
+   * those files existed has the per-electorate shards and not these, and the
+   * two answer different questions, so neither implies the other.
+   */
+  votingPlacePagesAvailable: ComputedRef<boolean>
+  /**
    * Ask for the electorate-level documents this page needs.
    *
    * Prefer `useResultsScope`, which releases the subscription automatically.
@@ -591,6 +610,51 @@ export async function useElectionSource(options: {
     }
   }
 
+  const votingPlaceResultsAvailable = computed(
+    () => Boolean(resultsVersion.value?.paths.voting_places))
+
+  /**
+   * Load everything counted at one voting place.
+   *
+   * One request, because a place's own file holds every electorate it issued
+   * votes for. Assembling the same thing from the per-electorate shards would
+   * mean fetching all of them: a place appears in the shard of each electorate
+   * it served, and which those are is not known until the tallies arrive.
+   *
+   * Called in both modes. During a live count the listener is the fresher
+   * source, but the published figures are a floor while it connects, and
+   * `applyResults` merges on the timestamp so the two cannot fight.
+   */
+  async function loadVotingPlaceResults(votingPlace: EntityNumber) {
+    const version = resultsVersion.value
+    const currentElection = election.value
+    if (!version || !currentElection) return
+    if (store.hasPlaceResults(currentElection.slug, version.slug, votingPlace)) return
+
+    const base = version.paths.voting_places?.by_place_base
+    if (!base) return
+
+    // Marked before the request, not after: a place with nothing counted has
+    // no file, and a 404 would otherwise be retried on every re-render.
+    store.markPlaceResultsLoaded(currentElection.slug, version.slug, votingPlace)
+
+    try {
+      const results = await $fetch(
+        snapshotUrl(`${base}${votingPlace}.json`), apiFetchOptions())
+      store.applyResults(
+        currentElection.slug, version.slug, normaliseSnapshotResults(results))
+    } catch (caught) {
+      // A missing file is an answer -- nothing was counted here -- and must not
+      // become the page's error state. Anything else is a real failure.
+      const status = (caught as { statusCode?: number, status?: number } | null)
+      if (status?.statusCode === 404 || status?.status === 404) return
+      error.value = caught
+    }
+  }
+
+  const votingPlacePagesAvailable = computed(
+    () => Boolean(resultsVersion.value?.paths.voting_places?.by_place_base))
+
   const source: ElectionSource = {
     mode,
     connection,
@@ -604,6 +668,9 @@ export async function useElectionSource(options: {
     isFinal,
     refresh: async () => { await refresh() },
     loadVotingPlaces,
+    votingPlaceResultsAvailable,
+    loadVotingPlaceResults,
+    votingPlacePagesAvailable,
     watchScope,
     activeScope: readonly(scope) as Readonly<Ref<ResultsScope | null>>,
     liveEvent: computed(() => liveEvent.value),

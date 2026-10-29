@@ -49,9 +49,73 @@ export interface ResultsVersionPaths {
   results: string
   voting_places?: {
     reference: string
+    /** Every place within one electorate: `${base}${electorateNumber}.json`. */
     by_electorate_base: string
     by_electorate_count: number
+    /**
+     * Every electorate one place issued votes for:
+     * `${base}${votingPlaceNumber}.json`.
+     *
+     * The opposite sharding, and not derivable from the one above: a place
+     * serves several electorates, so its own tallies are spread across their
+     * files. Optional because a manifest published before these existed does
+     * not carry it.
+     */
+    by_place_base?: string
+    by_place_count?: number
   }
+}
+
+/* -------------------------------------------------------------------------
+ * Incumbency and blocs, curated in Django and carried in the manifest
+ * ---------------------------------------------------------------------- */
+
+/**
+ * The two political blocs, as ordered persistent party ids.
+ *
+ * One rule decides the whole seating plan: `[...left, ...crossbench, ...right]`
+ * reads from the far left of the chamber to the far right. So `left` is curated
+ * far-left first, `right` is curated centre first, and a party in neither list
+ * is cross-bench and sits in the middle.
+ *
+ * Null on a version nobody has aligned, which is every archived election. The
+ * ordering then falls back to size, exactly as it did before blocs existed.
+ */
+export interface PartyBlocs {
+  left: PersistentId[]
+  right: PersistentId[]
+}
+
+/**
+ * Who held one electorate going into this election.
+ *
+ * `party` is the party the seat was *won* for, which is what a flip is measured
+ * against. Where the sitting member has since left it, `left_party` says so and
+ * `current_party` says where they sit now -- absent there means they sit as an
+ * independent. That pair is curated in Django because a member who crossed the
+ * floor and is not standing again leaves nothing in the candidate list to infer
+ * it from. Everything else about a seat is derived: see `useIncumbency`.
+ *
+ * `candidate` is absent where the seat was vacant going in.
+ */
+export interface ElectorateIncumbency {
+  electorate: PersistentId
+  candidate: PersistentId | null
+  party: PersistentId | null
+  left_party: boolean
+  current_party: PersistentId | null
+}
+
+/** How many seats a party held at dissolution, to compare the result against. */
+export interface PartyIncumbency {
+  party: PersistentId
+  electorate_seats: number
+  list_seats: number
+}
+
+export interface Incumbency {
+  electorates: ElectorateIncumbency[]
+  parties: PartyIncumbency[]
 }
 
 export interface ResultsVersion {
@@ -74,7 +138,27 @@ export interface ResultsVersion {
   is_live: boolean
   is_final: boolean
   refdata_built: boolean
+  /**
+   * Social card image for this version, as an absolute URL.
+   *
+   * Uploaded in Django and resolved to a public media URL by the manifest, so
+   * the client never builds it. Null where no card has been uploaded, which is
+   * the usual case -- the page then emits no image meta and shares as a plain
+   * summary card.
+   */
+  card_image_url: string | null
   paths: ResultsVersionPaths
+  /**
+   * The two political blocs, or null where neither has been curated.
+   *
+   * Carried in the manifest rather than a payload because it is a curated
+   * description of the event, so editing it in Django reaches clients on the
+   * save with nothing to publish. Django omits the key entirely where there is
+   * nothing to say, which keeps the one object every visitor fetches small.
+   */
+  blocs: PartyBlocs | null
+  /** Who held what going in, or null where nothing has been curated. */
+  incumbency: Incumbency | null
 }
 
 export interface ElectionSummary {
@@ -137,6 +221,39 @@ export interface ReferenceVotingPlace {
   longitude: number | null
   persistent_voting_place: PersistentId | null
   id?: string
+}
+
+/**
+ * A voting place as the Algolia index holds it.
+ *
+ * A different shape from `ReferenceVotingPlace`, and deliberately not
+ * normalised into it: the index is denormalised for searching, so it carries
+ * the electorate's name as well as its number, and it is the only source that
+ * can rank places by distance. Fields mirror `ElectionVotingPlaceIndex` in
+ * `wts_app/index.py` -- keep the two in step.
+ *
+ * Note what is absent, because it does not exist anywhere upstream: no venue
+ * name, no opening hours, no advance-voting or polling-day flag. The address
+ * is the only identifying string a place has.
+ */
+export interface VotingPlaceHit {
+  /** The Django UUID, which is also the Algolia objectID. */
+  objectID: string
+  number: EntityNumber
+  address: string
+  electorate_name: string
+  electorate_number: EntityNumber
+  latitude: number | null
+  longitude: number | null
+  /** Absent where the place has never been geocoded. */
+  _geoloc?: { lat: number, lng: number }
+  persistent_voting_place: PersistentId | null
+  /**
+   * Metres from the search origin, read from Algolia's `_rankingInfo` rather
+   * than computed here, so the figure shown cannot disagree with the order the
+   * results came back in. Null outside a proximity search.
+   */
+  distanceMetres?: number | null
 }
 
 export interface ReferenceData {
@@ -255,6 +372,18 @@ export interface ResultsSet {
   results: Result[]
   transport: Transport
   source_id: string | null
+  /**
+   * The Firestore document id, where this tally has one.
+   *
+   * Part of the identity of a voting place set rather than mere provenance.
+   * The Commission has published advance votes and polling-day votes as
+   * separate sets for the same place, which level, category, electorate and
+   * place cannot tell apart; `result_number` is the field for that and nothing
+   * populates it. So this stands in, because it is the one discriminator both
+   * transports hold -- Django's `firebase_id` is the same id, and the snapshot
+   * carries it for this reason. See `resultsSetKey`.
+   */
+  firestore_id: string | null
 }
 
 export type ElectorateResultStatus =
