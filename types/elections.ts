@@ -287,6 +287,33 @@ export interface PersistentCandidate {
   firebase_id: string | null
 }
 
+/** A boundary geometry file, and what has to be credited where it is drawn. */
+export interface BoundaryShape {
+  id: string
+  /** Absolute URL of the GeoJSON on media. Fetched only for the shape drawn. */
+  url: string
+  copyright_owner: string | null
+  licence: string | null
+  licence_grantor: string | null
+}
+
+/**
+ * One electorate's shape under one boundary set.
+ *
+ * `valid_from` is the set's: the date its lines came into force. It is how a
+ * page chooses between an electorate's shapes -- the newest set for a current
+ * map, or the newest one in force on polling day for a past election.
+ */
+export interface ElectorateBoundary {
+  id: string
+  boundary_set: string
+  /** ISO date, `YYYY-MM-DD`. */
+  valid_from: string | null
+  shape: BoundaryShape | null
+  /** Fewer vertices, for a map that does not need every bay. Prefer it. */
+  simplified_shape: BoundaryShape | null
+}
+
 export interface PersistentElectorate {
   id: PersistentId
   name: string
@@ -296,6 +323,8 @@ export interface PersistentElectorate {
   status: string
   /** Matches Firestore's numeric persistent_electorate_id. */
   legacy_id: number | null
+  /** Every set the electorate has had, newest `valid_from` first. */
+  boundaries: ElectorateBoundary[]
 }
 
 export interface PersistentVotingPlace {
