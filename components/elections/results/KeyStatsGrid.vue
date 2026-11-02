@@ -12,15 +12,15 @@
 import type { ElectionSummary, ResultsVersion } from '~/types/elections'
 import { useElectionDataStore } from '~/stores/electionData'
 import { useElectionShape } from '~/composables/useElectionShape'
-import { formatCount, formatPercent, pluralise } from '~/utils/elections/format'
+import { formatCount, pluralise } from '~/utils/elections/format'
 
 /**
  * The handful of figures worth seeing before any table.
  *
  * Deliberately not "every statistic the feed carries": the Commission publishes
  * fourteen, most of which are only interesting once you already have a
- * question. What goes here are the four that describe how far along the count
- * is and how many people voted.
+ * question. Votes cast, turnout and electorates final used to sit here too,
+ * and were taken out to give the overview to the seats.
  *
  * A tile is omitted rather than shown empty. During a live count several of
  * these are genuinely unknown for the first hour, and "—" four times over is
@@ -71,28 +71,6 @@ const stats = computed(() => {
     if (!held) return []
 
     const rows: { label: string, value: string, note?: string | null }[] = []
-
-    const votes = formatCount(held.total_votes_cast)
-    if (votes) rows.push({ label: 'Votes cast', value: votes })
-
-    const turnout = formatPercent(held.percent_votes_cast)
-    if (turnout) {
-        rows.push({
-            label: 'Turnout',
-            value: turnout,
-            note: held.total_issued_ballot_papers
-                ? `${formatCount(held.total_issued_ballot_papers)} ballot papers issued`
-                : null,
-        })
-    }
-
-    if (hasPartyVote.value && held.total_electorates_final !== null) {
-        rows.push({
-            label: 'Electorates final',
-            value: formatCount(held.total_electorates_final) ?? '0',
-            note: formatPercent(held.percent_electorates_final),
-        })
-    }
 
     const informals = held.total_party_informals ?? held.total_candidate_informals
     if (informals !== null && informals !== undefined) {

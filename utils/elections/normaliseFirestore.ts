@@ -320,6 +320,8 @@ function normaliseLeadChange(meta: Raw): ElectorateLeadChangeMetadata {
     runner_up: toInt(meta.runner_up_candidate_id),
     previous_leader: toInt(meta.previous_leader_candidate_id),
     margin: toInt(meta.margin),
+    leader_count: toInt(meta.leader_count),
+    runner_up_count: toInt(meta.runner_up_count),
     percent_votes_cast: toFloat(meta.percent_votes_cast),
   }
 }
@@ -329,6 +331,8 @@ function normaliseVotingPlaceAdded(meta: Raw): VotingPlaceAddedMetadata {
     voting_place: toInt(meta.voting_place_id),
     physical_electorate: toInt(meta.physical_electorate_id),
     electorate: toInt(meta.electorate_id),
+    votes_added: toInt(meta.votes_added),
+    total_votes: toInt(meta.total_votes),
   }
 }
 

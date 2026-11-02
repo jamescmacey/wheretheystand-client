@@ -1,4 +1,4 @@
-import type { FeedMessage } from '~/types/elections'
+import type { FeedMessage, FeedMessageType } from '~/types/elections'
 import { normaliseFirestoreFeedMessage } from '~/utils/elections/normaliseFirestore'
 import type { FirestoreSubscription } from './useFirestoreResults'
 
@@ -15,6 +15,22 @@ export const FEED_LIMIT = 20
  */
 const RETRY_ATTEMPTS = 5
 const RETRY_DELAY_MS = 15_000
+
+/**
+ * Every type but voting places, for a reader who has them turned off.
+ *
+ * Filtered in the query rather than after it, so that hiding them still
+ * leaves twenty entries: on election night voting places outnumber
+ * everything else, and dropping them from a window of twenty would often
+ * leave a handful or none. Listed out rather than written as `!=`, which
+ * Firestore would require to be the first ordering and so could not sit
+ * behind `timestamp`.
+ */
+const WITHOUT_VOTING_PLACES: FeedMessageType[] = [
+  'SERVICE_ANNOUNCEMENT',
+  'ELECTORATE_LEAD_CHANGE',
+  'COMPOSITION_CHANGED',
+]
 
 /**
  * The running commentary on a count, while it is live.
@@ -37,6 +53,8 @@ const RETRY_DELAY_MS = 15_000
 export function useFirestoreFeed(options: {
   eventId: MaybeRefOrGetter<string | null>
   enabled: MaybeRefOrGetter<boolean>
+  /** False leaves voting places out of the query, not just out of the list. */
+  includeVotingPlaces: MaybeRefOrGetter<boolean>
 }): FirestoreSubscription & { messages: Ref<FeedMessage[]> } {
   const messages = ref<FeedMessage[]>([])
   const connection = ref<'connecting' | 'live' | 'offline' | 'archived'>('archived')
@@ -116,10 +134,16 @@ export function useFirestoreFeed(options: {
 
       if (mine !== generation) return
 
+      // Two queries, each with its own composite index: the filtered one
+      // adds `type` between the event and the ordering.
+      const constraints = toValue(options.includeVotingPlaces)
+        ? [where('event_id', '==', eventId)]
+        : [where('event_id', '==', eventId), where('type', 'in', WITHOUT_VOTING_PLACES)]
+
       unsubscribe = onSnapshot(
         query(
           collection(db, 'feed'),
-          where('event_id', '==', eventId),
+          ...constraints,
           orderBy('timestamp', 'desc'),
           limit(FEED_LIMIT),
         ),
@@ -150,8 +174,9 @@ export function useFirestoreFeed(options: {
           // index that has not been deployed looks from here exactly like a
           // feed with nothing in it.
           if (error.code === 'failed-precondition') {
-            console.warn('[elections] the live feed needs its composite index on'
-              + ' `feed` (event_id ascending, timestamp descending). Deploy'
+            console.warn('[elections] the live feed needs its composite indexes on'
+              + ' `feed` (event_id ascending, timestamp descending; and event_id'
+              + ' ascending, type ascending, timestamp descending). Deploy'
               + ' firestore.indexes.json from the Django repository.')
           } else {
             console.warn('[elections] live feed unavailable:', error.code)
@@ -168,8 +193,12 @@ export function useFirestoreFeed(options: {
     }
   }
 
+  // Changing the voting places preference re-attaches with the other query.
+  // The entries held stay put until its first snapshot replaces them, so the
+  // list does not blank while it loads; the list's own filter hides any
+  // voting places in the meantime.
   watch(
-    () => [toValue(options.eventId), toValue(options.enabled)],
+    () => [toValue(options.eventId), toValue(options.enabled), toValue(options.includeVotingPlaces)],
     () => { attach() },
     { immediate: true },
   )

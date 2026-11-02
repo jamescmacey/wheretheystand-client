@@ -25,7 +25,6 @@ interface Section { label: string, icon: string, path?: string, exact?: boolean,
 const sections: Section[] = [
   { label: 'Overview', icon: 'i-lucide-layout-dashboard', exact: true },
   { label: 'Parliament', icon: 'i-lucide-landmark', path: '/parliament', when: () => hasPartyVote.value },
-  { label: 'Candidates', icon: 'i-lucide-users', path: '/candidates' },
   {
     label: 'Electorates',
     icon: 'i-lucide-map',
@@ -34,7 +33,8 @@ const sections: Section[] = [
     when: () => !isSingleElectorate.value,
   },
   { label: 'Voting places', icon: 'i-lucide-map-pin', path: '/voting-places' },
-  { label: 'Settings', icon: 'i-lucide-settings', path: '/settings' },
+  // Changing the MMP rules is not ready for readers yet.
+  { label: 'Settings', icon: 'i-lucide-settings', path: '/settings', when: () => debugEnabled },
   {
     label: 'Debug',
     icon: 'i-lucide-bug',
@@ -61,11 +61,26 @@ const links = computed(() => [
   ],
 ] satisfies NavigationMenuItem[][])
 
-const groups = computed(() => [{
-  id: 'links',
-  label: 'Go to',
-  items: links.value.flat(),
-}])
+const colorMode = useColorMode()
+
+const themes = [
+  { label: 'Auto', icon: 'i-lucide-monitor', value: 'system' },
+  { label: 'Light', icon: 'i-lucide-sun', value: 'light' },
+  { label: 'Dark', icon: 'i-lucide-moon', value: 'dark' },
+]
+
+const currentTheme = computed(() => themes.find(theme => theme.value === colorMode.preference) ?? themes[0]!)
+
+const themeItems = computed(() => themes.map(theme => ({
+  label: theme.label,
+  icon: theme.icon,
+  type: 'checkbox' as const,
+  checked: colorMode.preference === theme.value,
+  onSelect: (e: Event) => {
+    e.preventDefault()
+    colorMode.preference = theme.value
+  },
+})))
 </script>
 
 <template>
@@ -88,8 +103,6 @@ const groups = computed(() => [{
       </template>
 
       <template #default="{ collapsed }">
-        <UDashboardSearchButton :collapsed="collapsed" class="bg-transparent ring-default" />
-
         <UNavigationMenu
           :collapsed="collapsed"
           :items="links[0]"
@@ -105,10 +118,28 @@ const groups = computed(() => [{
           tooltip
           class="mt-auto"
         />
+
+        <ClientOnly>
+          <UTooltip :text="`Theme: ${currentTheme.label}`" :disabled="!collapsed" :content="{ side: 'right' }">
+            <UDropdownMenu
+              :items="themeItems"
+              :content="{ side: collapsed ? 'right' : 'top', align: 'end' }"
+            >
+              <UButton
+                :icon="currentTheme.icon"
+                :label="collapsed ? undefined : `Theme: ${currentTheme.label}`"
+                :aria-label="`Theme: ${currentTheme.label}`"
+                color="neutral"
+                variant="ghost"
+                :square="collapsed"
+                :block="!collapsed"
+                :class="collapsed ? 'mx-auto' : 'justify-start'"
+              />
+            </UDropdownMenu>
+          </UTooltip>
+        </ClientOnly>
       </template>
     </UDashboardSidebar>
-
-    <UDashboardSearch :groups="groups" />
 
     <slot />
   </UDashboardGroup>

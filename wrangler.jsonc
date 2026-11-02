@@ -14,14 +14,9 @@
 		{
 			"pattern": "wheretheystand.nz",
 			"custom_domain": true,
-            "enabled":true
-		},
-        {
-            "pattern": "beta.wheretheystand.nz",
-            "custom_domain": true,
-            "previews_enabled": true,
-            "enabled": true
-        }
+            "enabled":true,
+            "previews_enabled":true
+		}
 	],
 	"build": {
 		"command": "npm run build"

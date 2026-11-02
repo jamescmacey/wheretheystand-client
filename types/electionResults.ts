@@ -20,7 +20,7 @@ export interface ResultsRow {
   sublabel?: string | null
   colour?: string | null
   to?: string | null
-  /** Bar value, in the same units as the table's barMax. */
+  /** Bar value, as a percentage: the bar is drawn against a full track of 100. */
   bar?: number | null
   cells: Record<string, string | number | null>
   /** Rendered muted, for informals and similar non-contesting lines. */

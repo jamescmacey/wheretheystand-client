@@ -16,6 +16,7 @@
 <script setup lang="ts">
 import type { ElectionSummary, ResultsVersion } from '~/types/elections'
 import { useInjectedElectionSource } from '~/composables/useElectionSource'
+import { useFeedVotingPlaces } from '~/composables/useFeedPreferences'
 
 /**
  * The feed on a phone, where there is no room for a second panel.
@@ -37,6 +38,9 @@ const source = useInjectedElectionSource()
 
 const open = ref(false)
 
+const { visible } = useFeedVotingPlaces()
+
+// Everything held goes to the list, which filters for itself.
 const messages = computed(() => source?.feed.value ?? [])
 const live = computed(() => source?.mode.value === 'live')
 const connection = computed(() => source?.feedConnection.value ?? 'archived')
@@ -44,15 +48,21 @@ const connection = computed(() => source?.feedConnection.value ?? 'archived')
 // The newest entry the reader has actually seen. Null until the drawer has
 // been opened once, which is why the first entries count as unread: somebody
 // arriving mid-count has not seen any of them.
+//
+// Tracked against every entry, not just the ones shown, so that turning
+// voting places on or off cannot lose track of where the reader got to.
 const seen = ref<string | null>(null)
 
 const unread = computed(() => {
     if (open.value) return 0
-    if (seen.value === null) return messages.value.length
-    const index = messages.value.findIndex(message => message.id === seen.value)
+    const index = seen.value === null
+        ? -1
+        : messages.value.findIndex(message => message.id === seen.value)
     // Not found means every entry held has arrived since, which happens once
-    // more than twenty land between openings.
-    return index === -1 ? messages.value.length : index
+    // more than twenty land between openings. Only what the list would show
+    // is counted.
+    const arrived = index === -1 ? messages.value : messages.value.slice(0, index)
+    return visible(arrived).length
 })
 
 const triggerLabel = computed(() => (unread.value

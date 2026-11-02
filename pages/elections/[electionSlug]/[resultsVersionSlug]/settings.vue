@@ -64,11 +64,18 @@
 <script setup lang="ts">
 import type { ElectionSummary, ResultsVersion } from '~/types/elections'
 import { useMmpSettings } from '~/composables/useMmpSettings'
+import { useElectionsDebugEnabled } from '~/composables/useElectionsDebug'
 
 defineProps<{
     election: ElectionSummary
     resultsVersion: ResultsVersion
 }>()
+
+// Changing the MMP rules is not ready for readers yet. The sidebar link is
+// gated too, but a route is reachable without it.
+if (!useElectionsDebugEnabled()) {
+    throw createError({ statusCode: 404, statusMessage: 'Not found' })
+}
 
 // One store for these, rather than a ref per control: they are read by the
 // Parliament page and by anything else showing a seat number, and they outlive

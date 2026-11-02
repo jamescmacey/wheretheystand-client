@@ -1,5 +1,6 @@
 import type { MmpSettings } from '~/utils/elections/mmp'
 import { OFFICIAL_MMP_SETTINGS } from '~/utils/elections/mmp'
+import { useElectionsDebugEnabled } from '~/composables/useElectionsDebug'
 
 /**
  * The rules the dashboard applies when working out the Parliament.
@@ -47,9 +48,12 @@ function sanitise(raw: unknown): Partial<MmpSettings> {
 export function useMmpSettings() {
   const settings = useState<MmpSettings>('mmp-settings', () => ({ ...OFFICIAL_MMP_SETTINGS }))
   const hydrated = useState<boolean>('mmp-settings-hydrated', () => false)
+  // The settings page is debug-only for now. Without it a reader could not see
+  // or reset a choice saved earlier, so the official rules apply regardless.
+  const debugEnabled = useElectionsDebugEnabled()
 
   onMounted(() => {
-    if (hydrated.value) return
+    if (hydrated.value || !debugEnabled) return
     hydrated.value = true
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY)

@@ -60,6 +60,26 @@ export function formatTime(value: Date | null | undefined): string | null {
     .replace(':', '.')
 }
 
+const DAY_MS = 24 * 60 * 60 * 1000
+
+/**
+ * A time, with its date once it is more than a day old: "9.35 pm" today,
+ * "14 Oct 2023, 9.35 pm" otherwise.
+ *
+ * A bare clock time is only unambiguous while it can be read as today's. An
+ * archived result updated at "9.35 pm" says nothing about which night.
+ */
+export function formatRecentTime(
+  value: Date | null | undefined,
+  now: Date = new Date(),
+): string | null {
+  const time = formatTime(value)
+  if (!time || !value) return null
+  if (now.getTime() - value.getTime() <= DAY_MS) return time
+  const date = value.toLocaleDateString(LOCALE, { day: 'numeric', month: 'short', year: 'numeric' })
+  return `${date}, ${time}`
+}
+
 /** Epoch seconds, as carried on a results set, to a Date. */
 export function fromEpochSeconds(value: number | null | undefined): Date | null {
   if (value === null || value === undefined || !Number.isFinite(value)) return null

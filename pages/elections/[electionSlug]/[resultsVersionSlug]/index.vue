@@ -4,10 +4,6 @@
             <ElectionsNavigationResultsVersionSwitch class="min-w-0" :election="election"
                 :resultsVersion="resultsVersion" />
         </template>
-        <template #heading>
-            <h1 class="text-2xl lg:text-5xl font-bold">{{ election.name }}</h1>
-            <p class="text-md lg:text-xl text-muted">{{ resultsVersion.name }}</p>
-        </template>
 
         <ElectionsResultsKeyStatsGrid :election="election" :resultsVersion="resultsVersion" />
 
@@ -23,9 +19,29 @@
         </template>
 
         <template v-else>
-            <ElectionsResultsSeatAllocationSummary :election="election" :resultsVersion="resultsVersion" />
+            <!-- The same chamber and card as the Parliament page, from the same
+                 allocation, so the two can never disagree about a seat. -->
+            <!-- Card beside the chamber on a wide screen; on a narrow one the
+                 chamber comes first, as the picture the figures explain. -->
+            <div v-if="allocation" class="grid gap-4 lg:grid-cols-2">
+                <ElectionsParliamentPartySeats :election="election" :resultsVersion="resultsVersion"
+                    :allocation="allocation" :to="parliamentHref" title="Parliament" variant="soft" />
+                <!-- Carded to match its neighbour, and stretched to its height
+                     with the chamber centred, so it does not float beside it. -->
+                <UCard variant="soft" class="order-first lg:order-last"
+                    :ui="{ body: 'h-full flex items-center justify-center' }">
+                    <ElectionsParliamentSeatGrid :election="election" :resultsVersion="resultsVersion"
+                        :allocation="allocation" class="w-full" />
+                </UCard>
+            </div>
 
-            <ElectionsResultsNationalPartyResults :election="election" :resultsVersion="resultsVersion" />
+            <!-- Side by side on a wide screen. The party card is too narrow
+                 there for bars to say anything the share column does not. -->
+            <div class="grid gap-4 items-start lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+                <ElectionsResultsNationalPartyResults :election="election" :resultsVersion="resultsVersion"
+                    :show-bars="false" />
+                <ElectionsResultsElectorateGrid :election="election" :resultsVersion="resultsVersion" />
+            </div>
 
             <ElectionsResultsCloseRacesList :election="election" :resultsVersion="resultsVersion"
                 :empty-message="closeRacesEmptyMessage" />
@@ -36,6 +52,7 @@
 <script setup lang="ts">
 import type { ElectionSummary, ResultsVersion } from '~/types/elections'
 import { useElectionShape } from '~/composables/useElectionShape'
+import { useSeatAllocation } from '~/composables/useSeatAllocation'
 import { useResultsScope } from '~/composables/useElectionSource'
 import { useElectionDataStore } from '~/stores/electionData'
 
@@ -46,6 +63,10 @@ const props = defineProps<{
 
 const store = useElectionDataStore()
 const { hasPartyVote, soleElectorate } = useElectionShape()
+const { allocation } = useSeatAllocation(() => props.election, () => props.resultsVersion)
+
+const parliamentHref = computed(() =>
+    `/elections/${props.election.slug}/${props.resultsVersion.slug}/parliament`)
 
 /**
  * This page asks for no results beyond the national tally.

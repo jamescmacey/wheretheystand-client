@@ -1,13 +1,21 @@
 <template>
-    <UCard v-if="tiles.length" variant="subtle">
+    <UCard v-if="tiles.length" :variant="variant" :ui="{ body: '@container' }">
         <template #header>
             <div class="flex items-baseline justify-between gap-2 flex-wrap">
-                <h3 class="font-bold">Seats</h3>
-                <p class="text-sm text-muted">{{ summary }}</p>
+                <h3 class="font-bold">{{ title }}</h3>
+                <div class="flex items-baseline gap-3">
+                    <p class="text-sm text-muted">{{ summary }}</p>
+                    <UButton v-if="to" :to="to" variant="link" color="neutral" size="sm"
+                        trailing-icon="i-lucide-arrow-right" class="p-0">
+                        Full Parliament
+                    </UButton>
+                </div>
             </div>
         </template>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-5">
+        <!-- Columns follow the card's width rather than the screen's, since
+             the overview shows it at half the width Parliament does. -->
+        <div class="grid grid-cols-2 @md:grid-cols-3 @3xl:grid-cols-4 gap-x-4 gap-y-5">
             <div v-for="tile in tiles" :key="tile.key" class="flex gap-3 min-w-0">
                 <ElectionsResultsPartySwatch :colour="tile.swatch" />
                 <div class="min-w-0">
@@ -56,11 +64,15 @@ import { formatPercent, pluralise } from '~/utils/elections/format'
  * threshold. A party on 3 per cent won nothing, but "nothing" is a result, and
  * leaving it out answers the question of who nearly made it with silence.
  */
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     election: ElectionSummary
     resultsVersion: ResultsVersion
     allocation: SeatAllocation
-}>()
+    /** Where the header links to, for a page that shows this card away from Parliament. */
+    to?: string
+    title?: string
+    variant?: 'soft' | 'subtle'
+}>(), { title: 'Seats', variant: 'subtle' })
 
 const store = useElectionDataStore()
 const slugs = computed(() => ({ e: props.election.slug, v: props.resultsVersion.slug }))

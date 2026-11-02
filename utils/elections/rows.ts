@@ -26,7 +26,7 @@ export interface ResultsRowsInput {
   resultsVersion: ResultsVersion
   category: ResultsCategory
   results: Result[]
-  /** The denominator for every share, and for the informals line. */
+  /** Every vote cast, informals included: the denominator for the informals line. */
   totalVotes: number
   informals: number | null
 }
@@ -49,8 +49,13 @@ export function buildResultsRows(input: ResultsRowsInput): ResultsRow[] {
 
   const ordered = [...results].sort((a, b) => (b.count ?? 0) - (a.count ?? 0))
 
+  // A contestant's share is of the valid votes, as the Electoral Commission
+  // reports it. Informals are a vote for nobody, and counting them in the
+  // denominator would understate every candidate by the informal rate.
+  const validVotes = ordered.reduce((sum, result) => sum + (result.count ?? 0), 0)
+
   const rows: ResultsRow[] = ordered.map((result) => {
-    const share = voteShare(result.count, totalVotes)
+    const share = voteShare(result.count, validVotes)
 
     if (isCandidates) {
       const candidate = result.candidate === null
@@ -107,11 +112,6 @@ export function buildResultsRows(input: ResultsRowsInput): ResultsRow[] {
   }
 
   return rows
-}
-
-/** The bar scale, so a table of small shares is still readable. */
-export function barMaxForRows(rows: ResultsRow[]): number {
-  return Math.max(10, ...rows.map(row => row.bar ?? 0))
 }
 
 /** The columns every results table shares. */

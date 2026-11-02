@@ -4,7 +4,7 @@
             description="National party vote totals have not been reported yet." />
         <template v-else>
             <UCard variant="soft">
-                <ElectionsResultsTable :columns="columns" :rows="rows" :totals="totals" :bar-max="barMax">
+                <ElectionsResultsTable :columns="columns" :rows="rows" :totals="totals" :show-bars="showBars">
                     <template #lead-header>
                         <USwitch v-model="showAll" size="sm" label="Show all parties" />
                     </template>
@@ -21,10 +21,12 @@ import { useElectionDataStore } from '~/stores/electionData'
 import { useSeatAllocation } from '~/composables/useSeatAllocation'
 import { formatCount, formatPercent } from '~/utils/elections/format'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     election: ElectionSummary
     resultsVersion: ResultsVersion
-}>()
+    /** Off where the card shares its row and the figures carry the comparison. */
+    showBars?: boolean
+}>(), { showBars: true })
 
 const store = useElectionDataStore()
 
@@ -68,9 +70,6 @@ const visible = computed(() => ordered.value.filter(result =>
     showAll.value
     || seatsFor(result.party).total > 0
     || (result.per_cent ?? 0) >= MINOR_PARTY_THRESHOLD))
-
-const barMax = computed(() =>
-    Math.max(10, ...ordered.value.map(result => result.per_cent ?? 0)))
 
 const rows = computed<ResultsRow[]>(() => visible.value.map(result => {
     const party = result.party === null

@@ -6,14 +6,6 @@
                 description="The seats below are worked out using the rules set on the Settings page, not the ones in the Electoral Act."
                 class="mb-2" />
 
-            <!-- Said once, here, rather than beside every number: until the
-                 count is final these seats can still move, and the specials are
-                 historically worth a seat or two. -->
-            <UAlert v-if="!isFinal" color="neutral" variant="subtle" icon="i-lucide-info"
-                title="The count is not final"
-                description="Seats are worked out from the votes counted so far and will change as more are counted."
-                class="mb-2" />
-
             <UAlert v-if="allocation.ties.length" color="warning" variant="subtle" icon="i-lucide-scale"
                 title="The last seat is tied"
                 description="Two or more parties have an equal claim to the final seat. The law settles this by lot, so it is not shown as won by either." />
@@ -60,7 +52,7 @@
 import type { ElectionSummary, ResultsVersion } from '~/types/elections'
 import { useSeatAllocation } from '~/composables/useSeatAllocation'
 import { useMmpSettings } from '~/composables/useMmpSettings'
-import { useInjectedElectionSource, useResultsScope } from '~/composables/useElectionSource'
+import { useResultsScope } from '~/composables/useElectionSource'
 import { pluralise } from '~/utils/elections/format'
 
 const props = defineProps<{
@@ -74,7 +66,4 @@ useResultsScope({ kind: 'all-electorates' })
 
 const { allocation } = useSeatAllocation(() => props.election, () => props.resultsVersion)
 const { isOfficial } = useMmpSettings()
-
-const source = useInjectedElectionSource()
-const isFinal = computed(() => source?.isFinal.value ?? false)
 </script>

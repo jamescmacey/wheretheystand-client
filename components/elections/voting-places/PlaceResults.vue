@@ -3,9 +3,6 @@
         <template #header>
             <div class="flex flex-wrap items-center justify-between gap-2">
                 <h3 class="font-bold">{{ heading }}</h3>
-                <UBadge v-if="aggregate.isFinal" variant="subtle" color="neutral" size="sm">
-                    Final
-                </UBadge>
             </div>
         </template>
 
@@ -13,7 +10,7 @@
             :description="emptyDescription" />
 
         <template v-else>
-            <ElectionsResultsTable :columns="columns" :rows="rows" :totals="totals" :bar-max="barMax"
+            <ElectionsResultsTable :columns="columns" :rows="rows" :totals="totals"
                 lead-width="minmax(9rem, 18rem)" />
 
             <p class="mt-3 text-sm text-muted">{{ provenance }}</p>
@@ -57,7 +54,7 @@ import type { ResultsRow } from '~/types/electionResults'
 import { useElectionDataStore } from '~/stores/electionData'
 import { aggregateResultsSets } from '~/utils/elections/aggregate'
 import { formatCount, formatTime, fromEpochSeconds, pluralise } from '~/utils/elections/format'
-import { RESULTS_COLUMNS, barMaxForRows, buildResultsRows } from '~/utils/elections/rows'
+import { RESULTS_COLUMNS, buildResultsRows } from '~/utils/elections/rows'
 
 /**
  * What one voting place counted, combined across whatever reported it.
@@ -119,8 +116,6 @@ const rows = computed<ResultsRow[]>(() => buildResultsRows({
     totalVotes: aggregate.value.totalVotes,
     informals: aggregate.value.informals,
 }))
-
-const barMax = computed(() => barMaxForRows(rows.value))
 
 const totals = computed(() => ({
     label: 'Total votes cast',
