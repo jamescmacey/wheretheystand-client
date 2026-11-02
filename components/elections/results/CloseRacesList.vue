@@ -13,23 +13,36 @@
         </template>
 
         <template v-if="races.length">
-            <ul class="divide-y divide-default/50">
-                <li v-for="race in races" :key="race.electorate" class="py-2">
-                    <NuxtLink :to="race.href" class="flex items-center justify-between gap-3 hover:underline">
-                        <div class="flex items-center gap-2 min-w-0">
-                            <ElectionsResultsPartySwatch :colour="race.colour" />
-                            <div class="min-w-0">
-                                <p class="truncate">{{ race.name }}</p>
-                                <p class="text-xs text-muted truncate">{{ race.leader }}</p>
+            <!-- The same badge, tallies and lead as the Electorates page, so a
+                 seat reads the same wherever it appears. -->
+            <div class="grid gap-3 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+                <UPageCard v-for="race in races" :key="race.electorate" :to="race.href" variant="subtle"
+                    :ui="{ container: 'p-3 sm:p-3' }">
+                    <!-- The card is a link in its own right, so nothing inside it is. -->
+                    <div class="min-w-0">
+                        <ElectionsEntityElectorateBadge :election="election" :resultsVersion="resultsVersion"
+                            :electorate="race.electorate" :link="false" class="max-w-full" />
+                    </div>
+
+                    <!-- The two tallies with the difference between them, where
+                         a reader comparing them is already looking. -->
+                    <div class="mt-3 flex flex-col gap-1">
+                        <template v-for="(leader, index) in race.leaders" :key="leader.candidate">
+                            <p v-if="index === 1" class="text-xs text-muted text-right tabular-nums"
+                                :title="race.description">
+                                {{ race.margin }}
+                            </p>
+                            <div class="flex items-center justify-between gap-3">
+                                <ElectionsEntityCandidateLabel :election="election"
+                                    :resultsVersion="resultsVersion" :candidate="leader.candidate" :link="false" />
+                                <span class="tabular-nums font-medium shrink-0">
+                                    {{ formatCount(leader.count) }}
+                                </span>
                             </div>
-                        </div>
-                        <div class="text-right shrink-0">
-                            <p class="tabular-nums font-bold">{{ race.margin }}</p>
-                            <p class="text-xs text-muted tabular-nums">{{ race.points }}</p>
-                        </div>
-                    </NuxtLink>
-                </li>
-            </ul>
+                        </template>
+                    </div>
+                </UPageCard>
+            </div>
             <UButton :to="electoratesHref" variant="link" color="neutral" size="sm" class="mt-2"
                 trailing-icon="i-lucide-arrow-right">
                 All electorates
@@ -44,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ElectionSummary, EntityNumber, ResultsVersion } from '~/types/elections'
+import type { ElectionSummary, ResultsVersion } from '~/types/elections'
 import { useElectionDataStore } from '~/stores/electionData'
 import { formatCount, formatPoints, formatTime, fromEpochSeconds } from '~/utils/elections/format'
 
@@ -92,33 +105,20 @@ const races = computed(() => {
         })
         .slice(0, props.limit)
         .map((result) => {
-            const leader = result.firstPlace?.length === 1 ? result.firstPlace[0]! : null
-            const candidate = leader === null
-                ? null
-                : store.candidate(slugs.value.e, slugs.value.v, leader)
-            const party = candidate?.party ?? null
+            const votes = formatCount(result.margin)
+            const points = formatPoints(result.marginPercentage)
 
             return {
                 electorate: result.electorate,
-                name: nameFor(result.electorate),
+                leaders: (result.leaders ?? []).slice(0, 2),
                 href: `/elections/${slugs.value.e}/${slugs.value.v}/electorates/${result.electorate}`,
-                colour: store.partyColour(slugs.value.e, slugs.value.v, party),
-                leader: result.resultStatus === 'indeterminate'
-                    ? 'Leading candidates tied'
-                    : candidate?.name ?? 'No leading candidate',
-                margin: result.resultStatus === 'indeterminate'
-                    ? 'Tied'
-                    : `${formatCount(result.margin)}`,
-                points: result.resultStatus === 'indeterminate'
-                    ? ''
-                    : formatPoints(result.marginPercentage) ?? '',
+                margin: result.resultStatus === 'indeterminate' ? 'Tied' : `+${votes}`,
+                description: result.resultStatus === 'indeterminate'
+                    ? 'The leading candidates are tied.'
+                    : points ? `Margin of ${votes} votes (${points}).` : `Margin of ${votes} votes.`,
             }
         })
 })
-
-function nameFor(electorate: EntityNumber): string {
-    return store.electorate(slugs.value.e, slugs.value.v, electorate)?.name ?? 'Unknown electorate'
-}
 
 /**
  * The newest electorate tally behind this list, which is what it is "as at".

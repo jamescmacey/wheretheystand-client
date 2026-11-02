@@ -1,8 +1,7 @@
 <template>
-    <div v-if="source" class="flex flex-wrap items-center gap-2">
+    <div v-if="source" class="flex flex-wrap items-end gap-x-6 gap-y-2">
         <ElectionsResultsStatusIndicator :mode="source.mode.value" :connection="source.connection.value"
-            :last-updated="lastUpdated" :is-final="isFinal"
-            :live-ended="source.liveEnded.value" />
+            :last-updated="lastUpdated" :live-ended="source.liveEnded.value" />
         <ElectionsResultsCountedProgress :percent="percentCounted" :counted="votingPlacesCounted"
             :total="votingPlacesTotal" />
         <slot />
@@ -71,17 +70,6 @@ const lastUpdated = computed(() => {
     }
     return newest === null ? null : new Date(newest * 1000)
 })
-
-/**
- * Final means every tally on this page is final, not that one of them is.
- *
- * A seat can be declared final while the election is not, which is the point
- * of asking the sets rather than the source. Nothing reported yet is not final
- * either, which `every` would otherwise call an empty truth.
- */
-const isFinal = computed(() => (scoped.value
-    ? sets.value.length > 0 && sets.value.every(set => set.is_final)
-    : source?.isFinal.value ?? false))
 
 // Null rather than zero where the seat has nothing yet: the badge then renders
 // nothing at all, where "0.0 per cent counted" would be a figure this page does

@@ -1,6 +1,6 @@
 <template>
-    <div class="overflow-x-auto">
-        <div :style="gridVars">
+    <div class="results-container overflow-x-auto">
+        <div :style="gridVars" :class="{ 'results-no-bars': !showBars }">
             <!-- Header -->
             <div class="results-grid items-end gap-3 pb-2 text-sm uppercase text-muted">
                 <div><slot name="lead-header" /></div>
@@ -33,7 +33,7 @@
                     <!-- Muted rows fall back to grey rather than the theme colour,
                          which would read as a party's own. -->
                     <ElectionsResultsVoteBar v-if="row.bar !== null && row.bar !== undefined"
-                        :value="row.bar" :max="barMax"
+                        :value="row.bar"
                         :colour="row.colour ?? (row.muted ? DEFAULT_PARTY_COLOUR : null)" />
                 </div>
                 <div v-for="column in columns" :key="column.key" class="text-right tabular-nums"
@@ -67,17 +67,24 @@ import { DEFAULT_PARTY_COLOUR } from '~/stores/electionData'
  * the bar has to stretch, and the columns must line up exactly between the
  * header, the rows and the totals.
  *
- * Narrow screens drop the bar and the columns marked secondary, and the dropped
+ * Narrow tables drop the bar and the columns marked secondary, and the dropped
  * figures reappear under each row's label. The switch is CSS only, so the
- * server and the browser always render the same markup.
+ * server and the browser always render the same markup. It is a container
+ * query rather than a media query: the same table sits full width on one page
+ * and in half a row on another, and only its own width says which fits.
+ *
+ * A bar is a share of the whole, drawn against a track of 100, never scaled to
+ * the largest row: scaled, the leader always fills the track and a 40 per cent
+ * party looks like a landslide. `showBars` drops the column outright, for a
+ * table set beside something else that needs the width more.
  */
 const props = withDefaults(defineProps<{
     columns: ResultsColumn[]
     rows: ResultsRow[]
     totals?: { label: string, note?: string | null, cells: Record<string, string | number | null> } | null
-    barMax?: number
+    showBars?: boolean
     leadWidth?: string
-}>(), { totals: null, barMax: 100, leadWidth: 'minmax(8rem, 15rem)' })
+}>(), { totals: null, showBars: true, leadWidth: 'minmax(8rem, 15rem)' })
 
 const hasSecondary = computed(() => props.columns.some(column => column.secondary))
 
@@ -89,9 +96,9 @@ const gridVars = computed(() => ({
         'minmax(0, 1fr)',
         ...props.columns.filter(c => !c.secondary).map(() => 'auto'),
     ].join(' '),
+    // Without bars the label takes the stretch the bar would have had.
     '--results-cols-wide': [
-        props.leadWidth,
-        'minmax(0, 1fr)',
+        ...(props.showBars ? [props.leadWidth, 'minmax(0, 1fr)'] : ['minmax(0, 1fr)']),
         ...props.columns.map(c => c.width ?? '4rem'),
     ].join(' '),
 }))
@@ -105,6 +112,10 @@ function secondarySummary(cells: Record<string, string | number | null>): string
 </script>
 
 <style scoped>
+.results-container {
+    container-type: inline-size;
+}
+
 .results-grid {
     display: grid;
     grid-template-columns: var(--results-cols-narrow);
@@ -115,7 +126,7 @@ function secondarySummary(cells: Record<string, string | number | null>): string
     display: none;
 }
 
-@media (min-width: 640px) {
+@container (min-width: 40rem) {
     .results-grid {
         grid-template-columns: var(--results-cols-wide);
     }
@@ -126,6 +137,10 @@ function secondarySummary(cells: Record<string, string | number | null>): string
     }
 
     .results-secondary-summary {
+        display: none;
+    }
+
+    .results-no-bars .results-bar {
         display: none;
     }
 }

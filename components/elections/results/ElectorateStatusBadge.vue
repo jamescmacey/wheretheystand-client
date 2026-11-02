@@ -8,24 +8,21 @@ import type { ElectorateResultStatus } from '~/types/elections'
 /**
  * How far along an electorate's count is, in one word.
  *
- * "Leading" rather than "Won", because until the count is final it is not.
+ * "Leading" rather than "Won" or "Elected", even once a results set is marked
+ * final: that marks the end of updates to the set, which for preliminary
+ * results is not the declaration of the seat.
  * Where the count has not reached an electorate at all the badge says so
  * plainly -- the alternative, before the store told the two apart, was every
  * electorate reading "too close to call" the moment polls closed.
  */
 const props = defineProps<{
     status?: ElectorateResultStatus | null
-    /** Once the whole count is final, leading becomes elected. */
-    isFinal?: boolean
 }>()
 
 const badge = computed(() => {
     switch (props.status) {
         case 'determined':
-            return {
-                label: props.isFinal ? 'Elected' : 'Leading',
-                color: 'primary' as const,
-            }
+            return { label: 'Leading', color: 'primary' as const }
         case 'indeterminate':
             return { label: 'Too close', color: 'warning' as const }
         case 'defaulted':

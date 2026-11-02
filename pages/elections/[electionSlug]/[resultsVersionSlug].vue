@@ -60,8 +60,8 @@ watch(resultsVersion, found => {
 }, { immediate: true })
 
 // Loaded once here and provided, rather than per page: switching between the
-// overview, candidates and electorates must not refetch a payload that covers
-// all three. Child pages read the store; they inject this only for status.
+// overview, electorates and voting places must not refetch a payload that covers
+// them all. Child pages read the store; they inject this only for status.
 const source = await useElectionSource({ election, resultsVersion })
 provide(ELECTION_SOURCE_KEY, source)
 

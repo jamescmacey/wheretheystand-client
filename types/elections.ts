@@ -603,6 +603,9 @@ export interface ElectorateLeadChangeMetadata {
   previous_leader: EntityNumber | null
   /** Votes between the leader and the runner up. Zero means they are level. */
   margin: number | null
+  /** Both tallies as they stood when the lead changed. Null from an older worker. */
+  leader_count: number | null
+  runner_up_count: number | null
   /** How much of the electorate was counted when the lead changed. */
   percent_votes_cast: number | null
 }
@@ -613,6 +616,9 @@ export interface VotingPlaceAddedMetadata {
   physical_electorate: EntityNumber | null
   /** The electorate the votes were counted for. */
   electorate: EntityNumber | null
+  /** How many votes this report added. Null from an older worker. */
+  votes_added: number | null
+  total_votes: number | null
 }
 
 /** One party's seat count before and after a change in the projection. */

@@ -18,6 +18,7 @@ import {
   normaliseSnapshotVotingPlaces,
 } from '~/utils/elections/normaliseSnapshot'
 import { snapshotUrl } from './useElectionManifest'
+import { useFeedVotingPlaces } from './useFeedPreferences'
 import { useFirestoreFeed } from './useFirestoreFeed'
 import { useFirestoreResults, type ResultsScope } from './useFirestoreResults'
 import { fetchFirestoreReference, watchLiveEvent } from './useFirestoreReference'
@@ -309,9 +310,11 @@ export async function useElectionSource(options: {
    * declared -- the listener stops, the entries stay, and switching results
    * version clears them.
    */
+  const { show: showVotingPlaces } = useFeedVotingPlaces()
   const feed = useFirestoreFeed({
     eventId: () => resultsVersion.value?.firebase_id ?? null,
     enabled: () => mode.value === 'live',
+    includeVotingPlaces: showVotingPlaces,
   })
 
   // Whatever the open page additionally asked for. Null means no second

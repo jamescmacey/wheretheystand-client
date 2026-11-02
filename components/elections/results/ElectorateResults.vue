@@ -6,7 +6,7 @@
 
         <ElectionsResultsEmpty v-if="!results" :title="`No ${noun} yet`"
             :description="`${headingNoun} for this electorate have not been reported yet.`" />
-        <ElectionsResultsTable v-else :columns="columns" :rows="rows" :totals="totals" :bar-max="barMax"
+        <ElectionsResultsTable v-else :columns="columns" :rows="rows" :totals="totals"
             lead-width="minmax(9rem, 18rem)" />
     </UCard>
 </template>
@@ -20,7 +20,7 @@ import { useElectionDataStore } from '~/stores/electionData'
 import { useIncumbency } from '~/composables/useIncumbency'
 import { formatCount } from '~/utils/elections/format'
 import {
-    RESULTS_COLUMNS, barMaxForRows, buildResultsRows,
+    RESULTS_COLUMNS, buildResultsRows,
 } from '~/utils/elections/rows'
 
 /**
@@ -84,8 +84,6 @@ const rows = computed<ResultsRow[]>(() => {
         }
     })
 })
-
-const barMax = computed(() => barMaxForRows(rows.value))
 
 const totals = computed(() => ({
     label: 'Total votes cast',
