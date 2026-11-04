@@ -3,7 +3,9 @@
         <div class="results-table" :style="gridVars" :class="{ 'results-no-bars': !showBars }">
             <!-- Header -->
             <div class="results-grid items-end gap-3 pb-2 text-sm uppercase text-muted">
-                <div><slot name="lead-header" /></div>
+                <div :class="$slots['lead-header'] ? 'results-lead-header' : ''"><slot name="lead-header" /></div>
+                <!-- Holds the label track under a lead heading that has its own line. -->
+                <div v-if="$slots['lead-header']" class="results-lead-spacer" aria-hidden="true" />
                 <div class="results-bar"><slot name="bar-header" /></div>
                 <div v-for="column in columns" :key="column.key"
                     class="text-right border-b border-default"
@@ -26,7 +28,14 @@
                     <ElectionsResultsPartySwatch v-if="!row.muted" :colour="row.colour"
                         :alternate="row.alternateColour" />
                     <div class="min-w-0">
-                        <p class="results-label">{{ row.label }}</p>
+                        <template v-if="row.shortLabel">
+                            <p class="results-label results-label-full">{{ row.label }}</p>
+                            <p class="results-label results-label-short" :title="row.label">
+                                <span aria-hidden="true">{{ row.shortLabel }}</span>
+                                <span class="sr-only">{{ row.label }}</span>
+                            </p>
+                        </template>
+                        <p v-else class="results-label">{{ row.label }}</p>
                         <p v-if="row.sublabel" class="results-label text-xs text-muted">{{ row.sublabel }}</p>
                         <!-- Columns dropped on narrow screens reappear here rather
                              than being lost. -->
@@ -43,7 +52,7 @@
                         :colour="row.colour ?? (row.muted ? DEFAULT_PARTY_COLOUR : null)"
                         :alternate="row.alternateColour" />
                 </div>
-                <div v-for="column in columns" :key="column.key" class="text-right tabular-nums"
+                <div v-for="column in columns" :key="column.key" class="results-figure text-right tabular-nums"
                     :class="[column.emphasis ? 'font-bold' : '', column.secondary ? 'results-secondary' : '',
                              column.muted ? 'text-muted' : '']">
                     <!-- A column that needs more than text, such as a figure
@@ -164,7 +173,8 @@ function secondarySummary(cells: Record<string, string | number | null>): string
 }
 
 .results-bar,
-.results-secondary {
+.results-secondary,
+.results-label-full {
     display: none;
 }
 
@@ -183,6 +193,24 @@ function secondarySummary(cells: Record<string, string | number | null>): string
     column-gap: 0.5rem;
 }
 
+.results-figure {
+    font-size: var(--text-sm);
+}
+
+/*
+ * A control in the lead heading, such as the show-all switch, gets its own line
+ * above the column headings: the label track is too narrow to hold it, and it
+ * would otherwise spill across the first heading.
+ */
+.results-lead-header {
+    grid-column: 1 / -1;
+}
+
+/* Initials are short enough to keep whole: "NA" over "T" reads as nothing. */
+.results-label-short {
+    white-space: nowrap;
+}
+
 @container (min-width: 40rem) {
     .results-table {
         grid-template-columns: var(--results-cols-wide);
@@ -193,12 +221,29 @@ function secondarySummary(cells: Record<string, string | number | null>): string
         display: block;
     }
 
-    .results-secondary-summary {
+    .results-label-full {
+        display: block;
+    }
+
+    .results-secondary-summary,
+    .results-label-short {
         display: none;
     }
 
     .results-grid {
         column-gap: 0.75rem;
+    }
+
+    .results-figure {
+        font-size: inherit;
+    }
+
+    .results-lead-header {
+        grid-column: auto;
+    }
+
+    .results-lead-spacer {
+        display: none;
     }
 
     .results-label {
