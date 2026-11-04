@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DashboardPhase, ElectionSummary } from '~/types/elections'
+import type { ConnectionState, DashboardPhase, ElectionSummary } from '~/types/elections'
 
 /**
  * The election night waiting screen.
@@ -61,10 +61,12 @@ import type { DashboardPhase, ElectionSummary } from '~/types/elections'
  * disagree about what state the event is in. The timer here drives the clock
  * and nothing else.
  */
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     election: ElectionSummary
     phase: DashboardPhase
-}>()
+    /** The live results listener, so the activity line says what is true. */
+    connection?: ConnectionState
+}>(), { connection: 'connecting' })
 
 const isCountdown = computed(() => props.phase === 'countdown')
 const canShowColour = computed(() => !isCountdown.value)
@@ -123,10 +125,20 @@ const waitingMessage = computed(() => {
     }
 })
 
-const activityLabel = computed(() =>
-    props.phase === 'awaiting-results'
-        ? 'Connected, waiting for the first results'
-        : 'Connected to the results feed')
+// The "awaiting" phases are reached only once the source behind them has
+// answered, so they can say "connected". Loading cannot: it is the state of not
+// having heard back yet.
+const activityLabel = computed(() => {
+    if (props.connection === 'offline') return 'Connection lost, trying again'
+    switch (props.phase) {
+        case 'awaiting-results':
+            return 'Connected, waiting for the first results'
+        case 'awaiting-refdata':
+            return 'Connected to the results feed'
+        default:
+            return 'Connecting to the results feed'
+    }
+})
 
 const blobClassBlue = computed(() => ({
     'bg-theme1': !canShowColour.value, 'bg-blue-400': canShowColour.value,

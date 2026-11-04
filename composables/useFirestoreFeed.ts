@@ -211,5 +211,10 @@ export function useFirestoreFeed(options: {
     detach()
   })
 
-  return { messages, connection, stop: () => { generation += 1; detach() } }
+  return {
+    messages,
+    connection,
+    retry: () => { attemptsLeft = RETRY_ATTEMPTS; attach() },
+    stop: () => { generation += 1; detach() },
+  }
 }

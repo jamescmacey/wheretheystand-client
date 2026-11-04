@@ -58,7 +58,7 @@ const shown = computed(() => visible(props.messages))
  * the whole of an evening.
  */
 const empty = computed(() => {
-    if (props.connection === 'offline') {
+    if (props.connection === 'offline' || props.connection === 'failed') {
         return {
             icon: 'i-lucide-triangle-alert',
             // No promise that it will fix itself: the listener retries a few

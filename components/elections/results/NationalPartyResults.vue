@@ -20,6 +20,7 @@ import type { ElectionSummary, ResultsVersion } from '~/types/elections'
 import type { ResultsColumn, ResultsRow } from '~/types/electionResults'
 import { useElectionDataStore } from '~/stores/electionData'
 import { useSeatAllocation } from '~/composables/useSeatAllocation'
+import { useMmpSettings } from '~/composables/useMmpSettings'
 import { useComparison } from '~/composables/useComparison'
 import { formatCount, formatPercent } from '~/utils/elections/format'
 import { partyAbbreviation } from '~/utils/elections/partyAbbreviation'
@@ -48,8 +49,14 @@ const seatsFor = (party: number | null) => {
     }
 }
 
-/** Parties below this share are hidden unless the reader asks for them. */
-const MINOR_PARTY_THRESHOLD = 0.5
+const { settings: mmpSettings } = useMmpSettings()
+
+/**
+ * Parties below this share (in percent) are hidden unless the reader asks for
+ * them: half the MMP threshold, rounded up -- 3% under the official 5%. Tied to
+ * the threshold so the list follows a reader who changes it.
+ */
+const minorPartyThreshold = computed(() => Math.ceil(mmpSettings.value.threshold * 100 / 2))
 
 const showAll = ref(false)
 
@@ -66,7 +73,7 @@ const columns = computed<ResultsColumn[]>(() => [
     { key: 'list_seats', label: 'List', width: '4rem', secondary: true },
     { key: 'total_seats', label: 'Total', width: '4rem', emphasis: true },
     { key: 'count', label: 'Votes', width: '6rem' },
-    { key: 'share', label: 'Share', width: '5rem' },
+    { key: 'share', label: 'Share', width: '5rem', emphasis: true },
     ...(comparisonColumn.value ? [comparisonColumn.value] : []),
 ])
 
@@ -78,7 +85,7 @@ const ordered = computed(() =>
 const visible = computed(() => ordered.value.filter(result =>
     showAll.value
     || seatsFor(result.party).total > 0
-    || (result.per_cent ?? 0) >= MINOR_PARTY_THRESHOLD))
+    || (result.per_cent ?? 0) >= minorPartyThreshold.value))
 
 const rows = computed<ResultsRow[]>(() => visible.value.map(result => {
     const party = result.party === null
