@@ -17,7 +17,7 @@
         <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             <div v-for="segment in segments" :key="segment.key" class="min-w-0">
                 <div class="flex items-center gap-2 min-w-0">
-                    <ElectionsResultsPartySwatch :colour="segment.colour" />
+                    <ElectionsResultsPartySwatch :colour="segment.colour" :alternate="segment.alternate" />
                     <p class="truncate text-sm">{{ segment.label }}</p>
                 </div>
                 <p class="font-bold tabular-nums">
@@ -81,6 +81,7 @@ const segments = computed<Segment[]>(() => {
             label: store.party(slugs.e, slugs.v, party)?.name ?? 'Unknown party',
             seats,
             colour: store.partyColour(slugs.e, slugs.v, party),
+            alternate: store.partyAlternateColour(slugs.e, slugs.v, party),
             split: `${allocation.value!.electorateSeats.get(party) ?? 0} electorate`
                 + ` · ${allocation.value!.listSeats.get(party) ?? 0} list`,
             change: seatChangeNoteFor(party, seats),

@@ -12,6 +12,7 @@ import type {
   SourceProvenance,
 } from '~/types/elections'
 import {
+  normaliseSnapshotComparison,
   normaliseSnapshotPersistentData,
   normaliseSnapshotReferenceData,
   normaliseSnapshotResults,
@@ -150,6 +151,7 @@ export async function useElectionSource(options: {
     reference: { origin: null, url: null, loadedAt: null, error: null },
     results: { origin: null, url: null, loadedAt: null, error: null },
     summary: { origin: null, url: null, loadedAt: null, error: null },
+    comparison: { origin: null, url: null, loadedAt: null, error: null },
   })
 
   // In `useState`, not a plain ref, because an archived version is fetched on
@@ -376,6 +378,39 @@ export async function useElectionSource(options: {
   const isFinal = computed(() => nationalSet.value?.is_final ?? false)
 
   /* ---------------------------------------------------------------------
+   * The election this version is compared against
+   * ------------------------------------------------------------------ */
+
+  /**
+   * Load the other election's results, where this version names one.
+   *
+   * The same in both modes: it is published before the night, keyed only on
+   * persistent ids, and never changes during a count, so there is nothing to
+   * subscribe to. A failure is recorded and otherwise ignored -- the page is
+   * complete without a comparison, and must not drop into its error state for
+   * want of one.
+   */
+  async function loadComparison() {
+    const version = resultsVersion.value
+    const currentElection = election.value
+    if (!version || !currentElection) return
+
+    const path = version.paths.comparison
+    if (!path || store.comparisonData(currentElection.slug, version.slug)) return
+
+    const url = snapshotUrl(path)
+    try {
+      store.setComparisonData(
+        currentElection.slug, version.slug,
+        normaliseSnapshotComparison(await $fetch(url, apiFetchOptions())))
+      noteLoaded('comparison', 'r2', url)
+    } catch (caught) {
+      console.warn('[elections] could not load comparison results:', caught)
+      noteFailed('comparison', caught)
+    }
+  }
+
+  /* ---------------------------------------------------------------------
    * Archived events: everything from R2, server rendered
    * ------------------------------------------------------------------ */
 
@@ -406,6 +441,10 @@ export async function useElectionSource(options: {
         results: snapshotUrl(version.paths.results),
       }
 
+      // Alongside the three, but not one of them: it never throws, so it
+      // cannot hold the page back or fail it.
+      const comparison = loadComparison()
+
       const [persistent, reference, results] = await Promise.all([
         $fetch(urls.persistent, apiFetchOptions()),
         $fetch(urls.reference, apiFetchOptions()),
@@ -420,6 +459,7 @@ export async function useElectionSource(options: {
       store.applyResults(
         currentElection.slug, version.slug, normaliseSnapshotResults(results))
       noteLoaded('results', 'r2', urls.results)
+      await comparison
       return true
     } catch (caught) {
       error.value = caught
@@ -534,7 +574,10 @@ export async function useElectionSource(options: {
 
   if (import.meta.client) {
     watch([mode, () => resultsVersion.value?.id], () => {
-      if (mode.value === 'live') loadLivePersistent()
+      if (mode.value === 'live') {
+        loadLivePersistent()
+        loadComparison()
+      }
     }, { immediate: true })
 
     watch([liveEvent, () => store.isPersistentLoaded, loadKey], () => {

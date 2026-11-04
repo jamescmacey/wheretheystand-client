@@ -1,4 +1,4 @@
-import type { ElectionSummary, ResultsVersion } from '~/types/elections'
+import type { ElectionSummary, EntityNumber, ResultsVersion } from '~/types/elections'
 import type { AllocationInput, ElectorateWinInput, SeatAllocation } from '~/utils/elections/mmp'
 import { allocateSeats } from '~/utils/elections/mmp'
 import { useElectionDataStore } from '~/stores/electionData'
@@ -66,6 +66,12 @@ export function useSeatAllocation(
           candidate: null,
           party: null,
           tie: true,
+          // Every level candidate, so the allocation can say whether it matters
+          // which of them the lot seats.
+          contenders: (result.firstPlace ?? []).map((candidate: EntityNumber) => ({
+            candidate,
+            party: store.candidate(e, v, candidate)?.party ?? null,
+          })),
         })
         continue
       }

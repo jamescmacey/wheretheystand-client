@@ -93,7 +93,7 @@ const themeItems = computed(() => themes.map(theme => ({
       v-model:open="open"
       :collapsed="true"
       class="bg-elevated/25"
-      :ui="{ footer: 'lg:border-t lg:border-default' }"
+      :ui="{ body: 'overflow-x-hidden', footer: 'lg:border-t lg:border-default' }"
     >
       <template #header="{ collapsed }">
         <!-- The rail is too narrow for the wordmark, so it carries the arch

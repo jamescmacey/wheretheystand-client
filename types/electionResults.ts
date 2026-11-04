@@ -12,6 +12,10 @@ export interface ResultsColumn {
    * can show, so the secondary ones fold into the row's sublabel instead.
    */
   secondary?: boolean
+  /** Shown on hover over the heading, where the label is a shorthand. */
+  title?: string
+  /** Figures for context rather than the result, eg the last election's. */
+  muted?: boolean
 }
 
 export interface ResultsRow {
@@ -19,6 +23,8 @@ export interface ResultsRow {
   label: string
   sublabel?: string | null
   colour?: string | null
+  /** A second colour, for a party drawn half in each. See utils/elections/partyFill. */
+  alternateColour?: string | null
   to?: string | null
   /** Bar value, as a percentage: the bar is drawn against a full track of 100. */
   bar?: number | null

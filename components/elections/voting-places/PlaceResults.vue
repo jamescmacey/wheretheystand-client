@@ -10,7 +10,8 @@
             :description="emptyDescription" />
 
         <template v-else>
-            <ElectionsResultsTable :columns="columns" :rows="rows" :totals="totals"
+            <ElectionsResultsTable :columns="columns" :rows="rows" :totals="footer.totals"
+                :informals="footer.informals"
                 lead-width="minmax(9rem, 18rem)" />
 
             <p class="mt-3 text-sm text-muted">{{ provenance }}</p>
@@ -54,7 +55,7 @@ import type { ResultsRow } from '~/types/electionResults'
 import { useElectionDataStore } from '~/stores/electionData'
 import { aggregateResultsSets } from '~/utils/elections/aggregate'
 import { formatCount, formatTime, fromEpochSeconds, pluralise } from '~/utils/elections/format'
-import { RESULTS_COLUMNS, buildResultsRows } from '~/utils/elections/rows'
+import { RESULTS_COLUMNS, buildResultsFooter, buildResultsRows } from '~/utils/elections/rows'
 
 /**
  * What one voting place counted, combined across whatever reported it.
@@ -113,14 +114,11 @@ const rows = computed<ResultsRow[]>(() => buildResultsRows({
     resultsVersion: props.resultsVersion,
     category: props.category,
     results: aggregate.value.results,
-    totalVotes: aggregate.value.totalVotes,
-    informals: aggregate.value.informals,
 }))
 
-const totals = computed(() => ({
-    label: 'Total votes cast',
-    note: null,
-    cells: { count: formatCount(aggregate.value.totalVotes), share: null },
+const footer = computed(() => buildResultsFooter({
+    results: aggregate.value.results,
+    informals: aggregate.value.informals,
 }))
 
 /** What went into the figure, said rather than left for the reader to assume. */

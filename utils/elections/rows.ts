@@ -5,7 +5,8 @@
  * cannot drift from it. The two show the same thing at different scopes, and
  * the parts worth keeping identical are the ones easiest to get subtly wrong:
  * which party colour a candidate inherits, what an independent's sublabel
- * says, and that informals appear as a muted line rather than a contestant.
+ * says, and that informals sit apart from the contestants and outside the
+ * total.
  */
 
 import type {
@@ -26,9 +27,6 @@ export interface ResultsRowsInput {
   resultsVersion: ResultsVersion
   category: ResultsCategory
   results: Result[]
-  /** Every vote cast, informals included: the denominator for the informals line. */
-  totalVotes: number
-  informals: number | null
 }
 
 /** A share of the total, guarding the zero denominator a count yet to start has. */
@@ -43,7 +41,7 @@ export function voteShare(count: number | null, totalVotes: number): number {
  * The incoming array is copied before sorting: it belongs to the store.
  */
 export function buildResultsRows(input: ResultsRowsInput): ResultsRow[] {
-  const { store, election, resultsVersion, category, results, totalVotes } = input
+  const { store, election, resultsVersion, category, results } = input
   const slugs = { election: election.slug, version: resultsVersion.slug }
   const isCandidates = category === 'candidate_votes'
 
@@ -54,7 +52,7 @@ export function buildResultsRows(input: ResultsRowsInput): ResultsRow[] {
   // denominator would understate every candidate by the informal rate.
   const validVotes = ordered.reduce((sum, result) => sum + (result.count ?? 0), 0)
 
-  const rows: ResultsRow[] = ordered.map((result) => {
+  return ordered.map((result) => {
     const share = voteShare(result.count, validVotes)
 
     if (isCandidates) {
@@ -73,6 +71,7 @@ export function buildResultsRows(input: ResultsRowsInput): ResultsRow[] {
         label: candidate?.name ?? 'Unknown candidate',
         sublabel: electionParty?.name ?? 'Independent',
         colour: party?.colour ?? null,
+        alternateColour: party?.colour ? party.alternate_colour : null,
         cells: {
           count: formatCount(result.count),
           share: formatPercent(share),
@@ -89,6 +88,7 @@ export function buildResultsRows(input: ResultsRowsInput): ResultsRow[] {
       key: result.party ?? `unknown-${result.count}`,
       label: party?.name ?? 'Unknown party',
       colour: store.partyColour(slugs.election, slugs.version, result.party),
+      alternateColour: store.partyAlternateColour(slugs.election, slugs.version, result.party),
       cells: {
         count: formatCount(result.count),
         share: formatPercent(share),
@@ -96,22 +96,45 @@ export function buildResultsRows(input: ResultsRowsInput): ResultsRow[] {
       bar: share,
     }
   })
+}
 
-  if (input.informals !== null) {
-    const share = voteShare(input.informals, totalVotes)
-    rows.push({
-      key: 'informals',
-      label: 'Informal votes',
-      muted: true,
-      bar: share,
-      cells: {
-        count: formatCount(input.informals),
-        share: formatPercent(share),
-      },
-    })
+/** A results table's footer line, as ResultsTable takes it. */
+export interface ResultsFooterLine {
+  label: string
+  note?: string | null
+  cells: Record<string, string | number | null>
+}
+
+/**
+ * The totals line and, where the feed reports them, the informals above it.
+ *
+ * The total is of valid votes only, so that it is the sum of the rows it sits
+ * under. Informals are stated beside it rather than folded in: a total that
+ * silently includes them never adds up, and one that silently omits them hides
+ * how many there were.
+ */
+export function buildResultsFooter(input: {
+  results: Result[]
+  informals: number | null
+  /** Overrides the summed rows, for a tally that reports its own valid total. */
+  validVotes?: number | null
+}): { informals: ResultsFooterLine | null, totals: ResultsFooterLine } {
+  const validVotes = input.validVotes
+    ?? input.results.reduce((sum, result) => sum + (result.count ?? 0), 0)
+
+  return {
+    informals: input.informals === null
+      ? null
+      : {
+          label: 'Informal votes',
+          cells: { count: formatCount(input.informals) },
+        },
+    totals: {
+      label: 'Total valid votes',
+      note: null,
+      cells: { count: formatCount(validVotes), share: null },
+    },
   }
-
-  return rows
 }
 
 /** The columns every results table shares. */

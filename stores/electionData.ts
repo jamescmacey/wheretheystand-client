@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 
 import type {
+  ComparisonData,
   ComputedElectorateResult,
   ElectorateLeader,
   ElectorateResultStatus,
@@ -63,6 +64,11 @@ interface VersionState {
    * dashboard does.
    */
   summaryUpdatedTimestamp: number | null
+  /**
+   * The other election's results this version is compared against, keyed on
+   * persistent ids. Null until loaded, and for a version with no comparison.
+   */
+  comparison: ComparisonData | null
   electoratesByNumber: Map<EntityNumber, ReferenceElectorate>
   partiesByNumber: Map<EntityNumber, ReferenceParty>
   candidatesByNumber: Map<EntityNumber, ReferenceCandidate>
@@ -110,6 +116,7 @@ function emptyVersion(): VersionState {
     placeResultsLoaded: new Set(),
     summarySequence: null,
     summaryUpdatedTimestamp: null,
+    comparison: null,
     electoratesByNumber: new Map(),
     partiesByNumber: new Map(),
     candidatesByNumber: new Map(),
@@ -239,6 +246,10 @@ export const useElectionDataStore = defineStore('electionData', {
     referenceData: state => (election: string, version: string) =>
       state.versions[electionKey(election, version)]?.reference ?? null,
 
+    /** The results this version is compared against, where loaded. */
+    comparisonData: state => (election: string, version: string) =>
+      state.versions[electionKey(election, version)]?.comparison ?? null,
+
     /** Every results set held for a version, in no particular order. */
     allResults: state => (election: string, version: string): ResultsSet[] =>
       [...(state.versions[electionKey(election, version)]?.results.values() ?? [])],
@@ -362,6 +373,21 @@ export const useElectionDataStore = defineStore('electionData', {
       return state.persistentPartiesById.get(party.persistent_party)?.colour
         ?? DEFAULT_PARTY_COLOUR
     },
+
+    /**
+     * A party's second colour, for one too close to another party's.
+     *
+     * Null for almost every party, and always null where there is no primary
+     * colour of its own: half of the grey fallback would be no help at all.
+     */
+    partyAlternateColour: state =>
+      (election: string, version: string, number: EntityNumber | null) => {
+        if (number === null) return null
+        const party = state.versions[electionKey(election, version)]?.partiesByNumber.get(number)
+        if (!party?.persistent_party) return null
+        const persistent = state.persistentPartiesById.get(party.persistent_party)
+        return persistent?.colour ? persistent.alternate_colour : null
+      },
   },
 
   actions: {
@@ -387,6 +413,10 @@ export const useElectionDataStore = defineStore('electionData', {
       if (data.voting_places.length) {
         held.votingPlacesByNumber = indexBy(data.voting_places, item => item.number)
       }
+    },
+
+    setComparisonData(election: string, version: string, data: ComparisonData) {
+      this.ensureVersion(election, version).comparison = data
     },
 
     setVotingPlaceReference(election: string, version: string, places: ReferenceVotingPlace[]) {

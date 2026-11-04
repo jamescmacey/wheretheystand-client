@@ -8,6 +8,11 @@
             Each party's votes are divided by {{ divisorLabel }}, and the
             {{ pluralise(awardedCount, 'highest result') }} each win a seat. The last seat
             awarded went to {{ lastAwardedLabel }}.
+            <template v-if="allocation.undecidedSeats">
+                The next {{ pluralise(allocation.ties.length, 'result') }} are level, with
+                {{ pluralise(allocation.undecidedSeats, 'seat') }} left for them, so none of
+                them is awarded.
+            </template>
         </p>
 
         <div class="overflow-x-auto">
@@ -28,7 +33,8 @@
                         <td class="py-1.5 pr-3 tabular-nums">{{ quotient.rank }}</td>
                         <td class="py-1.5 pr-3">
                             <div class="flex items-center gap-2 min-w-0">
-                                <ElectionsResultsPartySwatch :colour="colourFor(quotient.party)" />
+                                <ElectionsResultsPartySwatch :colour="colourFor(quotient.party)"
+                            :alternate="alternateFor(quotient.party)" />
                                 <span class="truncate">{{ nameFor(quotient.party) }}</span>
                             </div>
                         </td>
@@ -36,6 +42,8 @@
                         <td class="py-1.5 pr-3 text-right tabular-nums">{{ formatCount(Math.round(quotient.value)) }}</td>
                         <td class="py-1.5 text-right">
                             <UBadge v-if="quotient.awarded" color="primary" variant="subtle" size="sm">Won</UBadge>
+                            <UBadge v-else-if="allocation.ties.includes(quotient)" color="warning"
+                                variant="subtle" size="sm">Tied</UBadge>
                             <span v-else>—</span>
                         </td>
                     </tr>
@@ -76,6 +84,8 @@ const nameFor = (party: EntityNumber) =>
     store.party(slugs.value.e, slugs.value.v, party)?.name ?? 'Unknown party'
 const colourFor = (party: EntityNumber) =>
     store.partyColour(slugs.value.e, slugs.value.v, party)
+const alternateFor = (party: EntityNumber) =>
+    store.partyAlternateColour(slugs.value.e, slugs.value.v, party)
 
 const awardedCount = computed(() =>
     props.allocation.quotients.filter(quotient => quotient.awarded).length)

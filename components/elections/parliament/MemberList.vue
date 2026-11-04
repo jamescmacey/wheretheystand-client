@@ -10,7 +10,7 @@
         <div class="space-y-6">
             <div v-for="group in groups" :key="group.party ?? 'none'">
                 <div class="flex items-center gap-2 mb-2">
-                    <ElectionsResultsPartySwatch :colour="group.colour" />
+                    <ElectionsResultsPartySwatch :colour="group.colour" :alternate="group.alternate" />
                     <h4 class="font-bold truncate">{{ group.name }}</h4>
                     <span class="text-sm text-muted">{{ pluralise(group.members.length, 'seat') }}</span>
                 </div>
@@ -24,10 +24,6 @@
                     </li>
                 </ul>
             </div>
-
-            <UAlert v-if="allocation.unfilled > 0" color="warning" variant="subtle" icon="i-lucide-user-x"
-                title="Seats that cannot be filled"
-                :description="`${pluralise(allocation.unfilled, 'seat')} could not be filled because a party's list ran out of candidates.`" />
         </div>
     </UCard>
 </template>
@@ -47,6 +43,15 @@ const props = defineProps<{
 const store = useElectionDataStore()
 const slugs = computed(() => ({ e: props.election.slug, v: props.resultsVersion.slug }))
 
+/** The same name `CandidateLabel` shows for the member. */
+function memberName(member: ElectedMember): string {
+    const { e, v } = slugs.value
+    if (member.candidate === null) return ''
+    return store.persistentCandidateFor(e, v, member.candidate)?.display_name
+        || store.candidate(e, v, member.candidate)?.name
+        || ''
+}
+
 const groups = computed(() => {
     const byParty = new Map<EntityNumber | null, ElectedMember[]>()
     for (const member of props.allocation.members) {
@@ -62,11 +67,10 @@ const groups = computed(() => {
                 ? 'Independent'
                 : store.party(slugs.value.e, slugs.value.v, party)?.name ?? 'Unknown party',
             colour: store.partyColour(slugs.value.e, slugs.value.v, party),
-            // Electorate members first, then the list in its own order.
-            members: [...members].sort((a, b) => {
-                if (a.origin !== b.origin) return a.origin === 'electorate' ? -1 : 1
-                return (a.listPos ?? 0) - (b.listPos ?? 0)
-            }),
+            alternate: store.partyAlternateColour(slugs.value.e, slugs.value.v, party),
+            // A to Z by the name the row shows, so a reader can find someone.
+            members: [...members].sort((a, b) =>
+                memberName(a).localeCompare(memberName(b), undefined, { sensitivity: 'base' })),
         }))
         .sort((a, b) => b.members.length - a.members.length)
 })

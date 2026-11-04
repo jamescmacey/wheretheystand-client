@@ -64,6 +64,11 @@ export interface ResultsVersionPaths {
     by_place_base?: string
     by_place_count?: number
   }
+  /**
+   * The results of the version this one is compared against, from another
+   * election. Absent where no comparison is set. See `ComparisonData`.
+   */
+  comparison?: string
 }
 
 /* -------------------------------------------------------------------------
@@ -124,6 +129,12 @@ export interface ResultsVersion {
   name: string
   description: string | null
   is_primary: boolean
+  /**
+   * False for an unlisted version. It is in the manifest so it can be opened
+   * by URL and compared against, but is left out of every list of versions a
+   * visitor chooses from. True where a manifest predates the field.
+   */
+  listed: boolean
   access_mode: AccessMode
   firebase_id: string | null
   /**
@@ -274,6 +285,11 @@ export interface PersistentParty {
   short_name: string | null
   abbreviation: string | null
   colour: string | null
+  /**
+   * A second colour, for a party whose own is too close to another party's.
+   * Where set, a bar, dot or square is drawn half in each. Null for most.
+   */
+  alternate_colour: string | null
   /** The site's own party record, for linking to /parties/:id. */
   party: string | null
   firebase_id: string | null
@@ -340,6 +356,86 @@ export interface PersistentData {
   persistent_parties: PersistentParty[]
   persistent_candidates: PersistentCandidate[]
   persistent_voting_places: PersistentVotingPlace[]
+}
+
+/* -------------------------------------------------------------------------
+ * Comparison with another election
+ * ---------------------------------------------------------------------- */
+
+/**
+ * One party's vote in the election being compared against.
+ *
+ * `party` is null where that party has no persistent record. Such an entry
+ * cannot be matched to anything, but it is part of the valid vote, which is
+ * why every entry carries its own share rather than leaving it to be worked
+ * out from the entries the client can match.
+ */
+export interface ComparisonPartyEntry {
+  party: PersistentId | null
+  count: number | null
+  /** Of the valid vote in the same tally. */
+  per_cent: number | null
+}
+
+export interface ComparisonNationalPartyEntry extends ComparisonPartyEntry {
+  electorate_seats: number | null
+  list_seats: number | null
+  total_seats: number | null
+}
+
+/** One candidate's vote, with the party they stood for then. */
+export interface ComparisonCandidateEntry {
+  candidate: PersistentId | null
+  party: PersistentId | null
+  count: number | null
+  per_cent: number | null
+}
+
+export interface ComparisonPartyTally<Entry extends ComparisonPartyEntry = ComparisonPartyEntry> {
+  is_final: boolean
+  total_valid_votes: number
+  /** Largest first. */
+  parties: Entry[]
+}
+
+export interface ComparisonCandidateTally {
+  is_final: boolean
+  total_valid_votes: number
+  /** Largest first. */
+  candidates: ComparisonCandidateEntry[]
+}
+
+export interface ComparisonElectorate {
+  party_votes: ComparisonPartyTally | null
+  candidate_votes: ComparisonCandidateTally | null
+}
+
+/**
+ * Another election's results, keyed only on persistent ids.
+ *
+ * Published with the version that compares against it, so one fetch is enough:
+ * nothing in it is election-scoped, and none of the other election's reference
+ * data is needed to read it. An electorate with no persistent record is not in
+ * `electorates`, since there is nothing to match it on.
+ */
+export interface ComparisonData {
+  election: {
+    id: string
+    slug: string
+    name: string
+    polling_date: string | null
+  }
+  results_version: {
+    id: string
+    slug: string
+    name: string
+    is_final: boolean
+  }
+  national: {
+    party_votes: ComparisonPartyTally<ComparisonNationalPartyEntry> | null
+  }
+  /** By persistent electorate id. */
+  electorates: Record<PersistentId, ComparisonElectorate>
 }
 
 /* -------------------------------------------------------------------------
@@ -737,4 +833,6 @@ export interface SourceProvenance {
   results: PayloadProvenance
   /** The per-electorate summary, which exists only during a live count. */
   summary: PayloadProvenance
+  /** The other election's results, where this version compares against one. */
+  comparison: PayloadProvenance
 }

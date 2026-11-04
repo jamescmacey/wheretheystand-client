@@ -1,7 +1,7 @@
 <template>
     <component :is="to ? resolveComponent('NuxtLink') : 'div'" :to="to ?? undefined"
         class="flex items-center gap-2 min-w-0" :class="to ? 'hover:underline' : ''">
-        <ElectionsResultsPartySwatch v-if="swatch" :colour="colour" />
+        <ElectionsResultsPartySwatch v-if="swatch" :colour="colour" :alternate="alternate" />
         <div class="min-w-0">
             <p class="truncate">{{ name }}</p>
             <p v-if="showParty" class="text-xs text-muted truncate">{{ partyName }}</p>
@@ -54,6 +54,8 @@ const party = computed(() => (candidate.value?.party
 const partyName = computed(() => party.value?.name ?? 'Independent')
 
 const colour = computed(() => store.partyColour(
+    slugs.value.election, slugs.value.version, candidate.value?.party ?? null))
+const alternate = computed(() => store.partyAlternateColour(
     slugs.value.election, slugs.value.version, candidate.value?.party ?? null))
 
 // Only where the candidate has been matched to a person on the site. Most have

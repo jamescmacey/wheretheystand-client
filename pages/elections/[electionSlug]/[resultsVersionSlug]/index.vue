@@ -21,19 +21,9 @@
         <template v-else>
             <!-- The same chamber and card as the Parliament page, from the same
                  allocation, so the two can never disagree about a seat. -->
-            <!-- Card beside the chamber on a wide screen; on a narrow one the
-                 chamber comes first, as the picture the figures explain. -->
-            <div v-if="allocation" class="grid gap-4 lg:grid-cols-2">
-                <ElectionsParliamentPartySeats :election="election" :resultsVersion="resultsVersion"
-                    :allocation="allocation" :to="parliamentHref" title="Parliament" variant="soft" />
-                <!-- Carded to match its neighbour, and stretched to its height
-                     with the chamber centred, so it does not float beside it. -->
-                <UCard variant="soft" class="order-first lg:order-last"
-                    :ui="{ body: 'h-full flex items-center justify-center' }">
-                    <ElectionsParliamentSeatGrid :election="election" :resultsVersion="resultsVersion"
-                        :allocation="allocation" class="w-full" />
-                </UCard>
-            </div>
+            <ElectionsParliamentSeatsOverview v-if="allocation" :election="election"
+                :resultsVersion="resultsVersion" :allocation="allocation" :to="parliamentHref"
+                title="Parliament" />
 
             <!-- Side by side on a wide screen. The party card is too narrow
                  there for bars to say anything the share column does not. -->

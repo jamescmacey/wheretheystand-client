@@ -1,7 +1,7 @@
 <template>
     <component :is="to ? resolveComponent('NuxtLink') : 'div'" :to="to ?? undefined"
         class="flex items-center gap-2 min-w-0" :class="to ? 'hover:underline' : ''">
-        <ElectionsResultsPartySwatch v-if="swatch" :colour="colour" />
+        <ElectionsResultsPartySwatch v-if="swatch" :colour="colour" :alternate="alternate" />
         <span class="truncate">{{ name }}</span>
     </component>
 </template>
@@ -48,6 +48,8 @@ const name = computed(() =>
 
 const colour = computed(() =>
     store.partyColour(slugs.value.election, slugs.value.version, props.party))
+const alternate = computed(() =>
+    store.partyAlternateColour(slugs.value.election, slugs.value.version, props.party))
 
 // Only where the party has been matched to a site record. An unmatched party
 // still renders with its name and colour; it just does not lead anywhere.

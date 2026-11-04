@@ -85,6 +85,8 @@
             <ul class="flex flex-col gap-2">
                 <li v-for="place in places" :key="place.objectID">
                     <ElectionsVotingPlacesCard
+                        :election="election"
+                        :results-version="resultsVersion"
                         :place="place"
                         :selected="place.number === selectedNumber"
                         :show-distance="showDistance"
@@ -97,10 +99,12 @@
 </template>
 
 <script setup lang="ts">
-import type { VotingPlaceHit } from '~/types/elections'
+import type { ElectionSummary, ResultsVersion, VotingPlaceHit } from '~/types/elections'
 import { formatCount, pluralise } from '~/utils/elections/format'
 
 const props = defineProps<{
+    election: ElectionSummary
+    resultsVersion: ResultsVersion
     places: VotingPlaceHit[]
     selectedNumber: number | null
     status: 'idle' | 'pending' | 'success' | 'error'

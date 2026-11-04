@@ -13,14 +13,10 @@
             >
                 <MapboxSource :source-id="sourceId" :source="mapSource" />
 
-                <MapboxLayer :layer="clusterLayer" :on-click="onClusterClick" />
+                <!-- Pointer handlers are bound on the map itself, below. -->
+                <MapboxLayer :layer="clusterLayer" />
                 <MapboxLayer :layer="clusterCountLayer" />
-                <MapboxLayer
-                    :layer="placesLayer"
-                    :on-click="onPlaceClick"
-                    :on-mouseenter="onPlaceEnter"
-                    :on-mouseleave="onPlaceLeave"
-                />
+                <MapboxLayer :layer="placesLayer" />
                 <MapboxLayer :layer="selectedLayer" />
 
                 <MapboxDefaultMarker
@@ -48,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import type { GeoJSONSource } from 'mapbox-gl'
+import type { GeoJSONSource, MapMouseEvent } from 'mapbox-gl'
 import type { VotingPlaceHit } from '~/types/elections'
 import {
     NZ_FALLBACK_CENTRE,
@@ -191,10 +187,7 @@ const clusterCountLayer = computed(() => ({
 
 const mapRef = useMapboxRef(props.mapId)
 
-type LayerMouseEvent = {
-    features?: Array<{ id?: number | string, properties?: Record<string, unknown> }>
-    lngLat?: { lng: number, lat: number }
-}
+type LayerMouseEvent = MapMouseEvent
 
 function onPlaceClick(event: LayerMouseEvent) {
     const number = event.features?.[0]?.properties?.number
@@ -308,8 +301,29 @@ watch(() => props.focusNumber, (number) => {
  */
 let mapInstance: ReturnType<typeof useMapboxRef>['value']
 
+/**
+ * Pointer handlers, bound once per map instance.
+ *
+ * Not through MapboxLayer's `on-*` props: those never reached the map, so a
+ * pin could not be clicked. Layer-scoped listeners can be bound before the
+ * layer exists; Mapbox matches them by id when the event fires. The selected
+ * layer is included because it sits on top of the pin it highlights.
+ */
+function bindPointer(map: NonNullable<typeof mapInstance>) {
+    for (const layerId of [placesLayer.value.id, selectedLayer.value.id]) {
+        map.on('click', layerId, onPlaceClick)
+        map.on('mouseenter', layerId, onPlaceEnter)
+        map.on('mouseleave', layerId, onPlaceLeave)
+    }
+    map.on('click', clusterLayer.value.id, onClusterClick)
+    map.on('mouseenter', clusterLayer.value.id, onPlaceEnter)
+    map.on('mouseleave', clusterLayer.value.id, onPlaceLeave)
+}
+
 watch(mapRef, (map) => {
-    if (map) mapInstance = map
+    if (!map || map === mapInstance) return
+    mapInstance = map
+    bindPointer(map)
 }, { immediate: true })
 
 onUnmounted(() => {

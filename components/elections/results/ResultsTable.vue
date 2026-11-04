@@ -1,6 +1,6 @@
 <template>
     <div class="results-container overflow-x-auto">
-        <div :style="gridVars" :class="{ 'results-no-bars': !showBars }">
+        <div class="results-table" :style="gridVars" :class="{ 'results-no-bars': !showBars }">
             <!-- Header -->
             <div class="results-grid items-end gap-3 pb-2 text-sm uppercase text-muted">
                 <div><slot name="lead-header" /></div>
@@ -8,7 +8,12 @@
                 <div v-for="column in columns" :key="column.key"
                     class="text-right border-b border-default"
                     :class="[column.emphasis ? 'font-bold text-default' : '', column.secondary ? 'results-secondary' : '']">
-                    {{ column.label }}
+                    <UTooltip v-if="column.title" :text="column.title">
+                        <span class="cursor-help underline decoration-dotted underline-offset-2">
+                            {{ column.label }}
+                        </span>
+                    </UTooltip>
+                    <template v-else>{{ column.label }}</template>
                 </div>
             </div>
 
@@ -18,10 +23,11 @@
                 class="results-grid items-center gap-3 py-2 border-b border-default/50"
                 :class="[row.to ? 'hover:bg-elevated/50 transition-colors' : '', row.muted ? 'text-muted' : '']">
                 <div class="flex items-center gap-2 min-w-0">
-                    <ElectionsResultsPartySwatch v-if="!row.muted" :colour="row.colour" />
+                    <ElectionsResultsPartySwatch v-if="!row.muted" :colour="row.colour"
+                        :alternate="row.alternateColour" />
                     <div class="min-w-0">
-                        <p class="truncate">{{ row.label }}</p>
-                        <p v-if="row.sublabel" class="text-xs text-muted truncate">{{ row.sublabel }}</p>
+                        <p class="results-label">{{ row.label }}</p>
+                        <p v-if="row.sublabel" class="results-label text-xs text-muted">{{ row.sublabel }}</p>
                         <!-- Columns dropped on narrow screens reappear here rather
                              than being lost. -->
                         <p v-if="hasSecondary" class="text-xs text-muted results-secondary-summary">
@@ -34,20 +40,40 @@
                          which would read as a party's own. -->
                     <ElectionsResultsVoteBar v-if="row.bar !== null && row.bar !== undefined"
                         :value="row.bar"
-                        :colour="row.colour ?? (row.muted ? DEFAULT_PARTY_COLOUR : null)" />
+                        :colour="row.colour ?? (row.muted ? DEFAULT_PARTY_COLOUR : null)"
+                        :alternate="row.alternateColour" />
                 </div>
                 <div v-for="column in columns" :key="column.key" class="text-right tabular-nums"
-                    :class="[column.emphasis ? 'font-bold' : '', column.secondary ? 'results-secondary' : '']">
-                    {{ row.cells[column.key] ?? '—' }}
+                    :class="[column.emphasis ? 'font-bold' : '', column.secondary ? 'results-secondary' : '',
+                             column.muted ? 'text-muted' : '']">
+                    <!-- A column that needs more than text, such as a figure
+                         with an icon, fills `cell-{key}` instead. -->
+                    <slot :name="`cell-${column.key}`" :row="row">
+                        {{ row.cells[column.key] ?? '—' }}
+                    </slot>
                 </div>
             </component>
 
+            <!-- Informals: stated, but outside the total below -->
+            <div v-if="informals" class="results-grid items-center gap-3 py-2 mt-2 text-sm text-muted">
+                <div class="pl-3 truncate">{{ informals.label }}</div>
+                <div class="results-bar truncate">{{ informals.note ?? '' }}</div>
+                <div v-for="column in columns" :key="column.key" class="text-right tabular-nums"
+                    :class="column.secondary ? 'results-secondary' : ''">
+                    {{ informals.cells[column.key] ?? '' }}
+                </div>
+            </div>
+
             <!-- Totals -->
-            <div v-if="totals" class="results-grid items-center gap-3 py-2 mt-2 bg-elevated rounded-lg">
+            <div v-if="totals" class="results-grid items-center gap-3 py-2 bg-elevated rounded-lg"
+                :class="informals ? '' : 'mt-2'">
                 <div class="pl-3 text-sm text-muted truncate">{{ totals.label }}</div>
                 <div class="results-bar text-sm text-muted truncate">{{ totals.note ?? '' }}</div>
-                <div v-for="column in columns" :key="column.key" class="text-right tabular-nums pr-3"
-                    :class="[column.emphasis ? 'font-bold' : '', column.secondary ? 'results-secondary' : '']">
+                <!-- Only the last figure is inset from the shaded edge, so the
+                     others stay in line with the rows above. -->
+                <div v-for="(column, index) in columns" :key="column.key" class="text-right tabular-nums"
+                    :class="[column.emphasis ? 'font-bold' : '', column.secondary ? 'results-secondary' : '',
+                             index === columns.length - 1 ? 'pr-3' : '']">
                     {{ totals.cells[column.key] ?? '' }}
                 </div>
             </div>
@@ -57,13 +83,15 @@
 
 <script setup lang="ts">
 import type { ResultsColumn, ResultsRow } from '~/types/electionResults'
+import type { ResultsFooterLine } from '~/utils/elections/rows'
 import { DEFAULT_PARTY_COLOUR } from '~/stores/electionData'
 
 /**
  * The shared shape of every results table.
  *
  * A results row is a label, a bar that spans whatever space is left, right
- * aligned figures, and a totals line. That is a grid rather than a data table:
+ * aligned figures, a totals line, and the informals stated just above it.
+ * That is a grid rather than a data table:
  * the bar has to stretch, and the columns must line up exactly between the
  * header, the rows and the totals.
  *
@@ -81,10 +109,12 @@ import { DEFAULT_PARTY_COLOUR } from '~/stores/electionData'
 const props = withDefaults(defineProps<{
     columns: ResultsColumn[]
     rows: ResultsRow[]
-    totals?: { label: string, note?: string | null, cells: Record<string, string | number | null> } | null
+    totals?: ResultsFooterLine | null
+    /** Shown above the totals and not counted in them. */
+    informals?: ResultsFooterLine | null
     showBars?: boolean
     leadWidth?: string
-}>(), { totals: null, showBars: true, leadWidth: 'minmax(8rem, 15rem)' })
+}>(), { totals: null, informals: null, showBars: true, leadWidth: 'minmax(8rem, 15rem)' })
 
 const hasSecondary = computed(() => props.columns.some(column => column.secondary))
 
@@ -116,9 +146,21 @@ function secondarySummary(cells: Record<string, string | number | null>): string
     container-type: inline-size;
 }
 
-.results-grid {
+/*
+ * One set of tracks for the whole table, which every line takes as a subgrid.
+ * Separate grids per line size their content-sized tracks line by line, and a
+ * line with an empty cell -- the totals' share, say -- then sits out of step
+ * with the rows above it.
+ */
+.results-table {
     display: grid;
     grid-template-columns: var(--results-cols-narrow);
+}
+
+.results-grid {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
 }
 
 .results-bar,
@@ -126,8 +168,23 @@ function secondarySummary(cells: Record<string, string | number | null>): string
     display: none;
 }
 
+/*
+ * Narrow tables give the label whatever the figures leave, which with every
+ * column showing can be a few characters. A name cut to "TANGA…" says nothing,
+ * so it wraps there instead, and the row grows taller. Wide tables have the
+ * room to keep each row to one line.
+ */
+.results-label {
+    overflow-wrap: break-word;
+}
+
+/* Every pixel between the figures is one the label does not have. */
+.results-grid {
+    column-gap: 0.5rem;
+}
+
 @container (min-width: 40rem) {
-    .results-grid {
+    .results-table {
         grid-template-columns: var(--results-cols-wide);
     }
 
@@ -138,6 +195,16 @@ function secondarySummary(cells: Record<string, string | number | null>): string
 
     .results-secondary-summary {
         display: none;
+    }
+
+    .results-grid {
+        column-gap: 0.75rem;
+    }
+
+    .results-label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .results-no-bars .results-bar {

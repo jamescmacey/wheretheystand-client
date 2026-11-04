@@ -71,8 +71,6 @@
                             :location-status="location.status.value"
                             :location-unsupported="location.unsupported.value"
                             :near-me="nearMe"
-                            :polling-date="election.polling_date"
-                            :is-past="isPast"
                             @request-location="requestLocation"
                             @clear-location="clearLocation"
                         />
@@ -87,11 +85,16 @@
                             size="sm"
                         />
 
+                        <!-- Inset by a few pixels inside its own scroll box:
+                             a card's ring is drawn outside its border, and
+                             an overflow container would clip it at the edges. -->
                         <div
                             v-show="!isMobile || mobilePane === 'list'"
-                            class="flex-1 min-h-0 lg:overflow-y-auto"
+                            class="flex-1 min-h-0 lg:overflow-y-auto lg:-mx-1 lg:px-1 lg:pb-1"
                         >
                             <ElectionsVotingPlacesResultList
+                                :election="election"
+                                :results-version="resultsVersion"
                                 :places="places"
                                 :selected-number="selectedNumber"
                                 :status="listStatus"
@@ -442,13 +445,6 @@ function clearSearch() {
 /* ------------------------------------------------------------------ *
  * Framing
  * ------------------------------------------------------------------ */
-
-const isPast = computed(() => {
-    if (!props.election.polling_date) return false
-    const polling = new Date(props.election.polling_date)
-    polling.setHours(23, 59, 59, 999)
-    return polling.getTime() < Date.now()
-})
 
 /**
  * This page is a way into results, not a guide to finding a booth.

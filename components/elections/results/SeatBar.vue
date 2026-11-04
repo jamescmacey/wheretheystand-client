@@ -2,7 +2,7 @@
     <div v-if="totalSeats > 0">
         <div class="relative flex h-8 w-full overflow-hidden rounded-md bg-accented">
             <div v-for="segment in segments" :key="segment.key" class="h-full transition-[width] duration-300"
-                :style="{ width: `${segment.share}%`, backgroundColor: segment.colour }"
+                :style="{ width: `${segment.share}%`, background: partyFill(segment.colour, segment.alternate, 'horizontal') }"
                 :title="`${segment.label}: ${segment.seats} seats`" />
             <!-- Where a majority begins, so a reader can see who is past it. -->
             <div class="absolute inset-y-0 border-l-2 border-inverted/70"
@@ -18,12 +18,14 @@
 
 <script setup lang="ts">
 import { DEFAULT_PARTY_COLOUR } from '~/stores/electionData'
+import { partyFill } from '~/utils/elections/partyFill'
 
 export interface SeatSegment {
     key: string | number
     label: string
     seats: number
     colour?: string | null
+    alternate?: string | null
 }
 
 const props = withDefaults(defineProps<{

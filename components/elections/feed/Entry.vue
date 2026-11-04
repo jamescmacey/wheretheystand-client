@@ -76,7 +76,7 @@
                 </div>
                 <ul v-if="composition.length" class="space-y-1.5">
                     <li v-for="change in composition" :key="change.key" class="flex gap-2 min-w-0">
-                        <ElectionsResultsPartySwatch :colour="change.colour" />
+                        <ElectionsResultsPartySwatch :colour="change.colour" :alternate="change.alternate" />
                         <div class="min-w-0">
                             <p class="text-sm truncate">{{ change.name }}</p>
                             <p class="flex items-center gap-1.5 text-xs text-muted tabular-nums">
@@ -214,6 +214,9 @@ const composition = computed(() => {
         colour: change.party === null
             ? null
             : store.partyColour(slugs.value.e, slugs.value.v, change.party),
+        alternate: change.party === null
+            ? null
+            : store.partyAlternateColour(slugs.value.e, slugs.value.v, change.party),
         before: pluralise(change.before, 'seat'),
         after: pluralise(change.after, 'seat'),
     }))
