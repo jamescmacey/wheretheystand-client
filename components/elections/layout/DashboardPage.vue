@@ -11,8 +11,10 @@
                 <template #title>
                     <UBreadcrumb v-if="breadcrumb?.length" :items="breadcrumb" />
                     <!-- Both ends of the navbar compete for a phone's width, so the
-                         title yields rather than pushing the version switch off. -->
-                    <span v-else class="block truncate max-w-[40vw] sm:max-w-none">{{ title }}</span>
+                         title yields rather than pushing the version switch off.
+                         It wraps rather than truncating: "2023 general electi…"
+                         loses the one word that says what the page is. -->
+                    <span v-else class="block whitespace-normal line-clamp-2 leading-tight max-w-[40vw] sm:max-w-none">{{ title }}</span>
                 </template>
                 <template v-if="$slots.actions" #right>
                     <slot name="actions" />

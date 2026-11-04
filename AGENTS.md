@@ -71,6 +71,7 @@ Set in `.env` for local dev. Public runtime config is in `nuxt.config.ts` → `r
 | `NUXT_PUBLIC_SITE_URL` | Canonical site URL for return redirects |
 | `NUXT_PUBLIC_ELECTIONS_ENABLED` | `"true"` to expose `/elections` routes |
 | `NUXT_PUBLIC_ELECTIONS_SNAPSHOT_BASE` | Where election snapshots are read from, default `https://elections-r2.wheretheystand.nz/` |
+| `NUXT_PUBLIC_SHOW_ELECTORAL_HISTORY` | `"true"` shows the "Electoral history" tab on person and party pages and allows `/people/:id/elections` and `/parties/:id/elections` |
 | `NUXT_PUBLIC_ELECTIONS_DEBUG` | `"true"` adds the dashboard's Debug page (`/elections/:election/:version/debug`): the manifest entry, the Firestore event document, and where each payload was read from. Developer diagnostics; turn it off in production |
 | `ALGOLIA_*`, `MAPBOX_ACCESS_TOKEN`, `TURNSTILE_SITE_KEY` | Third-party integrations |
 
