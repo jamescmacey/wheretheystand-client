@@ -19,6 +19,16 @@ export type ResultsScope =
   | { kind: 'electorate', electorate: EntityNumber }
   | { kind: 'all-electorates' }
   | { kind: 'voting-place', votingPlace: EntityNumber }
+  /**
+   * Every voting place that issued candidate votes for one electorate.
+   *
+   * Candidate votes only: each place reports both categories, so one of them
+   * is enough to enumerate the places, at half the reads. Filtered on the
+   * electorate the votes were cast for, not the one the place stands in --
+   * which is what finds a Māori seat's places, and an advance voting place
+   * elsewhere in the country issuing this seat's ballots.
+   */
+  | { kind: 'electorate-voting-places', electorate: EntityNumber }
 
 export interface FirestoreSubscription {
   connection: Ref<ConnectionState>
@@ -36,6 +46,9 @@ export function scopeSize(scope: ResultsScope): number {
     // estimate, not a bound: it is for budgeting, and the real figure is not
     // known until the documents arrive.
     case 'voting-place': return 8
+    // A general electorate's own forty-odd places plus the advance places
+    // elsewhere that issued its ballots. Again an estimate, not a bound.
+    case 'electorate-voting-places': return 80
   }
 }
 
@@ -52,6 +65,13 @@ export function useFirestoreResults(options: {
   onResults: (sets: ResultsSet[]) => void
   /** Called when the live connection cannot be relied on. */
   onOffline?: () => void
+  /**
+   * Called on every snapshot the server has confirmed, changes or not.
+   *
+   * `onResults` alone cannot tell a scope that matched nothing from one still
+   * loading, because an empty snapshot has no changes to hand over.
+   */
+  onSettled?: () => void
 }): FirestoreSubscription {
   const connection = ref<ConnectionState>('archived')
   let unsubscribe: (() => void) | null = null
@@ -108,6 +128,14 @@ export function useFirestoreResults(options: {
         // name would not match.
         constraints.push(where('results_level', '==', 'voting_place'))
         constraints.push(where('voting_place_id', '==', scope.votingPlace))
+      } else if (scope.kind === 'electorate-voting-places') {
+        // Equality on four fields. Served by merging the existing
+        // (event_id, results_level, electorate_id) and
+        // (event_id, results_level, results_category) indexes, so it needs
+        // no index of its own.
+        constraints.push(where('results_level', '==', 'voting_place'))
+        constraints.push(where('electorate_id', '==', scope.electorate))
+        constraints.push(where('results_category', '==', 'candidate_votes'))
       } else {
         constraints.push(where('results_level', '==', 'electorate'))
       }
@@ -127,6 +155,7 @@ export function useFirestoreResults(options: {
 
           // fromCache means the SDK has not confirmed against the server yet.
           connection.value = snapshot.metadata.fromCache ? 'connecting' : 'live'
+          if (!snapshot.metadata.fromCache) options.onSettled?.()
         },
         error => {
           if (mine !== generation) return

@@ -29,7 +29,8 @@
                         <h2 v-if="heading" class="text-2xl font-bold">{{ heading }}</h2>
                     </slot>
                     <p v-if="description" class="text-muted">{{ description }}</p>
-                    <ElectionsStatusResultsStatusBar v-if="status" :electorate="statusElectorate" />
+                    <ElectionsStatusResultsStatusBar v-if="status" :electorate="statusElectorate"
+                        :progress="statusProgress" />
                 </div>
 
                 <slot />
@@ -69,6 +70,8 @@ withDefaults(defineProps<{
      * seat's figures reads as a statement about that seat.
      */
     statusElectorate?: EntityNumber
+    /** Show the counting progress in the status bar. */
+    statusProgress?: boolean
     /**
      * Let the page's content fill the panel rather than growing with its own
      * height.
@@ -81,5 +84,5 @@ withDefaults(defineProps<{
      * the whole panel grows instead.
      */
     fill?: boolean
-}>(), { status: true, fill: false })
+}>(), { status: true, statusProgress: true, fill: false })
 </script>

@@ -1,9 +1,14 @@
 <template>
     <UCard variant="soft">
         <template #header>
-            <div class="flex flex-wrap items-baseline justify-between gap-2">
-                <h3 class="font-bold">Voting places</h3>
-                <span v-if="places.length" class="text-sm text-muted">{{ countLabel }}</span>
+            <div class="flex flex-col gap-2">
+                <div class="flex flex-wrap items-baseline justify-between gap-2">
+                    <h3 class="font-bold">Voting places</h3>
+                    <span v-if="places.length" class="text-sm text-muted">{{ countLabel }}</span>
+                </div>
+                <UInput v-if="places.length" v-model="search" icon="i-lucide-search" size="sm"
+                    placeholder="Search voting places" aria-label="Search voting places"
+                    class="w-full sm:max-w-64" />
             </div>
         </template>
 
@@ -22,17 +27,33 @@
                      general election every advance voting place that issued a ballot
                      for this electorate is one of these, wherever in the country it
                      stood. -->
-                <ul class="flex flex-col gap-2 max-h-[32rem] overflow-y-auto">
-                    <li v-for="place in places" :key="place.number">
+                <ul v-if="shown.length" class="flex flex-col gap-2 max-h-[32rem] overflow-y-auto">
+                    <li v-for="place in shown" :key="place.number">
                         <NuxtLink :to="place.to"
                             class="block rounded-md ring ring-default bg-default p-3 hover:bg-elevated transition-colors">
-                            <p class="font-medium text-highlighted">{{ place.address }}</p>
-                            <p v-if="place.away" class="mt-1 text-sm text-muted">
-                                Issued votes for this electorate
-                            </p>
+                            <p class="font-medium text-highlighted">{{ place.name }}</p>
+                            <p v-if="place.rest" class="text-sm text-muted">{{ place.rest }}</p>
+
+                            <!-- A Māori seat's places all stand in some general
+                                 seat, so which one is information, not a flag. -->
+                            <div v-if="isMaori && place.standsIn !== null" class="mt-2">
+                                <ElectionsEntityElectorateBadge :election="election"
+                                    :resultsVersion="resultsVersion" :electorate="place.standsIn"
+                                    :link="false" />
+                            </div>
+                            <div v-else-if="place.away && place.standsIn !== null"
+                                class="mt-2 flex flex-wrap items-center gap-2 text-sm text-muted">
+                                <span>Located in</span>
+                                <ElectionsEntityElectorateBadge :election="election"
+                                    :resultsVersion="resultsVersion" :electorate="place.standsIn"
+                                    :link="false" />
+                            </div>
                         </NuxtLink>
                     </li>
                 </ul>
+
+                <UEmpty v-else icon="i-lucide-search-x" title="No matching voting places"
+                    :description="`Nothing in this electorate's list matches “${search.trim()}”.`" />
             </template>
 
             <div v-else-if="loading" class="flex justify-center py-6">
@@ -50,9 +71,8 @@
 </template>
 
 <script setup lang="ts">
-import type { ElectionSummary, EntityNumber, ResultsVersion } from '~/types/elections'
-import { useElectionDataStore } from '~/stores/electionData'
-import { useInjectedElectionSource } from '~/composables/useElectionSource'
+import type { ElectionSummary, ResultsVersion } from '~/types/elections'
+import type { ElectorateVotingPlace } from '~/composables/useElectorateVotingPlaces'
 import { pluralise } from '~/utils/elections/format'
 
 /**
@@ -63,68 +83,45 @@ import { pluralise } from '~/utils/elections/format'
  * boundary, but which of them this seat's figures are made of. At a general
  * election those are not the same list -- an advance voting place anywhere in
  * the country issues ballots for any electorate -- so a place outside the seat
- * is marked rather than left looking misfiled.
+ * says where it stands rather than looking misfiled.
+ *
+ * The places are worked out by `useElectorateVotingPlaces` on the page, which
+ * hands the same list to the map.
  */
 const props = defineProps<{
     election: ElectionSummary
     resultsVersion: ResultsVersion
-    electorate: EntityNumber
+    places: ElectorateVotingPlace[]
+    isMaori: boolean
+    available: boolean
+    loading: boolean
 }>()
 
-const store = useElectionDataStore()
-const source = useInjectedElectionSource()
-
-const slugs = computed(() => ({ e: props.election.slug, v: props.resultsVersion.slug }))
+const search = ref('')
 
 /**
- * Asked for in the browser, and only when a reader reaches this page.
- *
- * Two files, and the larger is every voting place in the election: fetching
- * them while rendering on the server would put a megabyte nobody has asked to
- * see inside each electorate page's own response, on the night when the pages
- * are served most. The card renders a spinner on the server for the same
- * reason the finder does -- one state on both sides of hydration.
+ * The address split at the first comma, as on the voting place's own page: a
+ * place has no name, and the address is written venue first, so the leading
+ * fragment is the closest thing to one.
  */
-watch(() => props.electorate, (electorate) => {
-    if (import.meta.server) return
-    source?.loadVotingPlaces(electorate)
-}, { immediate: true })
-
-const available = computed(() => Boolean(source?.votingPlaceResultsAvailable.value))
-
-const loaded = computed(() =>
-    store.hasVotingPlaceResults(slugs.value.e, slugs.value.v, props.electorate))
-
-const places = computed(() => {
-    const numbers = new Set<EntityNumber>()
-    for (const category of ['candidate_votes', 'party_votes'] as const) {
-        for (const set of store.votingPlaceResults(
-            slugs.value.e, slugs.value.v, props.electorate, category)) {
-            if (set.voting_place !== null) numbers.add(set.voting_place)
-        }
+const named = computed(() => props.places.map((place) => {
+    const comma = place.address.indexOf(',')
+    return {
+        ...place,
+        name: comma === -1 ? place.address : place.address.slice(0, comma).trim(),
+        rest: comma === -1 ? null : place.address.slice(comma + 1).trim() || null,
+        haystack: place.address.toLocaleLowerCase('en-NZ'),
     }
+}))
 
-    return [...numbers]
-        .map((number) => {
-            const reference = store.votingPlace(slugs.value.e, slugs.value.v, number)
-            return {
-                number,
-                address: reference?.address ?? `Voting place ${number}`,
-                // Null where the place's own record has not been loaded, which
-                // is not the same as standing elsewhere, so it claims nothing.
-                away: reference?.physical_electorate != null
-                    && reference.physical_electorate !== props.electorate,
-                to: `/elections/${slugs.value.e}/${slugs.value.v}/voting-places/${number}`,
-            }
-        })
-        // By address, which is the only name a voting place has.
-        .sort((a, b) => a.address.localeCompare(b.address, 'en-NZ'))
+/** Every word must appear somewhere in the address, in any order. */
+const shown = computed(() => {
+    const words = search.value.toLocaleLowerCase('en-NZ').split(/\s+/).filter(Boolean)
+    if (!words.length) return named.value
+    return named.value.filter(place => words.every(word => place.haystack.includes(word)))
 })
 
-// A spinner only while the shard is in flight: a page revisited once it has
-// landed shows the list at once, and a version without these files never
-// spins at all.
-const loading = computed(() => available.value && !loaded.value && !places.value.length)
-
-const countLabel = computed(() => pluralise(places.value.length, 'voting place'))
+const countLabel = computed(() => (shown.value.length === props.places.length
+    ? pluralise(props.places.length, 'voting place')
+    : `${shown.value.length} of ${pluralise(props.places.length, 'voting place')}`))
 </script>
