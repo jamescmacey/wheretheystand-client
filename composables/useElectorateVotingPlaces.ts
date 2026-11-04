@@ -1,11 +1,11 @@
 import type {
   ElectionSummary,
   EntityNumber,
-  ReferenceVotingPlace,
   ResultsVersion,
   VotingPlaceHit,
 } from '~/types/elections'
 import { useElectionDataStore } from '~/stores/electionData'
+import { votingPlaceFromHit } from '~/utils/elections/votingPlaceHit'
 import {
   useElectorateVotingPlacesScope,
   useInjectedElectionSource,
@@ -118,18 +118,6 @@ export function useElectorateVotingPlaces(options: {
   const requested = new Set<string>()
   const resolving = ref(0)
 
-  function toReference(hit: VotingPlaceHit): ReferenceVotingPlace {
-    return {
-      number: hit.number,
-      physical_electorate: hit.electorate_number ?? null,
-      address: hit.address,
-      latitude: hit.latitude ?? hit._geoloc?.lat ?? null,
-      longitude: hit.longitude ?? hit._geoloc?.lng ?? null,
-      persistent_voting_place: hit.persistent_voting_place ?? null,
-      id: hit.objectID,
-    }
-  }
-
   async function resolve(numbers: EntityNumber[]) {
     const version = toValue(options.resultsVersion)
     const { e, v } = slugs.value
@@ -165,7 +153,7 @@ export function useElectorateVotingPlaces(options: {
         })),
       )
 
-      const places = results.flatMap(result => result.hits.map(toReference))
+      const places = results.flatMap(result => result.hits.map(votingPlaceFromHit))
       store.mergeVotingPlaces(e, v, places)
     } catch (caught) {
       // Forget the numbers, so the next update tries again. The list still
