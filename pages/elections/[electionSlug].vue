@@ -1,5 +1,16 @@
 <template>
-    <div v-if="status === 'success'" class="w-full">
+    <!-- The dashboard panel inside is a flex child that scrolls its own body,
+         which only works if every wrapper between it and the fixed layout root
+         passes a bounded height down. A plain `w-full` here left the panel free
+         to grow to its content, so the page overflowed the layout instead of
+         scrolling inside it.
+
+         `flex-1 min-w-0` rather than `w-full` for the same reason in the other
+         axis. This is a flex child of the layout's row, beside the sidebar, so
+         `w-full` is the full width of the row and overflows by exactly the
+         sidebar's width. The group clips that, which is why it went unnoticed:
+         nothing used to sit against the right edge. The feed panel does. -->
+    <div v-if="status === 'success'" class="flex-1 min-w-0 h-full min-h-0 flex flex-col">
         <NuxtPage :election="election" />
     </div>
     <div v-else-if="status === 'pending'" class="flex flex-col items-center justify-center min-h-[40vh] w-full">
@@ -18,12 +29,33 @@
 
 
 
-const config = useRuntimeConfig()
-const apiBase = config.public.apiBase
 const route = useRoute()
 
-const electionKey = computed(() => `election-${route.params.electionSlug}`)
-const { data: election, status, error, refresh, clear } = await useAsyncData(electionKey, () => $fetch(apiBase + 'elections/' + route.params.electionSlug + '/', apiFetchOptions()))
+const { status: manifestStatus, findElection, findResultsVersion } = await useElectionManifest()
+
+const election = computed(() => findElection(String(route.params.electionSlug)))
+
+// The manifest either has the election or it does not; there is no per-election
+// request that could fail on its own.
+const status = computed(() => {
+    if (manifestStatus.value !== 'success') return manifestStatus.value
+    return election.value ? 'success' : 'error'
+})
+
+watch(election, found => {
+    if (manifestStatus.value === 'success' && !found) {
+        throw createError({ statusCode: 404, statusMessage: 'Election not found' })
+    }
+}, { immediate: true })
+
+// The social card belongs to a results version, but the SEO for every page
+// under an election is set here, so the version has to be read off the route.
+// Missing on the election's own page, where "default" resolves to the primary
+// version -- its card is the one that should represent the election.
+const cardVersion = computed(() => findResultsVersion(
+    String(route.params.electionSlug),
+    String(route.params.resultsVersionSlug ?? 'default'),
+))
 
 usePageSeo({
     title: () => election.value?.name,
@@ -32,6 +64,8 @@ usePageSeo({
         if (!e?.polling_date) return undefined
         return `Election results for ${e.name ?? 'this election'}.`
     },
+    // Null for most versions, and then no image meta is emitted at all.
+    image: () => cardVersion.value?.card_image_url,
 })
 
 </script>

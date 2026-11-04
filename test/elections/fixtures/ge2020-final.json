@@ -1,0 +1,3215 @@
+{
+ "label": "2020 General Election (final)",
+ "slug": "ge2020-final",
+ "partyVotes": [
+  {
+   "party": 17,
+   "votes": 1443545
+  },
+  {
+   "party": 21,
+   "votes": 738275
+  },
+  {
+   "party": 38,
+   "votes": 1880
+  },
+  {
+   "party": 25,
+   "votes": 3256
+  },
+  {
+   "party": 36,
+   "votes": 8121
+  },
+  {
+   "party": 11,
+   "votes": 42613
+  },
+  {
+   "party": 41,
+   "votes": 914
+  },
+  {
+   "party": 7,
+   "votes": 13329
+  },
+  {
+   "party": 13,
+   "votes": 226757
+  },
+  {
+   "party": 22,
+   "votes": 75020
+  },
+  {
+   "party": 31,
+   "votes": 1520
+  },
+  {
+   "party": 5,
+   "votes": 219031
+  },
+  {
+   "party": 37,
+   "votes": 4237
+  },
+  {
+   "party": 49,
+   "votes": 28429
+  },
+  {
+   "party": 19,
+   "votes": 33630
+  },
+  {
+   "party": 40,
+   "votes": 2414
+  },
+  {
+   "party": 29,
+   "votes": 43449
+  }
+ ],
+ "electorateWins": [
+  {
+   "electorate": 1,
+   "candidate": 95,
+   "party": 13
+  },
+  {
+   "electorate": 2,
+   "candidate": 307,
+   "party": 17
+  },
+  {
+   "electorate": 3,
+   "candidate": 19,
+   "party": 21
+  },
+  {
+   "electorate": 4,
+   "candidate": 21,
+   "party": 21
+  },
+  {
+   "electorate": 5,
+   "candidate": 371,
+   "party": 17
+  },
+  {
+   "electorate": 6,
+   "candidate": 374,
+   "party": 17
+  },
+  {
+   "electorate": 7,
+   "candidate": 36,
+   "party": 21
+  },
+  {
+   "electorate": 8,
+   "candidate": 224,
+   "party": 17
+  },
+  {
+   "electorate": 9,
+   "candidate": 214,
+   "party": 17
+  },
+  {
+   "electorate": 10,
+   "candidate": 39,
+   "party": 21
+  },
+  {
+   "electorate": 11,
+   "candidate": 10,
+   "party": 5
+  },
+  {
+   "electorate": 12,
+   "candidate": 358,
+   "party": 17
+  },
+  {
+   "electorate": 13,
+   "candidate": 355,
+   "party": 17
+  },
+  {
+   "electorate": 14,
+   "candidate": 215,
+   "party": 17
+  },
+  {
+   "electorate": 15,
+   "candidate": 319,
+   "party": 17
+  },
+  {
+   "electorate": 16,
+   "candidate": 46,
+   "party": 21
+  },
+  {
+   "electorate": 17,
+   "candidate": 101,
+   "party": 21
+  },
+  {
+   "electorate": 18,
+   "candidate": 54,
+   "party": 21
+  },
+  {
+   "electorate": 19,
+   "candidate": 353,
+   "party": 17
+  },
+  {
+   "electorate": 20,
+   "candidate": 233,
+   "party": 17
+  },
+  {
+   "electorate": 21,
+   "candidate": 354,
+   "party": 17
+  },
+  {
+   "electorate": 22,
+   "candidate": 377,
+   "party": 17
+  },
+  {
+   "electorate": 23,
+   "candidate": 323,
+   "party": 17
+  },
+  {
+   "electorate": 24,
+   "candidate": 216,
+   "party": 17
+  },
+  {
+   "electorate": 25,
+   "candidate": 375,
+   "party": 17
+  },
+  {
+   "electorate": 26,
+   "candidate": 311,
+   "party": 17
+  },
+  {
+   "electorate": 27,
+   "candidate": 220,
+   "party": 17
+  },
+  {
+   "electorate": 28,
+   "candidate": 329,
+   "party": 17
+  },
+  {
+   "electorate": 29,
+   "candidate": 218,
+   "party": 17
+  },
+  {
+   "electorate": 30,
+   "candidate": 82,
+   "party": 21
+  },
+  {
+   "electorate": 31,
+   "candidate": 237,
+   "party": 17
+  },
+  {
+   "electorate": 32,
+   "candidate": 322,
+   "party": 17
+  },
+  {
+   "electorate": 33,
+   "candidate": 317,
+   "party": 17
+  },
+  {
+   "electorate": 34,
+   "candidate": 313,
+   "party": 17
+  },
+  {
+   "electorate": 35,
+   "candidate": 89,
+   "party": 21
+  },
+  {
+   "electorate": 36,
+   "candidate": 364,
+   "party": 17
+  },
+  {
+   "electorate": 37,
+   "candidate": 351,
+   "party": 17
+  },
+  {
+   "electorate": 38,
+   "candidate": 93,
+   "party": 21
+  },
+  {
+   "electorate": 39,
+   "candidate": 94,
+   "party": 21
+  },
+  {
+   "electorate": 40,
+   "candidate": 302,
+   "party": 17
+  },
+  {
+   "electorate": 41,
+   "candidate": 97,
+   "party": 21
+  },
+  {
+   "electorate": 42,
+   "candidate": 241,
+   "party": 17
+  },
+  {
+   "electorate": 43,
+   "candidate": 232,
+   "party": 17
+  },
+  {
+   "electorate": 44,
+   "candidate": 157,
+   "party": 21
+  },
+  {
+   "electorate": 45,
+   "candidate": 158,
+   "party": 21
+  },
+  {
+   "electorate": 46,
+   "candidate": 26,
+   "party": 21
+  },
+  {
+   "electorate": 47,
+   "candidate": 258,
+   "party": 17
+  },
+  {
+   "electorate": 48,
+   "candidate": 259,
+   "party": 17
+  },
+  {
+   "electorate": 49,
+   "candidate": 162,
+   "party": 21
+  },
+  {
+   "electorate": 50,
+   "candidate": 163,
+   "party": 21
+  },
+  {
+   "electorate": 51,
+   "candidate": 164,
+   "party": 21
+  },
+  {
+   "electorate": 52,
+   "candidate": 165,
+   "party": 21
+  },
+  {
+   "electorate": 53,
+   "candidate": 361,
+   "party": 17
+  },
+  {
+   "electorate": 54,
+   "candidate": 300,
+   "party": 17
+  },
+  {
+   "electorate": 55,
+   "candidate": 369,
+   "party": 17
+  },
+  {
+   "electorate": 56,
+   "candidate": 169,
+   "party": 21
+  },
+  {
+   "electorate": 57,
+   "candidate": 170,
+   "party": 21
+  },
+  {
+   "electorate": 58,
+   "candidate": 306,
+   "party": 17
+  },
+  {
+   "electorate": 59,
+   "candidate": 172,
+   "party": 21
+  },
+  {
+   "electorate": 60,
+   "candidate": 324,
+   "party": 17
+  },
+  {
+   "electorate": 61,
+   "candidate": 315,
+   "party": 17
+  },
+  {
+   "electorate": 62,
+   "candidate": 261,
+   "party": 17
+  },
+  {
+   "electorate": 63,
+   "candidate": 154,
+   "party": 21
+  },
+  {
+   "electorate": 64,
+   "candidate": 239,
+   "party": 17
+  },
+  {
+   "electorate": 65,
+   "candidate": 376,
+   "party": 17
+  },
+  {
+   "electorate": 66,
+   "candidate": 304,
+   "party": 17
+  },
+  {
+   "electorate": 67,
+   "candidate": 372,
+   "party": 17
+  },
+  {
+   "electorate": 68,
+   "candidate": 238,
+   "party": 17
+  },
+  {
+   "electorate": 69,
+   "candidate": 328,
+   "party": 17
+  },
+  {
+   "electorate": 70,
+   "candidate": 231,
+   "party": 17
+  },
+  {
+   "electorate": 71,
+   "candidate": 360,
+   "party": 17
+  },
+  {
+   "electorate": 72,
+   "candidate": 412,
+   "party": 19
+  }
+ ],
+ "listCandidates": [
+  {
+   "candidate": 10,
+   "party": 5,
+   "listPos": 1
+  },
+  {
+   "candidate": 11,
+   "party": 5,
+   "listPos": 2
+  },
+  {
+   "candidate": 12,
+   "party": 5,
+   "listPos": 3
+  },
+  {
+   "candidate": 13,
+   "party": 5,
+   "listPos": 4
+  },
+  {
+   "candidate": 14,
+   "party": 5,
+   "listPos": 5
+  },
+  {
+   "candidate": 16,
+   "party": 5,
+   "listPos": 6
+  },
+  {
+   "candidate": 18,
+   "party": 5,
+   "listPos": 7
+  },
+  {
+   "candidate": 20,
+   "party": 5,
+   "listPos": 8
+  },
+  {
+   "candidate": 22,
+   "party": 5,
+   "listPos": 9
+  },
+  {
+   "candidate": 24,
+   "party": 5,
+   "listPos": 10
+  },
+  {
+   "candidate": 27,
+   "party": 5,
+   "listPos": 11
+  },
+  {
+   "candidate": 28,
+   "party": 5,
+   "listPos": 12
+  },
+  {
+   "candidate": 29,
+   "party": 5,
+   "listPos": 13
+  },
+  {
+   "candidate": 30,
+   "party": 5,
+   "listPos": 14
+  },
+  {
+   "candidate": 31,
+   "party": 5,
+   "listPos": 15
+  },
+  {
+   "candidate": 32,
+   "party": 5,
+   "listPos": 16
+  },
+  {
+   "candidate": 33,
+   "party": 5,
+   "listPos": 17
+  },
+  {
+   "candidate": 34,
+   "party": 5,
+   "listPos": 18
+  },
+  {
+   "candidate": 62,
+   "party": 5,
+   "listPos": 19
+  },
+  {
+   "candidate": 35,
+   "party": 5,
+   "listPos": 20
+  },
+  {
+   "candidate": 15,
+   "party": 5,
+   "listPos": 21
+  },
+  {
+   "candidate": 41,
+   "party": 5,
+   "listPos": 22
+  },
+  {
+   "candidate": 47,
+   "party": 5,
+   "listPos": 23
+  },
+  {
+   "candidate": 48,
+   "party": 5,
+   "listPos": 24
+  },
+  {
+   "candidate": 49,
+   "party": 5,
+   "listPos": 25
+  },
+  {
+   "candidate": 50,
+   "party": 5,
+   "listPos": 26
+  },
+  {
+   "candidate": 149,
+   "party": 5,
+   "listPos": 27
+  },
+  {
+   "candidate": 51,
+   "party": 5,
+   "listPos": 28
+  },
+  {
+   "candidate": 52,
+   "party": 5,
+   "listPos": 29
+  },
+  {
+   "candidate": 188,
+   "party": 5,
+   "listPos": 30
+  },
+  {
+   "candidate": 53,
+   "party": 5,
+   "listPos": 31
+  },
+  {
+   "candidate": 106,
+   "party": 5,
+   "listPos": 32
+  },
+  {
+   "candidate": 110,
+   "party": 5,
+   "listPos": 33
+  },
+  {
+   "candidate": 56,
+   "party": 5,
+   "listPos": 34
+  },
+  {
+   "candidate": 99,
+   "party": 5,
+   "listPos": 35
+  },
+  {
+   "candidate": 57,
+   "party": 5,
+   "listPos": 36
+  },
+  {
+   "candidate": 58,
+   "party": 5,
+   "listPos": 37
+  },
+  {
+   "candidate": 60,
+   "party": 5,
+   "listPos": 38
+  },
+  {
+   "candidate": 61,
+   "party": 5,
+   "listPos": 39
+  },
+  {
+   "candidate": 160,
+   "party": 5,
+   "listPos": 40
+  },
+  {
+   "candidate": 59,
+   "party": 5,
+   "listPos": 41
+  },
+  {
+   "candidate": 156,
+   "party": 5,
+   "listPos": 42
+  },
+  {
+   "candidate": 63,
+   "party": 5,
+   "listPos": 43
+  },
+  {
+   "candidate": 64,
+   "party": 5,
+   "listPos": 44
+  },
+  {
+   "candidate": 65,
+   "party": 5,
+   "listPos": 45
+  },
+  {
+   "candidate": 66,
+   "party": 5,
+   "listPos": 46
+  },
+  {
+   "candidate": 73,
+   "party": 5,
+   "listPos": 47
+  },
+  {
+   "candidate": 74,
+   "party": 5,
+   "listPos": 48
+  },
+  {
+   "candidate": 148,
+   "party": 5,
+   "listPos": 49
+  },
+  {
+   "candidate": 582,
+   "party": 5,
+   "listPos": 50
+  },
+  {
+   "candidate": 583,
+   "party": 5,
+   "listPos": 51
+  },
+  {
+   "candidate": 105,
+   "party": 5,
+   "listPos": 52
+  },
+  {
+   "candidate": 189,
+   "party": 5,
+   "listPos": 53
+  },
+  {
+   "candidate": 75,
+   "party": 5,
+   "listPos": 54
+  },
+  {
+   "candidate": 76,
+   "party": 5,
+   "listPos": 55
+  },
+  {
+   "candidate": 81,
+   "party": 5,
+   "listPos": 56
+  },
+  {
+   "candidate": 83,
+   "party": 5,
+   "listPos": 57
+  },
+  {
+   "candidate": 439,
+   "party": 7,
+   "listPos": 1
+  },
+  {
+   "candidate": 440,
+   "party": 7,
+   "listPos": 2
+  },
+  {
+   "candidate": 441,
+   "party": 7,
+   "listPos": 3
+  },
+  {
+   "candidate": 442,
+   "party": 7,
+   "listPos": 4
+  },
+  {
+   "candidate": 443,
+   "party": 7,
+   "listPos": 5
+  },
+  {
+   "candidate": 445,
+   "party": 7,
+   "listPos": 6
+  },
+  {
+   "candidate": 446,
+   "party": 7,
+   "listPos": 7
+  },
+  {
+   "candidate": 447,
+   "party": 7,
+   "listPos": 8
+  },
+  {
+   "candidate": 450,
+   "party": 7,
+   "listPos": 9
+  },
+  {
+   "candidate": 641,
+   "party": 7,
+   "listPos": 10
+  },
+  {
+   "candidate": 448,
+   "party": 7,
+   "listPos": 11
+  },
+  {
+   "candidate": 449,
+   "party": 7,
+   "listPos": 12
+  },
+  {
+   "candidate": 521,
+   "party": 11,
+   "listPos": 1
+  },
+  {
+   "candidate": 509,
+   "party": 11,
+   "listPos": 2
+  },
+  {
+   "candidate": 254,
+   "party": 11,
+   "listPos": 3
+  },
+  {
+   "candidate": 426,
+   "party": 11,
+   "listPos": 4
+  },
+  {
+   "candidate": 527,
+   "party": 11,
+   "listPos": 5
+  },
+  {
+   "candidate": 142,
+   "party": 11,
+   "listPos": 6
+  },
+  {
+   "candidate": 516,
+   "party": 11,
+   "listPos": 7
+  },
+  {
+   "candidate": 430,
+   "party": 11,
+   "listPos": 8
+  },
+  {
+   "candidate": 8,
+   "party": 11,
+   "listPos": 9
+  },
+  {
+   "candidate": 245,
+   "party": 11,
+   "listPos": 10
+  },
+  {
+   "candidate": 253,
+   "party": 11,
+   "listPos": 11
+  },
+  {
+   "candidate": 389,
+   "party": 11,
+   "listPos": 12
+  },
+  {
+   "candidate": 388,
+   "party": 11,
+   "listPos": 13
+  },
+  {
+   "candidate": 144,
+   "party": 11,
+   "listPos": 14
+  },
+  {
+   "candidate": 514,
+   "party": 11,
+   "listPos": 15
+  },
+  {
+   "candidate": 512,
+   "party": 11,
+   "listPos": 16
+  },
+  {
+   "candidate": 429,
+   "party": 11,
+   "listPos": 17
+  },
+  {
+   "candidate": 250,
+   "party": 11,
+   "listPos": 18
+  },
+  {
+   "candidate": 431,
+   "party": 11,
+   "listPos": 19
+  },
+  {
+   "candidate": 392,
+   "party": 11,
+   "listPos": 20
+  },
+  {
+   "candidate": 141,
+   "party": 11,
+   "listPos": 21
+  },
+  {
+   "candidate": 140,
+   "party": 11,
+   "listPos": 22
+  },
+  {
+   "candidate": 526,
+   "party": 11,
+   "listPos": 23
+  },
+  {
+   "candidate": 522,
+   "party": 11,
+   "listPos": 24
+  },
+  {
+   "candidate": 77,
+   "party": 13,
+   "listPos": 1
+  },
+  {
+   "candidate": 87,
+   "party": 13,
+   "listPos": 2
+  },
+  {
+   "candidate": 95,
+   "party": 13,
+   "listPos": 3
+  },
+  {
+   "candidate": 96,
+   "party": 13,
+   "listPos": 4
+  },
+  {
+   "candidate": 98,
+   "party": 13,
+   "listPos": 5
+  },
+  {
+   "candidate": 100,
+   "party": 13,
+   "listPos": 6
+  },
+  {
+   "candidate": 102,
+   "party": 13,
+   "listPos": 7
+  },
+  {
+   "candidate": 103,
+   "party": 13,
+   "listPos": 8
+  },
+  {
+   "candidate": 104,
+   "party": 13,
+   "listPos": 9
+  },
+  {
+   "candidate": 107,
+   "party": 13,
+   "listPos": 10
+  },
+  {
+   "candidate": 108,
+   "party": 13,
+   "listPos": 11
+  },
+  {
+   "candidate": 109,
+   "party": 13,
+   "listPos": 12
+  },
+  {
+   "candidate": 111,
+   "party": 13,
+   "listPos": 13
+  },
+  {
+   "candidate": 112,
+   "party": 13,
+   "listPos": 14
+  },
+  {
+   "candidate": 113,
+   "party": 13,
+   "listPos": 15
+  },
+  {
+   "candidate": 114,
+   "party": 13,
+   "listPos": 16
+  },
+  {
+   "candidate": 115,
+   "party": 13,
+   "listPos": 17
+  },
+  {
+   "candidate": 116,
+   "party": 13,
+   "listPos": 18
+  },
+  {
+   "candidate": 117,
+   "party": 13,
+   "listPos": 19
+  },
+  {
+   "candidate": 118,
+   "party": 13,
+   "listPos": 20
+  },
+  {
+   "candidate": 119,
+   "party": 13,
+   "listPos": 21
+  },
+  {
+   "candidate": 120,
+   "party": 13,
+   "listPos": 22
+  },
+  {
+   "candidate": 121,
+   "party": 13,
+   "listPos": 23
+  },
+  {
+   "candidate": 122,
+   "party": 13,
+   "listPos": 24
+  },
+  {
+   "candidate": 123,
+   "party": 13,
+   "listPos": 25
+  },
+  {
+   "candidate": 145,
+   "party": 13,
+   "listPos": 26
+  },
+  {
+   "candidate": 146,
+   "party": 13,
+   "listPos": 27
+  },
+  {
+   "candidate": 147,
+   "party": 13,
+   "listPos": 28
+  },
+  {
+   "candidate": 150,
+   "party": 13,
+   "listPos": 29
+  },
+  {
+   "candidate": 151,
+   "party": 13,
+   "listPos": 30
+  },
+  {
+   "candidate": 153,
+   "party": 13,
+   "listPos": 31
+  },
+  {
+   "candidate": 178,
+   "party": 13,
+   "listPos": 32
+  },
+  {
+   "candidate": 179,
+   "party": 13,
+   "listPos": 33
+  },
+  {
+   "candidate": 180,
+   "party": 13,
+   "listPos": 34
+  },
+  {
+   "candidate": 181,
+   "party": 13,
+   "listPos": 35
+  },
+  {
+   "candidate": 182,
+   "party": 13,
+   "listPos": 36
+  },
+  {
+   "candidate": 183,
+   "party": 13,
+   "listPos": 37
+  },
+  {
+   "candidate": 184,
+   "party": 13,
+   "listPos": 38
+  },
+  {
+   "candidate": 185,
+   "party": 13,
+   "listPos": 39
+  },
+  {
+   "candidate": 186,
+   "party": 13,
+   "listPos": 40
+  },
+  {
+   "candidate": 187,
+   "party": 13,
+   "listPos": 41
+  },
+  {
+   "candidate": 190,
+   "party": 13,
+   "listPos": 42
+  },
+  {
+   "candidate": 191,
+   "party": 13,
+   "listPos": 43
+  },
+  {
+   "candidate": 192,
+   "party": 13,
+   "listPos": 44
+  },
+  {
+   "candidate": 216,
+   "party": 17,
+   "listPos": 1
+  },
+  {
+   "candidate": 231,
+   "party": 17,
+   "listPos": 2
+  },
+  {
+   "candidate": 324,
+   "party": 17,
+   "listPos": 3
+  },
+  {
+   "candidate": 361,
+   "party": 17,
+   "listPos": 4
+  },
+  {
+   "candidate": 376,
+   "party": 17,
+   "listPos": 5
+  },
+  {
+   "candidate": 241,
+   "party": 17,
+   "listPos": 6
+  },
+  {
+   "candidate": 262,
+   "party": 17,
+   "listPos": 7
+  },
+  {
+   "candidate": 353,
+   "party": 17,
+   "listPos": 8
+  },
+  {
+   "candidate": 320,
+   "party": 17,
+   "listPos": 9
+  },
+  {
+   "candidate": 304,
+   "party": 17,
+   "listPos": 10
+  },
+  {
+   "candidate": 305,
+   "party": 17,
+   "listPos": 11
+  },
+  {
+   "candidate": 311,
+   "party": 17,
+   "listPos": 12
+  },
+  {
+   "candidate": 351,
+   "party": 17,
+   "listPos": 13
+  },
+  {
+   "candidate": 315,
+   "party": 17,
+   "listPos": 14
+  },
+  {
+   "candidate": 234,
+   "party": 17,
+   "listPos": 15
+  },
+  {
+   "candidate": 224,
+   "party": 17,
+   "listPos": 16
+  },
+  {
+   "candidate": 365,
+   "party": 17,
+   "listPos": 17
+  },
+  {
+   "candidate": 238,
+   "party": 17,
+   "listPos": 18
+  },
+  {
+   "candidate": 243,
+   "party": 17,
+   "listPos": 19
+  },
+  {
+   "candidate": 354,
+   "party": 17,
+   "listPos": 20
+  },
+  {
+   "candidate": 374,
+   "party": 17,
+   "listPos": 21
+  },
+  {
+   "candidate": 369,
+   "party": 17,
+   "listPos": 22
+  },
+  {
+   "candidate": 375,
+   "party": 17,
+   "listPos": 23
+  },
+  {
+   "candidate": 328,
+   "party": 17,
+   "listPos": 24
+  },
+  {
+   "candidate": 214,
+   "party": 17,
+   "listPos": 25
+  },
+  {
+   "candidate": 306,
+   "party": 17,
+   "listPos": 26
+  },
+  {
+   "candidate": 368,
+   "party": 17,
+   "listPos": 27
+  },
+  {
+   "candidate": 372,
+   "party": 17,
+   "listPos": 28
+  },
+  {
+   "candidate": 360,
+   "party": 17,
+   "listPos": 29
+  },
+  {
+   "candidate": 217,
+   "party": 17,
+   "listPos": 30
+  },
+  {
+   "candidate": 323,
+   "party": 17,
+   "listPos": 31
+  },
+  {
+   "candidate": 359,
+   "party": 17,
+   "listPos": 32
+  },
+  {
+   "candidate": 329,
+   "party": 17,
+   "listPos": 33
+  },
+  {
+   "candidate": 301,
+   "party": 17,
+   "listPos": 34
+  },
+  {
+   "candidate": 370,
+   "party": 17,
+   "listPos": 35
+  },
+  {
+   "candidate": 322,
+   "party": 17,
+   "listPos": 36
+  },
+  {
+   "candidate": 228,
+   "party": 17,
+   "listPos": 37
+  },
+  {
+   "candidate": 223,
+   "party": 17,
+   "listPos": 38
+  },
+  {
+   "candidate": 302,
+   "party": 17,
+   "listPos": 39
+  },
+  {
+   "candidate": 358,
+   "party": 17,
+   "listPos": 40
+  },
+  {
+   "candidate": 229,
+   "party": 17,
+   "listPos": 41
+  },
+  {
+   "candidate": 318,
+   "party": 17,
+   "listPos": 42
+  },
+  {
+   "candidate": 371,
+   "party": 17,
+   "listPos": 43
+  },
+  {
+   "candidate": 256,
+   "party": 17,
+   "listPos": 44
+  },
+  {
+   "candidate": 215,
+   "party": 17,
+   "listPos": 45
+  },
+  {
+   "candidate": 221,
+   "party": 17,
+   "listPos": 46
+  },
+  {
+   "candidate": 232,
+   "party": 17,
+   "listPos": 47
+  },
+  {
+   "candidate": 373,
+   "party": 17,
+   "listPos": 48
+  },
+  {
+   "candidate": 233,
+   "party": 17,
+   "listPos": 49
+  },
+  {
+   "candidate": 325,
+   "party": 17,
+   "listPos": 50
+  },
+  {
+   "candidate": 237,
+   "party": 17,
+   "listPos": 51
+  },
+  {
+   "candidate": 259,
+   "party": 17,
+   "listPos": 52
+  },
+  {
+   "candidate": 307,
+   "party": 17,
+   "listPos": 53
+  },
+  {
+   "candidate": 356,
+   "party": 17,
+   "listPos": 54
+  },
+  {
+   "candidate": 261,
+   "party": 17,
+   "listPos": 55
+  },
+  {
+   "candidate": 326,
+   "party": 17,
+   "listPos": 56
+  },
+  {
+   "candidate": 220,
+   "party": 17,
+   "listPos": 57
+  },
+  {
+   "candidate": 377,
+   "party": 17,
+   "listPos": 58
+  },
+  {
+   "candidate": 258,
+   "party": 17,
+   "listPos": 59
+  },
+  {
+   "candidate": 321,
+   "party": 17,
+   "listPos": 60
+  },
+  {
+   "candidate": 381,
+   "party": 17,
+   "listPos": 61
+  },
+  {
+   "candidate": 319,
+   "party": 17,
+   "listPos": 62
+  },
+  {
+   "candidate": 355,
+   "party": 17,
+   "listPos": 63
+  },
+  {
+   "candidate": 239,
+   "party": 17,
+   "listPos": 64
+  },
+  {
+   "candidate": 313,
+   "party": 17,
+   "listPos": 65
+  },
+  {
+   "candidate": 260,
+   "party": 17,
+   "listPos": 66
+  },
+  {
+   "candidate": 230,
+   "party": 17,
+   "listPos": 67
+  },
+  {
+   "candidate": 383,
+   "party": 17,
+   "listPos": 68
+  },
+  {
+   "candidate": 242,
+   "party": 17,
+   "listPos": 69
+  },
+  {
+   "candidate": 378,
+   "party": 17,
+   "listPos": 70
+  },
+  {
+   "candidate": 379,
+   "party": 17,
+   "listPos": 71
+  },
+  {
+   "candidate": 218,
+   "party": 17,
+   "listPos": 72
+  },
+  {
+   "candidate": 380,
+   "party": 17,
+   "listPos": 73
+  },
+  {
+   "candidate": 303,
+   "party": 17,
+   "listPos": 74
+  },
+  {
+   "candidate": 309,
+   "party": 17,
+   "listPos": 75
+  },
+  {
+   "candidate": 219,
+   "party": 17,
+   "listPos": 76
+  },
+  {
+   "candidate": 240,
+   "party": 17,
+   "listPos": 77
+  },
+  {
+   "candidate": 236,
+   "party": 17,
+   "listPos": 78
+  },
+  {
+   "candidate": 222,
+   "party": 17,
+   "listPos": 79
+  },
+  {
+   "candidate": 367,
+   "party": 17,
+   "listPos": 80
+  },
+  {
+   "candidate": 490,
+   "party": 17,
+   "listPos": 81
+  },
+  {
+   "candidate": 205,
+   "party": 19,
+   "listPos": 1
+  },
+  {
+   "candidate": 412,
+   "party": 19,
+   "listPos": 2
+  },
+  {
+   "candidate": 413,
+   "party": 19,
+   "listPos": 3
+  },
+  {
+   "candidate": 395,
+   "party": 19,
+   "listPos": 4
+  },
+  {
+   "candidate": 401,
+   "party": 19,
+   "listPos": 5
+  },
+  {
+   "candidate": 398,
+   "party": 19,
+   "listPos": 6
+  },
+  {
+   "candidate": 396,
+   "party": 19,
+   "listPos": 7
+  },
+  {
+   "candidate": 414,
+   "party": 19,
+   "listPos": 8
+  },
+  {
+   "candidate": 415,
+   "party": 19,
+   "listPos": 9
+  },
+  {
+   "candidate": 402,
+   "party": 19,
+   "listPos": 10
+  },
+  {
+   "candidate": 405,
+   "party": 19,
+   "listPos": 11
+  },
+  {
+   "candidate": 406,
+   "party": 19,
+   "listPos": 12
+  },
+  {
+   "candidate": 416,
+   "party": 19,
+   "listPos": 13
+  },
+  {
+   "candidate": 407,
+   "party": 19,
+   "listPos": 14
+  },
+  {
+   "candidate": 417,
+   "party": 19,
+   "listPos": 15
+  },
+  {
+   "candidate": 408,
+   "party": 19,
+   "listPos": 16
+  },
+  {
+   "candidate": 418,
+   "party": 19,
+   "listPos": 17
+  },
+  {
+   "candidate": 419,
+   "party": 19,
+   "listPos": 18
+  },
+  {
+   "candidate": 410,
+   "party": 19,
+   "listPos": 19
+  },
+  {
+   "candidate": 420,
+   "party": 19,
+   "listPos": 20
+  },
+  {
+   "candidate": 397,
+   "party": 19,
+   "listPos": 21
+  },
+  {
+   "candidate": 93,
+   "party": 21,
+   "listPos": 1
+  },
+  {
+   "candidate": 45,
+   "party": 21,
+   "listPos": 2
+  },
+  {
+   "candidate": 40,
+   "party": 21,
+   "listPos": 3
+  },
+  {
+   "candidate": 165,
+   "party": 21,
+   "listPos": 4
+  },
+  {
+   "candidate": 176,
+   "party": 21,
+   "listPos": 5
+  },
+  {
+   "candidate": 157,
+   "party": 21,
+   "listPos": 6
+  },
+  {
+   "candidate": 44,
+   "party": 21,
+   "listPos": 7
+  },
+  {
+   "candidate": 19,
+   "party": 21,
+   "listPos": 8
+  },
+  {
+   "candidate": 164,
+   "party": 21,
+   "listPos": 9
+  },
+  {
+   "candidate": 36,
+   "party": 21,
+   "listPos": 10
+  },
+  {
+   "candidate": 42,
+   "party": 21,
+   "listPos": 11
+  },
+  {
+   "candidate": 37,
+   "party": 21,
+   "listPos": 12
+  },
+  {
+   "candidate": 173,
+   "party": 21,
+   "listPos": 13
+  },
+  {
+   "candidate": 172,
+   "party": 21,
+   "listPos": 14
+  },
+  {
+   "candidate": 154,
+   "party": 21,
+   "listPos": 15
+  },
+  {
+   "candidate": 69,
+   "party": 21,
+   "listPos": 16
+  },
+  {
+   "candidate": 94,
+   "party": 21,
+   "listPos": 17
+  },
+  {
+   "candidate": 72,
+   "party": 21,
+   "listPos": 18
+  },
+  {
+   "candidate": 174,
+   "party": 21,
+   "listPos": 19
+  },
+  {
+   "candidate": 163,
+   "party": 21,
+   "listPos": 20
+  },
+  {
+   "candidate": 175,
+   "party": 21,
+   "listPos": 21
+  },
+  {
+   "candidate": 80,
+   "party": 21,
+   "listPos": 22
+  },
+  {
+   "candidate": 43,
+   "party": 21,
+   "listPos": 23
+  },
+  {
+   "candidate": 91,
+   "party": 21,
+   "listPos": 24
+  },
+  {
+   "candidate": 284,
+   "party": 21,
+   "listPos": 25
+  },
+  {
+   "candidate": 339,
+   "party": 21,
+   "listPos": 26
+  },
+  {
+   "candidate": 70,
+   "party": 21,
+   "listPos": 27
+  },
+  {
+   "candidate": 67,
+   "party": 21,
+   "listPos": 28
+  },
+  {
+   "candidate": 23,
+   "party": 21,
+   "listPos": 29
+  },
+  {
+   "candidate": 166,
+   "party": 21,
+   "listPos": 30
+  },
+  {
+   "candidate": 170,
+   "party": 21,
+   "listPos": 31
+  },
+  {
+   "candidate": 101,
+   "party": 21,
+   "listPos": 32
+  },
+  {
+   "candidate": 167,
+   "party": 21,
+   "listPos": 33
+  },
+  {
+   "candidate": 68,
+   "party": 21,
+   "listPos": 34
+  },
+  {
+   "candidate": 162,
+   "party": 21,
+   "listPos": 35
+  },
+  {
+   "candidate": 86,
+   "party": 21,
+   "listPos": 36
+  },
+  {
+   "candidate": 89,
+   "party": 21,
+   "listPos": 37
+  },
+  {
+   "candidate": 97,
+   "party": 21,
+   "listPos": 38
+  },
+  {
+   "candidate": 39,
+   "party": 21,
+   "listPos": 39
+  },
+  {
+   "candidate": 85,
+   "party": 21,
+   "listPos": 40
+  },
+  {
+   "candidate": 54,
+   "party": 21,
+   "listPos": 41
+  },
+  {
+   "candidate": 169,
+   "party": 21,
+   "listPos": 42
+  },
+  {
+   "candidate": 84,
+   "party": 21,
+   "listPos": 43
+  },
+  {
+   "candidate": 79,
+   "party": 21,
+   "listPos": 44
+  },
+  {
+   "candidate": 71,
+   "party": 21,
+   "listPos": 45
+  },
+  {
+   "candidate": 17,
+   "party": 21,
+   "listPos": 46
+  },
+  {
+   "candidate": 177,
+   "party": 21,
+   "listPos": 47
+  },
+  {
+   "candidate": 155,
+   "party": 21,
+   "listPos": 48
+  },
+  {
+   "candidate": 78,
+   "party": 21,
+   "listPos": 49
+  },
+  {
+   "candidate": 161,
+   "party": 21,
+   "listPos": 50
+  },
+  {
+   "candidate": 159,
+   "party": 21,
+   "listPos": 51
+  },
+  {
+   "candidate": 55,
+   "party": 21,
+   "listPos": 52
+  },
+  {
+   "candidate": 25,
+   "party": 21,
+   "listPos": 53
+  },
+  {
+   "candidate": 90,
+   "party": 21,
+   "listPos": 54
+  },
+  {
+   "candidate": 477,
+   "party": 21,
+   "listPos": 55
+  },
+  {
+   "candidate": 152,
+   "party": 21,
+   "listPos": 56
+  },
+  {
+   "candidate": 168,
+   "party": 21,
+   "listPos": 57
+  },
+  {
+   "candidate": 171,
+   "party": 21,
+   "listPos": 58
+  },
+  {
+   "candidate": 88,
+   "party": 21,
+   "listPos": 59
+  },
+  {
+   "candidate": 158,
+   "party": 21,
+   "listPos": 60
+  },
+  {
+   "candidate": 21,
+   "party": 21,
+   "listPos": 61
+  },
+  {
+   "candidate": 26,
+   "party": 21,
+   "listPos": 62
+  },
+  {
+   "candidate": 46,
+   "party": 21,
+   "listPos": 63
+  },
+  {
+   "candidate": 38,
+   "party": 21,
+   "listPos": 64
+  },
+  {
+   "candidate": 82,
+   "party": 21,
+   "listPos": 65
+  },
+  {
+   "candidate": 333,
+   "party": 21,
+   "listPos": 66
+  },
+  {
+   "candidate": 285,
+   "party": 21,
+   "listPos": 67
+  },
+  {
+   "candidate": 337,
+   "party": 21,
+   "listPos": 68
+  },
+  {
+   "candidate": 342,
+   "party": 21,
+   "listPos": 69
+  },
+  {
+   "candidate": 287,
+   "party": 21,
+   "listPos": 70
+  },
+  {
+   "candidate": 338,
+   "party": 21,
+   "listPos": 71
+  },
+  {
+   "candidate": 478,
+   "party": 21,
+   "listPos": 72
+  },
+  {
+   "candidate": 347,
+   "party": 21,
+   "listPos": 73
+  },
+  {
+   "candidate": 556,
+   "party": 21,
+   "listPos": 74
+  },
+  {
+   "candidate": 286,
+   "party": 21,
+   "listPos": 75
+  },
+  {
+   "candidate": 591,
+   "party": 22,
+   "listPos": 1
+  },
+  {
+   "candidate": 592,
+   "party": 22,
+   "listPos": 2
+  },
+  {
+   "candidate": 593,
+   "party": 22,
+   "listPos": 3
+  },
+  {
+   "candidate": 594,
+   "party": 22,
+   "listPos": 4
+  },
+  {
+   "candidate": 595,
+   "party": 22,
+   "listPos": 5
+  },
+  {
+   "candidate": 599,
+   "party": 22,
+   "listPos": 6
+  },
+  {
+   "candidate": 600,
+   "party": 22,
+   "listPos": 7
+  },
+  {
+   "candidate": 602,
+   "party": 22,
+   "listPos": 8
+  },
+  {
+   "candidate": 603,
+   "party": 22,
+   "listPos": 9
+  },
+  {
+   "candidate": 604,
+   "party": 22,
+   "listPos": 10
+  },
+  {
+   "candidate": 605,
+   "party": 22,
+   "listPos": 11
+  },
+  {
+   "candidate": 606,
+   "party": 22,
+   "listPos": 12
+  },
+  {
+   "candidate": 607,
+   "party": 22,
+   "listPos": 13
+  },
+  {
+   "candidate": 608,
+   "party": 22,
+   "listPos": 14
+  },
+  {
+   "candidate": 609,
+   "party": 22,
+   "listPos": 15
+  },
+  {
+   "candidate": 610,
+   "party": 22,
+   "listPos": 16
+  },
+  {
+   "candidate": 611,
+   "party": 22,
+   "listPos": 17
+  },
+  {
+   "candidate": 612,
+   "party": 22,
+   "listPos": 18
+  },
+  {
+   "candidate": 613,
+   "party": 22,
+   "listPos": 19
+  },
+  {
+   "candidate": 614,
+   "party": 22,
+   "listPos": 20
+  },
+  {
+   "candidate": 615,
+   "party": 22,
+   "listPos": 21
+  },
+  {
+   "candidate": 616,
+   "party": 22,
+   "listPos": 22
+  },
+  {
+   "candidate": 617,
+   "party": 22,
+   "listPos": 23
+  },
+  {
+   "candidate": 618,
+   "party": 22,
+   "listPos": 24
+  },
+  {
+   "candidate": 619,
+   "party": 22,
+   "listPos": 25
+  },
+  {
+   "candidate": 620,
+   "party": 22,
+   "listPos": 26
+  },
+  {
+   "candidate": 621,
+   "party": 22,
+   "listPos": 27
+  },
+  {
+   "candidate": 622,
+   "party": 22,
+   "listPos": 28
+  },
+  {
+   "candidate": 469,
+   "party": 25,
+   "listPos": 1
+  },
+  {
+   "candidate": 640,
+   "party": 25,
+   "listPos": 2
+  },
+  {
+   "candidate": 470,
+   "party": 25,
+   "listPos": 3
+  },
+  {
+   "candidate": 453,
+   "party": 25,
+   "listPos": 4
+  },
+  {
+   "candidate": 471,
+   "party": 25,
+   "listPos": 5
+  },
+  {
+   "candidate": 461,
+   "party": 25,
+   "listPos": 6
+  },
+  {
+   "candidate": 455,
+   "party": 25,
+   "listPos": 7
+  },
+  {
+   "candidate": 539,
+   "party": 25,
+   "listPos": 8
+  },
+  {
+   "candidate": 457,
+   "party": 25,
+   "listPos": 9
+  },
+  {
+   "candidate": 472,
+   "party": 25,
+   "listPos": 10
+  },
+  {
+   "candidate": 468,
+   "party": 25,
+   "listPos": 11
+  },
+  {
+   "candidate": 459,
+   "party": 25,
+   "listPos": 12
+  },
+  {
+   "candidate": 643,
+   "party": 25,
+   "listPos": 13
+  },
+  {
+   "candidate": 538,
+   "party": 25,
+   "listPos": 14
+  },
+  {
+   "candidate": 540,
+   "party": 25,
+   "listPos": 15
+  },
+  {
+   "candidate": 464,
+   "party": 25,
+   "listPos": 16
+  },
+  {
+   "candidate": 589,
+   "party": 25,
+   "listPos": 17
+  },
+  {
+   "candidate": 543,
+   "party": 25,
+   "listPos": 18
+  },
+  {
+   "candidate": 474,
+   "party": 25,
+   "listPos": 19
+  },
+  {
+   "candidate": 462,
+   "party": 25,
+   "listPos": 20
+  },
+  {
+   "candidate": 488,
+   "party": 25,
+   "listPos": 21
+  },
+  {
+   "candidate": 642,
+   "party": 25,
+   "listPos": 22
+  },
+  {
+   "candidate": 590,
+   "party": 25,
+   "listPos": 23
+  },
+  {
+   "candidate": 671,
+   "party": 25,
+   "listPos": 24
+  },
+  {
+   "candidate": 475,
+   "party": 25,
+   "listPos": 25
+  },
+  {
+   "candidate": 639,
+   "party": 25,
+   "listPos": 26
+  },
+  {
+   "candidate": 473,
+   "party": 25,
+   "listPos": 27
+  },
+  {
+   "candidate": 588,
+   "party": 25,
+   "listPos": 28
+  },
+  {
+   "candidate": 9,
+   "party": 29,
+   "listPos": 1
+  },
+  {
+   "candidate": 124,
+   "party": 29,
+   "listPos": 2
+  },
+  {
+   "candidate": 134,
+   "party": 29,
+   "listPos": 3
+  },
+  {
+   "candidate": 136,
+   "party": 29,
+   "listPos": 4
+  },
+  {
+   "candidate": 128,
+   "party": 29,
+   "listPos": 5
+  },
+  {
+   "candidate": 203,
+   "party": 29,
+   "listPos": 6
+  },
+  {
+   "candidate": 127,
+   "party": 29,
+   "listPos": 7
+  },
+  {
+   "candidate": 137,
+   "party": 29,
+   "listPos": 8
+  },
+  {
+   "candidate": 125,
+   "party": 29,
+   "listPos": 9
+  },
+  {
+   "candidate": 130,
+   "party": 29,
+   "listPos": 10
+  },
+  {
+   "candidate": 227,
+   "party": 29,
+   "listPos": 11
+  },
+  {
+   "candidate": 131,
+   "party": 29,
+   "listPos": 12
+  },
+  {
+   "candidate": 138,
+   "party": 29,
+   "listPos": 13
+  },
+  {
+   "candidate": 129,
+   "party": 29,
+   "listPos": 14
+  },
+  {
+   "candidate": 132,
+   "party": 29,
+   "listPos": 15
+  },
+  {
+   "candidate": 126,
+   "party": 29,
+   "listPos": 16
+  },
+  {
+   "candidate": 135,
+   "party": 29,
+   "listPos": 17
+  },
+  {
+   "candidate": 226,
+   "party": 29,
+   "listPos": 18
+  },
+  {
+   "candidate": 225,
+   "party": 29,
+   "listPos": 19
+  },
+  {
+   "candidate": 204,
+   "party": 29,
+   "listPos": 20
+  },
+  {
+   "candidate": 133,
+   "party": 29,
+   "listPos": 21
+  },
+  {
+   "candidate": 501,
+   "party": 31,
+   "listPos": 1
+  },
+  {
+   "candidate": 491,
+   "party": 31,
+   "listPos": 2
+  },
+  {
+   "candidate": 494,
+   "party": 31,
+   "listPos": 3
+  },
+  {
+   "candidate": 481,
+   "party": 31,
+   "listPos": 4
+  },
+  {
+   "candidate": 496,
+   "party": 31,
+   "listPos": 5
+  },
+  {
+   "candidate": 623,
+   "party": 31,
+   "listPos": 6
+  },
+  {
+   "candidate": 484,
+   "party": 31,
+   "listPos": 7
+  },
+  {
+   "candidate": 486,
+   "party": 31,
+   "listPos": 8
+  },
+  {
+   "candidate": 479,
+   "party": 31,
+   "listPos": 9
+  },
+  {
+   "candidate": 483,
+   "party": 31,
+   "listPos": 10
+  },
+  {
+   "candidate": 482,
+   "party": 31,
+   "listPos": 11
+  },
+  {
+   "candidate": 502,
+   "party": 31,
+   "listPos": 12
+  },
+  {
+   "candidate": 499,
+   "party": 31,
+   "listPos": 13
+  },
+  {
+   "candidate": 500,
+   "party": 31,
+   "listPos": 14
+  },
+  {
+   "candidate": 485,
+   "party": 31,
+   "listPos": 15
+  },
+  {
+   "candidate": 480,
+   "party": 31,
+   "listPos": 16
+  },
+  {
+   "candidate": 498,
+   "party": 31,
+   "listPos": 17
+  },
+  {
+   "candidate": 624,
+   "party": 31,
+   "listPos": 18
+  },
+  {
+   "candidate": 492,
+   "party": 31,
+   "listPos": 19
+  },
+  {
+   "candidate": 638,
+   "party": 31,
+   "listPos": 20
+  },
+  {
+   "candidate": 497,
+   "party": 31,
+   "listPos": 21
+  },
+  {
+   "candidate": 493,
+   "party": 31,
+   "listPos": 22
+  },
+  {
+   "candidate": 495,
+   "party": 31,
+   "listPos": 23
+  },
+  {
+   "candidate": 269,
+   "party": 36,
+   "listPos": 1
+  },
+  {
+   "candidate": 270,
+   "party": 36,
+   "listPos": 2
+  },
+  {
+   "candidate": 399,
+   "party": 36,
+   "listPos": 3
+  },
+  {
+   "candidate": 271,
+   "party": 36,
+   "listPos": 4
+  },
+  {
+   "candidate": 403,
+   "party": 36,
+   "listPos": 5
+  },
+  {
+   "candidate": 272,
+   "party": 36,
+   "listPos": 6
+  },
+  {
+   "candidate": 404,
+   "party": 36,
+   "listPos": 7
+  },
+  {
+   "candidate": 296,
+   "party": 36,
+   "listPos": 8
+  },
+  {
+   "candidate": 275,
+   "party": 36,
+   "listPos": 9
+  },
+  {
+   "candidate": 633,
+   "party": 36,
+   "listPos": 10
+  },
+  {
+   "candidate": 630,
+   "party": 36,
+   "listPos": 11
+  },
+  {
+   "candidate": 537,
+   "party": 36,
+   "listPos": 12
+  },
+  {
+   "candidate": 411,
+   "party": 36,
+   "listPos": 13
+  },
+  {
+   "candidate": 274,
+   "party": 36,
+   "listPos": 14
+  },
+  {
+   "candidate": 280,
+   "party": 36,
+   "listPos": 15
+  },
+  {
+   "candidate": 631,
+   "party": 36,
+   "listPos": 16
+  },
+  {
+   "candidate": 282,
+   "party": 36,
+   "listPos": 17
+  },
+  {
+   "candidate": 298,
+   "party": 36,
+   "listPos": 18
+  },
+  {
+   "candidate": 278,
+   "party": 36,
+   "listPos": 19
+  },
+  {
+   "candidate": 632,
+   "party": 36,
+   "listPos": 20
+  },
+  {
+   "candidate": 629,
+   "party": 36,
+   "listPos": 21
+  },
+  {
+   "candidate": 293,
+   "party": 36,
+   "listPos": 22
+  },
+  {
+   "candidate": 297,
+   "party": 36,
+   "listPos": 23
+  },
+  {
+   "candidate": 295,
+   "party": 36,
+   "listPos": 24
+  },
+  {
+   "candidate": 279,
+   "party": 36,
+   "listPos": 25
+  },
+  {
+   "candidate": 637,
+   "party": 36,
+   "listPos": 26
+  },
+  {
+   "candidate": 400,
+   "party": 36,
+   "listPos": 27
+  },
+  {
+   "candidate": 409,
+   "party": 36,
+   "listPos": 28
+  },
+  {
+   "candidate": 277,
+   "party": 36,
+   "listPos": 29
+  },
+  {
+   "candidate": 634,
+   "party": 36,
+   "listPos": 30
+  },
+  {
+   "candidate": 291,
+   "party": 36,
+   "listPos": 31
+  },
+  {
+   "candidate": 636,
+   "party": 36,
+   "listPos": 32
+  },
+  {
+   "candidate": 635,
+   "party": 36,
+   "listPos": 33
+  },
+  {
+   "candidate": 288,
+   "party": 36,
+   "listPos": 34
+  },
+  {
+   "candidate": 283,
+   "party": 36,
+   "listPos": 35
+  },
+  {
+   "candidate": 628,
+   "party": 36,
+   "listPos": 36
+  },
+  {
+   "candidate": 290,
+   "party": 36,
+   "listPos": 37
+  },
+  {
+   "candidate": 289,
+   "party": 36,
+   "listPos": 38
+  },
+  {
+   "candidate": 432,
+   "party": 36,
+   "listPos": 39
+  },
+  {
+   "candidate": 316,
+   "party": 37,
+   "listPos": 1
+  },
+  {
+   "candidate": 312,
+   "party": 37,
+   "listPos": 2
+  },
+  {
+   "candidate": 265,
+   "party": 37,
+   "listPos": 3
+  },
+  {
+   "candidate": 314,
+   "party": 37,
+   "listPos": 4
+  },
+  {
+   "candidate": 336,
+   "party": 37,
+   "listPos": 5
+  },
+  {
+   "candidate": 503,
+   "party": 38,
+   "listPos": 1
+  },
+  {
+   "candidate": 545,
+   "party": 38,
+   "listPos": 2
+  },
+  {
+   "candidate": 467,
+   "party": 38,
+   "listPos": 3
+  },
+  {
+   "candidate": 542,
+   "party": 38,
+   "listPos": 4
+  },
+  {
+   "candidate": 541,
+   "party": 38,
+   "listPos": 5
+  },
+  {
+   "candidate": 452,
+   "party": 38,
+   "listPos": 6
+  },
+  {
+   "candidate": 463,
+   "party": 38,
+   "listPos": 7
+  },
+  {
+   "candidate": 466,
+   "party": 38,
+   "listPos": 8
+  },
+  {
+   "candidate": 460,
+   "party": 38,
+   "listPos": 9
+  },
+  {
+   "candidate": 465,
+   "party": 38,
+   "listPos": 10
+  },
+  {
+   "candidate": 458,
+   "party": 38,
+   "listPos": 11
+  },
+  {
+   "candidate": 352,
+   "party": 40,
+   "listPos": 1
+  },
+  {
+   "candidate": 362,
+   "party": 40,
+   "listPos": 2
+  },
+  {
+   "candidate": 363,
+   "party": 40,
+   "listPos": 3
+  },
+  {
+   "candidate": 511,
+   "party": 40,
+   "listPos": 4
+  },
+  {
+   "candidate": 350,
+   "party": 40,
+   "listPos": 5
+  },
+  {
+   "candidate": 357,
+   "party": 40,
+   "listPos": 6
+  },
+  {
+   "candidate": 366,
+   "party": 40,
+   "listPos": 7
+  },
+  {
+   "candidate": 585,
+   "party": 40,
+   "listPos": 8
+  },
+  {
+   "candidate": 433,
+   "party": 40,
+   "listPos": 9
+  },
+  {
+   "candidate": 434,
+   "party": 40,
+   "listPos": 10
+  },
+  {
+   "candidate": 586,
+   "party": 40,
+   "listPos": 11
+  },
+  {
+   "candidate": 587,
+   "party": 40,
+   "listPos": 12
+  },
+  {
+   "candidate": 340,
+   "party": 41,
+   "listPos": 1
+  },
+  {
+   "candidate": 343,
+   "party": 41,
+   "listPos": 2
+  },
+  {
+   "candidate": 344,
+   "party": 41,
+   "listPos": 3
+  },
+  {
+   "candidate": 345,
+   "party": 41,
+   "listPos": 4
+  },
+  {
+   "candidate": 346,
+   "party": 41,
+   "listPos": 5
+  },
+  {
+   "candidate": 569,
+   "party": 49,
+   "listPos": 1
+  },
+  {
+   "candidate": 334,
+   "party": 49,
+   "listPos": 2
+  },
+  {
+   "candidate": 691,
+   "party": 49,
+   "listPos": 3
+  },
+  {
+   "candidate": 663,
+   "party": 49,
+   "listPos": 4
+  },
+  {
+   "candidate": 332,
+   "party": 49,
+   "listPos": 5
+  },
+  {
+   "candidate": 668,
+   "party": 49,
+   "listPos": 6
+  },
+  {
+   "candidate": 688,
+   "party": 49,
+   "listPos": 7
+  },
+  {
+   "candidate": 651,
+   "party": 49,
+   "listPos": 8
+  },
+  {
+   "candidate": 648,
+   "party": 49,
+   "listPos": 9
+  },
+  {
+   "candidate": 653,
+   "party": 49,
+   "listPos": 10
+  },
+  {
+   "candidate": 546,
+   "party": 49,
+   "listPos": 11
+  },
+  {
+   "candidate": 650,
+   "party": 49,
+   "listPos": 12
+  },
+  {
+   "candidate": 666,
+   "party": 49,
+   "listPos": 13
+  },
+  {
+   "candidate": 677,
+   "party": 49,
+   "listPos": 14
+  },
+  {
+   "candidate": 331,
+   "party": 49,
+   "listPos": 15
+  },
+  {
+   "candidate": 550,
+   "party": 49,
+   "listPos": 16
+  },
+  {
+   "candidate": 656,
+   "party": 49,
+   "listPos": 17
+  },
+  {
+   "candidate": 658,
+   "party": 49,
+   "listPos": 18
+  },
+  {
+   "candidate": 674,
+   "party": 49,
+   "listPos": 19
+  },
+  {
+   "candidate": 678,
+   "party": 49,
+   "listPos": 20
+  },
+  {
+   "candidate": 659,
+   "party": 49,
+   "listPos": 21
+  },
+  {
+   "candidate": 672,
+   "party": 49,
+   "listPos": 22
+  },
+  {
+   "candidate": 554,
+   "party": 49,
+   "listPos": 23
+  },
+  {
+   "candidate": 667,
+   "party": 49,
+   "listPos": 24
+  },
+  {
+   "candidate": 657,
+   "party": 49,
+   "listPos": 25
+  },
+  {
+   "candidate": 553,
+   "party": 49,
+   "listPos": 26
+  },
+  {
+   "candidate": 649,
+   "party": 49,
+   "listPos": 27
+  },
+  {
+   "candidate": 646,
+   "party": 49,
+   "listPos": 28
+  },
+  {
+   "candidate": 685,
+   "party": 49,
+   "listPos": 29
+  },
+  {
+   "candidate": 694,
+   "party": 49,
+   "listPos": 30
+  },
+  {
+   "candidate": 695,
+   "party": 49,
+   "listPos": 31
+  },
+  {
+   "candidate": 700,
+   "party": 49,
+   "listPos": 32
+  },
+  {
+   "candidate": 683,
+   "party": 49,
+   "listPos": 33
+  },
+  {
+   "candidate": 698,
+   "party": 49,
+   "listPos": 34
+  },
+  {
+   "candidate": 665,
+   "party": 49,
+   "listPos": 35
+  },
+  {
+   "candidate": 654,
+   "party": 49,
+   "listPos": 36
+  },
+  {
+   "candidate": 660,
+   "party": 49,
+   "listPos": 37
+  },
+  {
+   "candidate": 679,
+   "party": 49,
+   "listPos": 38
+  },
+  {
+   "candidate": 692,
+   "party": 49,
+   "listPos": 39
+  },
+  {
+   "candidate": 645,
+   "party": 49,
+   "listPos": 40
+  },
+  {
+   "candidate": 675,
+   "party": 49,
+   "listPos": 41
+  },
+  {
+   "candidate": 689,
+   "party": 49,
+   "listPos": 42
+  },
+  {
+   "candidate": 676,
+   "party": 49,
+   "listPos": 43
+  },
+  {
+   "candidate": 697,
+   "party": 49,
+   "listPos": 44
+  },
+  {
+   "candidate": 669,
+   "party": 49,
+   "listPos": 45
+  },
+  {
+   "candidate": 335,
+   "party": 49,
+   "listPos": 46
+  },
+  {
+   "candidate": 661,
+   "party": 49,
+   "listPos": 47
+  },
+  {
+   "candidate": 647,
+   "party": 49,
+   "listPos": 48
+  },
+  {
+   "candidate": 680,
+   "party": 49,
+   "listPos": 49
+  },
+  {
+   "candidate": 552,
+   "party": 49,
+   "listPos": 50
+  },
+  {
+   "candidate": 655,
+   "party": 49,
+   "listPos": 51
+  },
+  {
+   "candidate": 699,
+   "party": 49,
+   "listPos": 52
+  },
+  {
+   "candidate": 686,
+   "party": 49,
+   "listPos": 53
+  },
+  {
+   "candidate": 662,
+   "party": 49,
+   "listPos": 54
+  },
+  {
+   "candidate": 684,
+   "party": 49,
+   "listPos": 55
+  },
+  {
+   "candidate": 548,
+   "party": 49,
+   "listPos": 56
+  },
+  {
+   "candidate": 681,
+   "party": 49,
+   "listPos": 57
+  },
+  {
+   "candidate": 664,
+   "party": 49,
+   "listPos": 58
+  },
+  {
+   "candidate": 693,
+   "party": 49,
+   "listPos": 59
+  },
+  {
+   "candidate": 687,
+   "party": 49,
+   "listPos": 60
+  },
+  {
+   "candidate": 690,
+   "party": 49,
+   "listPos": 61
+  },
+  {
+   "candidate": 644,
+   "party": 49,
+   "listPos": 62
+  }
+ ],
+ "official": [
+  {
+   "party": 17,
+   "name": "Labour Party",
+   "electorate_seats": 46,
+   "list_seats": 19,
+   "total_seats": 65
+  },
+  {
+   "party": 21,
+   "name": "National Party",
+   "electorate_seats": 23,
+   "list_seats": 10,
+   "total_seats": 33
+  },
+  {
+   "party": 13,
+   "name": "Green Party",
+   "electorate_seats": 1,
+   "list_seats": 9,
+   "total_seats": 10
+  },
+  {
+   "party": 5,
+   "name": "ACT New Zealand",
+   "electorate_seats": 1,
+   "list_seats": 9,
+   "total_seats": 10
+  },
+  {
+   "party": 19,
+   "name": "Māori Party",
+   "electorate_seats": 1,
+   "list_seats": 1,
+   "total_seats": 2
+  }
+ ]
+}

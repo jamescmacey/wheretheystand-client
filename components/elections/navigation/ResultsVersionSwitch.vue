@@ -11,6 +11,8 @@
 </template>
 
 <script setup>
+import { listedVersions } from '~/utils/elections/versions'
+
 const props = defineProps({
     election: {
         type: Object,
@@ -23,12 +25,17 @@ const props = defineProps({
 })
 
 const router = useRouter()
+const route = useRoute()
 
+// Listed versions only. An unlisted one is offered only while it is the one
+// open, so the select still names the page being viewed.
 const resultsVersions = computed(() =>
-    props.election.results_versions.map(version => ({
-        label: version.name,
-        value: version.slug
-    }))
+    listedVersions(props.election)
+        .concat(props.resultsVersion.listed ? [] : [props.resultsVersion])
+        .map(version => ({
+            label: version.name,
+            value: version.slug
+        }))
 )
 const selectedResultsVersion = ref(props.resultsVersion.slug)
 
@@ -38,9 +45,11 @@ function onVersionChange() {
     })
 }
 
-watch(router.currentRoute.value.params, (newParams) => {
+// A getter, not the params object itself: that is a plain snapshot, so the
+// watcher never fired and the switch stopped following the route.
+watch(() => route.params, (newParams) => {
     if (newParams.electionSlug && newParams.resultsVersionSlug) {
         selectedResultsVersion.value = newParams.resultsVersionSlug
     }
-})
+}, { deep: true })
 </script>

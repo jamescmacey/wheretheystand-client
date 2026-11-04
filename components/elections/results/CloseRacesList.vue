@@ -1,0 +1,155 @@
+<template>
+    <UCard variant="soft">
+        <template #header>
+            <div class="flex items-center justify-between gap-2 flex-wrap">
+                <h3 class="font-bold">Closest electorates</h3>
+                <!-- The figures behind this list can be older than the national
+                     tally beside it, so it dates itself rather than borrowing
+                     the page's status badge. Once every one of them is final
+                     there is nothing left to be out of date about, and a time
+                     stamp on a settled result reads as a fault. -->
+                <p v-if="asAt" class="text-sm text-muted">As at {{ asAt }}</p>
+            </div>
+        </template>
+
+        <template v-if="races.length">
+            <!-- The same badge, tallies and lead as the Electorates page, so a
+                 seat reads the same wherever it appears. -->
+            <div class="grid gap-3 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+                <UPageCard v-for="race in races" :key="race.electorate" :to="race.href" variant="subtle"
+                    :ui="{ container: 'p-3 sm:p-3' }">
+                    <!-- The card is a link in its own right, so nothing inside it is. -->
+                    <div class="min-w-0">
+                        <ElectionsEntityElectorateBadge :election="election" :resultsVersion="resultsVersion"
+                            :electorate="race.electorate" :link="false" class="max-w-full" />
+                    </div>
+
+                    <!-- The two tallies with the difference between them, where
+                         a reader comparing them is already looking. -->
+                    <div class="mt-3 flex flex-col gap-1">
+                        <template v-for="(leader, index) in race.leaders" :key="leader.candidate">
+                            <p v-if="index === 1" class="text-xs text-muted text-right tabular-nums"
+                                :title="race.description">
+                                {{ race.margin }}
+                            </p>
+                            <div class="flex items-center justify-between gap-3">
+                                <ElectionsEntityCandidateLabel :election="election"
+                                    :resultsVersion="resultsVersion" :candidate="leader.candidate" :link="false" />
+                                <span class="tabular-nums font-medium shrink-0">
+                                    {{ formatCount(leader.count) }}
+                                </span>
+                            </div>
+                        </template>
+                    </div>
+                </UPageCard>
+            </div>
+            <UButton :to="electoratesHref" variant="link" color="neutral" size="sm" class="mt-2"
+                trailing-icon="i-lucide-arrow-right">
+                All electorates
+            </UButton>
+        </template>
+
+        <div v-else class="text-center py-6 space-y-3">
+            <p class="text-sm text-muted">{{ emptyMessage }}</p>
+            <slot name="empty-action" />
+        </div>
+    </UCard>
+</template>
+
+<script setup lang="ts">
+import type { ElectionSummary, ResultsVersion } from '~/types/elections'
+import { useElectionDataStore } from '~/stores/electionData'
+import { formatCount, formatPoints, formatTime, fromEpochSeconds } from '~/utils/elections/format'
+
+/**
+ * The electorates that could still go either way.
+ *
+ * Ordered by margin, tightest first, with genuine ties above everything else --
+ * a tie is not a small margin, it is an undecided seat.
+ *
+ * Renders whatever per-electorate results the store happens to hold. In
+ * archived mode that is all of them, for the cost of the one results file the
+ * page already fetched. During a live count it is whatever the open
+ * subscription covers, which is why the empty state takes an action slot rather
+ * than this component quietly subscribing to all 144 electorates itself.
+ */
+const props = withDefaults(defineProps<{
+    election: ElectionSummary
+    resultsVersion: ResultsVersion
+    limit?: number
+    emptyMessage?: string
+}>(), {
+    limit: 8,
+    emptyMessage: 'Electorate results have not been loaded for this view yet.',
+})
+
+const store = useElectionDataStore()
+const slugs = computed(() => ({ e: props.election.slug, v: props.resultsVersion.slug }))
+
+const electoratesHref = computed(() => `/elections/${slugs.value.e}/${slugs.value.v}/electorates`)
+
+const races = computed(() => {
+    const results = [...store.computedElectorateResults(slugs.value.e, slugs.value.v).values()]
+
+    return results
+        // Only contests with a real margin to compare. An uncounted electorate
+        // has no claim to being close.
+        .filter(result => result.resultStatus === 'determined'
+            || result.resultStatus === 'indeterminate')
+        .sort((a, b) => {
+            // Ties first: an undecided seat outranks any margin.
+            const tieA = a.resultStatus === 'indeterminate' ? 0 : 1
+            const tieB = b.resultStatus === 'indeterminate' ? 0 : 1
+            if (tieA !== tieB) return tieA - tieB
+            return (a.marginPercentage ?? Infinity) - (b.marginPercentage ?? Infinity)
+        })
+        .slice(0, props.limit)
+        .map((result) => {
+            const votes = formatCount(result.margin)
+            const points = formatPoints(result.marginPercentage)
+
+            return {
+                electorate: result.electorate,
+                leaders: (result.leaders ?? []).slice(0, 2),
+                href: `/elections/${slugs.value.e}/${slugs.value.v}/electorates/${result.electorate}`,
+                margin: result.resultStatus === 'indeterminate' ? 'Tied' : `+${votes}`,
+                description: result.resultStatus === 'indeterminate'
+                    ? 'The leading candidates are tied.'
+                    : points ? `Margin of ${votes} votes (${points}).` : `Margin of ${votes} votes.`,
+            }
+        })
+})
+
+/**
+ * The newest electorate tally behind this list, which is what it is "as at".
+ *
+ * Two sources, because the list has two. Archived results arrive as a document
+ * per electorate and each one dates itself. During a live count the margins
+ * come from the summary instead, and this page holds no electorate tallies at
+ * all, so the summary's own timestamp is the only thing that can date them.
+ */
+const asAt = computed(() => {
+    let newest: number | null = null
+    let anyProvisional = false
+
+    for (const set of store.allResults(slugs.value.e, slugs.value.v)) {
+        if (set.results_level !== 'electorate' || set.results_category !== 'candidate_votes') continue
+        if (!set.is_final) anyProvisional = true
+        if (set.updated_timestamp === null) continue
+        if (newest === null || set.updated_timestamp > newest) newest = set.updated_timestamp
+    }
+
+    if (newest === null) {
+        const fromSummary = store.summaryUpdatedTimestamp(slugs.value.e, slugs.value.v)
+        if (fromSummary === null) return null
+        // A settled count has nothing to be out of date about, and a time stamp
+        // on one reads as a fault.
+        const national = store.nationalResults(slugs.value.e, slugs.value.v, 'party_votes')
+        if (national?.is_final) return null
+        return formatTime(fromEpochSeconds(fromSummary))
+    }
+
+    if (!anyProvisional) return null
+    return formatTime(fromEpochSeconds(newest))
+})
+</script>
