@@ -426,6 +426,22 @@ export const useElectionDataStore = defineStore('electionData', {
     },
 
     /**
+     * Add some places' records without replacing the rest.
+     *
+     * For records resolved a few at a time -- an electorate's places looked up
+     * in Algolia -- rather than the whole version's published at once. A place
+     * already held is kept: the published record is the better one.
+     */
+    mergeVotingPlaces(election: string, version: string, places: ReferenceVotingPlace[]) {
+      const held = this.ensureVersion(election, version)
+      const next = new Map(held.votingPlacesByNumber)
+      for (const place of places) {
+        if (!next.has(place.number)) next.set(place.number, place)
+      }
+      held.votingPlacesByNumber = next
+    },
+
+    /**
      * Merge results in, keeping whichever tally is newer.
      *
      * Called for the initial snapshot and for every live update. A snapshot

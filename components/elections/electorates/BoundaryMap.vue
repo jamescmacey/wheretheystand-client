@@ -24,7 +24,18 @@
                                 <MapboxLayer :layer="fillLayer" />
                                 <MapboxLayer :layer="outlineLayer" />
                             </template>
+                            <!-- Always mounted, so pins added mid-count reach a
+                                 source that already exists rather than racing
+                                 the map's style load. -->
+                            <MapboxSource :source-id="placesSourceId" :source="placesSource" />
+                            <MapboxLayer :layer="placesLayer" />
                         </MapboxMap>
+
+                        <div v-if="hoveredPlace"
+                            class="absolute top-2 left-2 right-2 rounded-md bg-default/90 backdrop-blur-sm ring ring-default px-3 py-2 text-sm pointer-events-none">
+                            <p class="font-medium text-highlighted">{{ hoveredPlace.address }}</p>
+                            <p v-if="hoveredPlace.away" class="text-muted">Elsewhere, issuing votes for this electorate</p>
+                        </div>
 
                         <div v-if="status === 'pending'"
                             class="absolute inset-x-0 bottom-0 p-3 text-center text-sm text-muted bg-default/80 backdrop-blur-sm">
@@ -42,6 +53,7 @@
 
             <!-- Said beside the map rather than left to be assumed: a reader
                  has no way to tell one review's coastline from another's. -->
+            <p v-if="unplaced" class="text-xs text-muted">{{ unplaced }}</p>
             <p v-if="laterBoundaryNote" class="text-xs text-muted">{{ laterBoundaryNote }}</p>
             <p v-if="attribution" class="text-xs text-muted">{{ attribution }}</p>
         </template>
@@ -49,7 +61,9 @@
 </template>
 
 <script setup lang="ts">
+import type { MapMouseEvent } from 'mapbox-gl'
 import type { ElectionSummary, EntityNumber, ResultsVersion } from '~/types/elections'
+import type { ElectorateVotingPlace } from '~/composables/useElectorateVotingPlaces'
 import { useElectionDataStore } from '~/stores/electionData'
 import { chooseElectorateBoundary } from '~/utils/elections/boundaries'
 import { formatIsoDate } from '~/utils/elections/format'
@@ -77,6 +91,8 @@ const props = defineProps<{
     resultsVersion: ResultsVersion
     electorate: EntityNumber
     mapId: string
+    /** The places that issued this seat's ballots. Those without coordinates are counted, not drawn. */
+    places?: ElectorateVotingPlace[]
 }>()
 
 const store = useElectionDataStore()
@@ -178,6 +194,89 @@ const mapOptions = {
 
 const mapRef = useMapboxRef(props.mapId)
 
+/* ------------------------------------------------------------------ *
+ * Voting places
+ * ------------------------------------------------------------------ */
+
+const drawable = computed(() => (props.places ?? [])
+    .filter(place => place.latitude !== null && place.longitude !== null))
+
+/**
+ * Said under the map, because a list of sixty beside a map of fifty-eight
+ * otherwise looks like two pins went missing.
+ */
+const unplaced = computed(() => {
+    const missing = (props.places?.length ?? 0) - drawable.value.length
+    if (missing <= 0) return ''
+    return missing === 1
+        ? 'One voting place has no location recorded and is not on the map.'
+        : `${missing} voting places have no location recorded and are not on the map.`
+})
+
+const placesSourceId = computed(() => `${props.mapId}-places`)
+
+/** A fresh object each time: the module watches `source` by identity. */
+const placesSource = computed(() => ({
+    type: 'geojson' as const,
+    data: {
+        type: 'FeatureCollection' as const,
+        features: drawable.value.map(place => ({
+            type: 'Feature' as const,
+            properties: { number: place.number, away: place.away },
+            geometry: {
+                type: 'Point' as const,
+                coordinates: [place.longitude!, place.latitude!],
+            },
+        })),
+    },
+}))
+
+/**
+ * The seat's own places in its colour, those elsewhere muted: at a general
+ * election the advance places across the country are most of the list and
+ * almost none of the votes.
+ *
+ * Fitted to the boundary, not to the pins, for the same reason -- a fit that
+ * took in every advance place would show the whole country every time.
+ */
+const placesLayer = computed(() => ({
+    id: `${props.mapId}-places`,
+    type: 'circle' as const,
+    source: placesSourceId.value,
+    paint: {
+        'circle-radius': ['interpolate', ['linear'], ['zoom'], 5, 3, 12, 6],
+        'circle-color': ['case', ['get', 'away'], '#94a3b8', '#349494'],
+        'circle-stroke-width': 1.5,
+        'circle-stroke-color': '#ffffff',
+    },
+}))
+
+const hoveredPlace = ref<ElectorateVotingPlace | null>(null)
+
+function placeFor(event: MapMouseEvent) {
+    const number = event.features?.[0]?.properties?.number
+    return typeof number === 'number'
+        ? drawable.value.find(place => place.number === number) ?? null
+        : null
+}
+
+function onPlaceClick(event: MapMouseEvent) {
+    const place = placeFor(event)
+    if (place) navigateTo(place.to)
+}
+
+function onPlaceMove(event: MapMouseEvent) {
+    const map = mapRef.value
+    if (map) map.getCanvas().style.cursor = 'pointer'
+    hoveredPlace.value = placeFor(event)
+}
+
+function onPlaceLeave() {
+    const map = mapRef.value
+    if (map) map.getCanvas().style.cursor = ''
+    hoveredPlace.value = null
+}
+
 function onMapError(error: unknown) {
     const message = error instanceof Error ? error.message : String(error ?? '')
     mapError.value = message || 'The map could not be loaded.'
@@ -229,8 +328,16 @@ const attribution = computed(() => {
  */
 let mapInstance: ReturnType<typeof useMapboxRef>['value']
 
+// Pointer handlers are bound on the map rather than through MapboxLayer's
+// props, which never reach it -- as on the voting places map. Layer-scoped
+// listeners may be bound before the layer exists.
 watch(mapRef, (map) => {
-    if (map) mapInstance = map
+    if (!map || map === mapInstance) return
+    mapInstance = map
+    const layerId = placesLayer.value.id
+    map.on('click', layerId, onPlaceClick)
+    map.on('mousemove', layerId, onPlaceMove)
+    map.on('mouseleave', layerId, onPlaceLeave)
 }, { immediate: true })
 
 onUnmounted(() => {

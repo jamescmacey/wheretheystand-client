@@ -88,6 +88,7 @@ import { coalitionSeats, majorityFor, partyKey } from '~/utils/elections/coaliti
 import { hasBlocs } from '~/utils/elections/blocs'
 import { partyFill } from '~/utils/elections/partyFill'
 import { pluralise } from '~/utils/elections/format'
+import { partyAbbreviation } from '~/utils/elections/partyAbbreviation'
 
 /**
  * Who could govern together, and whether they have the seats to.
@@ -135,9 +136,8 @@ function describe(party: EntityNumber, seats: number): CoalitionParty {
         key: keyFor(party),
         number: party,
         name,
-        // The same fallbacks the seat change badges use.
-        abbreviation: persistent?.abbreviation || reference?.abbreviation
-            || persistent?.short_name || reference?.short_name || name,
+        // The same short form the results table uses on narrow screens.
+        abbreviation: partyAbbreviation(reference, persistent) ?? name,
         seats,
         colour: store.partyColour(slugs.value.e, slugs.value.v, party),
         alternate: store.partyAlternateColour(slugs.value.e, slugs.value.v, party),

@@ -21,6 +21,11 @@ export interface ResultsColumn {
 export interface ResultsRow {
   key: string | number
   label: string
+  /**
+   * Shown in place of the label on narrow screens, eg a party's initials. A
+   * full name wrapped into a phone's label track can run to five lines.
+   */
+  shortLabel?: string | null
   sublabel?: string | null
   colour?: string | null
   /** A second colour, for a party drawn half in each. See utils/elections/partyFill. */

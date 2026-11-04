@@ -4,10 +4,14 @@
              tables, which are about this election alone. -->
         <template #heading>
             <div v-if="electorate" class="space-y-1">
-                <h2>
-                    <ElectionsEntityElectorateBadge :election="election" :resultsVersion="resultsVersion"
-                        :electorate="electorateNumber" :link="false" size="lg" />
-                </h2>
+                <div class="flex flex-wrap items-center gap-3">
+                    <h2>
+                        <ElectionsEntityElectorateBadge :election="election" :resultsVersion="resultsVersion"
+                            :electorate="electorateNumber" :link="false" size="lg" />
+                    </h2>
+                    <ElectionsResultsSeatChangeBadge :election="election" :resultsVersion="resultsVersion"
+                        :electorate="electorateNumber" />
+                </div>
                 <!-- The badge's colour says this too, which nobody can read as
                      a colour: the seat's type is written out underneath it. -->
                 <p v-if="typeLabel" class="text-sm text-muted">{{ typeLabel }}</p>
@@ -42,13 +46,16 @@
                     <UCard variant="subtle">
                         <ElectionsElectoratesBoundaryMap :key="mapId" :election="election"
                             :resultsVersion="resultsVersion" :electorate="electorateNumber"
-                            :map-id="mapId" />
+                            :map-id="mapId" :places="votingPlaces.places.value" />
                     </UCard>
                 </div>
 
                 <div class="order-2 lg:order-1 lg:col-span-2">
                     <ElectionsElectoratesVotingPlaceList :election="election"
-                        :resultsVersion="resultsVersion" :electorate="electorateNumber" />
+                        :resultsVersion="resultsVersion" :places="votingPlaces.places.value"
+                        :isMaori="votingPlaces.isMaori.value"
+                        :available="votingPlaces.available.value"
+                        :loading="votingPlaces.loading.value" />
                 </div>
             </div>
         </template>
@@ -59,6 +66,7 @@
 import type { ElectionSummary, ResultsVersion } from '~/types/elections'
 import { useElectionDataStore } from '~/stores/electionData'
 import { useResultsScope } from '~/composables/useElectionSource'
+import { useElectorateVotingPlaces } from '~/composables/useElectorateVotingPlaces'
 import { useElectionShape } from '~/composables/useElectionShape'
 import { electorateTypeLabel } from '~/utils/elections/electorates'
 
@@ -101,6 +109,14 @@ watch([electorate, referenceLoaded], ([found, loaded]) => {
 // Narrow the live subscription to this electorate: two documents rather than
 // every electorate's, and released when the page closes.
 useResultsScope(() => ({ kind: 'electorate', electorate: electorateNumber.value }))
+
+// Every place that issued this seat's ballots, for the list and the map alike:
+// subscribed from the tallies during a live count, then placed via Algolia.
+const votingPlaces = useElectorateVotingPlaces({
+    election: () => props.election,
+    resultsVersion: () => props.resultsVersion,
+    electorate: electorateNumber,
+})
 
 /**
  * Also the map's `:key`, so walking from one electorate to the next builds a

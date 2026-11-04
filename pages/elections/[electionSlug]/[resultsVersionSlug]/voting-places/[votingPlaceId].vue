@@ -1,5 +1,6 @@
 <template>
-    <ElectionsLayoutDashboardPage :breadcrumb="breadcrumbItems" :heading="primaryName">
+    <ElectionsLayoutDashboardPage :breadcrumb="breadcrumbItems" :heading="primaryName"
+        :status-progress="false">
         <template #heading>
             <div class="space-y-2">
                 <h2 class="text-2xl font-bold">{{ primaryName }}</h2>
@@ -60,15 +61,6 @@
                         <ElectionsVotingPlacesPointMap :map-id="mapId" :latitude="latitude"
                             :longitude="longitude" :label="address" @error="mapError = $event" />
                     </div>
-                </UCard>
-
-                <UCard variant="subtle">
-                    <dl class="flex flex-col gap-3 text-sm">
-                        <div>
-                            <dt class="text-muted">Address</dt>
-                            <dd>{{ address }}</dd>
-                        </div>
-                    </dl>
                 </UCard>
             </div>
         </div>

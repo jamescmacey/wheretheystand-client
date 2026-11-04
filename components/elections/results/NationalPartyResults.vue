@@ -22,6 +22,7 @@ import { useElectionDataStore } from '~/stores/electionData'
 import { useSeatAllocation } from '~/composables/useSeatAllocation'
 import { useComparison } from '~/composables/useComparison'
 import { formatCount, formatPercent } from '~/utils/elections/format'
+import { partyAbbreviation } from '~/utils/elections/partyAbbreviation'
 
 const props = withDefaults(defineProps<{
     election: ElectionSummary
@@ -87,6 +88,9 @@ const rows = computed<ResultsRow[]>(() => visible.value.map(result => {
     return {
         key: result.party ?? `unknown-${result.count}`,
         label: party?.name ?? 'Unknown party',
+        shortLabel: partyAbbreviation(party, result.party === null
+            ? null
+            : store.persistentPartyForParty(props.election.slug, props.resultsVersion.slug, result.party)),
         colour: store.partyColour(props.election.slug, props.resultsVersion.slug, result.party),
         alternateColour: store.partyAlternateColour(
             props.election.slug, props.resultsVersion.slug, result.party),
