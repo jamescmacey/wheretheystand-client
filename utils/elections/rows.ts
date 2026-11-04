@@ -140,5 +140,5 @@ export function buildResultsFooter(input: {
 /** The columns every results table shares. */
 export const RESULTS_COLUMNS: ResultsColumn[] = [
   { key: 'count', label: 'Votes', width: '6rem' },
-  { key: 'share', label: 'Share', width: '5rem' },
+  { key: 'share', label: 'Share', width: '5rem', emphasis: true },
 ]

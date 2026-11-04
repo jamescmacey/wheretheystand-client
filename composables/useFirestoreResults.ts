@@ -1,5 +1,6 @@
 import type { ConnectionState, EntityNumber, ResultsSet } from '~/types/elections'
 import { normaliseFirestoreResultsSet } from '~/utils/elections/normaliseFirestore'
+import { createListenerRetry } from '~/utils/elections/listenerRetry'
 
 /**
  * Live results, while an event is being counted.
@@ -32,6 +33,8 @@ export type ResultsScope =
 
 export interface FirestoreSubscription {
   connection: Ref<ConnectionState>
+  /** Start again with a full budget of attempts, for a reader's own retry. */
+  retry: () => void
   stop: () => void
 }
 
@@ -63,7 +66,7 @@ export function useFirestoreResults(options: {
   scope: MaybeRefOrGetter<ResultsScope>
   enabled: MaybeRefOrGetter<boolean>
   onResults: (sets: ResultsSet[]) => void
-  /** Called when the live connection cannot be relied on. */
+  /** Called when the listener fails, whether or not it will be tried again. */
   onOffline?: () => void
   /**
    * Called on every snapshot the server has confirmed, changes or not.
@@ -74,14 +77,27 @@ export function useFirestoreResults(options: {
   onSettled?: () => void
 }): FirestoreSubscription {
   const connection = ref<ConnectionState>('archived')
+  const retries = createListenerRetry()
   let unsubscribe: (() => void) | null = null
   let generation = 0
 
   function detach() {
+    retries.cancel()
     if (unsubscribe) {
       unsubscribe()
       unsubscribe = null
     }
+  }
+
+  /**
+   * After a terminal error. The SDK reconnects a dropped connection without
+   * ever calling the error callback; what does reach it has been given up on,
+   * and the listener is dead.
+   */
+  function giveUpOrRetry(mine: number) {
+    const pending = retries.schedule(() => { if (mine === generation) attach() })
+    connection.value = pending ? 'offline' : 'failed'
+    options.onOffline?.()
   }
 
   async function attach() {
@@ -96,7 +112,8 @@ export function useFirestoreResults(options: {
     // Each attach claims a generation, so a subscription that resolves after a
     // newer one started tears itself down instead of writing stale results.
     const mine = ++generation
-    connection.value = 'connecting'
+    // A retry stays `offline` until it has actually delivered.
+    if (connection.value !== 'offline') connection.value = 'connecting'
 
     try {
       // Inside the client branch and dynamic, so Nitro never bundles the SDK
@@ -142,6 +159,10 @@ export function useFirestoreResults(options: {
 
       unsubscribe = onSnapshot(
         query(collection(db, 'results'), ...constraints),
+        // Metadata changes included, so that the server confirming what the
+        // cache gave -- and the connection dropping -- both arrive, even when
+        // no document changed. They are local events and cost no reads.
+        { includeMetadataChanges: true },
         snapshot => {
           if (mine !== generation) return
 
@@ -155,26 +176,28 @@ export function useFirestoreResults(options: {
 
           // fromCache means the SDK has not confirmed against the server yet.
           connection.value = snapshot.metadata.fromCache ? 'connecting' : 'live'
-          if (!snapshot.metadata.fromCache) options.onSettled?.()
+          if (!snapshot.metadata.fromCache) {
+            // A listener that has delivered has earned its attempts back.
+            retries.reset()
+            options.onSettled?.()
+          }
         },
         error => {
           if (mine !== generation) return
           console.warn('[elections] live results unavailable:', error.code)
-          connection.value = 'offline'
-          options.onOffline?.()
+          giveUpOrRetry(mine)
         },
       )
     } catch (error) {
       if (mine !== generation) return
       console.warn('[elections] could not start live results:', error)
-      connection.value = 'offline'
-      options.onOffline?.()
+      giveUpOrRetry(mine)
     }
   }
 
   watch(
     () => [toValue(options.eventId), toValue(options.enabled), JSON.stringify(toValue(options.scope))],
-    () => { attach() },
+    () => { retries.reset(); attach() },
     { immediate: true },
   )
 
@@ -186,5 +209,9 @@ export function useFirestoreResults(options: {
     detach()
   })
 
-  return { connection, stop: () => { generation += 1; detach() } }
+  return {
+    connection,
+    retry: () => { retries.reset(); attach() },
+    stop: () => { generation += 1; detach() },
+  }
 }

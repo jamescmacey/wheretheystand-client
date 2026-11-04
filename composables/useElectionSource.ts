@@ -24,6 +24,7 @@ import { useFirestoreFeed } from './useFirestoreFeed'
 import { useFirestoreResults, type ResultsScope } from './useFirestoreResults'
 import { fetchFirestoreReference, watchLiveEvent } from './useFirestoreReference'
 import { useElectionDataStore } from '~/stores/electionData'
+import { createListenerRetry } from '~/utils/elections/listenerRetry'
 
 export const ELECTION_SOURCE_KEY = Symbol('election-source') as InjectionKey<ElectionSource>
 
@@ -44,7 +45,12 @@ export interface ElectionSource {
   votingPlacesCounted: ComputedRef<number | null>
   votingPlacesTotal: ComputedRef<number | null>
   isFinal: ComputedRef<boolean>
-  /** Re-read the published payloads. Archived events only; live has no snapshot. */
+  /**
+   * Try again after a failure.
+   *
+   * Archived: re-read the published payloads. Live: restart every listener with
+   * a full budget of attempts, and reload whatever had not arrived from R2.
+   */
   refresh: () => Promise<void>
   loadVotingPlaces: (electorate: EntityNumber) => Promise<void>
   /**
@@ -207,10 +213,11 @@ export async function useElectionSource(options: {
   // Stays attached for the whole visit, including after a count ends, so that
   // the switch being turned back on is picked up as readily as it being turned
   // off. One document either way.
-  const { event: liveEvent } = watchLiveEvent({
+  const eventWatch = watchLiveEvent({
     eventId: () => (manifestLive.value ? resultsVersion.value?.firebase_id ?? null : null),
     enabled: () => manifestLive.value,
   })
+  const liveEvent = eventWatch.event
 
   /**
    * The count has been taken off live while someone was watching.
@@ -299,7 +306,7 @@ export async function useElectionSource(options: {
    * results listeners, so a page that needs every candidate's count -- the
    * candidates list -- still asks for the scope it needs.
    */
-  useFirestoreSummary({
+  const summaryLive = useFirestoreSummary({
     eventId: () => (mode.value === 'live' ? resultsVersion.value?.firebase_id ?? null : null),
     enabled: () => mode.value === 'live',
     onSummary: (summary) => {
@@ -338,7 +345,7 @@ export async function useElectionSource(options: {
 
   // Held only for its subscription; the page reads tallies from the store and
   // its connection state from the national listener above.
-  useFirestoreResults({
+  const scopeLive = useFirestoreResults({
     eventId: () => (mode.value === 'live' && scope.value
       ? resultsVersion.value?.firebase_id ?? null
       : null),
@@ -356,7 +363,7 @@ export async function useElectionSource(options: {
     votingPlacesElectorate.value = next
   }
 
-  useFirestoreResults({
+  const votingPlacesLive = useFirestoreResults({
     eventId: () => (mode.value === 'live' && votingPlacesElectorate.value !== null
       ? resultsVersion.value?.firebase_id ?? null
       : null),
@@ -543,6 +550,17 @@ export async function useElectionSource(options: {
   let loadingReference = false
 
   /**
+   * Reference data could not be loaded from anywhere, after every attempt.
+   *
+   * Without this a failure waits for the next change to the event document,
+   * which may never come -- the worker writes it once reference data is built
+   * and then has no reason to touch it again -- and the page sits on its
+   * loading screen for good.
+   */
+  const referenceFailed = ref(false)
+  const referenceRetries = createListenerRetry()
+
+  /**
    * Load reference data once the worker says it exists.
    *
    * Two places name the R2 payload, and both are tried before Firestore is.
@@ -601,9 +619,16 @@ export async function useElectionSource(options: {
       if (hasNames(data)) {
         store.setReferenceData(currentElection.slug, version.slug, data!)
         if (origin) noteLoaded('reference', origin, url)
+        referenceRetries.reset()
+        referenceFailed.value = false
+      } else {
+        // Tried again on a widening interval, and on any change to the event
+        // document in the meantime. Only once both have run out does the page
+        // say it has failed, with a retry.
+        referenceFailed.value = !referenceRetries.schedule(() => {
+          if (mode.value === 'live') loadLiveReference()
+        })
       }
-      // Otherwise leave it unloaded: the next change to the event document
-      // retries, rather than latching a failure for the life of the page.
     } finally {
       loadingReference = false
     }
@@ -620,6 +645,29 @@ export async function useElectionSource(options: {
     watch([liveEvent, () => store.isPersistentLoaded, loadKey], () => {
       if (mode.value === 'live') loadLiveReference()
     }, { immediate: true, deep: true })
+
+    // A different version is a different question, with its own attempts.
+    watch(loadKey, () => {
+      referenceRetries.reset()
+      referenceFailed.value = false
+    })
+  }
+
+  /**
+   * Restart everything a live count depends on.
+   *
+   * Listeners get a fresh budget of attempts, and the R2 loads are simply run
+   * again; each returns at once if its payload is already in the store.
+   */
+  async function retryLive() {
+    error.value = null
+    referenceRetries.reset()
+    referenceFailed.value = false
+    for (const subscription of [eventWatch, nationalLive, summaryLive, scopeLive, votingPlacesLive, feed]) {
+      subscription.retry()
+    }
+    await loadLivePersistent()
+    await loadLiveReference()
   }
 
   /* ---------------------------------------------------------------------
@@ -636,10 +684,28 @@ export async function useElectionSource(options: {
     if (!resultsVersion.value.is_final && !pollsClosed.value) return 'countdown'
 
     if (mode.value === 'live') {
-      if (!store.isPersistentLoaded) return 'loading'
+      // Each "awaiting" phase is a claim about the count -- that reference data
+      // is not built, that nothing has been counted -- and is made only once
+      // the source that would say otherwise has actually answered. Until then
+      // the honest state is loading, and once that source has given up it is
+      // an error, with a retry, rather than a wait that never ends.
+      if (!store.isPersistentLoaded) {
+        return provenance.value.persistent.error ? 'error' : 'loading'
+      }
+
+      if (!eventWatch.read.value) {
+        return eventWatch.connection.value === 'failed' ? 'error' : 'loading'
+      }
       if (!liveEvent.value?.refdata_built) return 'awaiting-refdata'
-      if (!hasReferenceData.value) return 'loading'
-      if (!nationalSet.value) return 'awaiting-results'
+
+      if (!hasReferenceData.value) return referenceFailed.value ? 'error' : 'loading'
+
+      if (!nationalSet.value) {
+        const national = nationalLive.connection.value
+        if (national === 'failed') return 'error'
+        // Only a snapshot the server has confirmed can say nothing is counted.
+        return national === 'live' ? 'awaiting-results' : 'loading'
+      }
       return 'ready'
     }
 
@@ -749,7 +815,10 @@ export async function useElectionSource(options: {
     votingPlacesCounted,
     votingPlacesTotal,
     isFinal,
-    refresh: async () => { await refresh() },
+    refresh: async () => {
+      if (mode.value === 'live') await retryLive()
+      else await refresh()
+    },
     loadVotingPlaces,
     votingPlaceResultsAvailable,
     loadVotingPlaceResults,
