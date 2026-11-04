@@ -187,6 +187,8 @@ import { breakpointsTailwind, useBreakpoints, watchDebounced } from '@vueuse/cor
 import type { ElectionSummary, ResultsVersion, VotingPlaceHit } from '~/types/elections'
 import type { SearchStatePayload } from '~/components/elections/voting-places/State.vue'
 import { formatCount } from '~/utils/elections/format'
+import { votingPlaceFromHit } from '~/utils/elections/votingPlaceHit'
+import { useElectionDataStore } from '~/stores/electionData'
 
 const props = defineProps<{
     election: ElectionSummary
@@ -341,6 +343,24 @@ const searchState = ref<SearchStatePayload | null>(null)
 function onSearchState(payload: SearchStatePayload) {
     searchState.value = payload
 }
+
+const store = useElectionDataStore()
+
+/**
+ * Every place this search returned, shared with the rest of the dashboard.
+ *
+ * The search itself always goes to Algolia -- proximity ranking and text
+ * matching cannot be answered from anything held locally -- but the records it
+ * brings back are the same ones an electorate's list or a place's own page
+ * would otherwise look up again.
+ */
+watch(() => searchState.value?.hits, (hits) => {
+    if (!hits?.length) return
+    store.mergeVotingPlaces(props.election.slug, props.resultsVersion.slug,
+        (hits as unknown as VotingPlaceHit[])
+            .filter(hit => typeof hit.number === 'number')
+            .map(votingPlaceFromHit))
+})
 
 const nbHits = computed(() => searchState.value?.nbHits ?? 0)
 
