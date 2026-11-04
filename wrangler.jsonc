@@ -15,7 +15,7 @@
 			"pattern": "wheretheystand.nz",
 			"custom_domain": true,
             "enabled":true,
-            "previews_enabled":true
+            "previews_enabled":false
 		}
 	],
 	"build": {
@@ -55,7 +55,17 @@
 				"head_sampling_rate": 1,
 				"persist": true
 			}
+		},
+		"vars": {
+			"NUXT_PUBLIC_ELECTIONS_ENABLED": "true",
+			"NUXT_PUBLIC_ELECTIONS_BYPASS_COUNTDOWN": "true",
+			"NUXT_PUBLIC_ELECTIONS_DEBUG": "true"
 		}
+	},
+	"vars": {
+		"NUXT_PUBLIC_ELECTIONS_ENABLED": "true",
+		"NUXT_PUBLIC_ELECTIONS_BYPASS_COUNTDOWN": "true",
+		"NUXT_PUBLIC_ELECTIONS_DEBUG": "false"
 	},
     "preview_urls": true
 }
