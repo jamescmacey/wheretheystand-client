@@ -11,8 +11,10 @@
                 <template #title>
                     <UBreadcrumb v-if="breadcrumb?.length" :items="breadcrumb" />
                     <!-- Both ends of the navbar compete for a phone's width, so the
-                         title yields rather than pushing the version switch off. -->
-                    <span v-else class="block truncate max-w-[40vw] sm:max-w-none">{{ title }}</span>
+                         title yields rather than pushing the version switch off.
+                         It wraps rather than truncating: "2023 general electi…"
+                         loses the one word that says what the page is. -->
+                    <span v-else class="block whitespace-normal line-clamp-2 leading-tight max-w-[40vw] sm:max-w-none">{{ title }}</span>
                 </template>
                 <template v-if="$slots.actions" #right>
                     <slot name="actions" />
@@ -27,7 +29,8 @@
                         <h2 v-if="heading" class="text-2xl font-bold">{{ heading }}</h2>
                     </slot>
                     <p v-if="description" class="text-muted">{{ description }}</p>
-                    <ElectionsStatusResultsStatusBar v-if="status" :electorate="statusElectorate" />
+                    <ElectionsStatusResultsStatusBar v-if="status" :electorate="statusElectorate"
+                        :progress="statusProgress" />
                 </div>
 
                 <slot />
@@ -67,6 +70,8 @@ withDefaults(defineProps<{
      * seat's figures reads as a statement about that seat.
      */
     statusElectorate?: EntityNumber
+    /** Show the counting progress in the status bar. */
+    statusProgress?: boolean
     /**
      * Let the page's content fill the panel rather than growing with its own
      * height.
@@ -79,5 +84,5 @@ withDefaults(defineProps<{
      * the whole panel grows instead.
      */
     fill?: boolean
-}>(), { status: true, fill: false })
+}>(), { status: true, statusProgress: true, fill: false })
 </script>

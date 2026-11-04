@@ -99,6 +99,9 @@ export default defineNuxtConfig({
       // develop without R2.
       electionsSnapshotBase: process.env.NUXT_PUBLIC_ELECTIONS_SNAPSHOT_BASE
         ?? 'https://elections-r2.wheretheystand.nz/',
+      // Shows the "Electoral history" tab on person and party pages, and
+      // allows their /elections routes. Independent of electionsEnabled.
+      showElectoralHistory: process.env.NUXT_PUBLIC_SHOW_ELECTORAL_HISTORY ?? 'false',
       // Live results during an event. These are public identifiers rather than
       // secrets: access is controlled by Firestore security rules, which allow
       // reads and deny every write.

@@ -30,8 +30,18 @@ export interface AlgoliaIndex {
   ) => Promise<AlgoliaSearchResponse<THit>>
 }
 
+export interface AlgoliaMultipleQuery {
+  indexName: string
+  query?: string
+  params?: Record<string, unknown>
+}
+
 export interface AlgoliaSearchClient {
   initIndex: (indexName: string) => AlgoliaIndex
+  /** Several searches in one HTTP request; results come back in the same order. */
+  multipleQueries: <THit = Record<string, unknown>>(
+    queries: AlgoliaMultipleQuery[],
+  ) => Promise<{ results: AlgoliaSearchResponse<THit>[] }>
   clearCache: () => Promise<void>
 }
 

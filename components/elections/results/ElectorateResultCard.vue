@@ -5,23 +5,8 @@
             <ElectionsEntityElectorateBadge :election="election" :resultsVersion="resultsVersion"
                 :electorate="electorate.number" :link="false" />
 
-            <!-- Blank where the seat was not curated, which is every archived
-                 election: a seat says nothing about how it was held rather
-                 than guessing at it. -->
-            <!-- A gain reads as the old party's colour handing to the new
-                 one's; a hold as the one colour that kept it. -->
-            <div v-if="seatChange" class="flex items-stretch gap-1.5 shrink-0" :title="seatChange.description">
-                <template v-if="seatChange.flipped">
-                    <ElectionsResultsPartySwatch :colour="seatChange.fromColour"
-                        :alternate="seatChange.fromAlternate" />
-                    <UIcon name="i-lucide-arrow-right" class="size-4 self-center text-muted" aria-hidden="true" />
-                </template>
-                <ElectionsResultsPartySwatch :colour="seatChange.toColour"
-                    :alternate="seatChange.toAlternate" />
-                <span class="font-bold uppercase tracking-wide leading-6 text-highlighted">
-                    {{ seatChange.label }}
-                </span>
-            </div>
+            <ElectionsResultsSeatChangeBadge :election="election" :resultsVersion="resultsVersion"
+                :electorate="electorate.number" />
         </div>
 
         <USeparator class="my-3" />
@@ -53,7 +38,6 @@
 import type {
     ComputedElectorateResult, ElectionSummary, ReferenceElectorate, ResultsVersion,
 } from '~/types/elections'
-import { useIncumbency } from '~/composables/useIncumbency'
 import { formatCount, formatPoints } from '~/utils/elections/format'
 
 const props = defineProps<{
@@ -63,12 +47,8 @@ const props = defineProps<{
     result?: ComputedElectorateResult | null
 }>()
 
-const { seatChangeBadgeFor } = useIncumbency(() => props.election, () => props.resultsVersion)
-
 const to = computed(() =>
     `/elections/${props.election.slug}/${props.resultsVersion.slug}/electorates/${props.electorate.number}`)
-
-const seatChange = computed(() => seatChangeBadgeFor(props.electorate.number))
 
 /**
  * The top two, whether or not they are separable.

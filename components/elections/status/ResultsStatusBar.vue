@@ -2,7 +2,7 @@
     <div v-if="source" class="flex flex-wrap items-end gap-x-6 gap-y-2">
         <ElectionsResultsStatusIndicator :mode="source.mode.value" :connection="source.connection.value"
             :last-updated="lastUpdated" :live-ended="source.liveEnded.value" />
-        <ElectionsResultsCountedProgress :percent="percentCounted" :counted="votingPlacesCounted"
+        <ElectionsResultsCountedProgress v-if="progress" :percent="percentCounted" :counted="votingPlacesCounted"
             :total="votingPlacesTotal" />
         <slot />
     </div>
@@ -27,7 +27,15 @@ import { useInjectedElectionSource } from '~/composables/useElectionSource'
  * reconnecting, is a fact about the dashboard rather than about any one
  * electorate, so it is read from the source either way.
  */
-const props = defineProps<{ electorate?: EntityNumber }>()
+const props = withDefaults(defineProps<{
+    electorate?: EntityNumber
+    /**
+     * Show how much of the count is done. Off where the page is about something
+     * the statistics do not describe -- a single voting place has no share of
+     * voting places counted.
+     */
+    progress?: boolean
+}>(), { progress: true })
 
 // Every view is now served by one transport or the other -- live from Firestore
 // or archived from the snapshots -- so there is no "delayed" state to declare.

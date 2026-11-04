@@ -50,10 +50,11 @@ export interface ElectionSource {
   /**
    * Whether per-voting-place results exist to be loaded at all.
    *
-   * `loadVotingPlaces` returns silently when this version was not published
-   * with `--voting-places`, which is the usual case. Without this a caller has
-   * no way to tell "not published" from "still loading", and shows a spinner
-   * that never resolves.
+   * True during a live count, when they stream from Firestore, and otherwise
+   * only where this version was published with `--voting-places`.
+   * `loadVotingPlaces` returns silently when neither holds. Without this a
+   * caller has no way to tell "not published" from "still loading", and shows
+   * a spinner that never resolves.
    */
   votingPlaceResultsAvailable: ComputedRef<boolean>
   /** Load everything counted at one voting place, across every electorate. */
@@ -75,6 +76,16 @@ export interface ElectionSource {
   watchScope: (scope: ResultsScope | null) => void
   /** What the secondary subscription is currently covering, if anything. */
   activeScope: Readonly<Ref<ResultsScope | null>>
+  /**
+   * Ask for one electorate's voting place tallies during a live count.
+   *
+   * A slot of its own rather than another `watchScope`, because the page that
+   * wants these also wants the electorate's own two documents, and the two
+   * are different queries. Prefer `useElectorateVotingPlacesScope`, which
+   * releases it on unmount.
+   */
+  watchElectorateVotingPlaces: (electorate: EntityNumber | null) => void
+  activeVotingPlacesElectorate: Readonly<Ref<EntityNumber | null>>
   /**
    * The Firestore event document, where one is being watched.
    *
@@ -334,6 +345,32 @@ export async function useElectionSource(options: {
     scope: () => scope.value ?? { kind: 'national' as const },
     enabled: () => mode.value === 'live' && scope.value !== null,
     onResults: applyResults,
+  })
+
+  // One electorate's voting places, for its page's list and map. Marked
+  // loaded on every confirmed snapshot, so an electorate where nothing has
+  // reported yet shows that rather than a spinner.
+  const votingPlacesElectorate = ref<EntityNumber | null>(null)
+
+  const watchElectorateVotingPlaces = (next: EntityNumber | null) => {
+    votingPlacesElectorate.value = next
+  }
+
+  useFirestoreResults({
+    eventId: () => (mode.value === 'live' && votingPlacesElectorate.value !== null
+      ? resultsVersion.value?.firebase_id ?? null
+      : null),
+    scope: () => ({
+      kind: 'electorate-voting-places' as const,
+      electorate: votingPlacesElectorate.value ?? 0,
+    }),
+    enabled: () => mode.value === 'live' && votingPlacesElectorate.value !== null,
+    onResults: applyResults,
+    onSettled: () => {
+      const electorate = votingPlacesElectorate.value
+      if (electorate === null || !slugs.value.election) return
+      store.markVotingPlacesLoaded(slugs.value.election, slugs.value.version, electorate)
+    },
   })
 
   const connection = computed<ConnectionState>(() =>
@@ -623,12 +660,12 @@ export async function useElectionSource(options: {
    * ------------------------------------------------------------------ */
 
   /**
-   * Load voting place results for one electorate, on demand.
+   * Load voting place results for one electorate from the published shard.
    *
    * There are thousands of voting places per general election, so these are
-   * never loaded up front and never subscribed to live. They come from the
-   * published snapshot in both modes, which during a live count means they are
-   * only available once a version has been published with `--voting-places`.
+   * never loaded up front. During a live count one electorate's are
+   * subscribed to instead (`useElectorateVotingPlacesScope`); this is the
+   * archived path, and a floor during a live one where a shard was published.
    */
   async function loadVotingPlaces(electorate: EntityNumber) {
     const version = resultsVersion.value
@@ -656,8 +693,8 @@ export async function useElectionSource(options: {
     }
   }
 
-  const votingPlaceResultsAvailable = computed(
-    () => Boolean(resultsVersion.value?.paths.voting_places))
+  const votingPlaceResultsAvailable = computed(() =>
+    mode.value === 'live' || Boolean(resultsVersion.value?.paths.voting_places))
 
   /**
    * Load everything counted at one voting place.
@@ -719,6 +756,8 @@ export async function useElectionSource(options: {
     votingPlacePagesAvailable,
     watchScope,
     activeScope: readonly(scope) as Readonly<Ref<ResultsScope | null>>,
+    watchElectorateVotingPlaces,
+    activeVotingPlacesElectorate: readonly(votingPlacesElectorate),
     liveEvent: computed(() => liveEvent.value),
     feed: computed(() => feed.messages.value),
     feedConnection: computed(() => feed.connection.value),
@@ -760,5 +799,31 @@ export function useResultsScope(scope: MaybeRefOrGetter<ResultsScope | null>): v
   // outgoing one tears down.
   onScopeDispose(() => {
     if (identity(source.activeScope.value) === identity(mine)) source.watchScope(null)
+  })
+}
+
+/**
+ * Subscribe to one electorate's voting place tallies, for as long as the page
+ * is open. Live counts only; archived versions read the published shard.
+ */
+export function useElectorateVotingPlacesScope(
+  electorate: MaybeRefOrGetter<EntityNumber | null>,
+): void {
+  const source = useInjectedElectionSource()
+  if (!source) return
+
+  let mine: EntityNumber | null = null
+
+  watch(() => toValue(electorate), (next) => {
+    mine = next ?? null
+    source.watchElectorateVotingPlaces(mine)
+  }, { immediate: true })
+
+  // As with `useResultsScope`: the incoming page may already have claimed the
+  // slot, and must not be released by the outgoing one.
+  onScopeDispose(() => {
+    if (source.activeVotingPlacesElectorate.value === mine) {
+      source.watchElectorateVotingPlaces(null)
+    }
   })
 }

@@ -109,7 +109,7 @@
 <script setup lang="ts">
 const config = useRuntimeConfig()
 const apiBase = config.public.apiBase
-const electionsEnabled = String(config.public.electionsEnabled).toLowerCase() === 'true'
+const showElectoralHistory = String(config.public.showElectoralHistory).toLowerCase() === 'true'
 const route = useRoute()
 
 type PartyLeaderPerson = {
@@ -270,7 +270,7 @@ const links = computed(() => [
         to: '/parties/' + route.params.id,
         name: 'Overview',
     },
-    ...(electionsEnabled ? [{
+    ...(showElectoralHistory ? [{
         to: '/parties/' + route.params.id + '/elections',
         name: 'Electoral history',
     }] : []),
