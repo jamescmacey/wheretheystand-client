@@ -5,7 +5,7 @@ import type { IncumbencyStatus, StandingCandidate } from '~/utils/elections/incu
 import {
   incumbencyStatus, memberNote, seatChange, seatChangeBadge, seatChangeNote, seatOutcome,
 } from '~/utils/elections/incumbency'
-import { useElectionDataStore } from '~/stores/electionData'
+import { useElectionDataStore, DEFAULT_PARTY_COLOUR } from '~/stores/electionData'
 
 export type { IncumbencyStatus } from '~/utils/elections/incumbency'
 
@@ -147,17 +147,29 @@ export function useIncumbency(
    * The seat's result as a change, for a badge: "NAT hold", "LAB gain".
    *
    * The same judgement as `noteFor`'s outcome sentence, in the shorthand a
-   * results card has room for, and null in exactly the same cases.
+   * results card has room for, and null in exactly the same cases. Carries
+   * the colours of the party that held the seat and the one leading it, so a
+   * gain can be drawn as one handing to the other.
    */
   const seatChangeBadgeFor = (electorate: EntityNumber) => {
     const party = leadingParty(electorate)
     const abbreviation = party?.abbreviation || party?.short_name || party?.display_name
-    return seatChangeBadge(
+    const badge = seatChangeBadge(
       flippedFor(electorate),
       party && abbreviation
         ? { abbreviation, name: partyName(party.id) ?? abbreviation }
         : null,
     )
+    if (!badge) return null
+
+    const heldBy = incumbentFor(electorate)?.party
+    return {
+      ...badge,
+      fromColour: (heldBy && store.persistentParty(heldBy)?.colour) || DEFAULT_PARTY_COLOUR,
+      fromAlternate: (heldBy && store.persistentParty(heldBy)?.alternate_colour) || null,
+      toColour: party?.colour || DEFAULT_PARTY_COLOUR,
+      toAlternate: party?.alternate_colour || null,
+    }
   }
 
   /**

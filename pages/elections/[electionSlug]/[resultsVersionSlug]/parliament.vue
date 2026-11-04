@@ -6,18 +6,10 @@
                 description="The seats below are worked out using the rules set on the Settings page, not the ones in the Electoral Act."
                 class="mb-2" />
 
-            <UAlert v-if="allocation.ties.length" color="warning" variant="subtle" icon="i-lucide-scale"
-                title="The last seat is tied"
-                description="Two or more parties have an equal claim to the final seat. The law settles this by lot, so it is not shown as won by either." />
-
-            <UAlert v-if="allocation.undecidedElectorates.length" color="warning" variant="subtle"
-                icon="i-lucide-scale" title="An electorate is tied"
-                :description="`${pluralise(allocation.undecidedElectorates.length, 'electorate')} has no leading candidate, so the seat is not counted to any party.`" />
-
-            <ElectionsParliamentSeatGrid :election="election" :resultsVersion="resultsVersion"
+            <ElectionsParliamentSeatsOverview :election="election" :resultsVersion="resultsVersion"
                 :allocation="allocation" />
 
-            <ElectionsParliamentPartySeats :election="election" :resultsVersion="resultsVersion"
+            <ElectionsParliamentCoalitionOptions :election="election" :resultsVersion="resultsVersion"
                 :allocation="allocation" />
 
             <ElectionsParliamentThresholdPanel :election="election" :resultsVersion="resultsVersion"
@@ -53,7 +45,6 @@ import type { ElectionSummary, ResultsVersion } from '~/types/elections'
 import { useSeatAllocation } from '~/composables/useSeatAllocation'
 import { useMmpSettings } from '~/composables/useMmpSettings'
 import { useResultsScope } from '~/composables/useElectionSource'
-import { pluralise } from '~/utils/elections/format'
 
 const props = defineProps<{
     election: ElectionSummary

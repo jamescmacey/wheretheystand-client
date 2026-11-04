@@ -5,8 +5,19 @@
              block up and the seats become saucers. -->
         <svg :viewBox="`0 0 ${box.width} ${box.height}`" class="w-full h-auto mx-auto" role="img"
             :style="{ maxWidth: `${box.width}px` }" :aria-label="label">
+            <!-- A party with two colours is split along the diagonal from the
+                 bottom left to the top right, its primary colour above. The
+                 gradient is in each circle's own box, which is square, so the
+                 hard stop halfway along it is that diagonal. -->
+            <defs v-if="gradients.length">
+                <linearGradient v-for="gradient in gradients" :id="gradient.id" :key="gradient.id"
+                    x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="50%" :stop-color="gradient.colour" />
+                    <stop offset="50%" :stop-color="gradient.alternate" />
+                </linearGradient>
+            </defs>
             <circle v-for="seat in seats" :key="seat.key" :cx="seat.x" :cy="seat.y" :r="RADIUS"
-                :fill="seat.colour" :stroke="seat.filled ? 'none' : 'currentColor'"
+                :fill="seat.fill" :stroke="seat.filled ? 'none' : 'currentColor'"
                 :stroke-dasharray="seat.filled ? undefined : '2 2'"
                 :fill-opacity="seat.filled ? 1 : 0.15" class="text-muted">
                 <title>{{ seat.title }}</title>
@@ -64,6 +75,12 @@ const slugs = computed(() => ({ e: props.election.slug, v: props.resultsVersion.
 const { order, unalignedIndex } = useBlocOrder(
     () => props.election, () => props.resultsVersion)
 
+// Gradient ids are document-wide, and the page can hold more than one grid.
+const gradientPrefix = `seat-split-${useId()}`
+
+const gradientId = (colour: string, alternate: string) =>
+    `${gradientPrefix}-${`${colour}-${alternate}`.replace(/[^a-z0-9]/gi, '')}`
+
 const RADIUS = 9
 const PITCH = 24
 const PADDING = 6
@@ -82,6 +99,9 @@ interface Seat {
     x: number
     y: number
     colour: string
+    alternate: string | null
+    /** What the circle is filled with: the colour, or a gradient naming both. */
+    fill: string
     filled: boolean
     title: string
 }
@@ -99,7 +119,9 @@ const ordered = computed(() => {
     // Seats that exist but have nobody in them. Spliced in where the right
     // bloc begins, so they land in the middle rather than padding an edge; with
     // no blocs curated that index is the end, as it always was.
-    const empty = props.allocation.unfilled + props.allocation.undecidedElectorates.length
+    // A vacant seat from an underhang is not drawn: it is not part of the House
+    // until the next election, which is why the House is smaller.
+    const empty = props.allocation.undecidedSeats
     if (!empty) return list
 
     const hollow = Array.from({ length: empty },
@@ -175,19 +197,36 @@ const seats = computed<Seat[]>(() => {
 
     return ordered.value.map((seat, index) => {
         const cell = cellFor(index)
+        const colour = seat.party === null
+            ? DEFAULT_PARTY_COLOUR
+            : store.partyColour(slugs.value.e, slugs.value.v, seat.party)
+        const alternate = seat.party === null
+            ? null
+            : store.partyAlternateColour(slugs.value.e, slugs.value.v, seat.party)
         return {
             key: `${index}`,
             x: origin + cell.column * PITCH,
             y: origin + cell.row * PITCH,
-            colour: seat.party === null
-                ? DEFAULT_PARTY_COLOUR
-                : store.partyColour(slugs.value.e, slugs.value.v, seat.party),
+            colour,
+            alternate,
+            fill: alternate ? `url(#${gradientId(colour, alternate)})` : colour,
             filled: seat.filled,
             title: seat.party === null
                 ? 'Seat not yet filled'
                 : store.party(slugs.value.e, slugs.value.v, seat.party)?.name ?? 'Unknown party',
         }
     })
+})
+
+/** One gradient per two-coloured party on the grid. */
+const gradients = computed(() => {
+    const unique = new Map<string, { id: string, colour: string, alternate: string }>()
+    for (const seat of seats.value) {
+        if (!seat.alternate) continue
+        const id = gradientId(seat.colour, seat.alternate)
+        unique.set(id, { id, colour: seat.colour, alternate: seat.alternate })
+    }
+    return [...unique.values()]
 })
 
 const majority = computed(() => Math.floor(props.allocation.houseSize / 2) + 1)

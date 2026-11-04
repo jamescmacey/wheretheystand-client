@@ -57,6 +57,7 @@ import type { ElectionSummary, EntityNumber, ResultsVersion } from '~/types/elec
 import { useElectionDataStore, DEFAULT_PARTY_COLOUR } from '~/stores/electionData'
 import { useIncumbency } from '~/composables/useIncumbency'
 import { formatCount, formatPoints } from '~/utils/elections/format'
+import { partyFill } from '~/utils/elections/partyFill'
 
 /**
  * Every electorate as a square, coloured for the party whose candidate leads.
@@ -89,14 +90,23 @@ const canShowFlips = computed(() => Boolean(incumbency.value?.electorates?.lengt
 
 const electoratesHref = computed(() => `/elections/${slugs.value.e}/${slugs.value.v}/electorates`)
 
+/**
+ * The leader's colour, split along the diagonal where the party has two.
+ *
+ * The bottom left to top right diagonal, primary colour above, the same as the
+ * seats on the Parliament page.
+ */
+function squareStyle(colour: string, alternate: string | null) {
+    return { background: partyFill(colour, alternate, 'diagonal') }
+}
+
 /** Diagonal lines both ways over the leader's colour. */
-function hatchStyle(colour: string) {
+function hatchStyle(colour: string, alternate: string | null = null) {
     const line = 'rgb(255 255 255 / 0.6)'
     const stripes = (angle: number) =>
         `repeating-linear-gradient(${angle}deg, ${line} 0 1.5px, transparent 1.5px 5px)`
     return {
-        backgroundColor: colour,
-        backgroundImage: `${stripes(45)}, ${stripes(-45)}`,
+        background: `${stripes(45)}, ${stripes(-45)}, ${partyFill(colour, alternate, 'diagonal')}`,
     }
 }
 
@@ -109,6 +119,9 @@ function squareFor(electorate: EntityNumber, name: string) {
         : store.party(slugs.value.e, slugs.value.v, candidate.party)
 
     const colour = candidate ? store.partyColour(slugs.value.e, slugs.value.v, party?.number ?? null) : null
+    const alternate = candidate
+        ? store.partyAlternateColour(slugs.value.e, slugs.value.v, party?.number ?? null)
+        : null
     const flipped = candidate ? flippedFor(electorate) === true : false
 
     let leaderText: string
@@ -128,7 +141,9 @@ function squareFor(electorate: EntityNumber, name: string) {
         name,
         href: `/elections/${slugs.value.e}/${slugs.value.v}/electorates/${electorate}`,
         colour,
-        style: colour ? (flipped ? hatchStyle(colour) : { backgroundColor: colour }) : undefined,
+        style: colour
+            ? (flipped ? hatchStyle(colour, alternate) : squareStyle(colour, alternate))
+            : undefined,
         leader: leaderText,
         margin,
         outcome,

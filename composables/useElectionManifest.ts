@@ -1,5 +1,6 @@
 import type { ElectionManifest, ElectionSummary, ResultsVersion } from '~/types/elections'
 import { normaliseManifest } from '~/utils/elections/normaliseSnapshot'
+import { defaultVersion } from '~/utils/elections/versions'
 
 /**
  * The manifest is the only election URL the client knows by heart.
@@ -55,9 +56,7 @@ export async function useElectionManifest() {
     const election = findElection(electionSlug)
     if (!election) return null
     if (versionSlug === 'default') {
-      return election.results_versions.find(version => version.is_primary)
-        ?? election.results_versions[0]
-        ?? null
+      return defaultVersion(election.results_versions)
     }
     return election.results_versions.find(version => version.slug === versionSlug) ?? null
   }

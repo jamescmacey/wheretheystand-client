@@ -17,7 +17,7 @@
              the overview shows it at half the width Parliament does. -->
         <div class="grid grid-cols-2 @md:grid-cols-3 @3xl:grid-cols-4 gap-x-4 gap-y-5">
             <div v-for="tile in tiles" :key="tile.key" class="flex gap-3 min-w-0">
-                <ElectionsResultsPartySwatch :colour="tile.swatch" />
+                <ElectionsResultsPartySwatch :colour="tile.swatch" :alternate="tile.alternate" />
                 <div class="min-w-0">
                     <p class="truncate text-sm" :class="tile.seated ? '' : 'text-muted'">
                         {{ tile.name }}
@@ -30,6 +30,7 @@
                     </p>
                     <p class="text-xs text-muted tabular-nums">{{ tile.split }}</p>
                     <p v-if="tile.overhang" class="text-xs text-muted">{{ tile.overhang }}</p>
+                    <p v-if="tile.underhang" class="text-xs text-muted">{{ tile.underhang }}</p>
                 </div>
             </div>
         </div>
@@ -84,10 +85,12 @@ interface Tile {
     key: EntityNumber
     name: string
     swatch: string
+    alternate: string | null
     seats: number
     seated: boolean
     split: string
     overhang: string | null
+    underhang: string | null
     change: SeatChangeNote | null
 }
 
@@ -117,6 +120,7 @@ const shown = computed(() => {
 
 const tiles = computed<Tile[]>(() => shown.value.map(([party, seats]) => {
     const overhang = props.allocation.overhangByParty.get(party) ?? 0
+    const underhang = props.allocation.underhangByParty.get(party) ?? 0
     const share = props.allocation.qualification
         .find(entry => entry.party === party)?.share ?? null
 
@@ -128,6 +132,9 @@ const tiles = computed<Tile[]>(() => shown.value.map(([party, seats]) => {
         swatch: seats > 0
             ? store.partyColour(slugs.value.e, slugs.value.v, party)
             : DEFAULT_PARTY_COLOUR,
+        alternate: seats > 0
+            ? store.partyAlternateColour(slugs.value.e, slugs.value.v, party)
+            : null,
         seats,
         seated: seats > 0,
         // Where there are no seats to split, the party vote is the only figure
@@ -139,16 +146,23 @@ const tiles = computed<Tile[]>(() => shown.value.map(([party, seats]) => {
         overhang: overhang > 0
             ? `Overhang of ${pluralise(overhang, 'seat')}`
             : null,
+        underhang: underhang > 0
+            ? `Underhang of ${pluralise(underhang, 'seat')}`
+            : null,
         change: seatChangeNoteFor(party, seats),
     }
 }))
 
+// Overhang and underhang are named separately, even where they cancel out: a
+// House of 120 made from two of each is not the same as a House with neither.
 const summary = computed(() => {
-    const parts = [pluralise(props.allocation.houseSize, 'seat')]
-    if (props.allocation.overhang > 0) {
-        parts.push(`including an overhang of ${pluralise(props.allocation.overhang, 'seat')}`)
-    }
-    return parts.join(', ')
+    const { houseSize, overhang, underhang } = props.allocation
+    const parts: string[] = []
+    if (overhang > 0) parts.push(`an overhang of ${pluralise(overhang, 'seat')}`)
+    if (underhang > 0) parts.push(`an underhang of ${pluralise(underhang, 'seat')}`)
+    if (parts.length === 0) return pluralise(houseSize, 'seat')
+    if (underhang === 0) return `${pluralise(houseSize, 'seat')}, including ${parts[0]}`
+    return `${pluralise(houseSize, 'seat')}, with ${parts.join(' and ')}`
 })
 
 /**

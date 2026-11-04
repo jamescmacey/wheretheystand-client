@@ -31,7 +31,7 @@
             <UFormField label="Address or suburb" name="address">
                 <UInput
                     :model-value="query"
-                    placeholder="Street, suburb or place number"
+                    placeholder="Street or suburb"
                     icon="i-lucide-search"
                     class="w-full"
                     autocomplete="off"
@@ -78,17 +78,6 @@
                 title="Your location is not available"
                 description="Your device could not provide a position. Search by address instead."
             />
-
-            <!-- Polling day, to date the figures these places lead to. Per
-                 place there is nothing to show: no hours, no advance-voting
-                 flag, and this page would not be the place for them anyway. -->
-            <UAlert
-                v-if="datesDescription"
-                color="neutral"
-                variant="subtle"
-                icon="i-lucide-info"
-                :description="datesDescription"
-            />
         </div>
     </UCard>
 </template>
@@ -104,8 +93,6 @@ const props = defineProps<{
     locationUnsupported: boolean
     /** A proximity search is currently driving the results. */
     nearMe: boolean
-    pollingDate: string | null
-    isPast: boolean
 }>()
 
 const emit = defineEmits<{
@@ -122,19 +109,4 @@ function toggleLocation() {
         emit('request-location')
     }
 }
-
-const datesDescription = computed(() => {
-    const date = props.pollingDate
-        ? new Date(props.pollingDate).toLocaleDateString('en-NZ', {
-            weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
-        })
-        : null
-
-    if (!date) return null
-
-    // Polling day as context for the figures, not as advice about voting. The
-    // page is a way into results; it does not tell anybody where to go, so it
-    // has nothing to say about opening hours either.
-    return props.isPast ? `Polling day was ${date}.` : `Polling day is ${date}.`
-})
 </script>

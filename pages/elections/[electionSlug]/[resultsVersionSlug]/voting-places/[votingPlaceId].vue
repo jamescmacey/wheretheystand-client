@@ -65,21 +65,10 @@
                 <UCard variant="subtle">
                     <dl class="flex flex-col gap-3 text-sm">
                         <div>
-                            <dt class="text-muted">Voting place number</dt>
-                            <dd class="tabular-nums">{{ votingPlaceNumber }}</dd>
-                        </div>
-                        <div>
                             <dt class="text-muted">Address</dt>
                             <dd>{{ address }}</dd>
                         </div>
                     </dl>
-
-                    <!-- Said rather than left to be noticed: none of this is
-                         held anywhere upstream, so its absence is a fact about
-                         the data and not a gap on this page. -->
-                    <p class="mt-3 text-xs text-muted">
-                        Opening hours, and whether this place took advance votes, are not held here.
-                    </p>
                 </UCard>
             </div>
         </div>
@@ -168,7 +157,7 @@ const reference = computed(() =>
     store.votingPlace(props.election.slug, props.resultsVersion.slug, votingPlaceNumber.value))
 
 const address = computed(() =>
-    reference.value?.address ?? hit.value?.address ?? `Voting place ${votingPlaceNumber.value}`)
+    reference.value?.address ?? hit.value?.address ?? 'Voting place')
 
 const latitude = computed(() =>
     reference.value?.latitude ?? hit.value?.latitude ?? hit.value?._geoloc?.lat ?? null)
@@ -211,7 +200,7 @@ watch([hit, hitStatus, reference], ([found, status, fallback]) => {
     if (status === 'success' && !found && !fallback) {
         showError(createError({
             statusCode: 404,
-            statusMessage: `Page not found: voting place ${votingPlaceNumber.value}`,
+            statusMessage: 'Page not found: voting place',
             fatal: true,
         }))
     }

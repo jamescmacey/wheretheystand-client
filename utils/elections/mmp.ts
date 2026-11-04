@@ -20,12 +20,17 @@ import type { EntityNumber } from '~/types/elections'
  *   5. Where a party won more electorates than its entitlement, it keeps them
  *      and the House grows. There is no reallocation: everyone else keeps the
  *      entitlement the original allocation gave them.
+ *   6. Where a party's list runs out before its list seats do, the seats it
+ *      cannot fill stay vacant until the next election and the House shrinks
+ *      -- an underhang. Nobody else is given them.
  *
- * Two things this will not do. It will not break a tie -- on the final quotient
- * or in an electorate -- because the law breaks those by lot and inventing one
- * would state an outcome that does not exist. And it will not quietly shrink
- * the House when a party's list is too short to fill its seats; it reports the
- * shortfall instead.
+ * Overhang and underhang are kept apart rather than netted off. One party can
+ * cause each, and a House of exactly 120 made that way is still two things a
+ * reader needs to be told.
+ *
+ * One thing this will not do is break a tie -- on the final quotient or in an
+ * electorate -- because the law breaks those by lot and inventing one would
+ * state an outcome that does not exist.
  */
 
 export type MmpFormula = 'sainte-lague' | 'dhondt'
@@ -62,6 +67,8 @@ export interface ElectorateWinInput {
   party: EntityNumber | null
   /** The leading candidates are level, so this seat is not yet won by anyone. */
   tie?: boolean
+  /** In a tie, the level candidates, any of whom the lot could seat. */
+  contenders?: { candidate: EntityNumber, party: EntityNumber | null }[]
 }
 
 export interface ListCandidateInput {
@@ -121,23 +128,45 @@ export interface SeatAllocation {
   /** Seats from the proportional allocation, before overhang is applied. */
   entitlement: Map<EntityNumber, number>
   electorateSeats: Map<EntityNumber, number>
+  /** List seats a party actually fills, so never more than its list allows. */
   listSeats: Map<EntityNumber, number>
+  /** Seats a party holds: its electorates and the list seats it can fill. */
   totalSeats: Map<EntityNumber, number>
+  /** Electorates won beyond the entitlement, which grow the House. */
   overhangByParty: Map<EntityNumber, number>
   overhang: number
+  /** List seats a party is entitled to but has nobody left to fill. */
+  underhangByParty: Map<EntityNumber, number>
+  /** Those seats in all. They stay vacant, so the House shrinks by this many. */
+  underhang: number
   houseSize: number
   /** Every quotient considered, best first, for the workings table. */
   quotients: Quotient[]
-  /** Quotients level with the last awarded one. Non-empty means undecided. */
+  /** Quotients level at the cut, none of them awarded. Non-empty means undecided. */
   ties: Quotient[]
-  /** Seats a party is entitled to but has no list candidate left to fill. */
-  unfilled: number
+  /** Seats the tied quotients are contesting, which no party is given. */
+  undecidedSeats: number
   members: ElectedMember[]
   /** Electorate seats held outside any qualifying party. */
   outsideSeats: number
   /** Electorates whose winner is tied, and so not yet decided. */
   undecidedElectorates: EntityNumber[]
+  /**
+   * What the tied electorates could still change, once each is decided.
+   * Null when there are none, or too many to work through.
+   */
+  tieOutcomes: TieOutcomes | null
 }
+
+export interface TieOutcomes {
+  /** Every House size the possible results produce, smallest first. */
+  houseSizes: number[]
+  /** Whether any possible result gives a party a different total from this one. */
+  totalsVary: boolean
+}
+
+/** More combinations than this and the outcomes are not worked through. */
+const MAX_TIE_OUTCOMES = 256
 
 function divisorFor(formula: MmpFormula, seat: number): number {
   // Sainte-Lague uses the odd numbers, D'Hondt the whole ones.
@@ -155,12 +184,17 @@ function allocateByQuotient(
   parties: { party: EntityNumber, votes: number }[],
   seats: number,
   formula: MmpFormula,
-): { entitlement: Map<EntityNumber, number>, quotients: Quotient[], ties: Quotient[] } {
+): {
+  entitlement: Map<EntityNumber, number>
+  quotients: Quotient[]
+  ties: Quotient[]
+  undecidedSeats: number
+} {
   const entitlement = new Map<EntityNumber, number>()
   for (const party of parties) entitlement.set(party.party, 0)
 
   if (seats <= 0 || parties.length === 0) {
-    return { entitlement, quotients: [], ties: [] }
+    return { entitlement, quotients: [], ties: [], undecidedSeats: 0 }
   }
 
   const candidates: Omit<Quotient, 'awarded' | 'rank'>[] = []
@@ -172,14 +206,23 @@ function allocateByQuotient(
     }
   }
 
-  // Ties are left in whatever order they arrive; nothing below relies on the
-  // order within a tie, and imposing one would look like a decision.
+  // Ties are left in whatever order they arrive. Nothing below relies on the
+  // order within a tie, because a tie at the cut is awarded to none of them.
   candidates.sort((a, b) => b.value - a.value)
+
+  // A tie *at the cut* is the only one that matters: more quotients level with
+  // the last seat than there are seats left for them. Awarding the first of
+  // them would let the order the feed sent the parties in decide a seat the
+  // law decides by lot, so none of them is awarded and those seats stay empty.
+  const cut = candidates[seats - 1]!.value
+  const above = candidates.filter(quotient => quotient.value > cut).length
+  const level = candidates.filter(quotient => quotient.value === cut).length
+  const contested = above + level > seats
 
   const quotients: Quotient[] = candidates.map((quotient, index) => ({
     ...quotient,
     rank: index + 1,
-    awarded: index < seats,
+    awarded: contested ? quotient.value > cut : index < seats,
   }))
 
   for (const quotient of quotients) {
@@ -187,32 +230,29 @@ function allocateByQuotient(
     entitlement.set(quotient.party, (entitlement.get(quotient.party) ?? 0) + 1)
   }
 
-  // A tie *at the cut* is the only one that matters: quotients level with the
-  // last awarded seat, where more are level than there are seats left.
-  const lastAwarded = quotients[seats - 1]
-  const ties = lastAwarded === undefined
-    ? []
-    : quotients.filter(quotient => quotient.value === lastAwarded.value)
-  const contested = ties.length > 1 && ties.some(quotient => !quotient.awarded)
-
-  return { entitlement, quotients, ties: contested ? ties : [] }
+  return {
+    entitlement,
+    quotients,
+    ties: contested ? quotients.filter(quotient => quotient.value === cut) : [],
+    undecidedSeats: contested ? seats - above : 0,
+  }
 }
 
 /**
  * Fill a party's list seats, in list order.
  *
  * Candidates already elected in an electorate are skipped -- they are in the
- * House either way -- as are those who have died. A list can run out, which is
- * reported rather than papered over.
+ * House either way -- as are those who have died. A list can run out, and the
+ * seats left over are the party's underhang.
  */
 function fillList(
   party: EntityNumber,
   seats: number,
   listCandidates: ListCandidateInput[],
   electedCandidates: Set<EntityNumber>,
-): { members: ElectedMember[], unfilled: number } {
+): { members: ElectedMember[], vacant: number } {
   const members: ElectedMember[] = []
-  if (seats <= 0) return { members, unfilled: 0 }
+  if (seats <= 0) return { members, vacant: 0 }
 
   const list = listCandidates
     .filter(candidate => candidate.party === party && !candidate.isDead)
@@ -231,7 +271,7 @@ function fillList(
     })
   }
 
-  return { members, unfilled: seats - members.length }
+  return { members, vacant: seats - members.length }
 }
 
 export function allocateSeats(
@@ -308,6 +348,7 @@ export function allocateSeats(
   let entitlement = new Map<EntityNumber, number>()
   let quotients: Quotient[] = []
   let ties: Quotient[] = []
+  let undecidedSeats = 0
 
   for (let pass = 0; pass <= contenders.length; pass += 1) {
     const open = contenders.filter(party => !pinned.has(party.party))
@@ -318,6 +359,7 @@ export function allocateSeats(
     for (const [party, seats] of pinned) entitlement.set(party, seats)
     quotients = result.quotients
     ties = result.ties
+    undecidedSeats = result.undecidedSeats
 
     if (settings.allowOverhang) break
 
@@ -327,7 +369,7 @@ export function allocateSeats(
     pinned.set(nextPinned.party, electorateSeats.get(nextPinned.party) ?? 0)
   }
 
-  /* 4. Totals, list seats and overhang ----------------------------------- */
+  /* 4. Totals, list seats and overhang, before any list runs out --------- */
 
   const totalSeats = new Map<EntityNumber, number>()
   const listSeats = new Map<EntityNumber, number>()
@@ -371,15 +413,29 @@ export function allocateSeats(
     })
   }
 
-  let unfilled = 0
+  // A list that runs out leaves its remaining seats vacant. They come off the
+  // party's list and total seats, since nobody holds them, and are counted
+  // apart from any overhang so the two never cancel out unseen.
+  const underhangByParty = new Map<EntityNumber, number>()
   for (const party of qualified) {
     const filled = fillList(
       party.party, listSeats.get(party.party) ?? 0, listCandidates, electedCandidates)
     members.push(...filled.members)
-    unfilled += filled.unfilled
+    if (filled.vacant === 0) continue
+    underhangByParty.set(party.party, filled.vacant)
+    listSeats.set(party.party, (listSeats.get(party.party) ?? 0) - filled.vacant)
+    totalSeats.set(party.party, (totalSeats.get(party.party) ?? 0) - filled.vacant)
   }
 
-  const houseSize = members.length + unfilled + undecidedElectorates.length
+  const underhang = [...underhangByParty.values()].reduce((sum, seats) => sum + seats, 0)
+
+  // A tied electorate is not an extra seat. The proportional share already
+  // covers it: whichever qualifying party wins it holds it in place of a list
+  // seat. It only changes the House when the lot falls to a party already over
+  // its entitlement, or to someone outside the qualifying parties -- which is
+  // what `tieOutcomes` works out. A vacant seat from an underhang is not a seat
+  // at all until the next election, so it is not counted either.
+  const houseSize = members.length + undecidedSeats
 
   return {
     settings,
@@ -391,12 +447,61 @@ export function allocateSeats(
     totalSeats,
     overhangByParty,
     overhang,
+    underhangByParty,
+    underhang,
     houseSize,
     quotients,
     ties,
-    unfilled,
+    undecidedSeats,
     members,
     outsideSeats,
     undecidedElectorates,
+    tieOutcomes: undecidedElectorates.length
+      ? tieOutcomesFor(input, settings, totalSeats)
+      : null,
   }
+}
+
+/**
+ * Run the allocation once for every way the tied electorates could be decided.
+ *
+ * The law decides an electorate tie by lot, so no single answer is right; what
+ * a reader can be told is whether the answer matters. Each tie is resolved to
+ * each of its contenders in turn and the House and party totals compared.
+ */
+function tieOutcomesFor(
+  input: AllocationInput,
+  settings: MmpSettings,
+  totals: Map<EntityNumber, number>,
+): TieOutcomes | null {
+  const tied = input.electorateWins.filter(win => win.tie)
+  if (tied.some(win => !win.contenders?.length)) return null
+
+  const combinations = tied.reduce((product, win) => product * win.contenders!.length, 1)
+  if (combinations > MAX_TIE_OUTCOMES) return null
+
+  const settled = input.electorateWins.filter(win => !win.tie)
+  const houseSizes = new Set<number>()
+  let totalsVary = false
+
+  for (let index = 0; index < combinations; index += 1) {
+    // Read `index` as a mixed-radix number, one digit per tied electorate.
+    let rest = index
+    const decided: ElectorateWinInput[] = tied.map(win => {
+      const contenders = win.contenders!
+      const contender = contenders[rest % contenders.length]!
+      rest = Math.floor(rest / contenders.length)
+      return { electorate: win.electorate, candidate: contender.candidate, party: contender.party }
+    })
+
+    const outcome = allocateSeats({ ...input, electorateWins: [...settled, ...decided] }, settings)
+    houseSizes.add(outcome.houseSize)
+
+    const parties = new Set([...totals.keys(), ...outcome.totalSeats.keys()])
+    for (const party of parties) {
+      if ((totals.get(party) ?? 0) !== (outcome.totalSeats.get(party) ?? 0)) totalsVary = true
+    }
+  }
+
+  return { houseSizes: [...houseSizes].sort((a, b) => a - b), totalsVary }
 }

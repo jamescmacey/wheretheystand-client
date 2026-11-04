@@ -11,7 +11,8 @@
                 </p>
                 <ul class="space-y-1">
                     <li v-for="party in qualified" :key="party.party" class="flex items-center gap-2 text-sm">
-                        <ElectionsResultsPartySwatch :colour="colourFor(party.party)" />
+                        <ElectionsResultsPartySwatch :colour="colourFor(party.party)"
+                            :alternate="alternateFor(party.party)" />
                         <span class="truncate">{{ nameFor(party.party) }}</span>
                         <span class="text-muted">{{ reasonFor(party) }}</span>
                     </li>
@@ -63,6 +64,8 @@ const nameFor = (party: EntityNumber) =>
     store.party(slugs.value.e, slugs.value.v, party)?.name ?? 'Unknown party'
 const colourFor = (party: EntityNumber) =>
     store.partyColour(slugs.value.e, slugs.value.v, party)
+const alternateFor = (party: EntityNumber) =>
+    store.partyAlternateColour(slugs.value.e, slugs.value.v, party)
 
 const qualified = computed(() => props.allocation.qualification
     .filter(party => party.qualified)

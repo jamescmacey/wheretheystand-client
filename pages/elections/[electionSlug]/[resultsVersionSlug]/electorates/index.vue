@@ -45,6 +45,7 @@ import type {
     ElectionSummary, EntityNumber, ReferenceElectorate, ResultsVersion,
 } from '~/types/elections'
 import { useElectionDataStore } from '~/stores/electionData'
+import { useIncumbency } from '~/composables/useIncumbency'
 
 const props = defineProps<{
     election: ElectionSummary
@@ -65,6 +66,8 @@ const computedResults = computed(() =>
     store.computedElectorateResults(slugs.value.e, slugs.value.v))
 
 const resultFor = (number: EntityNumber) => computedResults.value.get(number) ?? null
+
+const { flippedFor } = useIncumbency(() => props.election, () => props.resultsVersion)
 
 const defaultQueryParams = {
     search: '',
@@ -88,9 +91,8 @@ const electorateTypeOptions = [
 
 const resultStatusOptions = [
     { label: 'All electorates', value: 'all' },
-    { label: 'Leading candidate known', value: 'determined' },
-    { label: 'Too close to call', value: 'indeterminate' },
-    { label: 'Not counted yet', value: 'uncounted' },
+    { label: 'Held electorates', value: 'held' },
+    { label: 'Flipped electorates', value: 'flipped' },
 ]
 
 type Filters = Record<string, string | undefined>
@@ -112,13 +114,9 @@ const customFilter = (items: ReferenceElectorate[], filters: Filters) => {
 
     const status = filters.resultStatus
     if (status && status !== 'all') {
-        filtered = filtered.filter(e => {
-            const result = resultFor(e.number)
-            // No results document at all, and one where nothing has been
-            // counted, are the same thing to a reader.
-            if (status === 'uncounted') return !result || result.resultStatus === 'uncounted'
-            return result?.resultStatus === status
-        })
+        // Tied, uncounted and uncurated seats are neither, so drop out of both.
+        const wanted = status === 'flipped'
+        filtered = filtered.filter(e => flippedFor(e.number) === wanted)
     }
 
     return filtered

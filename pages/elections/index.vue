@@ -10,12 +10,12 @@
                             <h4 class="text-lg font-bold mb-2">{{ election.name }}</h4>
                             <p class="text-sm text-muted">{{ formatDate(election.polling_date) }}</p>
                             <USeparator class="my-4" />
-                            <div v-if="election.results_versions.length == 0">
+                            <div v-if="listedVersions(election).length == 0">
                                 <p class="text-sm text-muted">Results not on WhereTheyStand.</p>
                             </div>
                             <div v-else>
                                 <h5 class="text-sm text-muted mb-2">Available results</h5>
-                                <div v-for="results_version in election.results_versions" :key="results_version.id">
+                                <div v-for="results_version in listedVersions(election)" :key="results_version.id">
                                     <h5 class="mb-2">{{ results_version.name }}</h5>
                                 </div>
                             </div>
@@ -45,9 +45,13 @@
 </template>
 
 <script setup>
+import { listedVersions } from '~/utils/elections/versions'
+
 // Elections come from the published manifest rather than the API, so that
 // election night traffic never reaches Django. The manifest already lists
-// elections newest first and omits any without published results.
+// elections newest first and omits any without published results. An election
+// whose versions are all unlisted is left out too: it can be opened by URL, but
+// is not offered here.
 const { elections, status, refresh } = await useElectionManifest()
 
 usePageSeo({
@@ -55,7 +59,8 @@ usePageSeo({
     description: 'Election results hosted on WhereTheyStand.',
 })
 
-const sortedElections = computed(() => elections.value)
+const sortedElections = computed(() =>
+    elections.value.filter(election => listedVersions(election).length > 0))
 
 const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-NZ', { year: 'numeric', month: 'long', day: 'numeric' })

@@ -27,12 +27,9 @@
                         <NuxtLink :to="place.to"
                             class="block rounded-md ring ring-default bg-default p-3 hover:bg-elevated transition-colors">
                             <p class="font-medium text-highlighted">{{ place.address }}</p>
-                            <div class="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted">
-                                <UBadge variant="subtle" color="neutral" size="sm">
-                                    Place {{ place.number }}
-                                </UBadge>
-                                <span v-if="place.away">Issued votes for this electorate</span>
-                            </div>
+                            <p v-if="place.away" class="mt-1 text-sm text-muted">
+                                Issued votes for this electorate
+                            </p>
                         </NuxtLink>
                     </li>
                 </ul>

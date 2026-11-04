@@ -11,6 +11,8 @@
 </template>
 
 <script setup>
+import { listedVersions } from '~/utils/elections/versions'
+
 const props = defineProps({
     election: {
         type: Object,
@@ -25,11 +27,15 @@ const props = defineProps({
 const router = useRouter()
 const route = useRoute()
 
+// Listed versions only. An unlisted one is offered only while it is the one
+// open, so the select still names the page being viewed.
 const resultsVersions = computed(() =>
-    props.election.results_versions.map(version => ({
-        label: version.name,
-        value: version.slug
-    }))
+    listedVersions(props.election)
+        .concat(props.resultsVersion.listed ? [] : [props.resultsVersion])
+        .map(version => ({
+            label: version.name,
+            value: version.slug
+        }))
 )
 const selectedResultsVersion = ref(props.resultsVersion.slug)
 

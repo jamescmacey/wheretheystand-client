@@ -12,11 +12,15 @@
              string a voting place has: there is no venue name in the data. -->
         <p class="font-medium text-highlighted">{{ place.address }}</p>
 
-        <div class="mt-2 flex flex-wrap items-center gap-2 text-sm text-muted">
-            <UBadge variant="subtle" color="neutral" size="sm">
-                Place {{ place.number }}
-            </UBadge>
-            <span class="truncate">{{ place.electorate_name }}</span>
+        <!-- Not a link: the card is already a button, and a link inside one
+             is invalid markup that swallows the click either way. -->
+        <div v-if="place.electorate_number" class="mt-2 flex flex-wrap items-center gap-2">
+            <ElectionsEntityElectorateBadge
+                :election="election"
+                :results-version="resultsVersion"
+                :electorate="place.electorate_number"
+                :link="false"
+            />
         </div>
 
         <div v-if="distance || unmapped" class="mt-2 flex flex-wrap items-center gap-2">
@@ -31,10 +35,12 @@
 </template>
 
 <script setup lang="ts">
-import type { VotingPlaceHit } from '~/types/elections'
+import type { ElectionSummary, ResultsVersion, VotingPlaceHit } from '~/types/elections'
 import { formatDistance } from '~/utils/geo/format'
 
 const props = defineProps<{
+    election: ElectionSummary
+    resultsVersion: ResultsVersion
     place: VotingPlaceHit
     selected?: boolean
     /** Only in proximity mode; a distance from nowhere means nothing. */

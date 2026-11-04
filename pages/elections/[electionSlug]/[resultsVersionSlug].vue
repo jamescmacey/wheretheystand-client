@@ -38,6 +38,7 @@
 import type { ElectionSummary } from '~/types/elections'
 import { ELECTION_SOURCE_KEY, useElectionSource } from '~/composables/useElectionSource'
 import { useElectionsDebugEnabled } from '~/composables/useElectionsDebug'
+import { defaultVersion } from '~/utils/elections/versions'
 
 const props = defineProps<{ election: ElectionSummary }>()
 
@@ -48,7 +49,7 @@ const election = computed(() => props.election)
 const resultsVersion = computed(() => {
     const versions = props.election.results_versions ?? []
     if (resultsVersionSlug.value === 'default') {
-        return versions.find(version => version.is_primary) ?? versions[0] ?? null
+        return defaultVersion(versions)
     }
     return versions.find(version => version.slug === resultsVersionSlug.value) ?? null
 })

@@ -10,6 +10,11 @@
 
 import type {
   BoundaryShape,
+  ComparisonCandidateEntry,
+  ComparisonData,
+  ComparisonElectorate,
+  ComparisonNationalPartyEntry,
+  ComparisonPartyEntry,
   ElectionManifest,
   ElectionSummary,
   ElectorateBoundary,
@@ -238,6 +243,7 @@ export function normaliseSnapshotPersistentData(raw: unknown): PersistentData {
         short_name: toStringOrNull(item.short_name),
         abbreviation: toStringOrNull(item.abbreviation),
         colour: toStringOrNull(item.colour),
+        alternate_colour: toStringOrNull(item.alternate_colour),
         party: toStringOrNull(item.party),
         firebase_id: toStringOrNull(item.firebase_id),
       })),
@@ -256,6 +262,91 @@ export function normaliseSnapshotPersistentData(raw: unknown): PersistentData {
         longitude: toFloat(item.longitude),
         firebase_id: toStringOrNull(item.firebase_id),
       })),
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+
+function normaliseComparisonParty(raw: Raw): ComparisonPartyEntry {
+  return {
+    party: toStringOrNull(raw.party),
+    count: toInt(raw.count),
+    per_cent: toFloat(raw.per_cent),
+  }
+}
+
+function normaliseComparisonNationalParty(raw: Raw): ComparisonNationalPartyEntry {
+  return {
+    ...normaliseComparisonParty(raw),
+    electorate_seats: toInt(raw.electorate_seats),
+    list_seats: toInt(raw.list_seats),
+    total_seats: toInt(raw.total_seats),
+  }
+}
+
+function normaliseComparisonCandidate(raw: Raw): ComparisonCandidateEntry {
+  return {
+    candidate: toStringOrNull(raw.candidate),
+    party: toStringOrNull(raw.party),
+    count: toInt(raw.count),
+    per_cent: toFloat(raw.per_cent),
+  }
+}
+
+/** A party tally, or null where the comparison election has none at this level. */
+function normaliseComparisonPartyTally<Entry extends ComparisonPartyEntry>(
+  raw: unknown, entry: (item: Raw) => Entry,
+) {
+  if (!raw) return null
+  const tally = asObject(raw)
+  return {
+    is_final: toBool(tally.is_final),
+    total_valid_votes: toInt(tally.total_valid_votes) ?? 0,
+    parties: asArray(tally.parties).map(entry),
+  }
+}
+
+/** The other election's results this version is compared against. */
+export function normaliseSnapshotComparison(raw: unknown): ComparisonData {
+  const source = asObject(raw)
+  const election = asObject(source.election)
+  const version = asObject(source.results_version)
+
+  const electorates: Record<string, ComparisonElectorate> = {}
+  for (const [id, value] of Object.entries(asObject(source.electorates))) {
+    const electorate = asObject(value)
+    const candidates = electorate.candidate_votes ? asObject(electorate.candidate_votes) : null
+    electorates[id] = {
+      party_votes: normaliseComparisonPartyTally(
+        electorate.party_votes, normaliseComparisonParty),
+      candidate_votes: candidates
+        ? {
+            is_final: toBool(candidates.is_final),
+            total_valid_votes: toInt(candidates.total_valid_votes) ?? 0,
+            candidates: asArray(candidates.candidates).map(normaliseComparisonCandidate),
+          }
+        : null,
+    }
+  }
+
+  return {
+    election: {
+      id: String(election.id ?? ''),
+      slug: String(election.slug ?? ''),
+      name: String(election.name ?? ''),
+      polling_date: toStringOrNull(election.polling_date),
+    },
+    results_version: {
+      id: String(version.id ?? ''),
+      slug: String(version.slug ?? ''),
+      name: String(version.name ?? ''),
+      is_final: toBool(version.is_final),
+    },
+    national: {
+      party_votes: normaliseComparisonPartyTally(
+        asObject(source.national).party_votes, normaliseComparisonNationalParty),
+    },
+    electorates,
   }
 }
 
@@ -294,6 +385,7 @@ export function normaliseVersionPaths(raw: unknown): ResultsVersionPaths {
           },
         }
       : {}),
+    ...(paths.comparison ? { comparison: String(paths.comparison) } : {}),
   }
 }
 
@@ -353,6 +445,7 @@ function normaliseResultsVersion(raw: Raw): ResultsVersion {
     name: String(raw.name ?? ''),
     description: toStringOrNull(raw.description),
     is_primary: toBool(raw.is_primary),
+    listed: raw.listed === undefined ? true : toBool(raw.listed),
     access_mode: (toStringOrNull(raw.access_mode) ?? 'api') as ResultsVersion['access_mode'],
     firebase_id: toStringOrNull(raw.firebase_id),
     is_live: toBool(raw.is_live),

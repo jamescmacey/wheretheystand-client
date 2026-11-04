@@ -4,7 +4,8 @@
             description="National party vote totals have not been reported yet." />
         <template v-else>
             <UCard variant="soft">
-                <ElectionsResultsTable :columns="columns" :rows="rows" :totals="totals" :show-bars="showBars">
+                <ElectionsResultsTable :columns="columns" :rows="rows" :totals="totals"
+                    :informals="informals" :show-bars="showBars">
                     <template #lead-header>
                         <USwitch v-model="showAll" size="sm" label="Show all parties" />
                     </template>
@@ -19,6 +20,7 @@ import type { ElectionSummary, ResultsVersion } from '~/types/elections'
 import type { ResultsColumn, ResultsRow } from '~/types/electionResults'
 import { useElectionDataStore } from '~/stores/electionData'
 import { useSeatAllocation } from '~/composables/useSeatAllocation'
+import { useComparison } from '~/composables/useComparison'
 import { formatCount, formatPercent } from '~/utils/elections/format'
 
 const props = withDefaults(defineProps<{
@@ -53,13 +55,19 @@ const showAll = ref(false)
 const results = computed(() =>
     store.nationalResults(props.election.slug, props.resultsVersion.slug, 'party_votes'))
 
-const columns: ResultsColumn[] = [
+// The last election's share, on the far right and muted, where this version
+// is compared against one.
+const { column: comparisonColumn, nationalPartyShare } = useComparison(
+    () => props.election, () => props.resultsVersion)
+
+const columns = computed<ResultsColumn[]>(() => [
     { key: 'electorate_seats', label: 'Elec.', width: '4rem', secondary: true },
     { key: 'list_seats', label: 'List', width: '4rem', secondary: true },
     { key: 'total_seats', label: 'Total', width: '4rem', emphasis: true },
     { key: 'count', label: 'Votes', width: '6rem' },
     { key: 'share', label: 'Share', width: '5rem' },
-]
+    ...(comparisonColumn.value ? [comparisonColumn.value] : []),
+])
 
 // A copy before sorting: this array lives in the store, and sorting in place
 // would mutate shared state during render and reorder it for every other view.
@@ -80,6 +88,8 @@ const rows = computed<ResultsRow[]>(() => visible.value.map(result => {
         key: result.party ?? `unknown-${result.count}`,
         label: party?.name ?? 'Unknown party',
         colour: store.partyColour(props.election.slug, props.resultsVersion.slug, result.party),
+        alternateColour: store.partyAlternateColour(
+            props.election.slug, props.resultsVersion.slug, result.party),
         bar: result.per_cent,
         cells: {
             electorate_seats: seats.electorate,
@@ -87,6 +97,7 @@ const rows = computed<ResultsRow[]>(() => visible.value.map(result => {
             total_seats: seats.total,
             count: formatCount(result.count),
             share: formatPercent(result.per_cent),
+            comparison: formatPercent(nationalPartyShare(result.party)),
         },
     }
 }))
@@ -110,9 +121,29 @@ const totals = computed(() => ({
         electorate_seats: seatTotals.value.electorate,
         list_seats: seatTotals.value.list,
         total_seats: seatTotals.value.total,
-        count: formatCount(results.value?.statistics.total_votes_cast ?? sum(result => result.count)),
+        // Valid votes only, so the figure is the sum of the rows above it.
+        // `total_votes_cast` includes informals.
+        count: formatCount(sum(result => result.count)),
         share: null,
     },
 }))
+
+/**
+ * From the national tally only, never summed from the electorates.
+ *
+ * The feed's national set can leave both informal fields null -- the 2023
+ * final results do -- so the count falls back to votes cast less the valid
+ * votes in the rows.
+ */
+const informals = computed(() => {
+    const cast = results.value?.statistics.total_votes_cast ?? null
+    const derived = cast === null ? null : cast - sum(result => result.count)
+    const count = results.value?.informals
+        ?? results.value?.statistics.total_party_informals
+        ?? (derived !== null && derived >= 0 ? derived : null)
+    return count === null
+        ? null
+        : { label: 'Informal votes', cells: { count: formatCount(count) } }
+})
 
 </script>

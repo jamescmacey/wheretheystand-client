@@ -144,7 +144,7 @@ const empty: PayloadProvenance = { origin: null, url: null, loadedAt: null, erro
 // Only null where the page is somehow rendered outside the results version
 // page that provides the source, which would itself be worth seeing here.
 const provenance = computed<SourceProvenance>(() => source?.provenance.value ?? {
-    persistent: empty, reference: empty, results: empty, summary: empty,
+    persistent: empty, reference: empty, results: empty, summary: empty, comparison: empty,
 })
 
 const eventDocument = computed(() => source?.liveEvent.value ?? null)

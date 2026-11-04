@@ -1,5 +1,6 @@
 import type { ElectionManifest, ElectionSummary, ReferenceElectorate } from '~/types/elections'
 import { useElectionDataStore } from '~/stores/electionData'
+import { defaultVersion } from '~/utils/elections/versions'
 
 /**
  * What kind of election this is, and so what the dashboard should offer.
@@ -45,7 +46,7 @@ export function useElectionShape() {
     const versions = election.value?.results_versions ?? []
     if (!versions.length) return null
     if (versionSlug.value === 'default') {
-      return versions.find(version => version.is_primary) ?? versions[0] ?? null
+      return defaultVersion(versions)
     }
     return versions.find(version => version.slug === versionSlug.value) ?? null
   })
