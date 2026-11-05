@@ -1,6 +1,5 @@
 <template>
     <ElectionsLayoutDashboardPage
-        :title="pageTitle"
         :heading="pageTitle"
         :description="pageDescription"
         :status="false"
@@ -62,8 +61,10 @@
                     description="No voting places have been indexed for this version of the results."
                 />
 
-                <div v-else class="flex flex-col lg:flex-row gap-4 flex-1 min-h-0">
-                    <div class="lg:w-[24rem] xl:w-[28rem] shrink-0 flex flex-col gap-4 min-h-0">
+                <!-- A minimum height, so a short wide window scrolls the page
+                     rather than crushing the list into a sliver. -->
+                <div v-else class="flex flex-col xl:flex-row gap-4 flex-1 min-h-0 xl:min-h-[46rem]">
+                    <div class="xl:w-[24rem] 2xl:w-[28rem] shrink-0 flex flex-col gap-4 min-h-0">
                         <ElectionsVotingPlacesFinder
                             v-model:query="queryInput"
                             v-model:electorate-name="electorateName"
@@ -75,8 +76,8 @@
                             @clear-location="clearLocation"
                         />
 
-                        <!-- Tabs only on a phone, where the panes cannot sit
-                             side by side. -->
+                        <!-- Tabs wherever the panes cannot usefully sit side by
+                             side, which the feed panel makes wider than a phone. -->
                         <UTabs
                             v-if="isMobile"
                             v-model="mobilePane"
@@ -90,7 +91,7 @@
                              an overflow container would clip it at the edges. -->
                         <div
                             v-show="!isMobile || mobilePane === 'list'"
-                            class="flex-1 min-h-0 lg:overflow-y-auto lg:-mx-1 lg:px-1 lg:pb-1"
+                            class="flex-1 min-h-0 xl:overflow-y-auto xl:-mx-1 xl:px-1 xl:pb-1"
                         >
                             <ElectionsVotingPlacesResultList
                                 :election="election"
@@ -156,7 +157,7 @@
                     </div>
                 </div>
 
-                <!-- On a phone the detail is a drawer: there is no room for a
+                <!-- Without side-by-side panes the detail is a drawer: there is no room for a
                      third pane, and it has to be reachable from either tab. -->
                 <UDrawer
                     v-if="isMobile"
@@ -205,7 +206,7 @@ const indexName = useAlgoliaIndexName('ElectionVotingPlaces')
 const algolia = useNuxtApp().$algolia
 
 const breakpoints = useBreakpoints(breakpointsTailwind)
-const isLarge = breakpoints.greaterOrEqual('lg')
+const isLarge = breakpoints.greaterOrEqual('xl')
 const isMobile = computed(() => !isLarge.value)
 
 const mobilePane = ref<'list' | 'map'>('list')

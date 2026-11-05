@@ -27,7 +27,11 @@
                      general election every advance voting place that issued a ballot
                      for this electorate is one of these, wherever in the country it
                      stood. -->
-                <ul v-if="shown.length" class="flex flex-col gap-2 max-h-[32rem] overflow-y-auto">
+                <!-- Inset, because a card's ring is drawn outside its border and the
+                     scroll box would clip it. The fade says a cut-off card continues,
+                     and the bottom padding lets the last card scroll clear of it. -->
+                <ul v-if="shown.length"
+                    class="flex flex-col gap-2 max-h-[32rem] overflow-y-auto -mx-1 px-1 pt-1 pb-6 [mask-image:linear-gradient(to_bottom,black_calc(100%-1.5rem),transparent)]">
                     <li v-for="place in shown" :key="place.number">
                         <NuxtLink :to="place.to"
                             class="block rounded-md ring ring-default bg-default p-3 hover:bg-elevated transition-colors">

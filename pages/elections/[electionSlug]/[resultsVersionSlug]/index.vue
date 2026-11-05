@@ -1,10 +1,5 @@
 <template>
-    <ElectionsLayoutDashboardPage :title="election.name">
-        <template #actions>
-            <ElectionsNavigationResultsVersionSwitch class="min-w-0" :election="election"
-                :resultsVersion="resultsVersion" />
-        </template>
-
+    <ElectionsLayoutDashboardPage>
         <ElectionsResultsKeyStatsGrid :election="election" :resultsVersion="resultsVersion" />
 
         <!-- A by-election is one contest, and the overview is the natural place

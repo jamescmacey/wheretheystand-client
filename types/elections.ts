@@ -394,6 +394,8 @@ export interface ComparisonCandidateEntry {
 export interface ComparisonPartyTally<Entry extends ComparisonPartyEntry = ComparisonPartyEntry> {
   is_final: boolean
   total_valid_votes: number
+  /** Informals included. National tally only, and null in an older file. */
+  total_votes_cast: number | null
   /** Largest first. */
   parties: Entry[]
 }
@@ -702,8 +704,8 @@ export interface ElectorateLeadChangeMetadata {
   /** Both tallies as they stood when the lead changed. Null from an older worker. */
   leader_count: number | null
   runner_up_count: number | null
-  /** How much of the electorate was counted when the lead changed. */
-  percent_votes_cast: number | null
+  /** The share of the electorate's voting places counted when the lead changed. */
+  percent_voting_places_counted: number | null
 }
 
 export interface VotingPlaceAddedMetadata {

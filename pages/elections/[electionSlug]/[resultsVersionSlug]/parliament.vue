@@ -1,5 +1,5 @@
 <template>
-    <ElectionsLayoutDashboardPage title="Parliament" heading="Parliament">
+    <ElectionsLayoutDashboardPage heading="Parliament">
         <template v-if="allocation">
             <UAlert v-if="!isOfficial" color="warning" variant="subtle" icon="i-lucide-flask-conical"
                 title="These are not the official rules"
@@ -9,8 +9,12 @@
             <ElectionsParliamentSeatsOverview :election="election" :resultsVersion="resultsVersion"
                 :allocation="allocation" />
 
-            <ElectionsParliamentCoalitionOptions :election="election" :resultsVersion="resultsVersion"
-                :allocation="allocation" />
+            <div class="grid grid-cols-1 @4xl:grid-cols-2 gap-4">
+                <ElectionsParliamentCoalitionOptions :election="election" :resultsVersion="resultsVersion"
+                    :allocation="allocation" />
+                <ElectionsParliamentWastedVoteCard :election="election" :resultsVersion="resultsVersion"
+                    :allocation="allocation" />
+            </div>
 
             <ElectionsParliamentThresholdPanel :election="election" :resultsVersion="resultsVersion"
                 :allocation="allocation" />

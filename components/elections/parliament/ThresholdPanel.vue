@@ -4,17 +4,22 @@
             <h3 class="font-bold">Who shares in the list seats</h3>
         </template>
 
-        <div class="space-y-4">
+        <div class="@container space-y-4">
             <div>
                 <p class="text-sm text-muted mb-2">
                     Qualified — {{ qualifiedLabel }}
                 </p>
                 <ul class="space-y-1">
-                    <li v-for="party in qualified" :key="party.party" class="flex items-center gap-2 text-sm">
-                        <ElectionsResultsPartySwatch :colour="colourFor(party.party)"
+                    <li v-for="party in qualified" :key="party.party"
+                        class="flex items-start @md:items-center gap-2 text-sm">
+                        <ElectionsResultsPartySwatch class="mt-1 @md:mt-0" :colour="colourFor(party.party)"
                             :alternate="alternateFor(party.party)" />
-                        <span class="truncate">{{ nameFor(party.party) }}</span>
-                        <span class="text-muted">{{ reasonFor(party) }}</span>
+                        <div class="min-w-0 flex flex-col @md:flex-row @md:items-center @md:gap-2">
+                            <span class="font-medium @md:hidden" :title="nameFor(party.party)"
+                                aria-hidden="true">{{ codeFor(party.party) }}</span>
+                            <span class="sr-only @md:not-sr-only @md:truncate">{{ nameFor(party.party) }}</span>
+                            <span class="text-muted">{{ reasonFor(party) }}</span>
+                        </div>
                     </li>
                 </ul>
             </div>
@@ -27,8 +32,10 @@
                     </p>
                     <ul class="space-y-1">
                         <li v-for="party in excluded" :key="party.party"
-                            class="flex items-center gap-2 text-sm text-muted">
-                            <span class="truncate">{{ nameFor(party.party) }}</span>
+                            class="flex flex-col @md:flex-row @md:items-center @md:gap-2 text-sm text-muted">
+                            <span class="font-medium @md:hidden" :title="nameFor(party.party)"
+                                aria-hidden="true">{{ codeFor(party.party) }}</span>
+                            <span class="sr-only @md:not-sr-only @md:truncate">{{ nameFor(party.party) }}</span>
                             <span>{{ formatPercent(party.share) }}</span>
                         </li>
                     </ul>
@@ -43,6 +50,7 @@ import type { ElectionSummary, EntityNumber, ResultsVersion } from '~/types/elec
 import type { PartyQualification, SeatAllocation } from '~/utils/elections/mmp'
 import { useElectionDataStore } from '~/stores/electionData'
 import { formatPercent, pluralise } from '~/utils/elections/format'
+import { partyAbbreviation } from '~/utils/elections/partyAbbreviation'
 
 /**
  * Which parties shared in the list seats, and on which limb they qualified.
@@ -62,6 +70,9 @@ const slugs = computed(() => ({ e: props.election.slug, v: props.resultsVersion.
 
 const nameFor = (party: EntityNumber) =>
     store.party(slugs.value.e, slugs.value.v, party)?.name ?? 'Unknown party'
+const codeFor = (party: EntityNumber) => partyAbbreviation(
+    store.party(slugs.value.e, slugs.value.v, party),
+    store.persistentPartyForParty(slugs.value.e, slugs.value.v, party))
 const colourFor = (party: EntityNumber) =>
     store.partyColour(slugs.value.e, slugs.value.v, party)
 const alternateFor = (party: EntityNumber) =>

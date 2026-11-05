@@ -1,9 +1,11 @@
 <template>
     <UPageCard :to="to" variant="subtle" class="h-full">
-        <div class="flex items-start justify-between gap-2">
+        <div class="flex flex-wrap items-start justify-between gap-2">
             <!-- The card is a link in its own right, so nothing inside it is. -->
-            <ElectionsEntityElectorateBadge :election="election" :resultsVersion="resultsVersion"
-                :electorate="electorate.number" :link="false" />
+            <div class="min-w-0 max-w-full">
+                <ElectionsEntityElectorateBadge :election="election" :resultsVersion="resultsVersion"
+                    :electorate="electorate.number" :link="false" />
+            </div>
 
             <ElectionsResultsSeatChangeBadge :election="election" :resultsVersion="resultsVersion"
                 :electorate="electorate.number" />
@@ -38,7 +40,7 @@
 import type {
     ComputedElectorateResult, ElectionSummary, ReferenceElectorate, ResultsVersion,
 } from '~/types/elections'
-import { formatCount, formatPoints } from '~/utils/elections/format'
+import { describeMargin, formatCount } from '~/utils/elections/format'
 
 const props = defineProps<{
     election: ElectionSummary
@@ -59,30 +61,10 @@ const to = computed(() =>
  */
 const leaders = computed(() => props.result?.leaders ?? [])
 
-/**
- * The lead, written between the two figures it is the difference of.
- *
- * Short enough to sit in that gap, and spelled out in the title: "+12,151" is
- * clear where it stands and cryptic read on its own.
- */
-const margin = computed(() => {
-    const result = props.result
-    if (!result || leaders.value.length < 2) return null
-
-    if (result.resultStatus === 'indeterminate') {
-        return { text: 'Tied', description: 'The leading candidates are tied.' }
-    }
-    if (result.margin === null) return null
-
-    const votes = formatCount(result.margin)
-    const points = formatPoints(result.marginPercentage)
-    return {
-        text: `+${votes}`,
-        description: points
-            ? `Margin of ${votes} votes (${points}).`
-            : `Margin of ${votes} votes.`,
-    }
-})
+/** The lead, written between the two figures it is the difference of. */
+const margin = computed(() => (props.result && leaders.value.length >= 2
+    ? describeMargin(props.result)
+    : null))
 
 const emptyMessage = computed(() => {
     if (!props.electorate.accepting_candidate_votes) return 'No candidate election was held.'

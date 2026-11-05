@@ -322,7 +322,7 @@ function normaliseLeadChange(meta: Raw): ElectorateLeadChangeMetadata {
     margin: toInt(meta.margin),
     leader_count: toInt(meta.leader_count),
     runner_up_count: toInt(meta.runner_up_count),
-    percent_votes_cast: toFloat(meta.percent_votes_cast),
+    percent_voting_places_counted: toFloat(meta.percent_voting_places_counted),
   }
 }
 

@@ -41,8 +41,8 @@
 
             <!-- The map is the smaller half and leads on a phone, where a list
                  of several hundred addresses above it would bury it. -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
-                <div class="order-1 lg:order-2">
+            <div class="grid grid-cols-1 @4xl:grid-cols-3 gap-4 items-start">
+                <div class="order-1 @4xl:order-2">
                     <UCard variant="subtle">
                         <ElectionsElectoratesBoundaryMap :key="mapId" :election="election"
                             :resultsVersion="resultsVersion" :electorate="electorateNumber"
@@ -50,7 +50,7 @@
                     </UCard>
                 </div>
 
-                <div class="order-2 lg:order-1 lg:col-span-2">
+                <div class="order-2 @4xl:order-1 @4xl:col-span-2">
                     <ElectionsElectoratesVotingPlaceList :election="election"
                         :resultsVersion="resultsVersion" :places="votingPlaces.places.value"
                         :isMaori="votingPlaces.isMaori.value"

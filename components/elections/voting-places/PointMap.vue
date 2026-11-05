@@ -10,7 +10,9 @@
                  stray div of its own. -->
             <div class="relative w-full h-full overflow-hidden rounded-md ring ring-default">
                 <MapboxMap :key="mapId" :map-id="mapId" class="w-full h-full" :options="mapOptions"
-                    @error="onMapError" />
+                    @error="onMapError">
+                    <MapboxNavigationControl :options="{ showCompass: false }" />
+                </MapboxMap>
             </div>
 
             <template #fallback>
@@ -84,8 +86,23 @@ function onMapError(error: unknown) {
  */
 let marker: import('mapbox-gl').Marker | undefined
 
+/**
+ * Framed once per map and position.
+ *
+ * The module re-triggers `mapRef` on Mapbox's `data` and `idle` events, so
+ * without this check the camera snaps back whenever a reader moves it, and the
+ * marker is rebuilt each time.
+ */
+let framedMap: unknown
+let framedAt = ''
+
 watch([mapRef, coordinates], async ([map, position]) => {
     if (!map || !position) return
+
+    const at = `${position.lat},${position.lng}`
+    if (map === framedMap && at === framedAt) return
+    framedMap = map
+    framedAt = at
 
     marker?.remove()
     const { Marker } = await import('mapbox-gl')

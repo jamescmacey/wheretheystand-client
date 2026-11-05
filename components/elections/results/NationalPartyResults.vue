@@ -22,6 +22,7 @@ import { useElectionDataStore } from '~/stores/electionData'
 import { useSeatAllocation } from '~/composables/useSeatAllocation'
 import { useMmpSettings } from '~/composables/useMmpSettings'
 import { useComparison } from '~/composables/useComparison'
+import { nationalInformals } from '~/utils/elections/disproportionality'
 import { formatCount, formatPercent } from '~/utils/elections/format'
 import { partyAbbreviation } from '~/utils/elections/partyAbbreviation'
 
@@ -139,19 +140,8 @@ const totals = computed(() => ({
     },
 }))
 
-/**
- * From the national tally only, never summed from the electorates.
- *
- * The feed's national set can leave both informal fields null -- the 2023
- * final results do -- so the count falls back to votes cast less the valid
- * votes in the rows.
- */
 const informals = computed(() => {
-    const cast = results.value?.statistics.total_votes_cast ?? null
-    const derived = cast === null ? null : cast - sum(result => result.count)
-    const count = results.value?.informals
-        ?? results.value?.statistics.total_party_informals
-        ?? (derived !== null && derived >= 0 ? derived : null)
+    const count = results.value ? nationalInformals(results.value) : null
     return count === null
         ? null
         : { label: 'Informal votes', cells: { count: formatCount(count) } }

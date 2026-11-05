@@ -19,9 +19,13 @@
                 <UPageCard v-for="race in races" :key="race.electorate" :to="race.href" variant="subtle"
                     :ui="{ container: 'p-3 sm:p-3' }">
                     <!-- The card is a link in its own right, so nothing inside it is. -->
-                    <div class="min-w-0">
-                        <ElectionsEntityElectorateBadge :election="election" :resultsVersion="resultsVersion"
-                            :electorate="race.electorate" :link="false" class="max-w-full" />
+                    <div class="flex flex-wrap items-start justify-between gap-2">
+                        <div class="min-w-0 max-w-full">
+                            <ElectionsEntityElectorateBadge :election="election" :resultsVersion="resultsVersion"
+                                :electorate="race.electorate" :link="false" class="max-w-full" />
+                        </div>
+                        <ElectionsResultsSeatChangeBadge :election="election" :resultsVersion="resultsVersion"
+                            :electorate="race.electorate" />
                     </div>
 
                     <!-- The two tallies with the difference between them, where
@@ -29,8 +33,8 @@
                     <div class="mt-3 flex flex-col gap-1">
                         <template v-for="(leader, index) in race.leaders" :key="leader.candidate">
                             <p v-if="index === 1" class="text-xs text-muted text-right tabular-nums"
-                                :title="race.description">
-                                {{ race.margin }}
+                                :title="race.margin?.description">
+                                {{ race.margin?.text }}
                             </p>
                             <div class="flex items-center justify-between gap-3">
                                 <ElectionsEntityCandidateLabel :election="election"
@@ -59,7 +63,7 @@
 <script setup lang="ts">
 import type { ElectionSummary, ResultsVersion } from '~/types/elections'
 import { useElectionDataStore } from '~/stores/electionData'
-import { formatCount, formatPoints, formatTime, fromEpochSeconds } from '~/utils/elections/format'
+import { describeMargin, formatCount, formatTime, fromEpochSeconds } from '~/utils/elections/format'
 
 /**
  * The electorates that could still go either way.
@@ -104,20 +108,12 @@ const races = computed(() => {
             return (a.marginPercentage ?? Infinity) - (b.marginPercentage ?? Infinity)
         })
         .slice(0, props.limit)
-        .map((result) => {
-            const votes = formatCount(result.margin)
-            const points = formatPoints(result.marginPercentage)
-
-            return {
-                electorate: result.electorate,
-                leaders: (result.leaders ?? []).slice(0, 2),
-                href: `/elections/${slugs.value.e}/${slugs.value.v}/electorates/${result.electorate}`,
-                margin: result.resultStatus === 'indeterminate' ? 'Tied' : `+${votes}`,
-                description: result.resultStatus === 'indeterminate'
-                    ? 'The leading candidates are tied.'
-                    : points ? `Margin of ${votes} votes (${points}).` : `Margin of ${votes} votes.`,
-            }
-        })
+        .map(result => ({
+            electorate: result.electorate,
+            leaders: (result.leaders ?? []).slice(0, 2),
+            href: `/elections/${slugs.value.e}/${slugs.value.v}/electorates/${result.electorate}`,
+            margin: describeMargin(result),
+        }))
 })
 
 /**
