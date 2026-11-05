@@ -1,4 +1,10 @@
-import type { LiveEventDocument, PersistentData, ReferenceData } from '~/types/elections'
+import type {
+  ConnectionState,
+  LiveEventDocument,
+  PersistentData,
+  ReferenceData,
+} from '~/types/elections'
+import { createListenerRetry } from '~/utils/elections/listenerRetry'
 import {
   buildPersistentIndex,
   normaliseFirestoreReferenceData,
@@ -29,33 +35,64 @@ import { normaliseVersionPaths } from '~/utils/elections/normaliseSnapshot'
  * way: when reference data becomes available, where it was published, and
  * whether the count is still live at all.
  *
- * Returns `null` while nothing has been read yet, and where the document does
- * not exist. Callers must not read `null` as "not live" -- only a document that
- * exists and says so means that.
+ * `event` is `null` both before the first read and where the document does not
+ * exist. `read` tells the two apart: it turns true on the first snapshot the
+ * server has confirmed, and only then is a `null` a statement about the event.
+ * Callers must not read `null` as "not live", or as "no reference data", until
+ * then.
  */
 export function watchLiveEvent(options: {
   eventId: MaybeRefOrGetter<string | null>
   enabled: MaybeRefOrGetter<boolean>
-}): { event: Ref<LiveEventDocument | null>, stop: () => void } {
+}): {
+  event: Ref<LiveEventDocument | null>
+  read: Ref<boolean>
+  connection: Ref<ConnectionState>
+  retry: () => void
+  stop: () => void
+} {
   const event = ref<LiveEventDocument | null>(null)
+  const read = ref(false)
+  const connection = ref<ConnectionState>('archived')
+  const retries = createListenerRetry()
   let unsubscribe: (() => void) | null = null
   let generation = 0
+  let attachedTo: string | null = null
 
   function detach() {
+    retries.cancel()
     if (unsubscribe) {
       unsubscribe()
       unsubscribe = null
     }
   }
 
+  function giveUpOrRetry(mine: number) {
+    const pending = retries.schedule(() => { if (mine === generation) attach() })
+    connection.value = pending ? 'offline' : 'failed'
+  }
+
   async function attach() {
     detach()
-    event.value = null
 
     const eventId = toValue(options.eventId)
-    if (!import.meta.client || !toValue(options.enabled) || !eventId) return
+    // What was last read is kept across a retry of the same event, so that a
+    // listener failing does not look like the count being taken off live. It
+    // is cleared only when the event itself changes.
+    if (eventId !== attachedTo) {
+      event.value = null
+      read.value = false
+      retries.reset()
+      attachedTo = eventId
+    }
+
+    if (!import.meta.client || !toValue(options.enabled) || !eventId) {
+      connection.value = 'archived'
+      return
+    }
 
     const mine = ++generation
+    if (connection.value !== 'offline') connection.value = 'connecting'
 
     try {
       const { doc, onSnapshot } = await import('firebase/firestore')
@@ -63,8 +100,21 @@ export function watchLiveEvent(options: {
       const db = ($firestore as () => import('firebase/firestore').Firestore)()
       if (mine !== generation) return
 
-      unsubscribe = onSnapshot(doc(db, 'events', eventId), snapshot => {
+      // Metadata changes included, so that the server confirming a snapshot
+      // the cache already gave -- and the connection dropping -- both arrive.
+      // They are local events and cost no reads.
+      unsubscribe = onSnapshot(doc(db, 'events', eventId), { includeMetadataChanges: true }, snapshot => {
         if (mine !== generation) return
+
+        const fromCache = snapshot.metadata.fromCache
+        connection.value = fromCache ? 'connecting' : 'live'
+        // A cached snapshot says nothing about whether the document exists.
+        if (fromCache && !read.value) return
+
+        if (!fromCache) {
+          read.value = true
+          retries.reset()
+        }
 
         const data = snapshot.data()
         if (!data) {
@@ -81,13 +131,15 @@ export function watchLiveEvent(options: {
         }
       }, error => {
         if (mine !== generation) return
-        // Not a reason to tear the page down: the results listener has its own
-        // connection state, and the SDK retries on its own.
+        // Terminal: the SDK hands over only the errors it has given up on, and
+        // the listener delivers nothing after this.
         console.warn('[elections] could not watch event document:', error.code)
+        giveUpOrRetry(mine)
       })
     } catch (error) {
       if (mine !== generation) return
       console.warn('[elections] could not watch event document:', error)
+      giveUpOrRetry(mine)
     }
   }
 
@@ -99,7 +151,13 @@ export function watchLiveEvent(options: {
 
   onScopeDispose(() => { generation += 1; detach() })
 
-  return { event, stop: () => { generation += 1; detach() } }
+  return {
+    event,
+    read,
+    connection,
+    retry: () => { retries.reset(); attach() },
+    stop: () => { generation += 1; detach() },
+  }
 }
 
 /**

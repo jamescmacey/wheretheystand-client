@@ -1,5 +1,6 @@
-import type { ResultsSummary } from '~/types/elections'
+import type { ConnectionState, ResultsSummary } from '~/types/elections'
 import { normaliseFirestoreSummary } from '~/utils/elections/normaliseFirestore'
+import { createListenerRetry } from '~/utils/elections/listenerRetry'
 import type { FirestoreSubscription } from './useFirestoreResults'
 
 /**
@@ -24,15 +25,23 @@ export function useFirestoreSummary(options: {
   enabled: MaybeRefOrGetter<boolean>
   onSummary: (summary: ResultsSummary) => void
 }): FirestoreSubscription {
-  const connection = ref<'connecting' | 'live' | 'offline' | 'archived'>('archived')
+  const connection = ref<ConnectionState>('archived')
+  const retries = createListenerRetry()
   let unsubscribe: (() => void) | null = null
   let generation = 0
 
   function detach() {
+    retries.cancel()
     if (unsubscribe) {
       unsubscribe()
       unsubscribe = null
     }
+  }
+
+  /** After a terminal error, as for results: the listener is dead. */
+  function giveUpOrRetry(mine: number) {
+    const pending = retries.schedule(() => { if (mine === generation) attach() })
+    connection.value = pending ? 'offline' : 'failed'
   }
 
   async function attach() {
@@ -47,7 +56,7 @@ export function useFirestoreSummary(options: {
     // Each attach claims a generation, so a subscription that resolves after a
     // newer one started tears itself down instead of writing stale results.
     const mine = ++generation
-    connection.value = 'connecting'
+    if (connection.value !== 'offline') connection.value = 'connecting'
 
     try {
       const { doc, onSnapshot } = await import('firebase/firestore')
@@ -58,6 +67,7 @@ export function useFirestoreSummary(options: {
 
       unsubscribe = onSnapshot(
         doc(db, 'results_summary', eventId),
+        { includeMetadataChanges: true },
         (snapshot) => {
           if (mine !== generation) return
 
@@ -68,23 +78,24 @@ export function useFirestoreSummary(options: {
           if (data) options.onSummary(normaliseFirestoreSummary(data))
 
           connection.value = snapshot.metadata.fromCache ? 'connecting' : 'live'
+          if (!snapshot.metadata.fromCache) retries.reset()
         },
         (error) => {
           if (mine !== generation) return
           console.warn('[elections] live summary unavailable:', error.code)
-          connection.value = 'offline'
+          giveUpOrRetry(mine)
         },
       )
     } catch (error) {
       if (mine !== generation) return
       console.warn('[elections] could not start the live summary:', error)
-      connection.value = 'offline'
+      giveUpOrRetry(mine)
     }
   }
 
   watch(
     () => [toValue(options.eventId), toValue(options.enabled)],
-    () => { attach() },
+    () => { retries.reset(); attach() },
     { immediate: true },
   )
 
@@ -95,5 +106,9 @@ export function useFirestoreSummary(options: {
     detach()
   })
 
-  return { connection, stop: () => { generation += 1; detach() } }
+  return {
+    connection,
+    retry: () => { retries.reset(); attach() },
+    stop: () => { generation += 1; detach() },
+  }
 }
