@@ -302,6 +302,7 @@ function normaliseComparisonPartyTally<Entry extends ComparisonPartyEntry>(
   return {
     is_final: toBool(tally.is_final),
     total_valid_votes: toInt(tally.total_valid_votes) ?? 0,
+    total_votes_cast: toInt(tally.total_votes_cast),
     parties: asArray(tally.parties).map(entry),
   }
 }

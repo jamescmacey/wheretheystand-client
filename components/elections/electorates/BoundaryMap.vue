@@ -29,6 +29,7 @@
                                  the map's style load. -->
                             <MapboxSource :source-id="placesSourceId" :source="placesSource" />
                             <MapboxLayer :layer="placesLayer" />
+                            <MapboxNavigationControl :options="{ showCompass: false }" />
                         </MapboxMap>
 
                         <div v-if="hoveredPlace"
@@ -282,10 +283,22 @@ function onMapError(error: unknown) {
     mapError.value = message || 'The map could not be loaded.'
 }
 
+/**
+ * Framed once per map and shape.
+ *
+ * The module re-triggers `mapRef` on Mapbox's `data` and `idle` events, so
+ * without this check the camera snaps back whenever a reader moves it.
+ */
+let framedMap: unknown
+let framedShape: unknown
+
 watch([mapRef, geojson], ([map, shapeJson]) => {
     if (!map || !shapeJson) return
+    if (map === framedMap && shapeJson === framedShape) return
     const bounds = boundsFromGeoJson(shapeJson)
     if (!bounds) return
+    framedMap = map
+    framedShape = shapeJson
     map.fitBounds(bounds, { padding: 24, duration: 0 })
 }, { immediate: true })
 
