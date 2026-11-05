@@ -1,11 +1,11 @@
 <template>
-    <ElectionsLayoutDashboardPage title="Electorates" :heading="`${electorates.length} electorates`">
+    <ElectionsLayoutDashboardPage :heading="`${electorates.length} electorates`">
                 <WContentPaginatedItems :items="electorates" :item-key="item => item.number" item-label="electorates"
                     :items-per-page="24" url-prefix="electorates" :query-params="defaultQueryParams" :sync-url="true"
                     :custom-filter="customFilter" :custom-sort="customSort">
                     <template #filters="{ filters, updateFilter }">
                         <UCard variant="subtle" class="mb-4">
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div class="grid grid-cols-1 @md:grid-cols-2 @4xl:grid-cols-4 gap-4">
                                 <UFormField label="Search by name" name="search">
                                     <UInput :model-value="filters.search || ''" placeholder="Search electorates…"
                                         class="w-full"
@@ -30,11 +30,30 @@
                         </UCard>
                     </template>
                     <template #content="{ items }">
-                        <UPageGrid>
+                        <!-- The list needs about 1,010 px on 2023's names, so below 64rem
+                             of content the reader's choice is set aside, and kept for
+                             a wider window. Done in CSS because it follows the room
+                             left by the feed panel, which the server cannot know. -->
+                        <div class="hidden @5xl:flex justify-end mb-4">
+                            <UFieldGroup>
+                                <UButton icon="i-lucide-layout-grid" aria-label="Show as cards" color="neutral"
+                                    :variant="view === 'cards' ? 'subtle' : 'outline'"
+                                    :aria-pressed="view === 'cards'" @click="setView('cards')" />
+                                <UButton icon="i-lucide-list" aria-label="Show as a list" color="neutral"
+                                    :variant="view === 'list' ? 'subtle' : 'outline'"
+                                    :aria-pressed="view === 'list'" @click="setView('list')" />
+                            </UFieldGroup>
+                        </div>
+
+                        <ElectionsResultsElectorateResultsTable v-if="view === 'list'" class="hidden @5xl:block"
+                            :election="election" :resultsVersion="resultsVersion" :electorates="items"
+                            :result-for="resultFor" />
+                        <div class="grid gap-4 grid-cols-[repeat(auto-fill,minmax(min(100%,20rem),1fr))]"
+                            :class="view === 'list' ? '@5xl:hidden' : ''">
                             <ElectionsResultsElectorateResultCard v-for="item in items" :key="item.number"
                                 :election="election" :resultsVersion="resultsVersion" :electorate="item"
                                 :result="resultFor(item.number)" />
-                        </UPageGrid>
+                        </div>
                     </template>
                 </WContentPaginatedItems>
     </ElectionsLayoutDashboardPage>
@@ -66,6 +85,17 @@ const computedResults = computed(() =>
     store.computedElectorateResults(slugs.value.e, slugs.value.v))
 
 const resultFor = (number: EntityNumber) => computedResults.value.get(number) ?? null
+
+// A cookie rather than local storage, so the server renders the view the reader
+// chose and a reload does not flash the other one first.
+const view = useCookie<'cards' | 'list'>('elections-electorates-view', {
+    default: () => 'cards',
+    maxAge: 60 * 60 * 24 * 365,
+})
+
+function setView(value: 'cards' | 'list') {
+    view.value = value
+}
 
 const { flippedFor } = useIncumbency(() => props.election, () => props.resultsVersion)
 

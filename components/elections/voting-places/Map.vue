@@ -25,6 +25,8 @@
                     :lnglat="[userLocation.lng, userLocation.lat]"
                     :options="{ color: '#58787f' }"
                 />
+
+                <MapboxNavigationControl :options="{ showCompass: false }" />
             </MapboxMap>
 
             <div

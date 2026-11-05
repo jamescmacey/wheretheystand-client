@@ -1,5 +1,5 @@
 <template>
-    <ElectionsLayoutDashboardPage title="Debug" heading="Debug" :status="false"
+    <ElectionsLayoutDashboardPage heading="Debug" :status="false"
         description="What this page is reading, where each payload came from, and the objects behind it.">
         <UAlert color="warning" variant="subtle" icon="i-lucide-bug" title="Developer diagnostics"
             description="This page exists because NUXT_PUBLIC_ELECTIONS_DEBUG is true. It renders no results and is not meant for readers. Turn the flag off in production." />

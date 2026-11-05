@@ -22,6 +22,7 @@ const published = {
     party_votes: {
       is_final: true,
       total_valid_votes: 400,
+      total_votes_cast: 410,
       parties: [
         { party: 'p-blue', count: 300, per_cent: 75, electorate_seats: 5, list_seats: 10, total_seats: 15 },
         { party: null, count: 100, per_cent: 25, electorate_seats: null, list_seats: null, total_seats: null },
@@ -139,6 +140,7 @@ describe('candidateComparisonFigures', () => {
 describe('partyComparisonShare', () => {
   it('finds a party by persistent id, and nothing for an unlinked one', () => {
     const tally = normaliseSnapshotComparison(published).national.party_votes
+    expect(tally?.total_votes_cast).toBe(410)
     expect(partyComparisonShare(tally, 'p-blue')).toBe(75)
     expect(partyComparisonShare(tally, 'p-missing')).toBeNull()
     expect(partyComparisonShare(tally, null)).toBeNull()

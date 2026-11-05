@@ -42,7 +42,8 @@
                     </template>
 
                     <UDropdownMenu v-if="row.editable && row.available.length" :items="row.available"
-                        :content="{ align: 'start' }">
+                        :content="{ align: 'start', collisionPadding: 8 }"
+                        :ui="{ content: 'max-h-(--reka-dropdown-menu-content-available-height) max-w-[calc(100vw-1rem)]' }">
                         <UButton color="neutral" variant="ghost" size="xs" icon="i-lucide-plus"
                             label="Add party" />
                         <template #item-leading="{ item }">
