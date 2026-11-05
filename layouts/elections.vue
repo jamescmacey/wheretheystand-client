@@ -14,7 +14,7 @@ const linksAvailable = computed(() => Boolean(resultsVersionSlug.value && electi
 // A by-election returns one member and has no party vote, so Parliament and the
 // list of electorates are pages about nothing. Hiding them beats rendering
 // them empty, and beats a reader finding out by opening one.
-const { hasPartyVote, isSingleElectorate } = useElectionShape()
+const { election, resultsVersion, hasPartyVote, isSingleElectorate } = useElectionShape()
 
 const debugEnabled = useElectionsDebugEnabled()
 
@@ -103,6 +103,12 @@ const themeItems = computed(() => themes.map(theme => ({
       </template>
 
       <template #default="{ collapsed }">
+        <!-- Only the slideover has room to say which election this is. -->
+        <div v-if="!collapsed && election" class="px-2.5 pb-2 mb-1 border-b border-default">
+          <p class="text-sm font-semibold">{{ election.name }}</p>
+          <p v-if="resultsVersion" class="text-xs text-muted">{{ resultsVersion.name }}</p>
+        </div>
+
         <UNavigationMenu
           :collapsed="collapsed"
           :items="links[0]"

@@ -1,5 +1,5 @@
 <template>
-    <ElectionsLayoutDashboardPage title="Settings" :status="false">
+    <ElectionsLayoutDashboardPage :status="false">
             <div class="max-w-lg mx-auto space-y-4 w-full">
                 <UPageCard variant="naked">
                     <template #title>

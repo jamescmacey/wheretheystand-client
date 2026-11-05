@@ -47,6 +47,30 @@ export function formatPoints(
 }
 
 /**
+ * The lead, short enough to sit beside two tallies, and spelled out for a title:
+ * "+12,151" is clear where it stands and cryptic read on its own.
+ */
+export function describeMargin(result: {
+  resultStatus: string
+  margin: number | null
+  marginPercentage: number | null
+}): { text: string, description: string } | null {
+  if (result.resultStatus === 'indeterminate') {
+    return { text: 'Tied', description: 'The leading candidates are tied.' }
+  }
+  if (result.margin === null) return null
+
+  const votes = formatCount(result.margin)
+  const points = formatPoints(result.marginPercentage)
+  return {
+    text: `+${votes}`,
+    description: points
+      ? `Margin of ${votes} votes (${points}).`
+      : `Margin of ${votes} votes.`,
+  }
+}
+
+/**
  * A clock time, as New Zealand writes it: "9.35 pm".
  *
  * `toLocaleTimeString` gives "9:35 pm" or "9:35 p.m." depending on the browser's
