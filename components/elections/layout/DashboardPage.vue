@@ -10,11 +10,11 @@
                 </template>
                 <template #title>
                     <div v-if="breadcrumb?.length" class="min-w-0">
-                        <UBreadcrumb :items="breadcrumb" />
-                        <!-- No room beside the breadcrumb until `xl`, so it sits below. -->
-                        <p v-if="electionContext" class="xl:hidden text-xs font-normal text-muted truncate">
+                        <!-- No room beside the breadcrumb until `xl`, so it sits above. -->
+                        <p v-if="electionContext" class="xl:hidden mb-1 text-xs font-normal text-muted truncate">
                             {{ electionContext }}
                         </p>
+                        <UBreadcrumb :items="breadcrumb" />
                     </div>
                     <!-- Both ends of the navbar compete for a phone's width, so the
                          name yields rather than pushing the version switch off.
