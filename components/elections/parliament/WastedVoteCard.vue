@@ -30,10 +30,6 @@
                 </div>
             </dl>
 
-            <p v-if="!isFinal" class="text-xs text-muted">
-                {{ label ? `${label} is the final count. ` : '' }}Special votes are still to come.
-            </p>
-
             <USeparator />
 
             <div v-if="gallagher !== null">

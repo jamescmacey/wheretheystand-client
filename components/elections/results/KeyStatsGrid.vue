@@ -1,8 +1,8 @@
 <template>
-    <div v-if="stats.length" class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+    <div v-if="stats.length" class="grid grid-cols-2 @3xl:grid-cols-4 gap-3">
         <UCard v-for="stat in stats" :key="stat.label" variant="subtle">
             <p class="text-xs uppercase text-muted truncate">{{ stat.label }}</p>
-            <p class="text-xl lg:text-2xl font-bold tabular-nums">{{ stat.value }}</p>
+            <p class="text-xl @3xl:text-2xl font-bold tabular-nums">{{ stat.value }}</p>
             <p v-if="stat.note" class="text-xs text-muted truncate">{{ stat.note }}</p>
         </UCard>
     </div>
