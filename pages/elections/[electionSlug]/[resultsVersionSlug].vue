@@ -10,7 +10,8 @@
              clock the reader may not share, and the mismatch lands on the
              largest element on screen. -->
         <ClientOnly v-if="showCountdown">
-            <ElectionsLoadingCountdown :election="election" :phase="phase" />
+            <ElectionsLoadingCountdown :election="election" :phase="phase"
+                :connection="source.connection.value" />
             <template #fallback>
                 <ElectionsLoadingLoader phase="loading" />
             </template>

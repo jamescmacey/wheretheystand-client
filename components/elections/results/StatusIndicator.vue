@@ -53,6 +53,16 @@ const badge = computed(() => {
     if (props.mode !== 'live') {
         return { label: 'Archived results', icon: 'i-lucide-archive', color: 'neutral' as const, animation: '' }
     }
+    // Given up: nothing will update until the reader retries or reloads, and
+    // saying "Reconnecting" here would be a promise nothing is keeping.
+    if (props.connection === 'failed') {
+        return {
+            label: updatedAt.value ? `Not updating · ${updatedAt.value}` : 'Not updating',
+            icon: 'i-lucide-wifi-off',
+            color: 'error' as const,
+            animation: '',
+        }
+    }
     if (props.connection === 'offline') {
         return { label: 'Reconnecting…', icon: 'i-lucide-wifi-off', color: 'warning' as const, animation: '' }
     }

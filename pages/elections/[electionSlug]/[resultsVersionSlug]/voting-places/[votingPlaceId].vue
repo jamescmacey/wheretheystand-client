@@ -73,6 +73,7 @@ import type {
 } from '~/types/elections'
 import { useElectionDataStore } from '~/stores/electionData'
 import { useInjectedElectionSource, useResultsScope } from '~/composables/useElectionSource'
+import { votingPlaceFromHit } from '~/utils/elections/votingPlaceHit'
 
 /**
  * What one voting place counted.
@@ -119,8 +120,18 @@ const indexName = useAlgoliaIndexName('ElectionVotingPlaces')
 const algolia = useNuxtApp().$algolia
 
 /**
- * Resolved from Algolia, which is the only source holding one place's record
- * without the several thousand around it.
+ * The place's record, from the dashboard's shared store.
+ *
+ * Filled by whichever page resolved it first -- the directory's search, an
+ * electorate's list, a published reference file, or the lookup below -- so a
+ * reader arriving from any of them costs no further Algolia request.
+ */
+const reference = computed(() =>
+    store.votingPlace(props.election.slug, props.resultsVersion.slug, votingPlaceNumber.value))
+
+/**
+ * Asked of Algolia only where the store does not already hold the place, and
+ * written back to it so the next page to want it does not ask again.
  *
  * Client only, and so is the heading: InstantSearch cannot be server rendered
  * on Workers, and while a plain search could be, the rest of the page is
@@ -131,22 +142,22 @@ const algolia = useNuxtApp().$algolia
  */
 const { data: hit, status: hitStatus } = await useAsyncData(
     () => `voting-place-${props.resultsVersion.id}-${votingPlaceNumber.value}`,
-    () => algolia.initIndex(indexName).search<VotingPlaceHit>('', {
-        filters: `results_version:"${props.resultsVersion.id}" AND number=${votingPlaceNumber.value}`,
-        hitsPerPage: 1,
-    }).then(response => response.hits[0] ?? null),
+    async () => {
+        if (reference.value) return null
+
+        const found = await algolia.initIndex(indexName).search<VotingPlaceHit>('', {
+            filters: `results_version:"${props.resultsVersion.id}" AND number=${votingPlaceNumber.value}`,
+            hitsPerPage: 1,
+        }).then(response => response.hits[0] ?? null)
+
+        if (found) {
+            store.mergeVotingPlaces(props.election.slug, props.resultsVersion.slug,
+                [votingPlaceFromHit(found)])
+        }
+        return found
+    },
     { watch: [votingPlaceNumber], server: false },
 )
-
-/**
- * The reference record, where voting place reference data happens to be loaded.
- *
- * A fallback rather than the main path: it arrives only once something has
- * fetched the whole version's places, which this page does not do. When it is
- * there it is the better answer, being the same data Django published.
- */
-const reference = computed(() =>
-    store.votingPlace(props.election.slug, props.resultsVersion.slug, votingPlaceNumber.value))
 
 const address = computed(() =>
     reference.value?.address ?? hit.value?.address ?? 'Voting place')
@@ -226,8 +237,8 @@ const electorateNumbers = computed(() => [...new Set(
  * Algolia hit lands.
  */
 const homeGeneral = computed(() => (
-    hit.value?.electorate_number
-    ?? reference.value?.physical_electorate
+    reference.value?.physical_electorate
+    ?? hit.value?.electorate_number
     ?? sets.value.find(set => set.voting_place_electorate !== null)?.voting_place_electorate
     ?? null
 ))

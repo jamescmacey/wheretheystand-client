@@ -747,7 +747,14 @@ export type FeedMessage =
  * Source status
  * ---------------------------------------------------------------------- */
 
-export type ConnectionState = 'connecting' | 'live' | 'offline' | 'archived'
+/**
+ * Where a live listener stands.
+ *
+ * `offline` is a listener Firestore gave up on that is being tried again;
+ * `failed` is one that has used up its attempts and will deliver nothing more
+ * until the reader retries or reloads.
+ */
+export type ConnectionState = 'connecting' | 'live' | 'offline' | 'failed' | 'archived'
 
 /**
  * The Firestore `events/{firebase_id}` document, as the client reads it.
