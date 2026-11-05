@@ -1,14 +1,14 @@
 <template>
     <!-- Card beside the chamber on a wide screen; on a narrow one the
          chamber comes first, as the picture the figures explain. -->
-    <div class="grid gap-4 lg:grid-cols-2">
+    <div class="grid gap-4 @4xl:grid-cols-2">
         <ElectionsParliamentSeatAlerts :election="election" :resultsVersion="resultsVersion"
-            :allocation="allocation" class="lg:col-span-2" />
+            :allocation="allocation" class="@4xl:col-span-2" />
         <ElectionsParliamentPartySeats :election="election" :resultsVersion="resultsVersion"
             :allocation="allocation" :to="to" :title="title" variant="soft" />
         <!-- Carded to match its neighbour, and stretched to its height
              with the chamber centred, so it does not float beside it. -->
-        <UCard variant="soft" class="order-first lg:order-last"
+        <UCard variant="soft" class="order-first @4xl:order-last"
             :ui="{ body: 'h-full flex items-center justify-center' }">
             <ElectionsParliamentSeatGrid :election="election" :resultsVersion="resultsVersion"
                 :allocation="allocation" class="w-full" />

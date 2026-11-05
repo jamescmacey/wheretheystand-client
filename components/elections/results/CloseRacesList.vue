@@ -15,7 +15,7 @@
         <template v-if="races.length">
             <!-- The same badge, tallies and lead as the Electorates page, so a
                  seat reads the same wherever it appears. -->
-            <div class="grid gap-3 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="grid gap-3 grid-cols-1 @xl:grid-cols-2 @6xl:grid-cols-4">
                 <UPageCard v-for="race in races" :key="race.electorate" :to="race.href" variant="subtle"
                     :ui="{ container: 'p-3 sm:p-3' }">
                     <!-- The card is a link in its own right, so nothing inside it is. -->

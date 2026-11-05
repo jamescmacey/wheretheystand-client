@@ -22,7 +22,7 @@
 
             <!-- Side by side on a wide screen. The party card is too narrow
                  there for bars to say anything the share column does not. -->
-            <div class="grid gap-4 items-start lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+            <div class="grid gap-4 items-start @5xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
                 <ElectionsResultsNationalPartyResults :election="election" :resultsVersion="resultsVersion"
                     :show-bars="false" />
                 <ElectionsResultsElectorateGrid :election="election" :resultsVersion="resultsVersion" />
