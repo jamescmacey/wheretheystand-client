@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { gallagherIndex, nationalInformals, wastedVote } from '~/utils/elections/disproportionality'
+import { comparisonGallagherIndex, gallagherIndex, nationalInformals, wastedVote } from '~/utils/elections/disproportionality'
 
 describe('gallagherIndex', () => {
   it('is zero when seats match votes exactly', () => {
@@ -28,6 +28,44 @@ describe('gallagherIndex', () => {
   it('has no answer without votes or seats', () => {
     expect(gallagherIndex([{ votes: 0, seats: 5 }])).toBeNull()
     expect(gallagherIndex([{ votes: 5, seats: 0 }])).toBeNull()
+  })
+})
+
+describe('comparisonGallagherIndex', () => {
+  it('matches the official 2023 count, worked by hand', () => {
+    // Every row of the published 2023 comparison file. 122 seats, with Port
+    // Waikato's election yet to be held.
+    const index = comparisonGallagherIndex([
+      { count: 1_085_851, total_seats: 48 },
+      { count: 767_540, total_seats: 34 },
+      { count: 330_907, total_seats: 15 },
+      { count: 246_473, total_seats: 11 },
+      { count: 173_553, total_seats: 8 },
+      { count: 87_844, total_seats: 6 },
+      { count: 63_344, total_seats: 0 },
+      { count: 34_478, total_seats: 0 },
+      { count: 16_126, total_seats: 0 },
+      { count: 13_025, total_seats: 0 },
+      { count: 9_586, total_seats: 0 },
+      { count: 6_786, total_seats: 0 },
+      { count: 5_018, total_seats: 0 },
+      { count: 4_532, total_seats: 0 },
+      { count: 2_513, total_seats: 0 },
+      { count: 2_105, total_seats: 0 },
+      { count: 1_530, total_seats: 0 },
+    ])
+    expect(index).toBeCloseTo(2.633, 3)
+  })
+
+  it('has no answer where the file holds no seats', () => {
+    expect(comparisonGallagherIndex([{ count: 100, total_seats: null }])).toBeNull()
+  })
+
+  it('counts a party with no persistent record, which is still part of the vote', () => {
+    expect(comparisonGallagherIndex([
+      { count: 60, total_seats: 10 },
+      { count: 40, total_seats: null },
+    ])).toBeCloseTo(40)
   })
 })
 

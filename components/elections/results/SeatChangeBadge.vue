@@ -4,6 +4,9 @@
          than guessing at it. -->
     <!-- A gain reads as the old party's colour handing to the new
          one's; a hold as the one colour that kept it. -->
+    <!-- Beside an electorate's name, give this `grow basis-[min-content]`. The row
+         then wraps only if the label stacked as "NAT" over "GAIN" still will not
+         fit, and the label stays on one line wherever it has the room. -->
     <div v-if="seatChange" class="flex items-stretch gap-1.5 shrink-0" :title="seatChange.description">
         <template v-if="seatChange.flipped">
             <ElectionsResultsPartySwatch :colour="seatChange.fromColour"

@@ -7,7 +7,8 @@
                     :electorate="electorate.number" :link="false" />
             </div>
 
-            <ElectionsResultsSeatChangeBadge :election="election" :resultsVersion="resultsVersion"
+            <ElectionsResultsSeatChangeBadge class="grow basis-[min-content] justify-end"
+                :election="election" :resultsVersion="resultsVersion"
                 :electorate="electorate.number" />
         </div>
 
