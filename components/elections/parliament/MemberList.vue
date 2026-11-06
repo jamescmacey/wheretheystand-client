@@ -47,9 +47,7 @@ const slugs = computed(() => ({ e: props.election.slug, v: props.resultsVersion.
 function memberName(member: ElectedMember): string {
     const { e, v } = slugs.value
     if (member.candidate === null) return ''
-    return store.persistentCandidateFor(e, v, member.candidate)?.display_name
-        || store.candidate(e, v, member.candidate)?.name
-        || ''
+    return store.candidate(e, v, member.candidate)?.name || ''
 }
 
 const groups = computed(() => {
