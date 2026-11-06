@@ -44,8 +44,9 @@ const persistent = computed(() => (props.candidate === null
     ? null
     : store.persistentCandidateFor(slugs.value.election, slugs.value.version, props.candidate)))
 
-const name = computed(() =>
-    persistent.value?.display_name || candidate.value?.name || props.fallback)
+// The name they stood under at this election, which is on the ballot and may not
+// be what the persistent record calls them now. That record is only for the link.
+const name = computed(() => candidate.value?.name || props.fallback)
 
 const party = computed(() => (candidate.value?.party
     ? store.party(slugs.value.election, slugs.value.version, candidate.value.party)
