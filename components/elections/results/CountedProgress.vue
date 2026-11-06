@@ -1,9 +1,9 @@
 <template>
-    <div v-if="percent !== null" class="flex flex-col gap-1 min-w-48" :title="detail ?? undefined">
+    <div v-if="percent !== null" class="flex flex-col gap-1 min-w-72" :title="detail ?? undefined">
         <span class="text-xs text-muted">Counting progress</span>
         <div class="flex items-center gap-2">
             <UProgress :model-value="clamped" :max="100" size="md" class="flex-1" />
-            <span class="text-sm font-medium tabular-nums">{{ formatPercent(percent) }}</span>
+            <span class="text-sm font-medium tabular-nums whitespace-nowrap">{{ formatPercent(percent) }} of {{ noun }}</span>
         </div>
     </div>
 </template>
@@ -13,7 +13,7 @@ const props = withDefaults(defineProps<{
     percent?: number | null
     counted?: number | null
     total?: number | null
-    /** What is being counted, for the tooltip. */
+    /** What is being counted, for the label and the tooltip. */
     noun?: string
 }>(), { percent: null, counted: null, total: null, noun: 'voting places' })
 
