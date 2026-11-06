@@ -32,6 +32,7 @@ const sections: Section[] = [
     // One electorate is the overview. A list of it is a page with one card.
     when: () => !isSingleElectorate.value,
   },
+  { label: 'Voting places', icon: 'i-lucide-map-pin', path: '/voting-places' },
   {
     label: 'Candidates',
     icon: 'i-lucide-users',
@@ -39,7 +40,6 @@ const sections: Section[] = [
     // A by-election's candidates are already the whole of its overview.
     when: () => !isSingleElectorate.value,
   },
-  { label: 'Voting places', icon: 'i-lucide-map-pin', path: '/voting-places' },
   // Changing the MMP rules is not ready for readers yet.
   { label: 'Settings', icon: 'i-lucide-settings', path: '/settings', when: () => debugEnabled },
   {
