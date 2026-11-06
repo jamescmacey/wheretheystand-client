@@ -80,3 +80,19 @@ export function gallagherIndex(
 
   return Math.sqrt(squares / 2)
 }
+
+/**
+ * The same index for an election in a comparison file, from the seats it returned.
+ *
+ * Every party's votes are there, matched or not, so nothing is missing from the
+ * shares. Seats won outside any party are not in the file, so an election where
+ * an independent won a seat reads slightly low.
+ */
+export function comparisonGallagherIndex(
+  parties: { count: number | null, total_seats: number | null }[],
+): number | null {
+  return gallagherIndex(parties.map(party => ({
+    votes: party.count ?? 0,
+    seats: party.total_seats ?? 0,
+  })))
+}

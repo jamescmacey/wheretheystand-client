@@ -24,7 +24,8 @@
                             <ElectionsEntityElectorateBadge :election="election" :resultsVersion="resultsVersion"
                                 :electorate="race.electorate" :link="false" class="max-w-full" />
                         </div>
-                        <ElectionsResultsSeatChangeBadge :election="election" :resultsVersion="resultsVersion"
+                        <ElectionsResultsSeatChangeBadge class="grow basis-[min-content] justify-end"
+                            :election="election" :resultsVersion="resultsVersion"
                             :electorate="race.electorate" />
                     </div>
 
