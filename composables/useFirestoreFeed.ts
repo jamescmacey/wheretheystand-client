@@ -1,4 +1,4 @@
-import type { FeedMessage, FeedMessageType } from '~/types/elections'
+import type { EntityNumber, FeedMessage, FeedMessageType } from '~/types/elections'
 import { normaliseFirestoreFeedMessage } from '~/utils/elections/normaliseFirestore'
 import type { FirestoreSubscription } from './useFirestoreResults'
 
@@ -55,6 +55,11 @@ export function useFirestoreFeed(options: {
   enabled: MaybeRefOrGetter<boolean>
   /** False leaves voting places out of the query, not just out of the list. */
   includeVotingPlaces: MaybeRefOrGetter<boolean>
+  /**
+   * Narrows voting places to those physically in these electorates, in the
+   * query for the same reason. Normalised by the caller. Empty means all.
+   */
+  votingPlaceElectorates: MaybeRefOrGetter<EntityNumber[]>
 }): FirestoreSubscription & { messages: Ref<FeedMessage[]> } {
   const messages = ref<FeedMessage[]>([])
   const connection = ref<'connecting' | 'live' | 'offline' | 'archived'>('archived')
@@ -127,23 +132,40 @@ export function useFirestoreFeed(options: {
     connection.value = 'connecting'
 
     try {
-      const { collection, limit, onSnapshot, orderBy, query, where }
+      const { and, collection, limit, onSnapshot, or, orderBy, query, where }
         = await import('firebase/firestore')
       const { $firestore } = useNuxtApp()
       const db = ($firestore as () => import('firebase/firestore').Firestore)()
 
       if (mine !== generation) return
 
-      // Two queries, each with its own composite index: the filtered one
-      // adds `type` between the event and the ordering.
-      const constraints = toValue(options.includeVotingPlaces)
-        ? [where('event_id', '==', eventId)]
-        : [where('event_id', '==', eventId), where('type', 'in', WITHOUT_VOTING_PLACES)]
+      // Three queries. All entries, and all but voting places, each have a
+      // composite index of their own: the second adds `type` between the event
+      // and the ordering. Chosen electorates add a third, because Firestore
+      // needs an index for each branch of the `or`. The other types' branches
+      // use the `type` index, and the voting places' branch needs one that
+      // also covers the electorate.
+      const includeVotingPlaces = toValue(options.includeVotingPlaces)
+      const electorates = toValue(options.votingPlaceElectorates)
+      const filter = !includeVotingPlaces
+        ? and(where('event_id', '==', eventId), where('type', 'in', WITHOUT_VOTING_PLACES))
+        : electorates.length
+          ? and(
+              where('event_id', '==', eventId),
+              or(
+                where('type', 'in', WITHOUT_VOTING_PLACES),
+                and(
+                  where('type', '==', 'VOTING_PLACE_ADDED'),
+                  where('metadata.physical_electorate_id', 'in', electorates),
+                ),
+              ),
+            )
+          : and(where('event_id', '==', eventId))
 
       unsubscribe = onSnapshot(
         query(
           collection(db, 'feed'),
-          ...constraints,
+          filter,
           orderBy('timestamp', 'desc'),
           limit(FEED_LIMIT),
         ),
@@ -176,7 +198,9 @@ export function useFirestoreFeed(options: {
           if (error.code === 'failed-precondition') {
             console.warn('[elections] the live feed needs its composite indexes on'
               + ' `feed` (event_id ascending, timestamp descending; and event_id'
-              + ' ascending, type ascending, timestamp descending). Deploy'
+              + ' ascending, type ascending, timestamp descending; and event_id'
+              + ' ascending, type ascending, metadata.physical_electorate_id ascending,'
+              + ' timestamp descending). Deploy'
               + ' firestore.indexes.json from the Django repository.')
           } else {
             console.warn('[elections] live feed unavailable:', error.code)
@@ -193,12 +217,20 @@ export function useFirestoreFeed(options: {
     }
   }
 
-  // Changing the voting places preference re-attaches with the other query.
+  // Changing the voting places preference re-attaches with another query.
   // The entries held stay put until its first snapshot replaces them, so the
   // list does not blank while it loads; the list's own filter hides any
   // voting places in the meantime.
+  //
+  // The electorates only count while voting places are on, and are compared as
+  // a string because the caller may hand over a fresh array each time.
   watch(
-    () => [toValue(options.eventId), toValue(options.enabled), toValue(options.includeVotingPlaces)],
+    () => [
+      toValue(options.eventId),
+      toValue(options.enabled),
+      toValue(options.includeVotingPlaces),
+      toValue(options.includeVotingPlaces) ? toValue(options.votingPlaceElectorates).join(',') : '',
+    ],
     () => { attach() },
     { immediate: true },
   )
