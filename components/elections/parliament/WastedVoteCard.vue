@@ -121,6 +121,6 @@ const gallagher = computed(() => gallagherIndex(
         votes: party.votes,
         seats: props.allocation.totalSeats.get(party.party) ?? 0,
     })),
-    props.allocation.members.filter(member => member.party === null).length,
+    props.allocation.independentSeats,
 ))
 </script>

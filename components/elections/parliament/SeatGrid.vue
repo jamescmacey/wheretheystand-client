@@ -57,6 +57,9 @@ import { pluralise } from '~/utils/elections/format'
  * Where no blocs have been curated for the version the order falls back to
  * size, which is how every archived election is drawn.
  *
+ * Independents have no bloc to sit with, so they sit in the middle with the
+ * cross-bench, in the grey every independent is drawn in elsewhere.
+ *
  * Unfilled seats -- a party entitled to more list seats than it has candidates
  * left, or an electorate still tied -- are drawn hollow rather than omitted.
  * The seat exists; it just has nobody in it yet. They sit in the middle with
@@ -116,20 +119,24 @@ const ordered = computed(() => {
         for (let index = 0; index < seats; index += 1) list.push({ party, filled: true })
     }
 
-    // Seats that exist but have nobody in them. Spliced in where the right
-    // bloc begins, so they land in the middle rather than padding an edge; with
-    // no blocs curated that index is the end, as it always was.
+    // Seats in no party's total: independents, then seats that exist but have
+    // nobody in them. Spliced in where the right bloc begins, so they land in the
+    // middle rather than padding an edge; with no blocs curated that index is
+    // the end, as it always was.
     // A vacant seat from an underhang is not drawn: it is not part of the House
     // until the next election, which is why the House is smaller.
-    const empty = props.allocation.undecidedSeats
-    if (!empty) return list
+    const unaligned = [
+        ...Array.from({ length: props.allocation.independentSeats },
+            () => ({ party: null as EntityNumber | null, filled: true })),
+        ...Array.from({ length: props.allocation.undecidedSeats },
+            () => ({ party: null as EntityNumber | null, filled: false })),
+    ]
+    if (!unaligned.length) return list
 
-    const hollow = Array.from({ length: empty },
-        () => ({ party: null as EntityNumber | null, filled: false }))
     const seatsBefore = entries
         .slice(0, unalignedIndex(entries))
         .reduce((sum, [, seats]) => sum + seats, 0)
-    list.splice(seatsBefore, 0, ...hollow)
+    list.splice(seatsBefore, 0, ...unaligned)
     return list
 })
 
@@ -212,7 +219,7 @@ const seats = computed<Seat[]>(() => {
             fill: alternate ? `url(#${gradientId(colour, alternate)})` : colour,
             filled: seat.filled,
             title: seat.party === null
-                ? 'Seat not yet filled'
+                ? (seat.filled ? 'Independent' : 'Seat not yet filled')
                 : store.party(slugs.value.e, slugs.value.v, seat.party)?.name ?? 'Unknown party',
         }
     })
