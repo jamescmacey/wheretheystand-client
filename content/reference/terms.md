@@ -1,7 +1,7 @@
 ---
 title: Copyright and privacy terms
 description: Copyright and privacy terms for using WhereTheyStand.
-date: 2026-04-25
+date: 2026-11-04
 ---
 
 ## About these terms
@@ -27,6 +27,7 @@ When you use WhereTheyStand, some personal information about you is collected.
 * When you access any resource on WhereTheyStand, basic details about your browser and network are collected.  This is so that limited system resources can be protected from abuse and misuse, and to produce aggregated insights into how users access WhereTheyStand.
 * When you interact with WhereTheyStand, your activity on WhereTheyStand is collected.  This is so that the user experience can be understood and improved.
 * When you search for something on WhereTheyStand, your searches are collected.  This is so that search trends can be understood, and to optimise search functionality.
+* Searching for nearby voting places in the election results dashboard requires access to your location.  If you grant access to your location for this purpose, your location will be sent directly to the site’s search provider, Algolia, and only used to return relevant results.
 
 Some parts of WhereTheyStand have options which can be set to your preferences.  These options are stored in your web browser's local storage.  They are not sent to WhereTheyStand or any third party.
 

@@ -550,6 +550,12 @@ export async function useElectionSource(options: {
   let loadingReference = false
 
   /**
+   * What is in the store was published ahead of the worker building its own.
+   * Replaced once the worker has, so the count runs on the data it was built on.
+   */
+  let referenceIsEarly = false
+
+  /**
    * Reference data could not be loaded from anywhere, after every attempt.
    *
    * Without this a failure waits for the next change to the event document,
@@ -573,6 +579,12 @@ export async function useElectionSource(options: {
    * piece of redundancy kept here. Reference data is the difference between a
    * dashboard and a page of vote counts labelled "Unknown candidate", and the
    * worker has already written it to Firestore by the time this runs.
+   *
+   * Django publishes the same payload ahead of the night, and the candidates
+   * page wants it then. So a published path is read before the worker has built
+   * anything, though Firestore is left alone until it has: there is nothing
+   * there yet to read. This changes nothing for the gate, which still waits for
+   * `refdata_built` before it lets the dashboard open.
    */
   async function loadLiveReference() {
     if (!import.meta.client || loadingReference) return
@@ -581,7 +593,9 @@ export async function useElectionSource(options: {
     const currentElection = election.value
     const eventDocument = liveEvent.value
     if (!version?.firebase_id || !currentElection) return
-    if (!eventDocument?.refdata_built || hasReferenceData.value) return
+    if (!eventDocument) return
+    const built = Boolean(eventDocument.refdata_built)
+    if (hasReferenceData.value && !(built && referenceIsEarly)) return
     // The Firestore path translates ObjectIds back through the persistent index.
     if (!store.persistent) return
 
@@ -610,7 +624,7 @@ export async function useElectionSource(options: {
         }
       }
 
-      if (!hasNames(data)) {
+      if (!hasNames(data) && built) {
         data = await fetchFirestoreReference(version.firebase_id, store.persistent)
         origin = 'firestore'
         url = null
@@ -619,9 +633,10 @@ export async function useElectionSource(options: {
       if (hasNames(data)) {
         store.setReferenceData(currentElection.slug, version.slug, data!)
         if (origin) noteLoaded('reference', origin, url)
+        referenceIsEarly = !built
         referenceRetries.reset()
         referenceFailed.value = false
-      } else {
+      } else if (built) {
         // Tried again on a widening interval, and on any change to the event
         // document in the meantime. Only once both have run out does the page
         // say it has failed, with a retry.
@@ -650,6 +665,7 @@ export async function useElectionSource(options: {
     watch(loadKey, () => {
       referenceRetries.reset()
       referenceFailed.value = false
+      referenceIsEarly = false
     })
   }
 

@@ -151,7 +151,7 @@ const rows = computed<ResultsRow[]>(() => {
         if (persistent?.id !== incumbent.candidate) return row
         return {
             ...row,
-            sublabel: [row.sublabel, 'Sitting member'].filter(Boolean).join(' · '),
+            sublabel: [row.sublabel, 'Incumbent'].filter(Boolean).join(' · '),
         }
     })
 })
