@@ -31,7 +31,7 @@ const standing = (
 ): StandingCandidate => ({ persistentCandidate, persistentParty })
 
 describe('incumbencyStatus', () => {
-  it('reads the sitting member standing again for the same party', () => {
+  it('reads the incumbent standing again for the same party', () => {
     expect(incumbencyStatus(held(), [standing(SITTING, NATIONAL)]))
       .toBe('standing_again')
   })
@@ -151,7 +151,7 @@ describe('memberNote', () => {
 
   it('names the party a defector left', () => {
     expect(memberNote('defector_standing', 'National')?.text)
-      .toBe('The sitting member has left National and is standing again.')
+      .toBe('The incumbent has left National and is standing again.')
   })
 
   it('falls back to a nameless sentence where the party did not resolve', () => {
@@ -159,7 +159,7 @@ describe('memberNote', () => {
     expect(memberNote('party_other_candidate', null)?.text)
       .toBe('The party that won the seat is standing a new candidate.')
     expect(memberNote('defector_standing', null)?.text)
-      .toBe('The sitting member has left the party that won the seat.')
+      .toBe('The incumbent has left the party that won the seat.')
   })
 
   it('draws nothing where nothing is known', () => {

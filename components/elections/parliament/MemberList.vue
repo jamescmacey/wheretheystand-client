@@ -18,7 +18,7 @@
                 <ul class="divide-y divide-default/50">
                     <li v-for="member in group.members" :key="`${member.origin}-${member.candidate}`"
                         class="flex items-center justify-between gap-3 py-2">
-                        <ElectionsEntityCandidateLabel :election="election" :resultsVersion="resultsVersion"
+                        <ElectionsEntityCandidateLabel :link="false" :election="election" :resultsVersion="resultsVersion"
                             :candidate="member.candidate" :swatch="false" :show-party="false" />
                         <span class="text-sm text-muted shrink-0">{{ originLabel(member) }}</span>
                     </li>
@@ -47,9 +47,7 @@ const slugs = computed(() => ({ e: props.election.slug, v: props.resultsVersion.
 function memberName(member: ElectedMember): string {
     const { e, v } = slugs.value
     if (member.candidate === null) return ''
-    return store.persistentCandidateFor(e, v, member.candidate)?.display_name
-        || store.candidate(e, v, member.candidate)?.name
-        || ''
+    return store.candidate(e, v, member.candidate)?.name || ''
 }
 
 const groups = computed(() => {
@@ -78,7 +76,7 @@ const groups = computed(() => {
 const summary = computed(() => pluralise(props.allocation.members.length, 'member'))
 
 function originLabel(member: ElectedMember): string {
-    if (member.origin === 'list') return `List ${member.listPos ?? ''}`.trim()
+    if (member.origin === 'list') return 'List'
     const electorate = member.electorate === null
         ? null
         : store.electorate(slugs.value.e, slugs.value.v, member.electorate)

@@ -20,13 +20,13 @@ import type { ElectorateIncumbency, PersistentId } from '~/types/elections'
 import { formatCount, pluralise } from './format'
 
 export type IncumbencyStatus =
-  /** The sitting member is standing again for the party that won the seat. */
+  /** The incumbent is standing again for the party that won the seat. */
   | 'standing_again'
   /** The party that won the seat is standing somebody else -- the cross. */
   | 'party_other_candidate'
-  /** The sitting member is standing here for another party, or as an independent. */
+  /** The incumbent is standing here for another party, or as an independent. */
   | 'defector_standing'
-  /** The sitting member is not standing in this electorate. */
+  /** The incumbent is not standing in this electorate. */
   | 'not_standing'
   /** Nobody held the seat going in. */
   | 'vacant'
@@ -172,7 +172,7 @@ export function memberNote(
     case 'standing_again':
       return {
         icon: 'i-lucide-user-check',
-        text: 'The sitting member is standing again.',
+        text: 'The incumbent is standing again.',
       }
     case 'party_other_candidate':
       return {
@@ -185,13 +185,13 @@ export function memberNote(
       return {
         icon: 'i-lucide-arrow-left-right',
         text: partyName
-          ? `The sitting member has left ${partyName} and is standing again.`
-          : 'The sitting member has left the party that won the seat.',
+          ? `The incumbent has left ${partyName} and is standing again.`
+          : 'The incumbent has left the party that won the seat.',
       }
     case 'not_standing':
       return {
         icon: 'i-lucide-user-x',
-        text: 'The sitting member is not standing.',
+        text: 'The incumbent is not standing.',
       }
     case 'vacant':
       return {
