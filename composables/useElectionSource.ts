@@ -330,12 +330,31 @@ export async function useElectionSource(options: {
    * declared -- the listener stops, the entries stay, and switching results
    * version clears them.
    */
-  const { show: showVotingPlaces } = useFeedVotingPlaces()
+  const { show: showVotingPlaces, electoratesFor, setElectorates } = useFeedVotingPlaces()
   const feed = useFirestoreFeed({
     eventId: () => resultsVersion.value?.firebase_id ?? null,
     enabled: () => mode.value === 'live',
     includeVotingPlaces: showVotingPlaces,
+    votingPlaceElectorates: () => electoratesFor(resultsVersion.value?.firebase_id),
   })
+
+  // Take out any Māori electorate saved before the menu stopped offering them.
+  // Voting places sit in general electorates, so one would match nothing, and
+  // with no way left to untick it the feed would stay narrowed to nothing. Here
+  // rather than in the menu, which a phone does not mount until the drawer opens.
+  watch(
+    () => {
+      const electorates = electoratesFor(resultsVersion.value?.firebase_id)
+      return electorates.filter(number => store.persistentElectorateFor(
+        election.value?.slug ?? '', resultsVersion.value?.slug ?? '', number,
+      )?.electorate_type !== 'maori')
+    },
+    (kept) => {
+      const eventId = resultsVersion.value?.firebase_id
+      if (eventId && kept.length !== electoratesFor(eventId).length) setElectorates(eventId, kept)
+    },
+    { immediate: true },
+  )
 
   // Whatever the open page additionally asked for. Null means no second
   // subscription, which is the overview's case.

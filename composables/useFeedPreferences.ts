@@ -1,9 +1,11 @@
-import type { FeedMessage } from '~/types/elections'
+import type { EntityNumber, FeedMessage } from '~/types/elections'
+import { isVisibleFeedMessage, normaliseFeedElectorates } from '~/utils/elections/feedFilter'
 
 const STORAGE_KEY = 'elections-feed-voting-places'
+const ELECTORATES_STORAGE_KEY = 'elections-feed-voting-place-electorates'
 
 /**
- * Whether the feed shows voting places reporting.
+ * Whether the feed shows voting places reporting, and for which electorates.
  *
  * Off by default: on election night there are thousands of them, and they
  * bury the lead changes and seat moves most readers are watching for. The
@@ -16,9 +18,15 @@ const STORAGE_KEY = 'elections-feed-voting-places'
  * twenty entries rather than twenty with the voting places then removed. Storage is read once and wrapped, because
  * it throws in a private window or with site data blocked, and a feed that
  * fails to render over a preference would be the wrong way round.
+ *
+ * Electorates are held per event, because an electorate's number means nothing
+ * outside the event it belongs to: number 5 this year may be somewhere else
+ * entirely next time.
  */
 export function useFeedVotingPlaces() {
   const show = useState(STORAGE_KEY, () => false)
+  const electoratesByEvent = useState<Record<string, EntityNumber[]>>(
+    ELECTORATES_STORAGE_KEY, () => ({}))
   const loaded = useState(`${STORAGE_KEY}-loaded`, () => false)
 
   // On mount rather than in setup, so hydration matches the server's render
@@ -28,8 +36,13 @@ export function useFeedVotingPlaces() {
     loaded.value = true
     try {
       show.value = localStorage.getItem(STORAGE_KEY) === 'true'
+      const stored: unknown = JSON.parse(localStorage.getItem(ELECTORATES_STORAGE_KEY) ?? '{}')
+      if (stored && typeof stored === 'object') {
+        electoratesByEvent.value = Object.fromEntries(Object.entries(stored)
+          .map(([eventId, electorates]) => [eventId, normaliseFeedElectorates(electorates)]))
+      }
     } catch {
-      // Storage unavailable: the default stands.
+      // Storage unavailable or unreadable: the defaults stand.
     }
   })
 
@@ -42,12 +55,28 @@ export function useFeedVotingPlaces() {
     }
   }
 
-  /** The entries to show, with voting places dropped unless asked for. */
-  function visible(messages: FeedMessage[]) {
-    return show.value
-      ? messages
-      : messages.filter(message => message.type !== 'VOTING_PLACE_ADDED')
+  /** The electorates chosen for an event. Empty means all of them. */
+  function electoratesFor(eventId: string | null | undefined): EntityNumber[] {
+    return eventId ? electoratesByEvent.value[eventId] ?? [] : []
   }
 
-  return { show, setShow, visible }
+  function setElectorates(eventId: string, electorates: EntityNumber[]) {
+    electoratesByEvent.value = {
+      ...electoratesByEvent.value,
+      [eventId]: normaliseFeedElectorates(electorates),
+    }
+    try {
+      localStorage.setItem(ELECTORATES_STORAGE_KEY, JSON.stringify(electoratesByEvent.value))
+    } catch {
+      // Storage unavailable: the choice lasts until the page is closed.
+    }
+  }
+
+  /** The entries to show, leaving out any voting places not asked for. */
+  function visible(messages: FeedMessage[]) {
+    return messages.filter(message => isVisibleFeedMessage(
+      message, show.value, electoratesFor(message.event_id)))
+  }
+
+  return { show, setShow, electoratesFor, setElectorates, visible }
 }
