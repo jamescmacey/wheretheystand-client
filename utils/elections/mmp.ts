@@ -149,6 +149,12 @@ export interface SeatAllocation {
   members: ElectedMember[]
   /** Electorate seats held outside any qualifying party. */
   outsideSeats: number
+  /**
+   * Electorate seats won by a candidate with no party. They are in `members`
+   * and `houseSize` but in no party's total, so anything that adds up or draws
+   * the parties has to count these as well or come up short of the House.
+   */
+  independentSeats: number
   /** Electorates whose winner is tied, and so not yet decided. */
   undecidedElectorates: EntityNumber[]
   /**
@@ -285,6 +291,7 @@ export function allocateSeats(
   const electorateSeats = new Map<EntityNumber, number>()
   const undecidedElectorates: EntityNumber[] = []
   let outsideSeats = 0
+  let independentSeats = 0
 
   for (const win of electorateWins) {
     // A tied electorate has no winner yet, so it seats nobody and counts
@@ -295,6 +302,7 @@ export function allocateSeats(
     }
     if (win.party === null) {
       outsideSeats += 1
+      independentSeats += 1
       continue
     }
     electorateSeats.set(win.party, (electorateSeats.get(win.party) ?? 0) + 1)
@@ -455,6 +463,7 @@ export function allocateSeats(
     undecidedSeats,
     members,
     outsideSeats,
+    independentSeats,
     undecidedElectorates,
     tieOutcomes: undecidedElectorates.length
       ? tieOutcomesFor(input, settings, totalSeats)

@@ -88,7 +88,7 @@ const visible = computed(() => ordered.value.filter(result =>
     || seatsFor(result.party).total > 0
     || (result.per_cent ?? 0) >= minorPartyThreshold.value))
 
-const rows = computed<ResultsRow[]>(() => visible.value.map(result => {
+const partyRows = computed<ResultsRow[]>(() => visible.value.map(result => {
     const party = result.party === null
         ? null
         : store.party(props.election.slug, props.resultsVersion.slug, result.party)
@@ -114,6 +114,30 @@ const rows = computed<ResultsRow[]>(() => visible.value.map(result => {
     }
 }))
 
+// Independents hold seats but have no party vote, so they have no result of
+// their own. Without this row the seat columns would fall short of the House.
+const independentSeats = computed(() => allocation.value?.independentSeats ?? 0)
+
+const rows = computed<ResultsRow[]>(() => {
+    if (independentSeats.value === 0) return partyRows.value
+    return [...partyRows.value, {
+        key: 'independent',
+        label: 'Independent',
+        shortLabel: 'IND',
+        colour: store.partyColour(props.election.slug, props.resultsVersion.slug, null),
+        alternateColour: null,
+        bar: null,
+        cells: {
+            electorate_seats: independentSeats.value,
+            list_seats: 0,
+            total_seats: independentSeats.value,
+            count: null,
+            share: null,
+            comparison: null,
+        },
+    }]
+})
+
 const sum = (pick: (result: (typeof ordered.value)[number]) => number | null) =>
     ordered.value.reduce((total, result) => total + (pick(result) ?? 0), 0)
 
@@ -130,9 +154,9 @@ const totals = computed(() => ({
     label: 'Totals',
     note: null,
     cells: {
-        electorate_seats: seatTotals.value.electorate,
+        electorate_seats: seatTotals.value.electorate + independentSeats.value,
         list_seats: seatTotals.value.list,
-        total_seats: seatTotals.value.total,
+        total_seats: seatTotals.value.total + independentSeats.value,
         // Valid votes only, so the figure is the sum of the rows above it.
         // `total_votes_cast` includes informals.
         count: formatCount(sum(result => result.count)),
