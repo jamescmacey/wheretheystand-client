@@ -93,6 +93,10 @@ export default defineNuxtConfig({
       // entry, the Firestore event document, and where each payload was
       // actually read from. Developer diagnostics, not a reader-facing page.
       electionsDebug: process.env.NUXT_PUBLIC_ELECTIONS_DEBUG ?? 'true',
+      // The What if? page, where a reader tries out their own results and rules.
+      // On unless set otherwise: wrangler.jsonc turns it on for previews and off
+      // in production.
+      electionsWhatifEnabled: process.env.NUXT_PUBLIC_ELECTIONS_WHATIF_ENABLED ?? 'true',
       // Election results are read as static JSON from R2, not from the API, so
       // that election night traffic never reaches Django. Point this at a
       // directory built by `manage.py publish_election_snapshots --local` to

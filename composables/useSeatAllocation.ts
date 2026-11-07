@@ -104,5 +104,5 @@ export function useSeatAllocation(
   const allocation = computed<SeatAllocation | null>(() =>
     (input.value ? allocateSeats(input.value, settings.value) : null))
 
-  return { allocation, canAllocate, settings }
+  return { allocation, canAllocate, settings, input }
 }

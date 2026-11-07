@@ -2,6 +2,7 @@
 import type { NavigationMenuItem } from '@nuxt/ui'
 import { useElectionShape } from '~/composables/useElectionShape'
 import { useElectionsDebugEnabled } from '~/composables/useElectionsDebug'
+import { useElectionsWhatIfEnabled } from '~/composables/useElectionsWhatIf'
 
 const route = useRoute()
 const electionSlug = computed(() => route.params.electionSlug)
@@ -17,6 +18,7 @@ const linksAvailable = computed(() => Boolean(resultsVersionSlug.value && electi
 const { election, resultsVersion, hasPartyVote, isSingleElectorate } = useElectionShape()
 
 const debugEnabled = useElectionsDebugEnabled()
+const whatIfEnabled = useElectionsWhatIfEnabled()
 
 const base = computed(() => `/elections/${electionSlug.value}/${resultsVersionSlug.value}`)
 
@@ -25,6 +27,12 @@ interface Section { label: string, icon: string, path?: string, exact?: boolean,
 const sections: Section[] = [
   { label: 'Overview', icon: 'i-lucide-layout-dashboard', exact: true },
   { label: 'Parliament', icon: 'i-lucide-landmark', path: '/parliament', when: () => hasPartyVote.value },
+  {
+    label: 'What if?',
+    icon: 'i-lucide-flask-conical',
+    path: '/what-if',
+    when: () => whatIfEnabled && hasPartyVote.value,
+  },
   {
     label: 'Electorates',
     icon: 'i-lucide-map',
