@@ -413,7 +413,7 @@ function normaliseElectorateIncumbency(raw: Raw): ElectorateIncumbency {
   return {
     electorate: String(raw.electorate),
     // Django leaves these out rather than writing nulls, since the manifest is
-    // the one object every visitor fetches. Absent means no sitting member.
+    // the one object every visitor fetches. Absent means no incumbent.
     candidate: toStringOrNull(raw.candidate),
     party: toStringOrNull(raw.party),
     left_party: toBool(raw.left_party),

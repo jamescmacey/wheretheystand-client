@@ -33,6 +33,13 @@ const sections: Section[] = [
     when: () => !isSingleElectorate.value,
   },
   { label: 'Voting places', icon: 'i-lucide-map-pin', path: '/voting-places' },
+  {
+    label: 'Candidates',
+    icon: 'i-lucide-users',
+    path: '/candidates',
+    // A by-election's candidates are already the whole of its overview.
+    when: () => !isSingleElectorate.value,
+  },
   // Changing the MMP rules is not ready for readers yet.
   { label: 'Settings', icon: 'i-lucide-settings', path: '/settings', when: () => debugEnabled },
   {

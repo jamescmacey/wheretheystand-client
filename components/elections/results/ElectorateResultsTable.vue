@@ -34,7 +34,7 @@
                                     <span class="tabular-nums font-medium shrink-0 min-w-[3.25rem] text-right">
                                         {{ formatCount(row.leaders[index]!.count) }}
                                     </span>
-                                    <ElectionsEntityCandidateLabel :election="election"
+                                    <ElectionsEntityCandidateLabel :link="false" :election="election"
                                         :resultsVersion="resultsVersion"
                                         :candidate="row.leaders[index]!.candidate" />
                                 </div>

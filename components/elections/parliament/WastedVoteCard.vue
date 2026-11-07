@@ -40,6 +40,12 @@
                 <p class="text-sm text-muted">
                     How far seats are from votes: 0 is perfectly proportional, and higher is less so.
                 </p>
+                <dl v-if="gallagherComparison" class="mt-1 text-sm">
+                    <div class="flex justify-between gap-3">
+                        <dt class="text-muted">{{ label }}</dt>
+                        <dd class="tabular-nums">{{ gallagherComparison }}</dd>
+                    </div>
+                </dl>
             </div>
         </div>
     </UCard>
@@ -51,7 +57,7 @@ import type { SeatAllocation } from '~/utils/elections/mmp'
 import { useComparison } from '~/composables/useComparison'
 import { useMmpSettings } from '~/composables/useMmpSettings'
 import { useElectionDataStore } from '~/stores/electionData'
-import { gallagherIndex, nationalInformals, wastedVote } from '~/utils/elections/disproportionality'
+import { comparisonGallagherIndex, gallagherIndex, nationalInformals, wastedVote } from '~/utils/elections/disproportionality'
 import { formatCount, formatPercent, formatPoints } from '~/utils/elections/format'
 
 /**
@@ -123,4 +129,16 @@ const gallagher = computed(() => gallagherIndex(
     })),
     props.allocation.members.filter(member => member.party === null).length,
 ))
+
+/** Worked from the figures as shown, so the change agrees with what is on screen. */
+const gallagherComparison = computed(() => {
+    const parties = comparisonData.value?.national.party_votes?.parties
+    const then = parties ? comparisonGallagherIndex(parties) : null
+    if (!isOfficial.value || gallagher.value === null || then === null) return null
+
+    const change = Number(gallagher.value.toFixed(2)) - Number(then.toFixed(2))
+    const shown = then.toFixed(2)
+    if (Math.abs(change) < 0.005) return `${shown}, unchanged`
+    return `${shown}, ${change > 0 ? 'up' : 'down'} ${Math.abs(change).toFixed(2)}`
+})
 </script>

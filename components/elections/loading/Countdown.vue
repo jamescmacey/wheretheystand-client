@@ -119,7 +119,7 @@ const waitingMessage = computed(() => {
             return 'The Electoral Commission has not published candidate and party details yet. '
                 + 'This page will update on its own.'
         case 'awaiting-results':
-            return 'Counting has begun. The first results will appear here as they are released.'
+            return 'The first results will appear here as they are released.'
         default:
             return 'Loading the data this page needs.'
     }
