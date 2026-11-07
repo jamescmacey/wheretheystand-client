@@ -76,17 +76,22 @@ const phase = computed(() => source.phase.value)
 const debugRoute = computed(() =>
     useElectionsDebugEnabled() && route.path.replace(/\/$/, '').endsWith('/debug'))
 
+// Candidates are known before anyone has voted, and that is when a reader wants
+// them, so this page handles its own waiting too. Nothing on it reads a tally.
+const candidatesRoute = computed(() => route.path.replace(/\/$/, '').endsWith('/candidates'))
+const ungated = computed(() => debugRoute.value || candidatesRoute.value)
+
 // The countdown is the election night waiting experience: the clock before
 // polls close, and every waiting state after them until the dashboard is ready.
 // An error goes to the loader instead, because that is the branch with
 // something to say and a retry.
 const showCountdown = computed(() => {
-    if (debugRoute.value) return false
+    if (ungated.value) return false
     if (phase.value === 'ready' || phase.value === 'error') return false
     return phase.value === 'countdown' || source.mode.value === 'live'
 })
 
-const showLoader = computed(() => !debugRoute.value && phase.value !== 'ready')
+const showLoader = computed(() => !ungated.value && phase.value !== 'ready')
 
 /**
  * Whether to show the feed at all.
@@ -98,7 +103,11 @@ const showLoader = computed(() => !debugRoute.value && phase.value !== 'ready')
  * read and an empty panel would only take width from the results.
  *
  * The debug page is its own subject and renders without the feed beside it.
+ * The candidates page has it only once the dashboard is ready, as every other
+ * page does, because the feed is about the count and until then there is none.
  */
 const showFeed = computed(() =>
-    !debugRoute.value && (source.mode.value === 'live' || source.liveEnded.value))
+    !debugRoute.value
+    && (!candidatesRoute.value || phase.value === 'ready')
+    && (source.mode.value === 'live' || source.liveEnded.value))
 </script>

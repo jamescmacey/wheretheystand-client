@@ -1,11 +1,11 @@
 <template>
-    <UPageCard :to="to" variant="subtle" class="h-full">
-        <div class="flex flex-wrap items-start justify-between gap-2">
+    <!-- The content is pinned to the card's width: left to size itself, a long
+         party name widens it past the card's edge instead of truncating. -->
+    <UPageCard :to="to" variant="subtle" class="h-full" :ui="{ container: 'min-w-0 lg:grid-cols-[minmax(0,1fr)]' }">
+        <div class="flex flex-col items-start gap-1.5">
             <!-- The card is a link in its own right, so nothing inside it is. -->
-            <div class="min-w-0 max-w-full">
-                <ElectionsEntityElectorateBadge :election="election" :resultsVersion="resultsVersion"
-                    :electorate="electorate.number" :link="false" />
-            </div>
+            <ElectionsEntityElectorateBadge :election="election" :resultsVersion="resultsVersion"
+                :electorate="electorate.number" :link="false" class="max-w-full" />
 
             <ElectionsResultsSeatChangeBadge :election="election" :resultsVersion="resultsVersion"
                 :electorate="electorate.number" />

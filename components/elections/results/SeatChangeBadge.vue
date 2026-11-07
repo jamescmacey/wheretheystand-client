@@ -4,6 +4,8 @@
          than guessing at it. -->
     <!-- A gain reads as the old party's colour handing to the new
          one's; a hold as the one colour that kept it. -->
+    <!-- In a card this sits on its own line under the electorate's name: the
+         two together do not reliably fit across a narrow card. -->
     <div v-if="seatChange" class="flex items-stretch gap-1.5 shrink-0" :title="seatChange.description">
         <template v-if="seatChange.flipped">
             <ElectionsResultsPartySwatch :colour="seatChange.fromColour"
@@ -12,7 +14,7 @@
         </template>
         <ElectionsResultsPartySwatch :colour="seatChange.toColour"
             :alternate="seatChange.toAlternate" />
-        <span class="font-bold uppercase tracking-wide leading-6 text-highlighted">
+        <span class="text-sm font-bold uppercase tracking-wide leading-5 whitespace-nowrap text-highlighted">
             {{ seatChange.label }}
         </span>
     </div>
