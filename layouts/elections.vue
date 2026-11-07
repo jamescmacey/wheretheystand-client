@@ -28,12 +28,6 @@ const sections: Section[] = [
   { label: 'Overview', icon: 'i-lucide-layout-dashboard', exact: true },
   { label: 'Parliament', icon: 'i-lucide-landmark', path: '/parliament', when: () => hasPartyVote.value },
   {
-    label: 'What if?',
-    icon: 'i-lucide-flask-conical',
-    path: '/what-if',
-    when: () => whatIfEnabled && hasPartyVote.value,
-  },
-  {
     label: 'Electorates',
     icon: 'i-lucide-map',
     path: '/electorates',
@@ -48,6 +42,12 @@ const sections: Section[] = [
     icon: 'i-lucide-bug',
     path: '/debug',
     when: () => debugEnabled,
+  },
+  {
+    label: 'What if?',
+    icon: 'i-lucide-flask-conical',
+    path: '/what-if',
+    when: () => whatIfEnabled && hasPartyVote.value,
   },
 ]
 
