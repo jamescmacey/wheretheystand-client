@@ -133,6 +133,33 @@ describe('the threshold', () => {
   })
 })
 
+describe('an independent', () => {
+  const input = build(party(1, 600_000, 2), party(2, 400_000, 1))
+  input.electorateWins.push({ electorate: 99, candidate: 90_000, party: null })
+
+  it('holds a seat in no party total, so the two together make the House', () => {
+    const result = allocateSeats(input, settings())
+    const partySeats = [...result.totalSeats.values()].reduce((sum, seats) => sum + seats, 0)
+
+    expect(result.independentSeats).toBe(1)
+    expect(result.houseSize).toBe(120)
+    expect(partySeats + result.independentSeats).toBe(result.houseSize)
+  })
+
+  it('is not counted while the seat is tied', () => {
+    const tied = build(party(1, 600_000, 0), party(2, 400_000, 0))
+    tied.electorateWins.push({ electorate: 99, candidate: null, party: null, tie: true })
+    expect(allocateSeats(tied, settings()).independentSeats).toBe(0)
+  })
+
+  it('is not confused with the winner of a party that did not qualify', () => {
+    const result = allocateSeats(
+      build(party(1, 600_000, 0), party(3, 20_000, 1)), settings({ allowCoattailing: false }))
+    expect(result.outsideSeats).toBe(1)
+    expect(result.independentSeats).toBe(0)
+  })
+})
+
 describe('overhang', () => {
   // Two electorate seats on a vote share worth about one.
   const giant = party(1, 900_000, 0)

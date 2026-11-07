@@ -64,6 +64,7 @@ import { formatPercent, pluralise } from '~/utils/elections/format'
  * Which parties appear: those with a seat, plus those that reached half the
  * threshold. A party on 3 per cent won nothing, but "nothing" is a result, and
  * leaving it out answers the question of who nearly made it with silence.
+ * Independents share one tile, or the tiles would not add up to the House.
  */
 const props = withDefaults(defineProps<{
     election: ElectionSummary
@@ -77,12 +78,12 @@ const props = withDefaults(defineProps<{
 
 const store = useElectionDataStore()
 const slugs = computed(() => ({ e: props.election.slug, v: props.resultsVersion.slug }))
-const { order } = useBlocOrder(() => props.election, () => props.resultsVersion)
+const { order, unalignedIndex } = useBlocOrder(() => props.election, () => props.resultsVersion)
 const { curated, seatChangeNoteFor } = useIncumbency(
     () => props.election, () => props.resultsVersion)
 
 interface Tile {
-    key: EntityNumber
+    key: EntityNumber | 'independent'
     name: string
     swatch: string
     alternate: string | null
@@ -118,7 +119,7 @@ const shown = computed(() => {
     return order([...entries.entries()])
 })
 
-const tiles = computed<Tile[]>(() => shown.value.map(([party, seats]) => {
+const partyTiles = computed<Tile[]>(() => shown.value.map(([party, seats]) => {
     const overhang = props.allocation.overhangByParty.get(party) ?? 0
     const underhang = props.allocation.underhangByParty.get(party) ?? 0
     const share = props.allocation.qualification
@@ -152,6 +153,35 @@ const tiles = computed<Tile[]>(() => shown.value.map(([party, seats]) => {
         change: seatChangeNoteFor(party, seats),
     }
 }))
+
+/**
+ * Party tiles, with independents where the chamber seats them.
+ *
+ * That is the end of the cross-bench, walked back past any party with no seats
+ * so the tile stays among those in Parliament.
+ */
+const tiles = computed<Tile[]>(() => {
+    const seats = props.allocation.independentSeats
+    if (seats === 0) return partyTiles.value
+
+    let index = unalignedIndex(shown.value)
+    while (index > 0 && shown.value[index - 1]![1] === 0) index -= 1
+
+    const independents: Tile = {
+        key: 'independent',
+        name: 'Independent',
+        swatch: DEFAULT_PARTY_COLOUR,
+        alternate: null,
+        seats,
+        seated: true,
+        // Independents stand on no list, so there is no split to show.
+        split: `${seats} electorate`,
+        overhang: null,
+        underhang: null,
+        change: null,
+    }
+    return [...partyTiles.value.slice(0, index), independents, ...partyTiles.value.slice(index)]
+})
 
 // Overhang and underhang are named separately, even where they cancel out: a
 // House of 120 made from two of each is not the same as a House with neither.

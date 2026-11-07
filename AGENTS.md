@@ -73,6 +73,7 @@ Set in `.env` for local dev. Public runtime config is in `nuxt.config.ts` → `r
 | `NUXT_PUBLIC_ELECTIONS_SNAPSHOT_BASE` | Where election snapshots are read from, default `https://elections-r2.wheretheystand.nz/` |
 | `NUXT_PUBLIC_SHOW_ELECTORAL_HISTORY` | `"true"` shows the "Electoral history" tab on person and party pages and allows `/people/:id/elections` and `/parties/:id/elections` |
 | `NUXT_PUBLIC_ELECTIONS_DEBUG` | `"true"` adds the dashboard's Debug page (`/elections/:election/:version/debug`): the manifest entry, the Firestore event document, and where each payload was read from. Developer diagnostics; turn it off in production |
+| `NUXT_PUBLIC_ELECTIONS_WHATIF_ENABLED` | `"true"` adds the dashboard's What if? page (`/elections/:election/:version/what-if`). `true` if unset; `wrangler.jsonc` sets it on for previews and off in production |
 | `ALGOLIA_*`, `MAPBOX_ACCESS_TOKEN`, `TURNSTILE_SITE_KEY` | Third-party integrations |
 
 For console auth locally, Django must be running and configured to accept cookies from the Nuxt dev origin.
@@ -134,6 +135,10 @@ Query with `queryCollection('docs')` / `queryCollectionNavigation('docs')`. Docs
 ### Elections feature flag
 
 `middleware/elections-feature-flag.global.ts` redirects election routes to `/` when `NUXT_PUBLIC_ELECTIONS_ENABLED` is not `"true"`. When adding election-related nav links, gate them the same way (see `pages/people/[id].vue`).
+
+### What if? page
+
+`/elections/:election/:version/what-if` lets a reader pin electorates, add special votes and change the electoral law, saved on their device under `wts.elections.whatif.<slug>`. **Its results must only ever show on that page.** The scenario state and allocation live in `composables/useWhatIf.ts` and `utils/elections/whatIf.ts`, never in the store or `useMmpSettings`, and reach components only as props. `test/elections/whatIfIsolation.test.ts` fails if anything else starts to read them. Saved government arrangements (`useCoalitions`) are deliberately shared with the Parliament page, because they hold only a list of parties.
 
 ### Election results
 
