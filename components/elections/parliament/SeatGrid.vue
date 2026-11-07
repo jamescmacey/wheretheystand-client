@@ -37,6 +37,7 @@ import type { SeatAllocation } from '~/utils/elections/mmp'
 import { useElectionDataStore, DEFAULT_PARTY_COLOUR } from '~/stores/electionData'
 import { useBlocOrder } from '~/composables/useBlocOrder'
 import { pluralise } from '~/utils/elections/format'
+import { seatGridCell, seatGridShape } from '~/utils/elections/seatGrid'
 
 /**
  * Parliament as a block of seats: one dot per member, in a rectangle.
@@ -88,15 +89,6 @@ const RADIUS = 9
 const PITCH = 24
 const PADDING = 6
 
-/**
- * How wide the block is against its height.
- *
- * A 120-seat House comes out six rows by twenty columns, which is close enough
- * to the proportions of a page that the dots stay a readable size on a phone
- * without the block becoming a thin strip on a desktop.
- */
-const ASPECT = 3.3
-
 interface Seat {
     key: string
     x: number
@@ -140,28 +132,7 @@ const ordered = computed(() => {
     return list
 })
 
-/**
- * Rows, the columns they need, and where the short column falls.
- *
- * A House rarely divides evenly into rows, so one column is always short. It
- * goes in the middle rather than at an end: a column of one dot hanging off
- * the right edge reads as a party sitting on its own, when it is only the
- * arithmetic of the grid. Putting the gap in the middle pushes each bloc hard
- * up against its own side, which is also where a chamber puts them.
- */
-const grid = computed(() => {
-    const total = ordered.value.length
-    if (!total) return { rows: 0, columns: 0, blank: 0, middle: 0 }
-
-    const rows = Math.max(2, Math.min(10, Math.round(Math.sqrt(total / ASPECT))))
-    const columns = Math.ceil(total / rows)
-    return {
-        rows,
-        columns,
-        blank: columns * rows - total,
-        middle: Math.floor(columns / 2),
-    }
-})
+const grid = computed(() => seatGridShape(ordered.value.length))
 
 const box = computed(() => {
     const { rows, columns } = grid.value
@@ -170,40 +141,13 @@ const box = computed(() => {
     return { width: span(columns), height: span(rows) }
 })
 
-/**
- * Which cell the nth seat sits in, filling column by column.
- *
- * Row by row would scatter a party across the whole block, which is the one
- * arrangement that makes the drawing harder to read than the tiles above it.
- *
- * The left bloc fills from the left edge, the right bloc ends at the right
- * edge, and whatever is short of a full column sits in the middle, centred
- * between the rows so the gap reads as an aisle.
- */
-function cellFor(index: number) {
-    const { rows, blank, middle } = grid.value
-    if (!blank) return { column: Math.floor(index / rows), row: index % rows }
-
-    const before = middle * rows
-    if (index < before) return { column: Math.floor(index / rows), row: index % rows }
-
-    const inMiddle = rows - blank
-    if (index < before + inMiddle) {
-        return { column: middle, row: Math.floor(blank / 2) + (index - before) }
-    }
-
-    const after = index - before - inMiddle
-    return { column: middle + 1 + Math.floor(after / rows), row: after % rows }
-}
-
 const seats = computed<Seat[]>(() => {
-    const { rows } = grid.value
-    if (!rows) return []
+    if (!grid.value.rows) return []
 
     const origin = PADDING + RADIUS
 
     return ordered.value.map((seat, index) => {
-        const cell = cellFor(index)
+        const cell = seatGridCell(index, grid.value)
         const colour = seat.party === null
             ? DEFAULT_PARTY_COLOUR
             : store.partyColour(slugs.value.e, slugs.value.v, seat.party)
@@ -239,7 +183,8 @@ const gradients = computed(() => {
 const majority = computed(() => Math.floor(props.allocation.houseSize / 2) + 1)
 
 /**
- * The halfway mark: the middle of the block, wherever that falls.
+ * The halfway mark: the middle of the block, which `seatGridCell` keeps as the
+ * middle of the seats too.
  *
  * Snapping it to the nearest gap between columns was worse than drawing it
  * through a seat. A bloc is read as having a majority when its seats reach
